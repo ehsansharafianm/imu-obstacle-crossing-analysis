@@ -1,0 +1,143 @@
+Jun 22, 2026 11:07:06 AM: Subject number set: 5
+Jun 22, 2026 11:07:06 AM: Log File Created
+Jun 22, 2026 11:07:07 AM: === IMU Discovery Mode Started ===
+Jun 22, 2026 11:07:07 AM: Scanning for all available Xsens DOT devices...
+Jun 22, 2026 11:07:07 AM: Discovery scan started - searching for 5 seconds...
+Jun 22, 2026 11:07:07 AM: IMU Found: Address= D4:22:CD:00:9F:95, Tag= V2–20
+Jun 22, 2026 11:07:07 AM: IMU Found: Address= D4:22:CD:00:A7:91, Tag= V2–13
+Jun 22, 2026 11:07:07 AM: IMU Found: Address= D4:22:CD:00:63:7D, Tag= V2–15
+Jun 22, 2026 11:07:07 AM: IMU Found: Address= D4:22:CD:00:63:8B, Tag= V2–17
+Jun 22, 2026 11:07:07 AM: IMU Found: Address= D4:22:CD:00:63:A4, Tag= V2–19
+Jun 22, 2026 11:07:07 AM: IMU Found: Address= D4:22:CD:00:A1:76, Tag= V2–18
+Jun 22, 2026 11:07:07 AM: IMU Found: Address= D4:22:CD:00:A1:5B, Tag= V2–12
+Jun 22, 2026 11:07:07 AM: IMU Found: Address= D4:22:CD:00:63:D6, Tag= V2–16
+Jun 22, 2026 11:07:12 AM: ===== Discovery scan stopped. Found 8 devices =====
+Jun 22, 2026 11:07:28 AM: IMU1: V2–16, MAC: D4:22:CD:00:63:D6
+Jun 22, 2026 11:07:28 AM: IMU2: V2–17, MAC: D4:22:CD:00:63:8B
+Jun 22, 2026 11:07:28 AM: IMU3: V2–18, MAC: D4:22:CD:00:A1:76
+Jun 22, 2026 11:07:28 AM: IMU4: V2–19, MAC: D4:22:CD:00:63:A4
+Jun 22, 2026 11:07:28 AM: IMU5: V2–15, MAC: D4:22:CD:00:63:7D
+Jun 22, 2026 11:07:28 AM: IMU6: V2–20, MAC: D4:22:CD:00:9F:95
+Jun 22, 2026 11:07:28 AM: Scan started!
+Jun 22, 2026 11:07:29 AM: IMU1 IMU is disconnected!
+Jun 22, 2026 11:07:29 AM: IMU1 IMU scanned
+Jun 22, 2026 11:07:29 AM: IMU4 disconnected
+Jun 22, 2026 11:07:29 AM: IMU4 IMU scanned
+Jun 22, 2026 11:07:29 AM: IMU4 connected
+Jun 22, 2026 11:07:30 AM: IMU1 IMU is connected!
+Jun 22, 2026 11:07:30 AM: IMU3 disconnected
+Jun 22, 2026 11:07:30 AM: IMU3 IMU scanned
+Jun 22, 2026 11:07:30 AM: IMU3 connected
+Jun 22, 2026 11:07:30 AM: IMU2 IMU is disconnected!
+Jun 22, 2026 11:07:30 AM: IMU2 IMU scanned
+Jun 22, 2026 11:07:30 AM: IMU6 disconnected
+Jun 22, 2026 11:07:30 AM: IMU6 IMU scanned
+Jun 22, 2026 11:07:30 AM: IMU2 IMU is connected!
+Jun 22, 2026 11:07:31 AM: IMU6 connected
+Jun 22, 2026 11:07:32 AM: IMU5 disconnected
+Jun 22, 2026 11:07:32 AM: IMU5 IMU scanned
+Jun 22, 2026 11:07:32 AM: All 6 devices scanned
+Jun 22, 2026 11:07:32 AM: IMU5 connected
+Jun 22, 2026 11:07:34 AM: IMU6 init done
+Jun 22, 2026 11:07:34 AM: IMU5 init done
+Jun 22, 2026 11:07:36 AM: IMU6 enableDataRecordingNotification called
+Jun 22, 2026 11:07:36 AM: onDotRecordingNotification: D4:22:CD:00:9F:95 isEnabled=true isExporting=false
+Jun 22, 2026 11:07:36 AM: IMU6 eraseRecordingData called
+Jun 22, 2026 11:07:36 AM: IMU5 enableDataRecordingNotification called
+Jun 22, 2026 11:07:36 AM: onDotRecordingNotification: D4:22:CD:00:63:7D isEnabled=true isExporting=false
+Jun 22, 2026 11:07:36 AM: IMU5 eraseRecordingData called
+Jun 22, 2026 11:08:46 AM: onDotEraseDone: D4:22:CD:00:9F:95 success=true
+Jun 22, 2026 11:08:46 AM: IMU6 erase done
+Jun 22, 2026 11:08:47 AM: onDotEraseDone: D4:22:CD:00:63:7D success=true
+Jun 22, 2026 11:08:47 AM: IMU5 erase done
+Jun 22, 2026 11:08:47 AM: Both recording IMUs erased and ready
+Jun 22, 2026 11:08:47 AM: IMU5 and IMU6 erase complete — sync button enabled
+Jun 22, 2026 11:08:50 AM: Start Sync clicked. Device list size: 6
+Jun 22, 2026 11:08:50 AM: Sync requested.
+Jun 22, 2026 11:08:51 AM: IMU3 disconnected
+Jun 22, 2026 11:08:51 AM: IMU4 disconnected
+Jun 22, 2026 11:08:51 AM: IMU1 IMU is disconnected!
+Jun 22, 2026 11:08:51 AM: IMU2 IMU is disconnected!
+Jun 22, 2026 11:08:51 AM: IMU6 disconnected
+Jun 22, 2026 11:08:51 AM: IMU5 disconnected
+Jun 22, 2026 11:09:05 AM: IMU1 IMU is disconnected!
+Jun 22, 2026 11:09:05 AM: IMU4 disconnected
+Jun 22, 2026 11:09:05 AM: IMU2 IMU is disconnected!
+Jun 22, 2026 11:09:05 AM: IMU6 disconnected
+Jun 22, 2026 11:09:05 AM: IMU5 disconnected
+Jun 22, 2026 11:09:05 AM: IMU3 disconnected
+Jun 22, 2026 11:09:05 AM: IMU6 connected
+Jun 22, 2026 11:09:05 AM: IMU5 connected
+Jun 22, 2026 11:09:06 AM: IMU4 connected
+Jun 22, 2026 11:09:06 AM: IMU3 connected
+Jun 22, 2026 11:09:06 AM: IMU1 IMU is connected!
+Jun 22, 2026 11:09:06 AM: IMU2 IMU is connected!
+Jun 22, 2026 11:09:08 AM: IMU6 init done
+Jun 22, 2026 11:09:08 AM: IMU5 init done
+Jun 22, 2026 11:09:10 AM: IMU6 re-enabled notifications after sync reconnect
+Jun 22, 2026 11:09:10 AM: onDotRecordingNotification: D4:22:CD:00:9F:95 isEnabled=true isExporting=false
+Jun 22, 2026 11:09:10 AM: IMU5 re-enabled notifications after sync reconnect
+Jun 22, 2026 11:09:10 AM: onDotRecordingNotification: D4:22:CD:00:63:7D isEnabled=true isExporting=false
+Jun 22, 2026 11:09:39 AM: ---------- Syncing done ----------
+Jun 22, 2026 11:09:39 AM: (Main): --- Syncing is done! ---- 
+Jun 22, 2026 11:09:49 AM: IMU1_V2-16_Jun 22, 2026 11:09:49 AM, Subject 5.csv created
+Jun 22, 2026 11:09:49 AM: IMU2_V2-17_Jun 22, 2026 11:09:49 AM, Subject 5.csv created
+Jun 22, 2026 11:09:49 AM: IMU3_V2-18_Jun 22, 2026 11:09:49 AM, Subject 5.csv created
+Jun 22, 2026 11:09:49 AM: IMU4_V2-19_Jun 22, 2026 11:09:49 AM, Subject 5.csv created
+Jun 22, 2026 11:09:49 AM: Feature log created for IMU1: FeatureLog_IMU1_Subject5_Jun 22, 2026 11:09:49 AM.csv
+Jun 22, 2026 11:09:49 AM: Feature log created for IMU2: FeatureLog_IMU2_Subject5_Jun 22, 2026 11:09:49 AM.csv
+Jun 22, 2026 11:09:49 AM: Feature logging initialized for all IMUs
+Jun 22, 2026 11:09:49 AM: IMU1 measuring
+Jun 22, 2026 11:09:49 AM: IMU2 measuring
+Jun 22, 2026 11:09:49 AM: IMU3 measuring
+Jun 22, 2026 11:09:49 AM: IMU4 measuring
+Jun 22, 2026 11:09:49 AM: IMU5 recording started
+Jun 22, 2026 11:09:49 AM: IMU6 recording started
+Jun 22, 2026 11:09:49 AM: IMU6 start recording ack: OK state=success
+Jun 22, 2026 11:09:49 AM: IMU5 start recording ack: OK state=success
+Jun 22, 2026 11:09:59 AM:  ---- Data is Logging -----
+Jun 22, 2026 11:10:17 AM: Stopping
+Jun 22, 2026 11:10:17 AM: Feature log closed for IMU1
+Jun 22, 2026 11:10:17 AM: Feature log closed for IMU2
+Jun 22, 2026 11:10:17 AM: All feature logs closed successfully
+Jun 22, 2026 11:10:17 AM: IMU5 stop recording ack: OK state=success
+Jun 22, 2026 11:10:17 AM: IMU6 stop recording ack: OK state=success
+Jun 22, 2026 11:10:28 AM: Export started for recording IMUs
+Jun 22, 2026 11:10:28 AM: exportRecordingData called
+Jun 22, 2026 11:10:28 AM: IMU5 export logger created: /storage/emulated/0/Android/data/com.tmsimple.ObjectCrossing/files/Subject 5/V2-15/IMU5_V2-15_Jun 22, 2026 11:10:28 AM, Subject 5.csv
+Jun 22, 2026 11:10:28 AM: IMU6 export logger created: /storage/emulated/0/Android/data/com.tmsimple.ObjectCrossing/files/Subject 5/V2-20/IMU6_V2-20_Jun 22, 2026 11:10:28 AM, Subject 5.csv
+Jun 22, 2026 11:10:30 AM: Export: enableDataRecordingNotification called for IMU5 and IMU6
+Jun 22, 2026 11:10:30 AM: onDotRecordingNotification: D4:22:CD:00:63:7D isEnabled=true isExporting=true
+Jun 22, 2026 11:10:30 AM: onDotRecordingNotification: D4:22:CD:00:9F:95 isEnabled=true isExporting=true
+Jun 22, 2026 11:10:32 AM: IMU6 requestFlashInfo called (export)
+Jun 22, 2026 11:10:32 AM: IMU5 requestFlashInfo called (export)
+Jun 22, 2026 11:10:32 AM: onDotRequestFlashInfoDone: D4:22:CD:00:9F:95 used=229376 remaining=66560000
+Jun 22, 2026 11:10:32 AM: percent=0.3434% → totalPackets=451269
+Jun 22, 2026 11:10:32 AM: IMU6 requestFileInfo called
+Jun 22, 2026 11:10:32 AM: onDotRequestFlashInfoDone: D4:22:CD:00:63:7D used=229376 remaining=66560000
+Jun 22, 2026 11:10:32 AM: percent=0.3434% → totalPackets=451269
+Jun 22, 2026 11:10:32 AM: IMU5 requestFileInfo called
+Jun 22, 2026 11:10:32 AM: onDotRequestFileInfoDone: D4:22:CD:00:9F:95 fileCount=1 success=true
+Jun 22, 2026 11:10:32 AM: selectExportedData OK for D4:22:CD:00:9F:95
+Jun 22, 2026 11:10:32 AM: onDotRequestFileInfoDone: D4:22:CD:00:63:7D fileCount=1 success=true
+Jun 22, 2026 11:10:32 AM: selectExportedData OK for D4:22:CD:00:63:7D
+Jun 22, 2026 11:10:33 AM: startExporting called for D4:22:CD:00:9F:95 with 1 files
+Jun 22, 2026 11:10:33 AM: startExporting called for D4:22:CD:00:63:7D with 1 files
+Jun 22, 2026 11:11:25 AM: File exported from D4:22:CD:00:63:7D: 20260622_110949
+Jun 22, 2026 11:11:25 AM: All data exported from D4:22:CD:00:63:7D
+Jun 22, 2026 11:11:25 AM: IMU5 file exists: true
+Jun 22, 2026 11:11:25 AM: Export file added to upload list: IMU5_V2-15_Jun 22, 2026 11:10:28 AM, Subject 5.csv
+Jun 22, 2026 11:11:25 AM: File exported from D4:22:CD:00:9F:95: 20260622_110949
+Jun 22, 2026 11:11:25 AM: All data exported from D4:22:CD:00:9F:95
+Jun 22, 2026 11:11:25 AM: IMU6 file exists: true
+Jun 22, 2026 11:11:25 AM: Export file added to upload list: IMU6_V2-20_Jun 22, 2026 11:10:28 AM, Subject 5.csv
+Jun 22, 2026 11:11:25 AM: Export complete for all recording IMUs
+Jun 22, 2026 11:11:25 AM: Export complete — files ready for upload
+Jun 22, 2026 11:11:28 AM: Uploading data to cloud : IMU1_V2-16_Jun 22, 2026 11:09:49 AM, Subject 5.csv
+Jun 22, 2026 11:11:28 AM: Uploading data to cloud : IMU2_V2-17_Jun 22, 2026 11:09:49 AM, Subject 5.csv
+Jun 22, 2026 11:11:28 AM: Uploading data to cloud : IMU3_V2-18_Jun 22, 2026 11:09:49 AM, Subject 5.csv
+Jun 22, 2026 11:11:28 AM: Uploading data to cloud : IMU4_V2-19_Jun 22, 2026 11:09:49 AM, Subject 5.csv
+Jun 22, 2026 11:11:28 AM: Uploading data to cloud : FeatureLog_IMU1_Subject5_Jun 22, 2026 11:09:49 AM.csv
+Jun 22, 2026 11:11:28 AM: Uploading data to cloud : FeatureLog_IMU2_Subject5_Jun 22, 2026 11:09:49 AM.csv
+Jun 22, 2026 11:11:28 AM: Uploading data to cloud : IMU5_V2-15_Jun 22, 2026 11:10:28 AM, Subject 5.csv
+Jun 22, 2026 11:11:28 AM: Uploading data to cloud : IMU6_V2-20_Jun 22, 2026 11:10:28 AM, Subject 5.csv
