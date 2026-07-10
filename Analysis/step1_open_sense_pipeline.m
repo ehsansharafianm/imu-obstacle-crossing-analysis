@@ -40,6 +40,11 @@ endTime              = [];                 % IK end time (s);   [] = end of the 
 visualizeCalibration = false;              % calibration runs automatically (no viewer / no keypress)
 freeCoords           = true;               % remove IK angle caps on the lower-limb coordinates
 freeRangeDeg         = 180;                % widen freed coordinate range to +/- this (deg)
+% --- Automatic .mtb -> .txt conversion (no manual MT Manager export needed) ---
+convertMtb           = true;               % if an .mtb is in the test folder, convert it to per-IMU .txt first
+pythonExe            = 'py -3.8';          % Python that has the Xsens 'xsensdeviceapi' wheel installed
+converterScript      = fullfile(fileparts(mfilename('fullpath')), 'xsens_awinda_converter.py');
+forceConvert         = false;              % re-convert even if the .txt are already newer than the .mtb
 % =========================================================
 
 %% Resolve folders for this subject
@@ -50,6 +55,13 @@ if ~isfolder(dataDir)
     error('Raw data folder not found: %s', dataDir);
 end
 if ~isfolder(resultsRoot), mkdir(resultsRoot); end
+
+% Convert any Xsens .mtb in the test folder to per-IMU .txt (MT Manager layout)
+% with the Python xsensdeviceapi tool, so the rest of step 1 reads the .txt as
+% before. No .mtb -> uses whatever .txt are already there (manual export).
+if convertMtb
+    convertMtbToTxt(dataDir, pythonExe, converterScript, forceConvert);
+end
 
 % OpenSim's native file I/O fails on very long paths (Windows 260-char limit),
 % which the deep Google Drive folders exceed. So run all OpenSim steps in a
@@ -271,6 +283,44 @@ function p = abspath(p)
 % Absolute, canonical path (resolves '..'). OpenSim's native file I/O needs
 % absolute paths - relative ones fail on synced/virtual drives (Google Drive).
     p = char(java.io.File(p).getCanonicalPath());
+end
+
+function convertMtbToTxt(dataDir, pythonExe, converterScript, force)
+% Batch-convert any Xsens .mtb in dataDir to per-IMU ASCII .txt (MT Manager
+% layout: PacketCounter, Acc_X/Y/Z, Quat_q0..q3) using the Python xsensdeviceapi
+% converter, so no manual MT Manager export is needed. No-op if there is no .mtb.
+    mtb = dir(fullfile(dataDir, '*.mtb'));
+    if isempty(mtb)
+        fprintf('No .mtb in %s\n  -> using the .txt already in the folder (manual export).\n', dataDir);
+        return;
+    end
+    if ~isfile(converterScript)
+        error(['Converter script not found:\n  %s\n' ...
+               'Set converterScript (top of this file) to its location.'], converterScript);
+    end
+    % Skip if the .txt are already up to date (newest .txt at/after newest .mtb).
+    txt = dir(fullfile(dataDir, 'MT_*.txt'));
+    if ~force && ~isempty(txt) && max([txt.datenum]) >= max([mtb.datenum])
+        fprintf(['.txt exports already newer than the .mtb in %s\n' ...
+                 '  -> skipping conversion (set forceConvert = true to redo).\n'], dataDir);
+        return;
+    end
+    cmd = sprintf('%s "%s" "%s"', pythonExe, converterScript, abspath(dataDir));
+    fprintf('\n=== Converting .mtb -> .txt (Xsens Device API) ===\n  %s\n', cmd);
+    [status, out] = system(cmd);
+    fprintf('%s\n', out);
+    if status ~= 0
+        error(['MTB -> TXT conversion failed (exit %d). Common causes:\n' ...
+               '  - the .mtb is still open in MT Manager (close it and retry),\n' ...
+               '  - "%s" has no ''xsensdeviceapi'' installed (install the MT SDK wheel),\n' ...
+               '  - the Python launcher/version in pythonExe is not on PATH.\n' ...
+               'You can still export manually from MT Manager and set convertMtb = false.'], ...
+               status, pythonExe);
+    end
+    if isempty(dir(fullfile(dataDir, 'MT_*.txt')))
+        error('Conversion reported success but produced no MT_*.txt in %s.', dataDir);
+    end
+    fprintf('Conversion complete.\n');
 end
 
 function map = readIMUMappings(xmlFile)

@@ -1,6 +1,6 @@
 // General information: 
 //  MT Manager version: 2022.2.0 
-//  XDA version: 2022.2.0 build 7381 rev 124627 built on 2023-07-19
+//  XDA version: 2022.2.0
 // Device information: 
 //  DeviceId: 00B4AB31
 //  ProductCode: MTW2-3A7G6

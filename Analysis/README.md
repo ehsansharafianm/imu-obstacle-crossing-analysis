@@ -54,6 +54,10 @@ Analysis Environment/                 <- project root (contains Data & Results)
 - **Sensor Fusion and Tracking Toolbox** (or Navigation / Robotics System
   Toolbox) for `quaternion` / `eulerd` — step 3.
 - **Signal Processing Toolbox** for `findpeaks` — step 4.
+- **Python with the Xsens `xsensdeviceapi` wheel** (from the MT SDK) — only for
+  step 1's automatic `.mtb → .txt` conversion. Invoked as `py -3.8` by default
+  (`pythonExe` at the top of step 1). Not needed if you export `.txt` manually
+  from MT Manager and set `convertMtb = false`.
 
 ---
 
@@ -75,8 +79,15 @@ Converts raw Awinda `.txt` (quaternion columns) to an OpenSim orientations
 `.sto`, calibrates the Rajagopal model, runs IMU inverse kinematics, and prints
 a per-sensor orientation-error summary.
 
-- **Input:** `../Data/Awinda IMUs/Test N/MT_*.txt`, `Setup/myIMUMappings.xml`,
-  `Model/Rajagopal_2015.osim` (+ `Geometry/`).
+- **`.mtb` auto-conversion:** if a `.mtb` recording is in `Data/Awinda IMUs/Test N/`,
+  step 1 first runs `xsens_awinda_converter.py` (Python `xsensdeviceapi`) to write
+  the per-IMU `MT_*.txt` files into that folder — same layout as a manual MT
+  Manager export — so no manual export is needed. It skips the conversion when the
+  `.txt` are already newer than the `.mtb` (`forceConvert = true` to redo), and is
+  a no-op if there is no `.mtb` (it just uses the `.txt` already present). Toggle
+  with `convertMtb`; set the interpreter/script via `pythonExe` / `converterScript`.
+- **Input:** `../Data/Awinda IMUs/Test N/` (`.mtb` and/or `MT_*.txt`),
+  `Setup/myIMUMappings.xml`, `Model/Rajagopal_2015.osim` (+ `Geometry/`).
 - **Output (`../Results/OpenSim Outputs/Test N/`):** `STOFiles/*_orientations.sto`,
   `Rajagopal_2015_calibrated.osim`, `IKResults/ik_*_orientations.mot` (+ errors),
   `IMU_IK_Setup.xml`, `opensim.log`.
