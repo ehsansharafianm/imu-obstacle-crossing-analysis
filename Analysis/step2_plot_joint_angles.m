@@ -39,7 +39,9 @@ MARKER         = 'o';        % scatter marker shape
 LEGEND_ON      = true;       % show legend of visible joints
 START_ALL_ON   = false;      % true: start with every joint ticked; false: use DEFAULT_ON_JOINTS
 DEFAULT_ON_JOINTS = {'hip_flexion_r', 'knee_angle_r', 'ankle_angle_r', ...
-                     'hip_flexion_l', 'knee_angle_l', 'ankle_angle_l'};  % ticked on first open
+                     'hip_flexion_l', 'knee_angle_l', 'ankle_angle_l', ...
+                     'arm_flex_r', 'elbow_flex_r', ...
+                     'arm_flex_l', 'elbow_flex_l'};  % ticked on first open
 
 % --- Toggle (checkbox) panel ---
 CB_COLUMNS        = 2;        % how many columns of checkboxes

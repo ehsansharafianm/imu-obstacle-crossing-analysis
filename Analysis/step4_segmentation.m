@@ -27,7 +27,7 @@ ROLL_COL_R = 2;   ROLL_SIGN_R = 1;
 % Stride segmentation
 NSEG   = 200;          % samples per normalized stride (0-100% gait cycle)
 INTERP = 'spline';     % interpolation onto the normalized grid
-ZVP_SKIP_START = 1;    % drop this many leading ZVPs (start after them)
+ZVP_SKIP_START = 2;    % drop this many leading ZVPs (start after them)
 
 %% ===================== APPEARANCE SETTINGS =====================
 FONT_NAME  = 'Arial';  TITLE_SIZE = 15;  LABEL_SIZE = 13;  TICK_SIZE = 11;
@@ -95,7 +95,7 @@ drawNorms(subplot(2,2,4), t, omR, accR, zvpR, OMEGA_THRESH, ACC_THRESH, ...
 pct = linspace(0, 100, NSEG)';
 segT = {}; segY = {}; segL = {};
 for i = 1:numel(Data.imu)            % IMUs: X angle only (Y = NSEG x nStrides)
-    zvp = sideZVP(imuSide(Data.imu(i).label), zvpL, zvpR);
+    zvp = sideZVP(zvpSideIMU(Data.imu(i).label), zvpL, zvpR);
     segY{end+1} = segmentAll(t, Data.imu(i).euler_ZXY_deg(:,2), zvp, NSEG, INTERP); %#ok<SAGROW>
     segT{end+1} = pct;                                                              %#ok<SAGROW>
     segL{end+1} = sprintf('IMU: %s X', Data.imu(i).label);                          %#ok<SAGROW>
@@ -103,7 +103,7 @@ end
 for j = 1:numel(Data.joints.labels) % joints (excluding hip rotation)
     nm  = Data.joints.labels{j};
     if contains(nm,'hip_rotation'), continue; end
-    zvp = sideZVP(jointSide(nm), zvpL, zvpR);
+    zvp = sideZVP(zvpSideJoint(nm), zvpL, zvpR);
     segY{end+1} = segmentAll(t, Data.joints.angles_deg(:,j), zvp, NSEG, INTERP); %#ok<SAGROW>
     segT{end+1} = pct;                                                           %#ok<SAGROW>
     segL{end+1} = sprintf('Joint: %s', nm);                                      %#ok<SAGROW>
@@ -118,14 +118,14 @@ maxLen = max([strideMax(zvpL), strideMax(zvpR), 1]);
 tvec   = (0:maxLen-1)' * dt;
 segYt = {};  segTt = {};
 for i = 1:numel(Data.imu)
-    zvp = sideZVP(imuSide(Data.imu(i).label), zvpL, zvpR);
+    zvp = sideZVP(zvpSideIMU(Data.imu(i).label), zvpL, zvpR);
     segYt{end+1} = segmentAllTime(Data.imu(i).euler_ZXY_deg(:,2), zvp, maxLen); %#ok<SAGROW>
     segTt{end+1} = tvec;                                                        %#ok<SAGROW>
 end
 for j = 1:numel(Data.joints.labels)
     nm = Data.joints.labels{j};
     if contains(nm,'hip_rotation'), continue; end
-    zvp = sideZVP(jointSide(nm), zvpL, zvpR);
+    zvp = sideZVP(zvpSideJoint(nm), zvpL, zvpR);
     segYt{end+1} = segmentAllTime(Data.joints.angles_deg(:,j), zvp, maxLen); %#ok<SAGROW>
     segTt{end+1} = tvec;                                                     %#ok<SAGROW>
 end
@@ -472,6 +472,23 @@ function s = imuSide(label)   % Left / Pelvis / Sternum -> L ; Right -> R
 end
 function s = jointSide(name)
     if endsWith(name,'_r'), s = 'R'; else, s = 'L'; end
+end
+function s = zvpSideIMU(label)
+% Foot-ZVP side used to SEGMENT this IMU. Arm IMUs swing with the CONTRALATERAL
+% leg, so they are cut on the OPPOSITE foot's ZVPs (left arm -> right foot ZVP).
+    s = imuSide(label);
+    if isUpperLimb(label), s = otherSide(s); end
+end
+function s = zvpSideJoint(name)
+% Same contralateral rule for shoulder/elbow joints (arm_* / elbow_*).
+    s = jointSide(name);
+    if isUpperLimb(name), s = otherSide(s); end
+end
+function tf = isUpperLimb(s)   % arm IMU label or shoulder/elbow joint name
+    s = lower(s);  tf = contains(s,'arm') || contains(s,'elbow');
+end
+function s = otherSide(s)
+    if s == 'R', s = 'L'; else, s = 'R'; end
 end
 function zvp = sideZVP(side, zvpL, zvpR)
     if side == 'R', zvp = zvpR; else, zvp = zvpL; end

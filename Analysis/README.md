@@ -111,9 +111,15 @@ and exports.
     (Packet, Euler Z/X/Y, Acc, Gyro; 4 decimals).
   - `AllData_TestN.mat` — `Data` struct (`.time, .fs, .sync, .imu(k), .joints`).
   - Figures: sync check, IMU comparison, combined (joints + IMU).
-- **Conventions:** joints limited to hip/knee/ankle (no hip rotation, no knee
-  beta); Right Thigh & Right Shank (Awinda) Euler angles negated for sign
-  consistency.
+- **Conventions:** joints kept = hip/knee/ankle **and** shoulder/elbow
+  (`arm_flex`, `arm_add`, `elbow_flex`); dropped = knee beta, hip rotation and
+  shoulder rotation (`arm_rot`) — long-axis rotation is the least reliable DOF
+  from a single IMU (add `arm_rot` to the `keepJ` filter to keep it). Right Thigh
+  & Right Shank (Awinda) Euler angles negated for sign consistency (arm IMUs are
+  not negated — add them to `flipChannels` if their L/R signs need it).
+- **Arm sensors** (upper arm + forearm, both sides) are Awinda-only (no Dot
+  counterpart); missing sensor files are skipped with a warning, so this script
+  still runs on older 8-sensor recordings.
 
 ## step4_segmentation.m — Gait events (ZVP) + stride segmentation
 
@@ -126,7 +132,13 @@ every signal into strides — both **normalized** (0-100 %) and **time-domain**.
   midpoint of candidates between consecutive toe-offs.
 - **Segmentation:** each signal cut **mid-stance (ZVP) → next ZVP**. Left-side
   signals use the **Left** foot ZVPs, right-side the **Right** (independent of
-  leading/trailing role). `ZVP_SKIP_START = 1` drops the first transitional stride.
+  leading/trailing role). **Exception — arms:** the upper-arm/forearm IMUs and the
+  shoulder/elbow joints swing with the **contralateral** leg, so they are
+  segmented on the **opposite** foot's ZVPs (left arm → **Right** foot, right arm
+  → **Left** foot) and inherit that foot's terrain / leading-trailing labels in
+  step 5. In step 5's outputs their `.side` still names the physical arm, while
+  `.terrain` / `.role` / `.cycle` refer to the opposite foot's cycle.
+  `ZVP_SKIP_START = 2` drops the first two transitional strides (per foot).
   - **Normalized:** resampled to `NSEG = 200` points (0-100 %).
   - **Time-domain:** same cycles kept as **raw samples**, NaN-padded to the
     longest cycle; relative time (0 s at each cycle start).
@@ -361,3 +373,12 @@ and the walking trace for sanity-checking the reconstruction.
 | Right Thigh | 00B4AB2B | IMU4 |
 | Left Shank | 00B4AB25 | IMU5 |
 | Right Shank | 00B4AB27 | IMU6 |
+| Left Upper Arm | 00B4AB2E | - |
+| Right Upper Arm | 00B4AB31 | - |
+| Left Forearm | 00B4AB28 | - |
+| Right Forearm | 00B4AB2F | - |
+
+Forearm IMUs map to the **ulna** (`ulna_r/l`): the elbow joint is humerus→ulna,
+so the ulna's orientation gives a clean elbow-flexion angle. Shoulder (3-DOF
+`acromial`) and elbow (`elbow`) come from the Rajagopal model; no model edit is
+needed — OpenSense builds the sensor frames during calibration.

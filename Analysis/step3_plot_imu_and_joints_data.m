@@ -73,13 +73,16 @@ EXPORT_RESOLUTION = 300;
 %% ========================================================================
 subjFolder = ['Test ' num2str(subjectNumber)];
 bodyOrder = {'Left Foot','Right Foot','Left Thigh','Right Thigh', ...
-             'Left Shank','Right Shank','Pelvis','Sternum'};
+             'Left Shank','Right Shank','Pelvis','Sternum', ...
+             'Left Upper Arm','Right Upper Arm','Left Forearm','Right Forearm'};
 
 systems(1).name='Awinda'; systems(1).folder='Awinda IMUs'; systems(1).rate=RATE_AWINDA; systems(1).ext='txt'; systems(1).euler='ZXY';
 systems(1).defs = { '00B4AB26','Sternum'; '00B4AB22','Pelvis'; ...
                     '00B4AB23','Left Foot'; '00B4AB29','Right Foot'; ...
                     '00B4AB2D','Left Thigh'; '00B4AB2B','Right Thigh'; ...
-                    '00B4AB25','Left Shank'; '00B4AB27','Right Shank' };
+                    '00B4AB25','Left Shank'; '00B4AB27','Right Shank'; ...
+                    '00B4AB2E','Left Upper Arm'; '00B4AB31','Right Upper Arm'; ...
+                    '00B4AB28','Left Forearm';   '00B4AB2F','Right Forearm' };
 
 systems(2).name='Dot'; systems(2).folder='Dot IMUs'; systems(2).rate=RATE_DOT; systems(2).ext='csv'; systems(2).euler='ZYX';
 systems(2).defs = { 'IMU1','Left Foot'; 'IMU2','Right Foot'; ...
@@ -130,6 +133,7 @@ for b = 1:numel(bodyOrder)
             M = M(m,:); pkt = pkt(m);
             t = (pkt - dotStart) / S0.rate;           % shared zero across Dot IMUs
         else
+            pkt = unwrapCounter(pkt, 65536);          % undo Awinda 16-bit PacketCounter rollover
             t = (pkt - pkt(1)) / S0.rate;             % time from this device's packets
         end
         Q = contigQuat(getQuatCols(cols, M));            % raw quaternion [w x y z], sign-continuous
@@ -273,10 +277,14 @@ else
     [~,nw] = max([mots.datenum]);
     motFile = fullfile(ikDir, mots(nw).name);
     [jt, jData, jLabels] = readMot(motFile);          % jt in s, jData N x nJoint
-    % Keep only ankle / knee / hip coordinates (drop knee beta and hip rotation).
+    % Keep lower-limb (ankle / knee / hip) AND upper-limb (shoulder / elbow)
+    % coordinates. Drop knee beta, hip rotation, and shoulder rotation (arm_rot) -
+    % rotation about the long axis is the least reliable DOF from a single IMU, so
+    % it is excluded here just like hip_rotation. Add 'arm_rot' back to keep it.
     keepJ = (contains(jLabels,'hip') | contains(jLabels,'knee_angle') | ...
-             contains(jLabels,'ankle_angle')) & ~contains(jLabels,'beta') ...
-             & ~contains(jLabels,'hip_rotation');
+             contains(jLabels,'ankle_angle') | contains(jLabels,'arm_flex') | ...
+             contains(jLabels,'arm_add') | contains(jLabels,'elbow_flex')) ...
+             & ~contains(jLabels,'beta') & ~contains(jLabels,'hip_rotation');
     jLabels = jLabels(keepJ);  jData = jData(:, keepJ);
     nBefore = numel(jt);
     fsJ = 1/median(diff(jt));
@@ -419,7 +427,9 @@ if exist('tg','var') && ~isempty(tg)
         'Awinda IMUs Foot',               {'Left Foot (Awinda)','Left'; 'Right Foot (Awinda)','Right'};
         'Awinda IMUs Thigh',              {'Left Thigh (Awinda)','Left';'Right Thigh (Awinda)','Right'};
         'Awinda IMUs Shank',              {'Left Shank (Awinda)','Left';'Right Shank (Awinda)','Right'};
-        'Awinda IMUs Pelvis and Sternum', {'Pelvis (Awinda)','Pelvis';  'Sternum (Awinda)','Sternum'} };
+        'Awinda IMUs Pelvis and Sternum', {'Pelvis (Awinda)','Pelvis';  'Sternum (Awinda)','Sternum'};
+        'Awinda IMUs Arms',               {'Left Upper Arm (Awinda)','LeftUpperArm'; 'Right Upper Arm (Awinda)','RightUpperArm'; ...
+                                           'Left Forearm (Awinda)','LeftForearm';    'Right Forearm (Awinda)','RightForearm'} };
 
     nSheets = 0;
     for sh = 1:size(sheetSpec,1)
@@ -561,6 +571,18 @@ end
 function fp = findFile(dataDir, pattern)
     d = dir(fullfile(dataDir, pattern));
     if isempty(d), fp = ''; else, fp = fullfile(dataDir, d(1).name); end
+end
+
+function p = unwrapCounter(p, modulus)
+% Undo the rollover of a fixed-width sample counter (Awinda's PacketCounter is
+% 16-bit and wraps 65535 -> 0). Each backward jump larger than half the modulus
+% is one wrap; add the modulus to every sample after it so the counter becomes
+% monotonic and packet-derived time stays increasing. Forward gaps (dropped
+% packets) are left untouched.
+    p = p(:);
+    if numel(p) < 2, return; end
+    wraps = cumsum(diff(p) < -modulus/2);   % +1 at each rollover
+    p(2:end) = p(2:end) + wraps * modulus;
 end
 
 function [cols, M] = readIMUFile(file)

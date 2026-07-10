@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<OpenSimDocument Version="40500">
+	<IMUInverseKinematicsTool>
+		<!--Name of the directory where results are written. Be default this is the directory in which the setup file is be  executed.-->
+		<results_directory>C:\Users\BiomechanicsLab2\AppData\Local\Temp\OpenSense\Test 13\IKResults</results_directory>
+		<!--Name/path to the xml .osim file.-->
+		<model_file>C:\Users\BiomechanicsLab2\AppData\Local\Temp\OpenSense\Test 13\Rajagopal_2015_calibrated.osim</model_file>
+		<!--The time range for the study.-->
+		<time_range>0 218.375</time_range>
+		<!--Space fixed Euler angles (XYZ order) from IMU Space to OpenSim. Default to (0, 0, 0).-->
+		<sensor_to_opensim_rotations>-1.5707963267948966 0 0</sensor_to_opensim_rotations>
+		<!--Name/path to a .sto file of sensor frame orientations as quaternions.-->
+		<orientations_file>C:\Users\BiomechanicsLab2\AppData\Local\Temp\OpenSense\Test 13\STOFiles\MT_2026-07-10_10h04_01210270-000-000_orientations.sto</orientations_file>
+	</IMUInverseKinematicsTool>
+</OpenSimDocument>

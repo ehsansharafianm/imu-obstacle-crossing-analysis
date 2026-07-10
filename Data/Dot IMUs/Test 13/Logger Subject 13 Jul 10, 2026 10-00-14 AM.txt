@@ -1,0 +1,1508 @@
+Jul 10, 2026 10:00:14 AM: Subject number set: 13
+Jul 10, 2026 10:00:14 AM: Log File Created
+Jul 10, 2026 10:00:15 AM: === IMU Discovery Mode Started ===
+Jul 10, 2026 10:00:15 AM: Scanning for all available Xsens DOT devices...
+Jul 10, 2026 10:00:15 AM: Discovery scan started - searching for 5 seconds...
+Jul 10, 2026 10:00:15 AM: IMU Found: Address= D4:22:CD:00:63:D6, Tag= V2–16
+Jul 10, 2026 10:00:15 AM: IMU Found: Address= D4:22:CD:00:63:7D, Tag= V2–15
+Jul 10, 2026 10:00:15 AM: IMU Found: Address= D4:22:CD:00:9F:95, Tag= V2–20
+Jul 10, 2026 10:00:15 AM: IMU Found: Address= D4:22:CD:00:A1:5B, Tag= V2–12
+Jul 10, 2026 10:00:15 AM: IMU Found: Address= D4:22:CD:00:63:A4, Tag= V2–19
+Jul 10, 2026 10:00:15 AM: IMU Found: Address= D4:22:CD:00:63:8B, Tag= V2–17
+Jul 10, 2026 10:00:15 AM: IMU Found: Address= D4:22:CD:00:A7:91, Tag= V2–13
+Jul 10, 2026 10:00:16 AM: IMU Found: Address= D4:22:CD:00:A1:76, Tag= V2–18
+Jul 10, 2026 10:00:20 AM: ===== Discovery scan stopped. Found 8 devices =====
+Jul 10, 2026 10:00:57 AM: IMU1: V2–16, MAC: D4:22:CD:00:63:D6
+Jul 10, 2026 10:00:57 AM: IMU2: V2–17, MAC: D4:22:CD:00:63:8B
+Jul 10, 2026 10:00:57 AM: IMU3: V2–18, MAC: D4:22:CD:00:A1:76
+Jul 10, 2026 10:00:57 AM: IMU4: V2–19, MAC: D4:22:CD:00:63:A4
+Jul 10, 2026 10:00:57 AM: IMU5: V2–20, MAC: D4:22:CD:00:9F:95
+Jul 10, 2026 10:00:57 AM: IMU6: V2–15, MAC: D4:22:CD:00:63:7D
+Jul 10, 2026 10:00:57 AM: Scan started!
+Jul 10, 2026 10:00:57 AM: IMU4 disconnected
+Jul 10, 2026 10:00:57 AM: IMU4 IMU scanned
+Jul 10, 2026 10:00:57 AM: IMU5 disconnected
+Jul 10, 2026 10:00:57 AM: IMU5 IMU scanned
+Jul 10, 2026 10:00:57 AM: IMU1 IMU is disconnected!
+Jul 10, 2026 10:00:57 AM: IMU1 IMU scanned
+Jul 10, 2026 10:00:57 AM: IMU4 connected
+Jul 10, 2026 10:00:58 AM: IMU1 IMU is connected!
+Jul 10, 2026 10:00:58 AM: IMU2 IMU is disconnected!
+Jul 10, 2026 10:00:58 AM: IMU2 IMU scanned
+Jul 10, 2026 10:00:58 AM: IMU5 connected
+Jul 10, 2026 10:00:58 AM: IMU2 IMU is connected!
+Jul 10, 2026 10:00:58 AM: IMU3 disconnected
+Jul 10, 2026 10:00:58 AM: IMU3 IMU scanned
+Jul 10, 2026 10:00:59 AM: IMU6 disconnected
+Jul 10, 2026 10:00:59 AM: IMU6 IMU scanned
+Jul 10, 2026 10:00:59 AM: All 6 devices scanned
+Jul 10, 2026 10:00:59 AM: IMU3 connected
+Jul 10, 2026 10:00:59 AM: IMU6 connected
+Jul 10, 2026 10:01:01 AM: IMU5 init done
+Jul 10, 2026 10:01:03 AM: IMU6 init done
+Jul 10, 2026 10:01:03 AM: IMU5 enableDataRecordingNotification called
+Jul 10, 2026 10:01:03 AM: onDotRecordingNotification: D4:22:CD:00:9F:95 isEnabled=true isExporting=false
+Jul 10, 2026 10:01:03 AM: IMU5 eraseRecordingData called
+Jul 10, 2026 10:01:05 AM: IMU6 enableDataRecordingNotification called
+Jul 10, 2026 10:01:05 AM: onDotRecordingNotification: D4:22:CD:00:63:7D isEnabled=true isExporting=false
+Jul 10, 2026 10:01:05 AM: IMU6 eraseRecordingData called
+Jul 10, 2026 10:02:19 AM: onDotEraseDone: D4:22:CD:00:9F:95 success=true
+Jul 10, 2026 10:02:19 AM: IMU5 erase done
+Jul 10, 2026 10:02:20 AM: onDotEraseDone: D4:22:CD:00:63:7D success=true
+Jul 10, 2026 10:02:20 AM: IMU6 erase done
+Jul 10, 2026 10:02:20 AM: Both recording IMUs erased and ready
+Jul 10, 2026 10:02:20 AM: IMU5 and IMU6 erase complete — sync button enabled
+Jul 10, 2026 10:02:32 AM: Start Sync clicked. Device list size: 6
+Jul 10, 2026 10:02:32 AM: Sync requested.
+Jul 10, 2026 10:02:33 AM: IMU1 IMU is disconnected!
+Jul 10, 2026 10:02:33 AM: IMU4 disconnected
+Jul 10, 2026 10:02:33 AM: IMU5 disconnected
+Jul 10, 2026 10:02:33 AM: IMU3 disconnected
+Jul 10, 2026 10:02:33 AM: IMU2 IMU is disconnected!
+Jul 10, 2026 10:02:33 AM: IMU6 disconnected
+Jul 10, 2026 10:02:47 AM: IMU1 IMU is disconnected!
+Jul 10, 2026 10:02:47 AM: IMU4 disconnected
+Jul 10, 2026 10:02:47 AM: IMU5 disconnected
+Jul 10, 2026 10:02:47 AM: IMU3 disconnected
+Jul 10, 2026 10:02:47 AM: IMU2 IMU is disconnected!
+Jul 10, 2026 10:02:47 AM: IMU6 disconnected
+Jul 10, 2026 10:02:47 AM: IMU1 IMU is connected!
+Jul 10, 2026 10:02:48 AM: IMU4 connected
+Jul 10, 2026 10:02:48 AM: IMU3 connected
+Jul 10, 2026 10:02:48 AM: IMU6 connected
+Jul 10, 2026 10:02:48 AM: IMU2 IMU is connected!
+Jul 10, 2026 10:02:48 AM: IMU5 connected
+Jul 10, 2026 10:02:51 AM: IMU6 init done
+Jul 10, 2026 10:02:51 AM: IMU5 init done
+Jul 10, 2026 10:02:51 AM: ---------- Syncing done ----------
+Jul 10, 2026 10:02:53 AM: IMU6 re-enabled notifications after sync reconnect
+Jul 10, 2026 10:02:53 AM: onDotRecordingNotification: D4:22:CD:00:63:7D isEnabled=true isExporting=false
+Jul 10, 2026 10:02:53 AM: IMU5 re-enabled notifications after sync reconnect
+Jul 10, 2026 10:02:53 AM: onDotRecordingNotification: D4:22:CD:00:9F:95 isEnabled=true isExporting=false
+Jul 10, 2026 10:03:21 AM: ---------- Syncing done ----------
+Jul 10, 2026 10:03:21 AM: (Main): --- Syncing is done! ---- 
+Jul 10, 2026 10:04:09 AM: IMU1_V2-16_Jul 10, 2026 10:04:09 AM, Subject 13.csv created
+Jul 10, 2026 10:04:09 AM: IMU2_V2-17_Jul 10, 2026 10:04:09 AM, Subject 13.csv created
+Jul 10, 2026 10:04:09 AM: IMU3_V2-18_Jul 10, 2026 10:04:09 AM, Subject 13.csv created
+Jul 10, 2026 10:04:09 AM: IMU4_V2-19_Jul 10, 2026 10:04:09 AM, Subject 13.csv created
+Jul 10, 2026 10:04:09 AM: Feature log created for IMU1: FeatureLog_IMU1_Subject13_Jul 10, 2026 10:04:09 AM.csv
+Jul 10, 2026 10:04:09 AM: Feature log created for IMU2: FeatureLog_IMU2_Subject13_Jul 10, 2026 10:04:09 AM.csv
+Jul 10, 2026 10:04:09 AM: Feature logging initialized for all IMUs
+Jul 10, 2026 10:04:09 AM: IMU1 measuring
+Jul 10, 2026 10:04:09 AM: IMU2 measuring
+Jul 10, 2026 10:04:09 AM: IMU3 measuring
+Jul 10, 2026 10:04:09 AM: IMU4 measuring
+Jul 10, 2026 10:04:09 AM: IMU5 recording started
+Jul 10, 2026 10:04:09 AM: IMU6 recording started
+Jul 10, 2026 10:04:09 AM: IMU6 start recording ack: OK state=success
+Jul 10, 2026 10:04:09 AM: IMU5 start recording ack: OK state=success
+Jul 10, 2026 10:04:16 AM:  ---- Data is Logging -----
+Jul 10, 2026 10:04:34 AM: ZUPT IMU1 pkt:1509 t:0s accel:0 gyro:0
+Jul 10, 2026 10:04:34 AM: ZUPT IMU2 pkt:1508 t:0s accel:0 gyro:0
+Jul 10, 2026 10:04:35 AM: ZUPT IMU2 pkt:1540 t:0.533s accel:-0.01 gyro:0.01
+Jul 10, 2026 10:04:35 AM: CAL IMU2 Win#1 skipped (terrain: NA)
+Jul 10, 2026 10:04:35 AM: ZUPT IMU1 pkt:1546 t:0.617s accel:-0.009 gyro:-0.167
+Jul 10, 2026 10:04:35 AM: CAL IMU1 Win#1 skipped (terrain: NA)
+Jul 10, 2026 10:04:36 AM: ZUPT IMU1 pkt:1582 t:0.6s accel:0.003 gyro:-0.299
+Jul 10, 2026 10:04:36 AM: ZUPT IMU2 pkt:1575 t:0.583s accel:-0.003 gyro:0.029
+Jul 10, 2026 10:04:36 AM: CAL IMU1 Win#2 skipped (terrain: NA)
+Jul 10, 2026 10:04:36 AM: CAL IMU2 Win#2 skipped (terrain: NA)
+Jul 10, 2026 10:04:36 AM: ZUPT IMU2 pkt:1606 t:0.517s accel:-0.009 gyro:-0.053
+Jul 10, 2026 10:04:36 AM: CAL IMU2 Win#3 skipped (terrain: NA)
+Jul 10, 2026 10:04:36 AM: ZUPT IMU1 pkt:1621 t:0.65s accel:0.001 gyro:-0.054
+Jul 10, 2026 10:04:36 AM: CAL IMU1 Win#3 skipped (terrain: NA)
+Jul 10, 2026 10:04:36 AM: Initial values for IMU4 IMU:
+Jul 10, 2026 10:04:36 AM: Initial values for IMU1 IMU:
+Jul 10, 2026 10:04:36 AM:   Roll: -92.873
+Jul 10, 2026 10:04:36 AM:   Gyro: 2.305
+Jul 10, 2026 10:04:36 AM:   Accel: 9.828
+Jul 10, 2026 10:04:36 AM:   Roll: -32.477
+Jul 10, 2026 10:04:36 AM: Initial values for IMU3 IMU:
+Jul 10, 2026 10:04:36 AM:   Roll: -97.149
+Jul 10, 2026 10:04:36 AM:   Gyro: 1.985
+Jul 10, 2026 10:04:36 AM:   Gyro: 2.761
+Jul 10, 2026 10:04:36 AM:   Accel: 9.681
+Jul 10, 2026 10:04:36 AM:   Accel: 10.147
+Jul 10, 2026 10:04:36 AM: Initial values for IMU2 IMU:
+Jul 10, 2026 10:04:36 AM:   Roll: -28.741
+Jul 10, 2026 10:04:36 AM:   Gyro: 4.095
+Jul 10, 2026 10:04:36 AM:   Accel: 9.833
+Jul 10, 2026 10:04:37 AM: ZUPT IMU2 pkt:1639 t:0.55s accel:0 gyro:0.058
+Jul 10, 2026 10:04:37 AM: CAL IMU2 Win#4 skipped (terrain: NA)
+Jul 10, 2026 10:04:37 AM: ZUPT IMU1 pkt:1653 t:0.533s accel:-0.02 gyro:-0.293
+Jul 10, 2026 10:04:37 AM: CAL IMU1 Win#4 skipped (terrain: NA)
+Jul 10, 2026 10:04:37 AM: ZUPT IMU2 pkt:1669 t:0.5s accel:-0.199 gyro:0.276
+Jul 10, 2026 10:04:37 AM: CAL IMU2 Win#5 skipped (terrain: NA)
+Jul 10, 2026 10:04:37 AM: ZUPT IMU1 pkt:1686 t:0.55s accel:-0.088 gyro:1.244
+Jul 10, 2026 10:04:37 AM: CAL IMU1 Win#5 skipped (terrain: NA)
+Jul 10, 2026 10:04:38 AM: ZUPT IMU2 pkt:1736 t:1.117s accel:0.029 gyro:-0.161
+Jul 10, 2026 10:04:38 AM: CAL IMU2 [1/10] bias:0.013
+Jul 10, 2026 10:04:39 AM: ZUPT IMU1 pkt:1778 t:1.533s accel:-0.075 gyro:-0.272
+Jul 10, 2026 10:04:39 AM: CAL IMU1 [1/10] bias:0.035
+Jul 10, 2026 10:04:40 AM: ZUPT IMU2 pkt:1819 t:1.383s accel:0.077 gyro:0.731
+Jul 10, 2026 10:04:40 AM: CAL IMU2 [2/10] bias:0.044
+Jul 10, 2026 10:04:40 AM: ZUPT IMU1 pkt:1849 t:1.183s accel:0.447 gyro:3.821
+Jul 10, 2026 10:04:40 AM: CAL IMU1 [2/10] bias:0.075
+Jul 10, 2026 10:04:41 AM: ZUPT IMU2 pkt:1888 t:1.15s accel:0.042 gyro:6.264
+Jul 10, 2026 10:04:41 AM: CAL IMU2 [3/10] bias:0.043
+Jul 10, 2026 10:04:41 AM: ZUPT IMU1 pkt:1926 t:1.283s accel:-0.084 gyro:-0.238
+Jul 10, 2026 10:04:41 AM: CAL IMU1 [3/10] bias:0.053
+Jul 10, 2026 10:04:42 AM: ZUPT IMU2 pkt:1971 t:1.383s accel:0.052 gyro:-0.097
+Jul 10, 2026 10:04:42 AM: CAL IMU2 [4/10] bias:0.036
+Jul 10, 2026 10:04:43 AM: ZUPT IMU1 pkt:1996 t:1.167s accel:0.103 gyro:-0.663
+Jul 10, 2026 10:04:43 AM: CAL IMU1 [4/10] bias:0.043
+Jul 10, 2026 10:04:43 AM: ZUPT IMU2 pkt:2032 t:1.017s accel:-0.632 gyro:3.098
+Jul 10, 2026 10:04:43 AM: CAL IMU2 [5/10] bias:0.043
+Jul 10, 2026 10:04:44 AM: ZUPT IMU1 pkt:2072 t:1.267s accel:-0.59 gyro:3.019
+Jul 10, 2026 10:04:44 AM: CAL IMU1 [5/10] bias:0.063
+Jul 10, 2026 10:04:44 AM: ZUPT IMU2 pkt:2102 t:1.167s accel:-0.378 gyro:1.634
+Jul 10, 2026 10:04:44 AM: CAL IMU2 [6/10] bias:0.051
+Jul 10, 2026 10:04:45 AM: ZUPT IMU1 pkt:2140 t:1.133s accel:0.074 gyro:-0.328
+Jul 10, 2026 10:04:45 AM: CAL IMU1 [6/10] bias:0.043
+Jul 10, 2026 10:04:46 AM: ZUPT IMU2 pkt:2176 t:1.233s accel:-0.634 gyro:4.135
+Jul 10, 2026 10:04:46 AM: CAL IMU2 [7/10] bias:0.065
+Jul 10, 2026 10:04:46 AM: ZUPT IMU1 pkt:2213 t:1.217s accel:0.035 gyro:-0.058
+Jul 10, 2026 10:04:46 AM: CAL IMU1 [7/10] bias:0.062
+Jul 10, 2026 10:04:47 AM: ZUPT IMU2 pkt:2258 t:1.367s accel:0.017 gyro:-0.977
+Jul 10, 2026 10:04:47 AM: CAL IMU2 [8/10] bias:0.016
+Jul 10, 2026 10:04:47 AM: ZUPT IMU1 pkt:2285 t:1.2s accel:0.092 gyro:-0.992
+Jul 10, 2026 10:04:47 AM: CAL IMU1 [8/10] bias:0.066
+Jul 10, 2026 10:04:48 AM: ZUPT IMU2 pkt:2321 t:1.05s accel:-0.052 gyro:-0.164
+Jul 10, 2026 10:04:48 AM: CAL IMU2 [9/10] bias:0.056
+Jul 10, 2026 10:04:49 AM: ZUPT IMU1 pkt:2359 t:1.233s accel:0.068 gyro:-1.395
+Jul 10, 2026 10:04:49 AM: CAL IMU1 [9/10] bias:0.07
+Jul 10, 2026 10:04:49 AM: ZUPT IMU2 pkt:2396 t:1.25s accel:-0.395 gyro:-1.842
+Jul 10, 2026 10:04:49 AM: CAL IMU2 [10/10] bias:0.072
+Jul 10, 2026 10:04:49 AM: ==========================================
+Jul 10, 2026 10:04:49 AM: PERFORMING CALIBRATION WITH IQR FILTERING
+Jul 10, 2026 10:04:49 AM: ==========================================
+Jul 10, 2026 10:04:49 AM: Magnitude Q25: 0.036
+Jul 10, 2026 10:04:49 AM: Magnitude Q75: 0.056
+Jul 10, 2026 10:04:49 AM: IQR subset size: 6 out of 10 windows
+Jul 10, 2026 10:04:49 AM: Removed 4 outliers
+Jul 10, 2026 10:04:49 AM: Step 1: Baseline (μ_HS) from IQR = 0.044
+Jul 10, 2026 10:04:49 AM: Step 2: MAD from ALL data = 0.01
+Jul 10, 2026 10:04:49 AM: Step 3: Robust Spread (σ_HS) = 0.116
+Jul 10, 2026 10:04:49 AM: ==========================================
+Jul 10, 2026 10:04:49 AM: CALIBRATION COMPLETE!
+Jul 10, 2026 10:04:49 AM: ==========================================
+Jul 10, 2026 10:04:49 AM: Parameters:
+Jul 10, 2026 10:04:49 AM:   μ_HS (baseline) = 0.044
+Jul 10, 2026 10:04:49 AM:   σ_HS (spread), constant = 0.116
+Jul 10, 2026 10:04:49 AM:   k₁ (ramp) = 1.2
+Jul 10, 2026 10:04:49 AM:   k₂ (stair) = 3.2
+Jul 10, 2026 10:04:49 AM: ------------------------------------------
+Jul 10, 2026 10:04:49 AM: Calculated Thresholds:
+Jul 10, 2026 10:04:49 AM:   Stair Ascend:  > 0.414
+Jul 10, 2026 10:04:49 AM:   Ramp Ascend:   > 0.182
+Jul 10, 2026 10:04:49 AM:   Level Walk:    -0.095 to 0.182
+Jul 10, 2026 10:04:49 AM:   Ramp Descend:  < -0.095
+Jul 10, 2026 10:04:49 AM:   Stair Descend: < -0.326
+Jul 10, 2026 10:04:49 AM: ==========================================
+Jul 10, 2026 10:04:49 AM: >>> CALIBRATION COMPLETE: IMU2 - terrain classification active
+Jul 10, 2026 10:04:50 AM: ZUPT IMU1 pkt:2434 t:1.25s accel:0.419 gyro:8.101
+Jul 10, 2026 10:04:50 AM: CAL IMU1 [10/10] bias:0.067
+Jul 10, 2026 10:04:50 AM: ==========================================
+Jul 10, 2026 10:04:50 AM: PERFORMING CALIBRATION WITH IQR FILTERING
+Jul 10, 2026 10:04:50 AM: ==========================================
+Jul 10, 2026 10:04:50 AM: Magnitude Q25: 0.043
+Jul 10, 2026 10:04:50 AM: Magnitude Q75: 0.067
+Jul 10, 2026 10:04:50 AM: IQR subset size: 6 out of 10 windows
+Jul 10, 2026 10:04:50 AM: Removed 4 outliers
+Jul 10, 2026 10:04:50 AM: Step 1: Baseline (μ_HS) from IQR = 0.063
+Jul 10, 2026 10:04:50 AM: Step 2: MAD from ALL data = 0.008
+Jul 10, 2026 10:04:50 AM: Step 3: Robust Spread (σ_HS) = 0.116
+Jul 10, 2026 10:04:50 AM: ==========================================
+Jul 10, 2026 10:04:50 AM: CALIBRATION COMPLETE!
+Jul 10, 2026 10:04:50 AM: ==========================================
+Jul 10, 2026 10:04:50 AM: Parameters:
+Jul 10, 2026 10:04:50 AM:   μ_HS (baseline) = 0.063
+Jul 10, 2026 10:04:50 AM:   σ_HS (spread), constant = 0.116
+Jul 10, 2026 10:04:50 AM:   k₁ (ramp) = 1.2
+Jul 10, 2026 10:04:50 AM:   k₂ (stair) = 3.2
+Jul 10, 2026 10:04:50 AM: ------------------------------------------
+Jul 10, 2026 10:04:50 AM: Calculated Thresholds:
+Jul 10, 2026 10:04:50 AM:   Stair Ascend:  > 0.433
+Jul 10, 2026 10:04:50 AM:   Ramp Ascend:   > 0.201
+Jul 10, 2026 10:04:50 AM:   Level Walk:    -0.076 to 0.201
+Jul 10, 2026 10:04:50 AM:   Ramp Descend:  < -0.076
+Jul 10, 2026 10:04:50 AM:   Stair Descend: < -0.307
+Jul 10, 2026 10:04:50 AM: ==========================================
+Jul 10, 2026 10:04:50 AM: >>> CALIBRATION COMPLETE: IMU1 - terrain classification active
+Jul 10, 2026 10:04:51 AM: ZUPT IMU2 pkt:2478 t:1.367s accel:0.2 gyro:3.467
+Jul 10, 2026 10:04:51 AM: WIN IMU2 #16 bias:0.032 -> Level_Walk
+Jul 10, 2026 10:04:51 AM: IMU2 Win#16 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:04:51 AM: Feature data logged for IMU2: Window #16 | Level_Walk
+Jul 10, 2026 10:04:51 AM: ZUPT IMU1 pkt:2515 t:1.35s accel:-0.018 gyro:3.223
+Jul 10, 2026 10:04:51 AM: WIN IMU1 #16 bias:0.05 -> Level_Walk
+Jul 10, 2026 10:04:51 AM: IMU1 Win#16 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:04:51 AM: Feature data logged for IMU1: Window #16 | Level_Walk
+Jul 10, 2026 10:04:52 AM: ZUPT IMU2 pkt:2563 t:1.417s accel:-0.055 gyro:-2.584
+Jul 10, 2026 10:04:52 AM: WIN IMU2 #17 bias:-0.02 -> Level_Walk
+Jul 10, 2026 10:04:52 AM: IMU2 Win#17 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:04:52 AM: Feature data logged for IMU2: Window #17 | Level_Walk
+Jul 10, 2026 10:04:52 AM: ZUPT IMU1 pkt:2597 t:1.367s accel:0.085 gyro:0.081
+Jul 10, 2026 10:04:52 AM: WIN IMU1 #17 bias:-0.003 -> Level_Walk
+Jul 10, 2026 10:04:52 AM: IMU1 Win#17 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:04:52 AM: Feature data logged for IMU1: Window #17 | Level_Walk
+Jul 10, 2026 10:04:53 AM: ZUPT IMU2 pkt:2647 t:1.4s accel:0.127 gyro:0.84
+Jul 10, 2026 10:04:53 AM: WIN IMU2 #18 bias:0.011 -> Level_Walk
+Jul 10, 2026 10:04:53 AM: IMU2 Win#18 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:04:53 AM: Feature data logged for IMU2: Window #18 | Level_Walk
+Jul 10, 2026 10:04:54 AM: ZUPT IMU1 pkt:2672 t:1.25s accel:-0.127 gyro:9.501
+Jul 10, 2026 10:04:54 AM: WIN IMU1 #18 bias:0.011 -> Level_Walk
+Jul 10, 2026 10:04:54 AM: IMU1 Win#18 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:04:54 AM: Feature data logged for IMU1: Window #18 | Level_Walk
+Jul 10, 2026 10:04:55 AM: ZUPT IMU2 pkt:2718 t:1.183s accel:-0.121 gyro:-0.42
+Jul 10, 2026 10:04:55 AM: WIN IMU2 #19 bias:0.008 -> Level_Walk
+Jul 10, 2026 10:04:55 AM: IMU2 Win#19 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:04:55 AM: Feature data logged for IMU2: Window #19 | Level_Walk
+Jul 10, 2026 10:04:55 AM: ZUPT IMU1 pkt:2750 t:1.3s accel:-0.082 gyro:1.845
+Jul 10, 2026 10:04:55 AM: WIN IMU1 #19 bias:-0.002 -> Level_Walk
+Jul 10, 2026 10:04:55 AM: IMU1 Win#19 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:04:55 AM: Feature data logged for IMU1: Window #19 | Level_Walk
+Jul 10, 2026 10:04:56 AM: ZUPT IMU2 pkt:2792 t:1.233s accel:-0.045 gyro:1.692
+Jul 10, 2026 10:04:56 AM: WIN IMU2 #20 bias:-0.007 -> Level_Walk
+Jul 10, 2026 10:04:56 AM: IMU2 Win#20 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:04:56 AM: Feature data logged for IMU2: Window #20 | Level_Walk
+Jul 10, 2026 10:04:56 AM: ZUPT IMU1 pkt:2827 t:1.283s accel:-0.11 gyro:5.462
+Jul 10, 2026 10:04:56 AM: WIN IMU1 #20 bias:0.004 -> Level_Walk
+Jul 10, 2026 10:04:56 AM: IMU1 Win#20 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:04:56 AM: Feature data logged for IMU1: Window #20 | Level_Walk
+Jul 10, 2026 10:04:57 AM: ZUPT IMU2 pkt:2874 t:1.367s accel:0.132 gyro:3.756
+Jul 10, 2026 10:04:57 AM: WIN IMU2 #21 bias:-0.005 -> Level_Walk
+Jul 10, 2026 10:04:57 AM: IMU2 Win#21 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:04:57 AM: Feature data logged for IMU2: Window #21 | Level_Walk
+Jul 10, 2026 10:04:58 AM: ZUPT IMU1 pkt:2906 t:1.317s accel:0.086 gyro:6.906
+Jul 10, 2026 10:04:58 AM: WIN IMU1 #21 bias:0.016 -> Level_Walk
+Jul 10, 2026 10:04:58 AM: IMU1 Win#21 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:04:58 AM: Feature data logged for IMU1: Window #21 | Level_Walk
+Jul 10, 2026 10:04:58 AM: ZUPT IMU2 pkt:2948 t:1.233s accel:0.083 gyro:0.611
+Jul 10, 2026 10:04:58 AM: WIN IMU2 #22 bias:0.002 -> Level_Walk
+Jul 10, 2026 10:04:58 AM: IMU2 Win#22 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:04:58 AM: Feature data logged for IMU2: Window #22 | Level_Walk
+Jul 10, 2026 10:04:59 AM: ZUPT IMU1 pkt:2974 t:1.133s accel:0.151 gyro:4.005
+Jul 10, 2026 10:04:59 AM: WIN IMU1 #22 bias:0.027 -> Level_Walk
+Jul 10, 2026 10:04:59 AM: IMU1 Win#22 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:04:59 AM: Feature data logged for IMU1: Window #22 | Level_Walk
+Jul 10, 2026 10:05:00 AM: ZUPT IMU2 pkt:3023 t:1.25s accel:0.139 gyro:0.892
+Jul 10, 2026 10:05:00 AM: WIN IMU2 #23 bias:-0.004 -> Level_Walk
+Jul 10, 2026 10:05:00 AM: IMU2 Win#23 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:00 AM: Feature data logged for IMU2: Window #23 | Level_Walk
+Jul 10, 2026 10:05:00 AM: ZUPT IMU1 pkt:3051 t:1.283s accel:-0.161 gyro:9.033
+Jul 10, 2026 10:05:00 AM: WIN IMU1 #23 bias:0.042 -> Level_Walk
+Jul 10, 2026 10:05:00 AM: IMU1 Win#23 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:00 AM: Feature data logged for IMU1: Window #23 | Level_Walk
+Jul 10, 2026 10:05:01 AM: ZUPT IMU2 pkt:3094 t:1.183s accel:0.128 gyro:3.531
+Jul 10, 2026 10:05:01 AM: WIN IMU2 #24 bias:-0.001 -> Level_Walk
+Jul 10, 2026 10:05:01 AM: IMU2 Win#24 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:01 AM: Feature data logged for IMU2: Window #24 | Level_Walk
+Jul 10, 2026 10:05:01 AM: ZUPT IMU1 pkt:3123 t:1.2s accel:-0.232 gyro:8.991
+Jul 10, 2026 10:05:01 AM: WIN IMU1 #24 bias:0.041 -> Level_Walk
+Jul 10, 2026 10:05:01 AM: IMU1 Win#24 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:01 AM: Feature data logged for IMU1: Window #24 | Level_Walk
+Jul 10, 2026 10:05:02 AM: ZUPT IMU2 pkt:3159 t:1.083s accel:0.274 gyro:11.084
+Jul 10, 2026 10:05:02 AM: WIN IMU2 #25 bias:0.026 -> Level_Walk
+Jul 10, 2026 10:05:02 AM: IMU2 Win#25 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:02 AM: Feature data logged for IMU2: Window #25 | Level_Walk
+Jul 10, 2026 10:05:03 AM: ZUPT IMU1 pkt:3196 t:1.217s accel:0.333 gyro:0.6
+Jul 10, 2026 10:05:03 AM: WIN IMU1 #25 bias:0.028 -> Level_Walk
+Jul 10, 2026 10:05:03 AM: IMU1 Win#25 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:03 AM: Feature data logged for IMU1: Window #25 | Level_Walk
+Jul 10, 2026 10:05:03 AM: ZUPT IMU2 pkt:3233 t:1.233s accel:-0.044 gyro:0.33
+Jul 10, 2026 10:05:03 AM: WIN IMU2 #26 bias:0.035 -> Level_Walk
+Jul 10, 2026 10:05:03 AM: IMU2 Win#26 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:03 AM: Feature data logged for IMU2: Window #26 | Level_Walk
+Jul 10, 2026 10:05:04 AM: ZUPT IMU1 pkt:3270 t:1.233s accel:0.104 gyro:-0.809
+Jul 10, 2026 10:05:04 AM: WIN IMU1 #26 bias:0.012 -> Level_Walk
+Jul 10, 2026 10:05:04 AM: IMU1 Win#26 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:04 AM: Feature data logged for IMU1: Window #26 | Level_Walk
+Jul 10, 2026 10:05:04 AM: ZUPT IMU2 pkt:3313 t:1.333s accel:0.02 gyro:-0.064
+Jul 10, 2026 10:05:04 AM: WIN IMU2 #27 bias:0.002 -> Level_Walk
+Jul 10, 2026 10:05:04 AM: IMU2 Win#27 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:04 AM: Feature data logged for IMU2: Window #27 | Level_Walk
+Jul 10, 2026 10:05:05 AM: ZUPT IMU1 pkt:3344 t:1.233s accel:0.105 gyro:-1.337
+Jul 10, 2026 10:05:05 AM: WIN IMU1 #27 bias:-0.009 -> Level_Walk
+Jul 10, 2026 10:05:05 AM: IMU1 Win#27 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:05 AM: Feature data logged for IMU1: Window #27 | Level_Walk
+Jul 10, 2026 10:05:06 AM: ZUPT IMU2 pkt:3382 t:1.15s accel:-0.387 gyro:0.308
+Jul 10, 2026 10:05:06 AM: WIN IMU2 #28 bias:0.021 -> Level_Walk
+Jul 10, 2026 10:05:06 AM: IMU2 Win#28 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:06 AM: Feature data logged for IMU2: Window #28 | Level_Walk
+Jul 10, 2026 10:05:06 AM: ZUPT IMU1 pkt:3422 t:1.3s accel:-0.131 gyro:-1.04
+Jul 10, 2026 10:05:06 AM: WIN IMU1 #28 bias:0.007 -> Level_Walk
+Jul 10, 2026 10:05:06 AM: IMU1 Win#28 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:06 AM: Feature data logged for IMU1: Window #28 | Level_Walk
+Jul 10, 2026 10:05:07 AM: ZUPT IMU2 pkt:3458 t:1.267s accel:-0.131 gyro:-2.408
+Jul 10, 2026 10:05:07 AM: WIN IMU2 #29 bias:0.012 -> Level_Walk
+Jul 10, 2026 10:05:07 AM: IMU2 Win#29 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:07 AM: Feature data logged for IMU2: Window #29 | Level_Walk
+Jul 10, 2026 10:05:08 AM: ZUPT IMU1 pkt:3500 t:1.3s accel:-0.077 gyro:0.837
+Jul 10, 2026 10:05:08 AM: WIN IMU1 #29 bias:-0.005 -> Level_Walk
+Jul 10, 2026 10:05:08 AM: IMU1 Win#29 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:08 AM: Feature data logged for IMU1: Window #29 | Level_Walk
+Jul 10, 2026 10:05:08 AM: ZUPT IMU2 pkt:3551 t:1.55s accel:-0.003 gyro:-0.043
+Jul 10, 2026 10:05:08 AM: WIN IMU2 #30 bias:0.002 -> Level_Walk
+Jul 10, 2026 10:05:08 AM: IMU2 Win#30 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:08 AM: Feature data logged for IMU2: Window #30 | Level_Walk
+Jul 10, 2026 10:05:09 AM: ZUPT IMU1 pkt:3577 t:1.283s accel:0.065 gyro:5.63
+Jul 10, 2026 10:05:09 AM: WIN IMU1 #30 bias:0.008 -> Level_Walk
+Jul 10, 2026 10:05:09 AM: IMU1 Win#30 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:09 AM: Feature data logged for IMU1: Window #30 | Level_Walk
+Jul 10, 2026 10:05:10 AM: ZUPT IMU2 pkt:3609 t:0.967s accel:1.637 gyro:4.391
+Jul 10, 2026 10:05:10 AM: WIN IMU2 #31 bias:0.073 -> Level_Walk
+Jul 10, 2026 10:05:10 AM: IMU2 Win#31 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:10 AM: Feature data logged for IMU2: Window #31 | Level_Walk
+Jul 10, 2026 10:05:10 AM: ZUPT IMU1 pkt:3657 t:1.333s accel:0.22 gyro:-1.008
+Jul 10, 2026 10:05:10 AM: WIN IMU1 #31 bias:0.022 -> Level_Walk
+Jul 10, 2026 10:05:10 AM: IMU1 Win#31 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:10 AM: Feature data logged for IMU1: Window #31 | Level_Walk
+Jul 10, 2026 10:05:11 AM: ZUPT IMU2 pkt:3706 t:1.617s accel:0.099 gyro:7.731
+Jul 10, 2026 10:05:11 AM: WIN IMU2 #32 bias:0.056 -> Level_Walk
+Jul 10, 2026 10:05:11 AM: IMU2 Win#32 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:11 AM: Feature data logged for IMU2: Window #32 | Level_Walk
+Jul 10, 2026 10:05:12 AM: ZUPT IMU1 pkt:3739 t:1.367s accel:0.141 gyro:-0.999
+Jul 10, 2026 10:05:12 AM: WIN IMU1 #32 bias:0.032 -> Level_Walk
+Jul 10, 2026 10:05:12 AM: IMU1 Win#32 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:12 AM: Feature data logged for IMU1: Window #32 | Level_Walk
+Jul 10, 2026 10:05:12 AM: ZUPT IMU2 pkt:3779 t:1.217s accel:-0.154 gyro:-1.497
+Jul 10, 2026 10:05:12 AM: WIN IMU2 #33 bias:0.013 -> Level_Walk
+Jul 10, 2026 10:05:12 AM: IMU2 Win#33 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:12 AM: Feature data logged for IMU2: Window #33 | Level_Walk
+Jul 10, 2026 10:05:13 AM: ZUPT IMU1 pkt:3818 t:1.317s accel:-0.093 gyro:-0.89
+Jul 10, 2026 10:05:13 AM: WIN IMU1 #33 bias:0.041 -> Level_Walk
+Jul 10, 2026 10:05:13 AM: IMU1 Win#33 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:13 AM: Feature data logged for IMU1: Window #33 | Level_Walk
+Jul 10, 2026 10:05:13 AM: ZUPT IMU2 pkt:3853 t:1.233s accel:0.816 gyro:4.275
+Jul 10, 2026 10:05:13 AM: WIN IMU2 #34 bias:0.038 -> Level_Walk
+Jul 10, 2026 10:05:13 AM: IMU2 Win#34 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:13 AM: Feature data logged for IMU2: Window #34 | Level_Walk
+Jul 10, 2026 10:05:14 AM: ZUPT IMU1 pkt:3893 t:1.25s accel:0.098 gyro:0.065
+Jul 10, 2026 10:05:14 AM: WIN IMU1 #34 bias:0.032 -> Level_Walk
+Jul 10, 2026 10:05:14 AM: IMU1 Win#34 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:14 AM: Feature data logged for IMU1: Window #34 | Level_Walk
+Jul 10, 2026 10:05:15 AM: ZUPT IMU2 pkt:3933 t:1.333s accel:-0.203 gyro:-2.547
+Jul 10, 2026 10:05:15 AM: WIN IMU2 #35 bias:0.049 -> Level_Walk
+Jul 10, 2026 10:05:15 AM: IMU2 Win#35 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:15 AM: Feature data logged for IMU2: Window #35 | Level_Walk
+Jul 10, 2026 10:05:15 AM: ZUPT IMU1 pkt:3969 t:1.267s accel:0.111 gyro:-0.192
+Jul 10, 2026 10:05:15 AM: WIN IMU1 #35 bias:0.06 -> Level_Walk
+Jul 10, 2026 10:05:15 AM: IMU1 Win#35 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:15 AM: Feature data logged for IMU1: Window #35 | Level_Walk
+Jul 10, 2026 10:05:16 AM: ZUPT IMU2 pkt:4010 t:1.283s accel:0.018 gyro:-1.779
+Jul 10, 2026 10:05:16 AM: WIN IMU2 #36 bias:0.01 -> Level_Walk
+Jul 10, 2026 10:05:16 AM: IMU2 Win#36 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:16 AM: Feature data logged for IMU2: Window #36 | Level_Walk
+Jul 10, 2026 10:05:17 AM: ZUPT IMU1 pkt:4043 t:1.233s accel:0.868 gyro:5.184
+Jul 10, 2026 10:05:17 AM: WIN IMU1 #36 bias:0.07 -> Level_Walk
+Jul 10, 2026 10:05:17 AM: IMU1 Win#36 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:17 AM: Feature data logged for IMU1: Window #36 | Level_Walk
+Jul 10, 2026 10:05:17 AM: ZUPT IMU2 pkt:4091 t:1.35s accel:-0.074 gyro:-1.459
+Jul 10, 2026 10:05:17 AM: WIN IMU2 #37 bias:0.023 -> Level_Walk
+Jul 10, 2026 10:05:17 AM: IMU2 Win#37 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:17 AM: Feature data logged for IMU2: Window #37 | Level_Walk
+Jul 10, 2026 10:05:18 AM: ZUPT IMU1 pkt:4122 t:1.317s accel:0.106 gyro:1.983
+Jul 10, 2026 10:05:18 AM: WIN IMU1 #37 bias:0.082 -> Level_Walk
+Jul 10, 2026 10:05:18 AM: IMU1 Win#37 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:18 AM: Feature data logged for IMU1: Window #37 | Level_Walk
+Jul 10, 2026 10:05:19 AM: ZUPT IMU2 pkt:4159 t:1.133s accel:-0.068 gyro:2.219
+Jul 10, 2026 10:05:19 AM: WIN IMU2 #38 bias:0.028 -> Level_Walk
+Jul 10, 2026 10:05:19 AM: IMU2 Win#38 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:19 AM: Feature data logged for IMU2: Window #38 | Level_Walk
+Jul 10, 2026 10:05:19 AM: ZUPT IMU1 pkt:4196 t:1.233s accel:0.157 gyro:-0.102
+Jul 10, 2026 10:05:19 AM: WIN IMU1 #38 bias:0.046 -> Level_Walk
+Jul 10, 2026 10:05:19 AM: IMU1 Win#38 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:19 AM: Feature data logged for IMU1: Window #38 | Level_Walk
+Jul 10, 2026 10:05:20 AM: ZUPT IMU2 pkt:4240 t:1.35s accel:0.012 gyro:-0.054
+Jul 10, 2026 10:05:20 AM: WIN IMU2 #39 bias:0.024 -> Level_Walk
+Jul 10, 2026 10:05:20 AM: IMU2 Win#39 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:20 AM: Feature data logged for IMU2: Window #39 | Level_Walk
+Jul 10, 2026 10:05:20 AM: ZUPT IMU1 pkt:4269 t:1.217s accel:0.001 gyro:0.541
+Jul 10, 2026 10:05:20 AM: WIN IMU1 #39 bias:0.054 -> Level_Walk
+Jul 10, 2026 10:05:20 AM: IMU1 Win#39 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:20 AM: Feature data logged for IMU1: Window #39 | Level_Walk
+Jul 10, 2026 10:05:21 AM: ZUPT IMU2 pkt:4310 t:1.167s accel:0.066 gyro:1.865
+Jul 10, 2026 10:05:21 AM: WIN IMU2 #40 bias:0.023 -> Level_Walk
+Jul 10, 2026 10:05:21 AM: IMU2 Win#40 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:21 AM: Feature data logged for IMU2: Window #40 | Level_Walk
+Jul 10, 2026 10:05:22 AM: ZUPT IMU1 pkt:4346 t:1.283s accel:-0.348 gyro:0.434
+Jul 10, 2026 10:05:22 AM: WIN IMU1 #40 bias:0.047 -> Level_Walk
+Jul 10, 2026 10:05:22 AM: IMU1 Win#40 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:22 AM: Feature data logged for IMU1: Window #40 | Level_Walk
+Jul 10, 2026 10:05:22 AM: ZUPT IMU2 pkt:4385 t:1.25s accel:0.047 gyro:0.117
+Jul 10, 2026 10:05:22 AM: WIN IMU2 #41 bias:0.015 -> Level_Walk
+Jul 10, 2026 10:05:22 AM: IMU2 Win#41 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:22 AM: Feature data logged for IMU2: Window #41 | Level_Walk
+Jul 10, 2026 10:05:23 AM: ZUPT IMU1 pkt:4410 t:1.067s accel:0.686 gyro:10.354
+Jul 10, 2026 10:05:23 AM: WIN IMU1 #41 bias:0.072 -> Level_Walk
+Jul 10, 2026 10:05:23 AM: IMU1 Win#41 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:23 AM: Feature data logged for IMU1: Window #41 | Level_Walk
+Jul 10, 2026 10:05:23 AM: ZUPT IMU2 pkt:4448 t:1.05s accel:-0.481 gyro:-1.824
+Jul 10, 2026 10:05:23 AM: WIN IMU2 #42 bias:0.034 -> Level_Walk
+Jul 10, 2026 10:05:23 AM: IMU2 Win#42 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:23 AM: Feature data logged for IMU2: Window #42 | Level_Walk
+Jul 10, 2026 10:05:24 AM: ZUPT IMU1 pkt:4489 t:1.317s accel:0.121 gyro:0.541
+Jul 10, 2026 10:05:24 AM: WIN IMU1 #42 bias:0.085 -> Level_Walk
+Jul 10, 2026 10:05:24 AM: IMU1 Win#42 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:24 AM: Feature data logged for IMU1: Window #42 | Level_Walk
+Jul 10, 2026 10:05:25 AM: ZUPT IMU2 pkt:4537 t:1.483s accel:-0.047 gyro:0.115
+Jul 10, 2026 10:05:25 AM: WIN IMU2 #43 bias:0.035 -> Level_Walk
+Jul 10, 2026 10:05:25 AM: IMU2 Win#43 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:25 AM: Feature data logged for IMU2: Window #43 | Level_Walk
+Jul 10, 2026 10:05:25 AM: ZUPT IMU1 pkt:4562 t:1.217s accel:-0.099 gyro:6.689
+Jul 10, 2026 10:05:25 AM: WIN IMU1 #43 bias:0.065 -> Level_Walk
+Jul 10, 2026 10:05:25 AM: IMU1 Win#43 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:25 AM: Feature data logged for IMU1: Window #43 | Level_Walk
+Jul 10, 2026 10:05:26 AM: ZUPT IMU2 pkt:4593 t:0.933s accel:-0.362 gyro:7.556
+Jul 10, 2026 10:05:26 AM: WIN IMU2 #44 bias:0.158 -> Ramp_Ascend
+Jul 10, 2026 10:05:26 AM: IMU2 Win#44 GT:NA Pred:Ramp_Ascend ✗
+Jul 10, 2026 10:05:26 AM: Feature data logged for IMU2: Window #44 | Ramp_Ascend
+Jul 10, 2026 10:05:27 AM: ZUPT IMU1 pkt:4641 t:1.317s accel:-0.138 gyro:-1.204
+Jul 10, 2026 10:05:27 AM: WIN IMU1 #44 bias:0.038 -> Level_Walk
+Jul 10, 2026 10:05:27 AM: IMU1 Win#44 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:27 AM: Feature data logged for IMU1: Window #44 | Level_Walk
+Jul 10, 2026 10:05:27 AM: ZUPT IMU2 pkt:4689 t:1.6s accel:0.042 gyro:-2.05
+Jul 10, 2026 10:05:27 AM: WIN IMU2 #45 bias:0.023 -> Level_Walk
+Jul 10, 2026 10:05:27 AM: IMU2 Win#45 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:27 AM: Feature data logged for IMU2: Window #45 | Level_Walk
+Jul 10, 2026 10:05:28 AM: ZUPT IMU1 pkt:4722 t:1.35s accel:0.064 gyro:4.26
+Jul 10, 2026 10:05:28 AM: WIN IMU1 #45 bias:0.016 -> Level_Walk
+Jul 10, 2026 10:05:28 AM: IMU1 Win#45 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:28 AM: Feature data logged for IMU1: Window #45 | Level_Walk
+Jul 10, 2026 10:05:29 AM: ZUPT IMU2 pkt:4762 t:1.217s accel:-0.002 gyro:0.362
+Jul 10, 2026 10:05:29 AM: WIN IMU2 #46 bias:0.013 -> Level_Walk
+Jul 10, 2026 10:05:29 AM: IMU2 Win#46 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:29 AM: Feature data logged for IMU2: Window #46 | Level_Walk
+Jul 10, 2026 10:05:29 AM: ZUPT IMU1 pkt:4796 t:1.233s accel:0.029 gyro:6.192
+Jul 10, 2026 10:05:29 AM: WIN IMU1 #46 bias:0.037 -> Level_Walk
+Jul 10, 2026 10:05:29 AM: IMU1 Win#46 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:29 AM: Feature data logged for IMU1: Window #46 | Level_Walk
+Jul 10, 2026 10:05:30 AM: ZUPT IMU2 pkt:4838 t:1.267s accel:0.02 gyro:1.249
+Jul 10, 2026 10:05:30 AM: WIN IMU2 #47 bias:0.002 -> Level_Walk
+Jul 10, 2026 10:05:30 AM: IMU2 Win#47 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:30 AM: Feature data logged for IMU2: Window #47 | Level_Walk
+Jul 10, 2026 10:05:30 AM: ZUPT IMU1 pkt:4867 t:1.183s accel:0.255 gyro:-0.671
+Jul 10, 2026 10:05:30 AM: WIN IMU1 #47 bias:0.002 -> Level_Walk
+Jul 10, 2026 10:05:30 AM: IMU1 Win#47 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:30 AM: Feature data logged for IMU1: Window #47 | Level_Walk
+Jul 10, 2026 10:05:31 AM: ZUPT IMU2 pkt:4910 t:1.2s accel:-0.025 gyro:-2.537
+Jul 10, 2026 10:05:31 AM: WIN IMU2 #48 bias:-0.005 -> Level_Walk
+Jul 10, 2026 10:05:31 AM: IMU2 Win#48 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:31 AM: Feature data logged for IMU2: Window #48 | Level_Walk
+Jul 10, 2026 10:05:32 AM: ZUPT IMU1 pkt:4943 t:1.267s accel:-0.232 gyro:1.188
+Jul 10, 2026 10:05:32 AM: WIN IMU1 #48 bias:0.015 -> Level_Walk
+Jul 10, 2026 10:05:32 AM: IMU1 Win#48 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:32 AM: Feature data logged for IMU1: Window #48 | Level_Walk
+Jul 10, 2026 10:05:32 AM: ZUPT IMU2 pkt:4979 t:1.15s accel:-0.303 gyro:4.26
+Jul 10, 2026 10:05:32 AM: WIN IMU2 #49 bias:0.023 -> Level_Walk
+Jul 10, 2026 10:05:32 AM: IMU2 Win#49 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:32 AM: Feature data logged for IMU2: Window #49 | Level_Walk
+Jul 10, 2026 10:05:33 AM: ZUPT IMU1 pkt:5014 t:1.183s accel:-0.436 gyro:5.636
+Jul 10, 2026 10:05:33 AM: WIN IMU1 #49 bias:0.026 -> Level_Walk
+Jul 10, 2026 10:05:33 AM: IMU1 Win#49 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:33 AM: Feature data logged for IMU1: Window #49 | Level_Walk
+Jul 10, 2026 10:05:33 AM: ZUPT IMU2 pkt:5049 t:1.167s accel:-0.517 gyro:-2.343
+Jul 10, 2026 10:05:33 AM: WIN IMU2 #50 bias:0.013 -> Level_Walk
+Jul 10, 2026 10:05:33 AM: IMU2 Win#50 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:33 AM: Feature data logged for IMU2: Window #50 | Level_Walk
+Jul 10, 2026 10:05:34 AM: ZUPT IMU1 pkt:5085 t:1.183s accel:-0.431 gyro:8.02
+Jul 10, 2026 10:05:34 AM: WIN IMU1 #50 bias:0.042 -> Level_Walk
+Jul 10, 2026 10:05:34 AM: IMU1 Win#50 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:34 AM: Feature data logged for IMU1: Window #50 | Level_Walk
+Jul 10, 2026 10:05:35 AM: ZUPT IMU2 pkt:5125 t:1.267s accel:0.059 gyro:0.801
+Jul 10, 2026 10:05:35 AM: WIN IMU2 #51 bias:0.003 -> Level_Walk
+Jul 10, 2026 10:05:35 AM: IMU2 Win#51 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:35 AM: Feature data logged for IMU2: Window #51 | Level_Walk
+Jul 10, 2026 10:05:35 AM: ZUPT IMU1 pkt:5156 t:1.183s accel:-0.451 gyro:4.829
+Jul 10, 2026 10:05:35 AM: WIN IMU1 #51 bias:0.037 -> Level_Walk
+Jul 10, 2026 10:05:35 AM: IMU1 Win#51 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:35 AM: Feature data logged for IMU1: Window #51 | Level_Walk
+Jul 10, 2026 10:05:36 AM: ZUPT IMU2 pkt:5190 t:1.083s accel:0.022 gyro:-0.488
+Jul 10, 2026 10:05:36 AM: WIN IMU2 #52 bias:0.032 -> Level_Walk
+Jul 10, 2026 10:05:36 AM: IMU2 Win#52 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:05:36 AM: Feature data logged for IMU2: Window #52 | Level_Walk
+Jul 10, 2026 10:05:36 AM: ZUPT IMU1 pkt:5228 t:1.2s accel:-0.104 gyro:1.463
+Jul 10, 2026 10:05:36 AM: WIN IMU1 #52 bias:0.015 -> Level_Walk
+Jul 10, 2026 10:05:36 AM: IMU1 Win#52 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:36 AM: Feature data logged for IMU1: Window #52 | Level_Walk
+Jul 10, 2026 10:05:37 AM: ZUPT IMU2 pkt:5262 t:1.2s accel:-0.009 gyro:-1.781
+Jul 10, 2026 10:05:37 AM: WIN IMU2 #53 bias:0.016 -> Level_Walk
+Jul 10, 2026 10:05:37 AM: IMU2 Win#53 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:37 AM: Feature data logged for IMU2: Window #53 | Level_Walk
+Jul 10, 2026 10:05:38 AM: ZUPT IMU1 pkt:5300 t:1.2s accel:-0.389 gyro:6.908
+Jul 10, 2026 10:05:38 AM: WIN IMU1 #53 bias:0.042 -> Level_Walk
+Jul 10, 2026 10:05:38 AM: IMU1 Win#53 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:38 AM: Feature data logged for IMU1: Window #53 | Level_Walk
+Jul 10, 2026 10:05:38 AM: ZUPT IMU2 pkt:5340 t:1.3s accel:0.146 gyro:0.373
+Jul 10, 2026 10:05:38 AM: WIN IMU2 #54 bias:0.004 -> Level_Walk
+Jul 10, 2026 10:05:38 AM: IMU2 Win#54 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:38 AM: Feature data logged for IMU2: Window #54 | Level_Walk
+Jul 10, 2026 10:05:39 AM: ZUPT IMU1 pkt:5373 t:1.217s accel:-0.351 gyro:9.916
+Jul 10, 2026 10:05:39 AM: WIN IMU1 #54 bias:0.039 -> Level_Walk
+Jul 10, 2026 10:05:39 AM: IMU1 Win#54 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:39 AM: Feature data logged for IMU1: Window #54 | Level_Walk
+Jul 10, 2026 10:05:39 AM: ZUPT IMU2 pkt:5412 t:1.2s accel:0.093 gyro:-0.698
+Jul 10, 2026 10:05:39 AM: WIN IMU2 #55 bias:0.02 -> Level_Walk
+Jul 10, 2026 10:05:39 AM: IMU2 Win#55 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:39 AM: Feature data logged for IMU2: Window #55 | Level_Walk
+Jul 10, 2026 10:05:40 AM: ZUPT IMU1 pkt:5451 t:1.3s accel:-0.046 gyro:0.704
+Jul 10, 2026 10:05:40 AM: WIN IMU1 #55 bias:0.024 -> Level_Walk
+Jul 10, 2026 10:05:40 AM: IMU1 Win#55 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:40 AM: Feature data logged for IMU1: Window #55 | Level_Walk
+Jul 10, 2026 10:05:41 AM: ZUPT IMU2 pkt:5483 t:1.183s accel:-0.183 gyro:-2.052
+Jul 10, 2026 10:05:41 AM: WIN IMU2 #56 bias:0.023 -> Level_Walk
+Jul 10, 2026 10:05:41 AM: IMU2 Win#56 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:41 AM: Feature data logged for IMU2: Window #56 | Level_Walk
+Jul 10, 2026 10:05:41 AM: ZUPT IMU1 pkt:5526 t:1.25s accel:0.102 gyro:0.828
+Jul 10, 2026 10:05:41 AM: WIN IMU1 #56 bias:0.011 -> Level_Walk
+Jul 10, 2026 10:05:41 AM: IMU1 Win#56 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:41 AM: Feature data logged for IMU1: Window #56 | Level_Walk
+Jul 10, 2026 10:05:42 AM: ZUPT IMU2 pkt:5570 t:1.45s accel:0.133 gyro:-0.801
+Jul 10, 2026 10:05:42 AM: WIN IMU2 #57 bias:-0.002 -> Level_Walk
+Jul 10, 2026 10:05:42 AM: IMU2 Win#57 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:42 AM: Feature data logged for IMU2: Window #57 | Level_Walk
+Jul 10, 2026 10:05:43 AM: ZUPT IMU1 pkt:5600 t:1.233s accel:0.02 gyro:-0.235
+Jul 10, 2026 10:05:43 AM: WIN IMU1 #57 bias:0.023 -> Level_Walk
+Jul 10, 2026 10:05:43 AM: IMU1 Win#57 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:43 AM: Feature data logged for IMU1: Window #57 | Level_Walk
+Jul 10, 2026 10:05:43 AM: ZUPT IMU2 pkt:5642 t:1.2s accel:-0.004 gyro:2.47
+Jul 10, 2026 10:05:43 AM: WIN IMU2 #58 bias:0.021 -> Level_Walk
+Jul 10, 2026 10:05:43 AM: IMU2 Win#58 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:43 AM: Feature data logged for IMU2: Window #58 | Level_Walk
+Jul 10, 2026 10:05:44 AM: ZUPT IMU1 pkt:5676 t:1.267s accel:-0.014 gyro:-1.64
+Jul 10, 2026 10:05:44 AM: WIN IMU1 #58 bias:0.027 -> Level_Walk
+Jul 10, 2026 10:05:44 AM: IMU1 Win#58 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:44 AM: Feature data logged for IMU1: Window #58 | Level_Walk
+Jul 10, 2026 10:05:45 AM: ZUPT IMU2 pkt:5721 t:1.317s accel:0.376 gyro:10.177
+Jul 10, 2026 10:05:45 AM: WIN IMU2 #59 bias:0.028 -> Level_Walk
+Jul 10, 2026 10:05:45 AM: IMU2 Win#59 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:45 AM: Feature data logged for IMU2: Window #59 | Level_Walk
+Jul 10, 2026 10:05:45 AM: ZUPT IMU1 pkt:5768 t:1.533s accel:0.084 gyro:0.661
+Jul 10, 2026 10:05:45 AM: WIN IMU1 #59 bias:0.024 -> Level_Walk
+Jul 10, 2026 10:05:45 AM: IMU1 Win#59 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:45 AM: Feature data logged for IMU1: Window #59 | Level_Walk
+Jul 10, 2026 10:05:46 AM: ZUPT IMU2 pkt:5808 t:1.45s accel:-0.252 gyro:5.823
+Jul 10, 2026 10:05:46 AM: WIN IMU2 #60 bias:0.051 -> Level_Walk
+Jul 10, 2026 10:05:46 AM: IMU2 Win#60 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:46 AM: Feature data logged for IMU2: Window #60 | Level_Walk
+Jul 10, 2026 10:05:47 AM: ZUPT IMU1 pkt:5850 t:1.367s accel:-0.053 gyro:-0.031
+Jul 10, 2026 10:05:47 AM: WIN IMU1 #60 bias:0.031 -> Level_Walk
+Jul 10, 2026 10:05:47 AM: IMU1 Win#60 GT:Height1_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:05:47 AM: Feature data logged for IMU1: Window #60 | Level_Walk
+Jul 10, 2026 10:05:47 AM: ZUPT IMU2 pkt:5887 t:1.317s accel:-0.101 gyro:-2.931
+Jul 10, 2026 10:05:47 AM: WIN IMU2 #61 bias:0.045 -> Level_Walk
+Jul 10, 2026 10:05:47 AM: IMU2 Win#61 GT:Height1_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:05:47 AM: Feature data logged for IMU2: Window #61 | Level_Walk
+Jul 10, 2026 10:05:48 AM: ZUPT IMU1 pkt:5925 t:1.25s accel:-0.267 gyro:2.476
+Jul 10, 2026 10:05:48 AM: WIN IMU1 #61 bias:0.036 -> Level_Walk
+Jul 10, 2026 10:05:48 AM: IMU1 Win#61 GT:Height1_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:05:48 AM: Feature data logged for IMU1: Window #61 | Level_Walk
+Jul 10, 2026 10:05:49 AM: ZUPT IMU2 pkt:5963 t:1.267s accel:-0.025 gyro:-2.042
+Jul 10, 2026 10:05:49 AM: WIN IMU2 #62 bias:0.032 -> Level_Walk
+Jul 10, 2026 10:05:49 AM: IMU2 Win#62 GT:Height1_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:05:49 AM: Feature data logged for IMU2: Window #62 | Level_Walk
+Jul 10, 2026 10:05:49 AM: ZUPT IMU1 pkt:6000 t:1.25s accel:0.003 gyro:0.767
+Jul 10, 2026 10:05:49 AM: WIN IMU1 #62 bias:0.032 -> Level_Walk
+Jul 10, 2026 10:05:49 AM: IMU1 Win#62 GT:Height1_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:05:49 AM: Feature data logged for IMU1: Window #62 | Level_Walk
+Jul 10, 2026 10:05:50 AM: ZUPT IMU1 pkt:6030 t:0.5s accel:0.106 gyro:4.733
+Jul 10, 2026 10:05:50 AM: WIN IMU1 #63 bias:-0.004 -> Level_Walk
+Jul 10, 2026 10:05:50 AM: IMU1 Win#63 GT:Height1_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:05:50 AM: Feature data logged for IMU1: Window #63 | Level_Walk
+Jul 10, 2026 10:05:50 AM: ZUPT IMU2 pkt:6067 t:1.733s accel:0.252 gyro:5.723
+Jul 10, 2026 10:05:50 AM: WIN IMU2 #63 bias:0.023 -> Level_Walk
+Jul 10, 2026 10:05:50 AM: IMU2 Win#63 GT:Height1_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:05:50 AM: Feature data logged for IMU2: Window #63 | Level_Walk
+Jul 10, 2026 10:05:51 AM: ZUPT IMU1 pkt:6105 t:1.25s accel:-0.049 gyro:0.711
+Jul 10, 2026 10:05:51 AM: WIN IMU1 #64 bias:0.031 -> Level_Walk
+Jul 10, 2026 10:05:51 AM: IMU1 Win#64 GT:Height1_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:05:51 AM: Feature data logged for IMU1: Window #64 | Level_Walk
+Jul 10, 2026 10:05:52 AM: ZUPT IMU2 pkt:6140 t:1.217s accel:-0.281 gyro:3.298
+Jul 10, 2026 10:05:52 AM: WIN IMU2 #64 bias:0.068 -> Level_Walk
+Jul 10, 2026 10:05:52 AM: IMU2 Win#64 GT:Height1_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:05:52 AM: Feature data logged for IMU2: Window #64 | Level_Walk
+Jul 10, 2026 10:05:52 AM: ZUPT IMU1 pkt:6185 t:1.333s accel:-0.174 gyro:1.088
+Jul 10, 2026 10:05:52 AM: WIN IMU1 #65 bias:0.051 -> Level_Walk
+Jul 10, 2026 10:05:52 AM: IMU1 Win#65 GT:Height1_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:05:52 AM: Feature data logged for IMU1: Window #65 | Level_Walk
+Jul 10, 2026 10:05:53 AM: ZUPT IMU2 pkt:6222 t:1.367s accel:-0.131 gyro:-3.143
+Jul 10, 2026 10:05:53 AM: WIN IMU2 #65 bias:0.051 -> Level_Walk
+Jul 10, 2026 10:05:53 AM: IMU2 Win#65 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:53 AM: Feature data logged for IMU2: Window #65 | Level_Walk
+Jul 10, 2026 10:05:53 AM: >>> Leading leg is Right for H1_D1 crossing (Start pkt: 5817, End pkt: 6208)
+Jul 10, 2026 10:05:54 AM: ZUPT IMU1 pkt:6261 t:1.267s accel:-0.116 gyro:6.315
+Jul 10, 2026 10:05:54 AM: WIN IMU1 #66 bias:0.035 -> Level_Walk
+Jul 10, 2026 10:05:54 AM: IMU1 Win#66 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:05:54 AM: Feature data logged for IMU1: Window #66 | Level_Walk
+Jul 10, 2026 10:05:54 AM: ZUPT IMU2 pkt:6307 t:1.417s accel:-0.005 gyro:-2.132
+Jul 10, 2026 10:05:54 AM: WIN IMU2 #66 bias:0.035 -> Level_Walk
+Jul 10, 2026 10:05:54 AM: IMU2 Win#66 GT:Height2_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:05:54 AM: Feature data logged for IMU2: Window #66 | Level_Walk
+Jul 10, 2026 10:05:55 AM: ZUPT IMU1 pkt:6341 t:1.333s accel:0.137 gyro:9.025
+Jul 10, 2026 10:05:55 AM: WIN IMU1 #67 bias:0.076 -> Level_Walk
+Jul 10, 2026 10:05:55 AM: IMU1 Win#67 GT:Height2_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:05:55 AM: Feature data logged for IMU1: Window #67 | Level_Walk
+Jul 10, 2026 10:05:56 AM: ZUPT IMU2 pkt:6385 t:1.3s accel:-0.062 gyro:-2.881
+Jul 10, 2026 10:05:56 AM: WIN IMU2 #67 bias:0.039 -> Level_Walk
+Jul 10, 2026 10:05:56 AM: IMU2 Win#67 GT:Height2_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:05:56 AM: Feature data logged for IMU2: Window #67 | Level_Walk
+Jul 10, 2026 10:05:56 AM: ZUPT IMU1 pkt:6415 t:1.233s accel:0.411 gyro:7.934
+Jul 10, 2026 10:05:56 AM: WIN IMU1 #68 bias:0.055 -> Level_Walk
+Jul 10, 2026 10:05:56 AM: IMU1 Win#68 GT:Height2_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:05:56 AM: Feature data logged for IMU1: Window #68 | Level_Walk
+Jul 10, 2026 10:05:57 AM: ZUPT IMU2 pkt:6456 t:1.183s accel:0.271 gyro:-2.189
+Jul 10, 2026 10:05:57 AM: WIN IMU2 #68 bias:0.051 -> Level_Walk
+Jul 10, 2026 10:05:57 AM: IMU2 Win#68 GT:Height2_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:05:57 AM: Feature data logged for IMU2: Window #68 | Level_Walk
+Jul 10, 2026 10:05:58 AM: ZUPT IMU2 pkt:6499 t:0.717s accel:-0.066 gyro:-0.414
+Jul 10, 2026 10:05:58 AM: WIN IMU2 #69 bias:0.004 -> Level_Walk
+Jul 10, 2026 10:05:58 AM: IMU2 Win#69 GT:Height2_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:05:58 AM: Feature data logged for IMU2: Window #69 | Level_Walk
+Jul 10, 2026 10:05:58 AM: ZUPT IMU1 pkt:6526 t:1.85s accel:-0.003 gyro:2.543
+Jul 10, 2026 10:05:58 AM: WIN IMU1 #69 bias:0.072 -> Level_Walk
+Jul 10, 2026 10:05:58 AM: IMU1 Win#69 GT:Height2_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:05:58 AM: Feature data logged for IMU1: Window #69 | Level_Walk
+Jul 10, 2026 10:05:59 AM: ZUPT IMU1 pkt:6561 t:0.583s accel:0.013 gyro:3.047
+Jul 10, 2026 10:05:59 AM: WIN IMU1 #70 bias:0.004 -> Level_Walk
+Jul 10, 2026 10:05:59 AM: IMU1 Win#70 GT:Height2_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:05:59 AM: Feature data logged for IMU1: Window #70 | Level_Walk
+Jul 10, 2026 10:05:59 AM: ZUPT IMU2 pkt:6579 t:1.333s accel:-0.55 gyro:2.691
+Jul 10, 2026 10:05:59 AM: WIN IMU2 #70 bias:0.021 -> Level_Walk
+Jul 10, 2026 10:05:59 AM: IMU2 Win#70 GT:Height2_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:05:59 AM: Feature data logged for IMU2: Window #70 | Level_Walk
+Jul 10, 2026 10:06:00 AM: ZUPT IMU2 pkt:6609 t:0.5s accel:0.277 gyro:3.525
+Jul 10, 2026 10:06:00 AM: WIN IMU2 #71 bias:0.003 -> Level_Walk
+Jul 10, 2026 10:06:00 AM: IMU2 Win#71 GT:Height2_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:00 AM: Feature data logged for IMU2: Window #71 | Level_Walk
+Jul 10, 2026 10:06:00 AM: ZUPT IMU1 pkt:6628 t:1.117s accel:-0.045 gyro:3.641
+Jul 10, 2026 10:06:00 AM: WIN IMU1 #71 bias:0.033 -> Level_Walk
+Jul 10, 2026 10:06:00 AM: IMU1 Win#71 GT:Height2_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:00 AM: Feature data logged for IMU1: Window #71 | Level_Walk
+Jul 10, 2026 10:06:00 AM: ZUPT IMU2 pkt:6672 t:1.05s accel:0.333 gyro:0.454
+Jul 10, 2026 10:06:00 AM: WIN IMU2 #72 bias:0.025 -> Level_Walk
+Jul 10, 2026 10:06:00 AM: IMU2 Win#72 GT:Height2_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:00 AM: Feature data logged for IMU2: Window #72 | Level_Walk
+Jul 10, 2026 10:06:01 AM: ZUPT IMU1 pkt:6717 t:1.483s accel:0.555 gyro:4.467
+Jul 10, 2026 10:06:01 AM: WIN IMU1 #72 bias:0.05 -> Level_Walk
+Jul 10, 2026 10:06:01 AM: IMU1 Win#72 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:01 AM: Feature data logged for IMU1: Window #72 | Level_Walk
+Jul 10, 2026 10:06:02 AM: ZUPT IMU2 pkt:6746 t:1.233s accel:-1.213 gyro:11.132
+Jul 10, 2026 10:06:02 AM: WIN IMU2 #73 bias:0.106 -> Level_Walk
+Jul 10, 2026 10:06:02 AM: IMU2 Win#73 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:02 AM: Feature data logged for IMU2: Window #73 | Level_Walk
+Jul 10, 2026 10:06:02 AM: >>> Leading leg is Left for H2_D1 crossing (Start pkt: 6284, End pkt: 6712)
+Jul 10, 2026 10:06:02 AM: ZUPT IMU2 pkt:6779 t:0.55s accel:-0.06 gyro:-2.379
+Jul 10, 2026 10:06:02 AM: WIN IMU2 #74 bias:0.026 -> Level_Walk
+Jul 10, 2026 10:06:02 AM: IMU2 Win#74 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:02 AM: Feature data logged for IMU2: Window #74 | Level_Walk
+Jul 10, 2026 10:06:02 AM: ZUPT IMU1 pkt:6761 t:0.733s accel:0.204 gyro:5.489
+Jul 10, 2026 10:06:02 AM: WIN IMU1 #73 bias:-0.165 -> Ramp_Descend
+Jul 10, 2026 10:06:02 AM: IMU1 Win#73 GT:Height3_Depth1 Pred:Ramp_Descend ✗
+Jul 10, 2026 10:06:02 AM: Feature data logged for IMU1: Window #73 | Ramp_Descend
+Jul 10, 2026 10:06:03 AM: ZUPT IMU1 pkt:6798 t:0.617s accel:0.1 gyro:1.004
+Jul 10, 2026 10:06:03 AM: WIN IMU1 #74 bias:-0.421 -> Stair_Descend
+Jul 10, 2026 10:06:03 AM: IMU1 Win#74 GT:Height3_Depth1 Pred:Stair_Descend ✗
+Jul 10, 2026 10:06:03 AM: Feature data logged for IMU1: Window #74 | Stair_Descend
+Jul 10, 2026 10:06:03 AM: ZUPT IMU2 pkt:6844 t:1.083s accel:0 gyro:-3.554
+Jul 10, 2026 10:06:03 AM: WIN IMU2 #75 bias:0.015 -> Level_Walk
+Jul 10, 2026 10:06:03 AM: IMU2 Win#75 GT:Height3_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:03 AM: Feature data logged for IMU2: Window #75 | Level_Walk
+Jul 10, 2026 10:06:04 AM: ZUPT IMU1 pkt:6893 t:1.583s accel:-0.252 gyro:5.212
+Jul 10, 2026 10:06:04 AM: WIN IMU1 #75 bias:0.043 -> Level_Walk
+Jul 10, 2026 10:06:04 AM: IMU1 Win#75 GT:Height3_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:04 AM: Feature data logged for IMU1: Window #75 | Level_Walk
+Jul 10, 2026 10:06:05 AM: ZUPT IMU2 pkt:6946 t:1.7s accel:-0.054 gyro:5.3
+Jul 10, 2026 10:06:05 AM: WIN IMU2 #76 bias:0.035 -> Level_Walk
+Jul 10, 2026 10:06:05 AM: IMU2 Win#76 GT:Height3_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:05 AM: Feature data logged for IMU2: Window #76 | Level_Walk
+Jul 10, 2026 10:06:06 AM: ZUPT IMU2 pkt:6981 t:0.583s accel:-0.055 gyro:-3.387
+Jul 10, 2026 10:06:06 AM: WIN IMU2 #77 bias:0.009 -> Level_Walk
+Jul 10, 2026 10:06:06 AM: IMU2 Win#77 GT:Height3_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:06 AM: Feature data logged for IMU2: Window #77 | Level_Walk
+Jul 10, 2026 10:06:06 AM: ZUPT IMU1 pkt:7008 t:1.917s accel:-0.052 gyro:8.101
+Jul 10, 2026 10:06:06 AM: WIN IMU1 #76 bias:0.039 -> Level_Walk
+Jul 10, 2026 10:06:06 AM: IMU1 Win#76 GT:Height3_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:06 AM: Feature data logged for IMU1: Window #76 | Level_Walk
+Jul 10, 2026 10:06:07 AM: ZUPT IMU1 pkt:7040 t:0.533s accel:-0.034 gyro:1.131
+Jul 10, 2026 10:06:07 AM: WIN IMU1 #77 bias:0.01 -> Level_Walk
+Jul 10, 2026 10:06:07 AM: IMU1 Win#77 GT:Height3_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:07 AM: Feature data logged for IMU1: Window #77 | Level_Walk
+Jul 10, 2026 10:06:07 AM: ZUPT IMU2 pkt:7057 t:1.267s accel:-1.242 gyro:7.593
+Jul 10, 2026 10:06:07 AM: WIN IMU2 #78 bias:0.02 -> Level_Walk
+Jul 10, 2026 10:06:07 AM: IMU2 Win#78 GT:Height3_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:07 AM: Feature data logged for IMU2: Window #78 | Level_Walk
+Jul 10, 2026 10:06:08 AM: ZUPT IMU1 pkt:7101 t:1.017s accel:0.441 gyro:6.946
+Jul 10, 2026 10:06:08 AM: WIN IMU1 #78 bias:0.068 -> Level_Walk
+Jul 10, 2026 10:06:08 AM: IMU1 Win#78 GT:Height3_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:08 AM: Feature data logged for IMU1: Window #78 | Level_Walk
+Jul 10, 2026 10:06:08 AM: ZUPT IMU2 pkt:7151 t:1.567s accel:0.13 gyro:-2.315
+Jul 10, 2026 10:06:08 AM: WIN IMU2 #79 bias:0.028 -> Level_Walk
+Jul 10, 2026 10:06:08 AM: IMU2 Win#79 GT:Height3_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:08 AM: Feature data logged for IMU2: Window #79 | Level_Walk
+Jul 10, 2026 10:06:09 AM: ZUPT IMU1 pkt:7189 t:1.467s accel:-0.102 gyro:2.002
+Jul 10, 2026 10:06:09 AM: WIN IMU1 #79 bias:0.067 -> Level_Walk
+Jul 10, 2026 10:06:09 AM: IMU1 Win#79 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:09 AM: Feature data logged for IMU1: Window #79 | Level_Walk
+Jul 10, 2026 10:06:09 AM: >>> Leading leg is Left for H3_D1 crossing (Start pkt: 6791, End pkt: 7175)
+Jul 10, 2026 10:06:10 AM: ZUPT IMU2 pkt:7233 t:1.367s accel:0.223 gyro:9.359
+Jul 10, 2026 10:06:10 AM: WIN IMU2 #80 bias:0.037 -> Level_Walk
+Jul 10, 2026 10:06:10 AM: IMU2 Win#80 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:10 AM: Feature data logged for IMU2: Window #80 | Level_Walk
+Jul 10, 2026 10:06:10 AM: ZUPT IMU1 pkt:7271 t:1.367s accel:0.323 gyro:11.323
+Jul 10, 2026 10:06:10 AM: WIN IMU1 #80 bias:0.019 -> Level_Walk
+Jul 10, 2026 10:06:10 AM: IMU1 Win#80 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:10 AM: Feature data logged for IMU1: Window #80 | Level_Walk
+Jul 10, 2026 10:06:11 AM: ZUPT IMU1 pkt:7301 t:0.5s accel:-0.305 gyro:0.005
+Jul 10, 2026 10:06:11 AM: WIN IMU1 #81 bias:0.013 -> Level_Walk
+Jul 10, 2026 10:06:11 AM: IMU1 Win#81 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:11 AM: Feature data logged for IMU1: Window #81 | Level_Walk
+Jul 10, 2026 10:06:11 AM: ZUPT IMU2 pkt:7313 t:1.333s accel:0.066 gyro:-1.228
+Jul 10, 2026 10:06:11 AM: WIN IMU2 #81 bias:-0.005 -> Level_Walk
+Jul 10, 2026 10:06:11 AM: IMU2 Win#81 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:11 AM: Feature data logged for IMU2: Window #81 | Level_Walk
+Jul 10, 2026 10:06:12 AM: ZUPT IMU2 pkt:7346 t:0.55s accel:-0.064 gyro:1.827
+Jul 10, 2026 10:06:12 AM: WIN IMU2 #82 bias:0.007 -> Level_Walk
+Jul 10, 2026 10:06:12 AM: IMU2 Win#82 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:12 AM: Feature data logged for IMU2: Window #82 | Level_Walk
+Jul 10, 2026 10:06:12 AM: ZUPT IMU1 pkt:7367 t:1.1s accel:-0.05 gyro:0.219
+Jul 10, 2026 10:06:12 AM: WIN IMU1 #82 bias:0.004 -> Level_Walk
+Jul 10, 2026 10:06:12 AM: IMU1 Win#82 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:12 AM: Feature data logged for IMU1: Window #82 | Level_Walk
+Jul 10, 2026 10:06:13 AM: ZUPT IMU1 pkt:7399 t:0.533s accel:0.202 gyro:-0.18
+Jul 10, 2026 10:06:13 AM: WIN IMU1 #83 bias:-0.014 -> Level_Walk
+Jul 10, 2026 10:06:13 AM: IMU1 Win#83 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:13 AM: Feature data logged for IMU1: Window #83 | Level_Walk
+Jul 10, 2026 10:06:13 AM: ZUPT IMU2 pkt:7395 t:0.817s accel:-3.023 gyro:9.345
+Jul 10, 2026 10:06:13 AM: WIN IMU2 #83 bias:0.047 -> Level_Walk
+Jul 10, 2026 10:06:13 AM: IMU2 Win#83 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:13 AM: Feature data logged for IMU2: Window #83 | Level_Walk
+Jul 10, 2026 10:06:13 AM: ZUPT IMU2 pkt:7434 t:0.65s accel:0.023 gyro:-2.496
+Jul 10, 2026 10:06:13 AM: WIN IMU2 #84 bias:-0.023 -> Level_Walk
+Jul 10, 2026 10:06:13 AM: IMU2 Win#84 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:13 AM: Feature data logged for IMU2: Window #84 | Level_Walk
+Jul 10, 2026 10:06:13 AM: ZUPT IMU1 pkt:7452 t:0.883s accel:-0.047 gyro:-0.324
+Jul 10, 2026 10:06:13 AM: WIN IMU1 #84 bias:-0.014 -> Level_Walk
+Jul 10, 2026 10:06:13 AM: IMU1 Win#84 GT:Height3_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:13 AM: Feature data logged for IMU1: Window #84 | Level_Walk
+Jul 10, 2026 10:06:14 AM: ZUPT IMU2 pkt:7493 t:0.983s accel:-0.054 gyro:-2.703
+Jul 10, 2026 10:06:14 AM: WIN IMU2 #85 bias:0.029 -> Level_Walk
+Jul 10, 2026 10:06:14 AM: IMU2 Win#85 GT:Height3_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:14 AM: Feature data logged for IMU2: Window #85 | Level_Walk
+Jul 10, 2026 10:06:15 AM: ZUPT IMU1 pkt:7542 t:1.5s accel:0.225 gyro:-1.209
+Jul 10, 2026 10:06:15 AM: WIN IMU1 #85 bias:0.03 -> Level_Walk
+Jul 10, 2026 10:06:15 AM: IMU1 Win#85 GT:Height3_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:15 AM: Feature data logged for IMU1: Window #85 | Level_Walk
+Jul 10, 2026 10:06:16 AM: ZUPT IMU2 pkt:7587 t:1.567s accel:-0.225 gyro:-1.84
+Jul 10, 2026 10:06:16 AM: WIN IMU2 #86 bias:0.034 -> Level_Walk
+Jul 10, 2026 10:06:16 AM: IMU2 Win#86 GT:Height3_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:16 AM: Feature data logged for IMU2: Window #86 | Level_Walk
+Jul 10, 2026 10:06:16 AM: ZUPT IMU1 pkt:7626 t:1.4s accel:0.088 gyro:-0.164
+Jul 10, 2026 10:06:16 AM: WIN IMU1 #86 bias:0.028 -> Level_Walk
+Jul 10, 2026 10:06:16 AM: IMU1 Win#86 GT:Height3_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:16 AM: Feature data logged for IMU1: Window #86 | Level_Walk
+Jul 10, 2026 10:06:17 AM: ZUPT IMU1 pkt:7656 t:0.5s accel:0.014 gyro:2.984
+Jul 10, 2026 10:06:17 AM: WIN IMU1 #87 bias:0.003 -> Level_Walk
+Jul 10, 2026 10:06:17 AM: IMU1 Win#87 GT:Height3_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:17 AM: Feature data logged for IMU1: Window #87 | Level_Walk
+Jul 10, 2026 10:06:17 AM: ZUPT IMU2 pkt:7691 t:1.733s accel:0.083 gyro:9.283
+Jul 10, 2026 10:06:17 AM: WIN IMU2 #87 bias:0.011 -> Level_Walk
+Jul 10, 2026 10:06:17 AM: IMU2 Win#87 GT:Height3_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:17 AM: Feature data logged for IMU2: Window #87 | Level_Walk
+Jul 10, 2026 10:06:18 AM: ZUPT IMU2 pkt:7721 t:0.5s accel:0.019 gyro:-2.307
+Jul 10, 2026 10:06:18 AM: WIN IMU2 #88 bias:0.006 -> Level_Walk
+Jul 10, 2026 10:06:18 AM: IMU2 Win#88 GT:Height3_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:18 AM: Feature data logged for IMU2: Window #88 | Level_Walk
+Jul 10, 2026 10:06:18 AM: ZUPT IMU1 pkt:7750 t:1.567s accel:0.057 gyro:2.622
+Jul 10, 2026 10:06:18 AM: WIN IMU1 #88 bias:0.018 -> Level_Walk
+Jul 10, 2026 10:06:18 AM: IMU1 Win#88 GT:Height3_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:18 AM: Feature data logged for IMU1: Window #88 | Level_Walk
+Jul 10, 2026 10:06:19 AM: ZUPT IMU2 pkt:7782 t:1.017s accel:-0.347 gyro:0.193
+Jul 10, 2026 10:06:19 AM: WIN IMU2 #89 bias:0.037 -> Level_Walk
+Jul 10, 2026 10:06:19 AM: IMU2 Win#89 GT:Height3_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:19 AM: Feature data logged for IMU2: Window #89 | Level_Walk
+Jul 10, 2026 10:06:20 AM: ZUPT IMU1 pkt:7835 t:1.417s accel:0.168 gyro:0.814
+Jul 10, 2026 10:06:20 AM: WIN IMU1 #89 bias:0.038 -> Level_Walk
+Jul 10, 2026 10:06:20 AM: IMU1 Win#89 GT:Height3_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:20 AM: Feature data logged for IMU1: Window #89 | Level_Walk
+Jul 10, 2026 10:06:20 AM: ZUPT IMU2 pkt:7861 t:1.317s accel:-0.085 gyro:3.293
+Jul 10, 2026 10:06:20 AM: WIN IMU2 #90 bias:0.053 -> Level_Walk
+Jul 10, 2026 10:06:20 AM: IMU2 Win#90 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:20 AM: Feature data logged for IMU2: Window #90 | Level_Walk
+Jul 10, 2026 10:06:21 AM: >>> Leading leg is Right for H3_D2 crossing (Start pkt: 7443, End pkt: 7860)
+Jul 10, 2026 10:06:21 AM: ZUPT IMU2 pkt:7894 t:0.55s accel:0.026 gyro:-1.294
+Jul 10, 2026 10:06:21 AM: WIN IMU2 #91 bias:0.005 -> Level_Walk
+Jul 10, 2026 10:06:21 AM: IMU2 Win#91 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:21 AM: Feature data logged for IMU2: Window #91 | Level_Walk
+Jul 10, 2026 10:06:21 AM: ZUPT IMU1 pkt:7909 t:1.233s accel:-0.028 gyro:2.767
+Jul 10, 2026 10:06:21 AM: WIN IMU1 #90 bias:0.034 -> Level_Walk
+Jul 10, 2026 10:06:21 AM: IMU1 Win#90 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:21 AM: Feature data logged for IMU1: Window #90 | Level_Walk
+Jul 10, 2026 10:06:22 AM: ZUPT IMU1 pkt:7946 t:0.617s accel:-0.319 gyro:4.372
+Jul 10, 2026 10:06:22 AM: WIN IMU1 #91 bias:0.025 -> Level_Walk
+Jul 10, 2026 10:06:22 AM: IMU1 Win#91 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:22 AM: Feature data logged for IMU1: Window #91 | Level_Walk
+Jul 10, 2026 10:06:22 AM: ZUPT IMU2 pkt:7958 t:1.067s accel:-0.102 gyro:0.718
+Jul 10, 2026 10:06:22 AM: WIN IMU2 #92 bias:0.028 -> Level_Walk
+Jul 10, 2026 10:06:22 AM: IMU2 Win#92 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:22 AM: Feature data logged for IMU2: Window #92 | Level_Walk
+Jul 10, 2026 10:06:23 AM: ZUPT IMU1 pkt:8000 t:0.9s accel:0.032 gyro:-0.867
+Jul 10, 2026 10:06:23 AM: WIN IMU1 #92 bias:0.029 -> Level_Walk
+Jul 10, 2026 10:06:23 AM: IMU1 Win#92 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:23 AM: Feature data logged for IMU1: Window #92 | Level_Walk
+Jul 10, 2026 10:06:23 AM: ZUPT IMU2 pkt:8037 t:1.317s accel:-0.242 gyro:-1.2
+Jul 10, 2026 10:06:23 AM: WIN IMU2 #93 bias:0.054 -> Level_Walk
+Jul 10, 2026 10:06:23 AM: IMU2 Win#93 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:23 AM: Feature data logged for IMU2: Window #93 | Level_Walk
+Jul 10, 2026 10:06:24 AM: ZUPT IMU1 pkt:8078 t:1.3s accel:0.597 gyro:5.506
+Jul 10, 2026 10:06:24 AM: WIN IMU1 #93 bias:0.049 -> Level_Walk
+Jul 10, 2026 10:06:24 AM: IMU1 Win#93 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:24 AM: Feature data logged for IMU1: Window #93 | Level_Walk
+Jul 10, 2026 10:06:25 AM: ZUPT IMU2 pkt:8127 t:1.5s accel:-0.112 gyro:-0.803
+Jul 10, 2026 10:06:25 AM: WIN IMU2 #94 bias:0.031 -> Level_Walk
+Jul 10, 2026 10:06:25 AM: IMU2 Win#94 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:25 AM: Feature data logged for IMU2: Window #94 | Level_Walk
+Jul 10, 2026 10:06:25 AM: ZUPT IMU2 pkt:8159 t:0.533s accel:0.106 gyro:-1.357
+Jul 10, 2026 10:06:25 AM: WIN IMU2 #95 bias:-0.004 -> Level_Walk
+Jul 10, 2026 10:06:25 AM: IMU2 Win#95 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:25 AM: Feature data logged for IMU2: Window #95 | Level_Walk
+Jul 10, 2026 10:06:26 AM: ZUPT IMU1 pkt:8194 t:1.933s accel:0.068 gyro:7.809
+Jul 10, 2026 10:06:26 AM: WIN IMU1 #94 bias:0.044 -> Level_Walk
+Jul 10, 2026 10:06:26 AM: IMU1 Win#94 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:26 AM: Feature data logged for IMU1: Window #94 | Level_Walk
+Jul 10, 2026 10:06:27 AM: ZUPT IMU2 pkt:8240 t:1.35s accel:1.184 gyro:1.601
+Jul 10, 2026 10:06:27 AM: WIN IMU2 #96 bias:-0.007 -> Level_Walk
+Jul 10, 2026 10:06:27 AM: IMU2 Win#96 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:27 AM: Feature data logged for IMU2: Window #96 | Level_Walk
+Jul 10, 2026 10:06:27 AM: ZUPT IMU1 pkt:8229 t:0.583s accel:0.179 gyro:7.547
+Jul 10, 2026 10:06:27 AM: WIN IMU1 #95 bias:-0.003 -> Level_Walk
+Jul 10, 2026 10:06:27 AM: IMU1 Win#95 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:27 AM: Feature data logged for IMU1: Window #95 | Level_Walk
+Jul 10, 2026 10:06:27 AM: ZUPT IMU1 pkt:8284 t:0.917s accel:-0.041 gyro:-2.418
+Jul 10, 2026 10:06:27 AM: WIN IMU1 #96 bias:0.032 -> Level_Walk
+Jul 10, 2026 10:06:27 AM: IMU1 Win#96 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:27 AM: Feature data logged for IMU1: Window #96 | Level_Walk
+Jul 10, 2026 10:06:28 AM: ZUPT IMU2 pkt:8319 t:1.317s accel:-0.81 gyro:-2.38
+Jul 10, 2026 10:06:28 AM: WIN IMU2 #97 bias:0.078 -> Level_Walk
+Jul 10, 2026 10:06:28 AM: IMU2 Win#97 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:28 AM: Feature data logged for IMU2: Window #97 | Level_Walk
+Jul 10, 2026 10:06:28 AM: ZUPT IMU2 pkt:8350 t:0.517s accel:0.008 gyro:-2.413
+Jul 10, 2026 10:06:28 AM: WIN IMU2 #98 bias:-0.009 -> Level_Walk
+Jul 10, 2026 10:06:28 AM: IMU2 Win#98 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:28 AM: Feature data logged for IMU2: Window #98 | Level_Walk
+Jul 10, 2026 10:06:29 AM: ZUPT IMU1 pkt:8368 t:1.4s accel:0.055 gyro:2.784
+Jul 10, 2026 10:06:29 AM: WIN IMU1 #97 bias:0.048 -> Level_Walk
+Jul 10, 2026 10:06:29 AM: IMU1 Win#97 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:29 AM: Feature data logged for IMU1: Window #97 | Level_Walk
+Jul 10, 2026 10:06:29 AM: >>> Leading leg is Left for H2_D2 crossing (Start pkt: 7954, End pkt: 8357)
+Jul 10, 2026 10:06:29 AM: ZUPT IMU1 pkt:8400 t:0.533s accel:0.026 gyro:1.979
+Jul 10, 2026 10:06:29 AM: WIN IMU1 #98 bias:-0.001 -> Level_Walk
+Jul 10, 2026 10:06:29 AM: IMU1 Win#98 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:29 AM: Feature data logged for IMU1: Window #98 | Level_Walk
+Jul 10, 2026 10:06:29 AM: ZUPT IMU2 pkt:8411 t:1.017s accel:0.539 gyro:-0.259
+Jul 10, 2026 10:06:29 AM: WIN IMU2 #99 bias:0.032 -> Level_Walk
+Jul 10, 2026 10:06:29 AM: IMU2 Win#99 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:29 AM: Feature data logged for IMU2: Window #99 | Level_Walk
+Jul 10, 2026 10:06:30 AM: ZUPT IMU2 pkt:8444 t:0.55s accel:-0.029 gyro:-2.182
+Jul 10, 2026 10:06:30 AM: WIN IMU2 #100 bias:0.01 -> Level_Walk
+Jul 10, 2026 10:06:30 AM: IMU2 Win#100 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:30 AM: Feature data logged for IMU2: Window #100 | Level_Walk
+Jul 10, 2026 10:06:30 AM: ZUPT IMU1 pkt:8463 t:1.05s accel:0.215 gyro:1.384
+Jul 10, 2026 10:06:30 AM: WIN IMU1 #99 bias:0.039 -> Level_Walk
+Jul 10, 2026 10:06:30 AM: IMU1 Win#99 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:30 AM: Feature data logged for IMU1: Window #99 | Level_Walk
+Jul 10, 2026 10:06:31 AM: ZUPT IMU2 pkt:8503 t:0.983s accel:-0.288 gyro:-2.517
+Jul 10, 2026 10:06:31 AM: WIN IMU2 #101 bias:0.04 -> Level_Walk
+Jul 10, 2026 10:06:31 AM: IMU2 Win#101 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:31 AM: Feature data logged for IMU2: Window #101 | Level_Walk
+Jul 10, 2026 10:06:32 AM: ZUPT IMU1 pkt:8539 t:1.267s accel:0.394 gyro:6.876
+Jul 10, 2026 10:06:32 AM: WIN IMU1 #100 bias:0.065 -> Level_Walk
+Jul 10, 2026 10:06:32 AM: IMU1 Win#100 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:32 AM: Feature data logged for IMU1: Window #100 | Level_Walk
+Jul 10, 2026 10:06:32 AM: ZUPT IMU2 pkt:8578 t:1.25s accel:-0.113 gyro:-1.66
+Jul 10, 2026 10:06:32 AM: WIN IMU2 #102 bias:0.052 -> Level_Walk
+Jul 10, 2026 10:06:32 AM: IMU2 Win#102 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:32 AM: Feature data logged for IMU2: Window #102 | Level_Walk
+Jul 10, 2026 10:06:33 AM: ZUPT IMU1 pkt:8609 t:1.167s accel:0.494 gyro:5.245
+Jul 10, 2026 10:06:33 AM: WIN IMU1 #101 bias:0.088 -> Level_Walk
+Jul 10, 2026 10:06:33 AM: IMU1 Win#101 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:33 AM: Feature data logged for IMU1: Window #101 | Level_Walk
+Jul 10, 2026 10:06:33 AM: ZUPT IMU1 pkt:8643 t:0.567s accel:0.013 gyro:4.382
+Jul 10, 2026 10:06:33 AM: WIN IMU1 #102 bias:0.014 -> Level_Walk
+Jul 10, 2026 10:06:33 AM: IMU1 Win#102 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:33 AM: Feature data logged for IMU1: Window #102 | Level_Walk
+Jul 10, 2026 10:06:34 AM: ZUPT IMU2 pkt:8667 t:1.483s accel:0.015 gyro:9.237
+Jul 10, 2026 10:06:34 AM: WIN IMU2 #103 bias:0.078 -> Level_Walk
+Jul 10, 2026 10:06:34 AM: IMU2 Win#103 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:34 AM: Feature data logged for IMU2: Window #103 | Level_Walk
+Jul 10, 2026 10:06:34 AM: ZUPT IMU2 pkt:8702 t:0.583s accel:0.261 gyro:6.1
+Jul 10, 2026 10:06:34 AM: WIN IMU2 #104 bias:-0.025 -> Level_Walk
+Jul 10, 2026 10:06:34 AM: IMU2 Win#104 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:34 AM: Feature data logged for IMU2: Window #104 | Level_Walk
+Jul 10, 2026 10:06:35 AM: ZUPT IMU1 pkt:8722 t:1.317s accel:-0.017 gyro:-1.504
+Jul 10, 2026 10:06:35 AM: WIN IMU1 #103 bias:0.041 -> Level_Walk
+Jul 10, 2026 10:06:35 AM: IMU1 Win#103 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:35 AM: Feature data logged for IMU1: Window #103 | Level_Walk
+Jul 10, 2026 10:06:35 AM: ZUPT IMU2 pkt:8756 t:0.9s accel:-0.324 gyro:0.49
+Jul 10, 2026 10:06:35 AM: WIN IMU2 #105 bias:0.035 -> Level_Walk
+Jul 10, 2026 10:06:35 AM: IMU2 Win#105 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:35 AM: Feature data logged for IMU2: Window #105 | Level_Walk
+Jul 10, 2026 10:06:36 AM: ZUPT IMU1 pkt:8802 t:1.333s accel:0.056 gyro:-1.594
+Jul 10, 2026 10:06:36 AM: WIN IMU1 #104 bias:0.034 -> Level_Walk
+Jul 10, 2026 10:06:36 AM: IMU1 Win#104 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:36 AM: Feature data logged for IMU1: Window #104 | Level_Walk
+Jul 10, 2026 10:06:37 AM: ZUPT IMU2 pkt:8841 t:1.417s accel:-0.033 gyro:-1.95
+Jul 10, 2026 10:06:37 AM: WIN IMU2 #106 bias:0.037 -> Level_Walk
+Jul 10, 2026 10:06:37 AM: IMU2 Win#106 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:37 AM: Feature data logged for IMU2: Window #106 | Level_Walk
+Jul 10, 2026 10:06:37 AM: >>> Leading leg is Right for H1_D2 crossing (Start pkt: 8436, End pkt: 8814)
+Jul 10, 2026 10:06:37 AM: ZUPT IMU1 pkt:8891 t:1.483s accel:0.026 gyro:4.624
+Jul 10, 2026 10:06:37 AM: WIN IMU1 #105 bias:0.052 -> Level_Walk
+Jul 10, 2026 10:06:37 AM: IMU1 Win#105 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:37 AM: Feature data logged for IMU1: Window #105 | Level_Walk
+Jul 10, 2026 10:06:38 AM: ZUPT IMU2 pkt:8924 t:1.383s accel:-0.051 gyro:4.852
+Jul 10, 2026 10:06:38 AM: WIN IMU2 #107 bias:0.062 -> Level_Walk
+Jul 10, 2026 10:06:38 AM: IMU2 Win#107 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:38 AM: Feature data logged for IMU2: Window #107 | Level_Walk
+Jul 10, 2026 10:06:39 AM: ZUPT IMU1 pkt:8972 t:1.35s accel:-0.146 gyro:1.089
+Jul 10, 2026 10:06:39 AM: WIN IMU1 #106 bias:0.054 -> Level_Walk
+Jul 10, 2026 10:06:39 AM: IMU1 Win#106 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:39 AM: Feature data logged for IMU1: Window #106 | Level_Walk
+Jul 10, 2026 10:06:39 AM: ZUPT IMU2 pkt:9008 t:1.4s accel:-0.193 gyro:-2.366
+Jul 10, 2026 10:06:39 AM: WIN IMU2 #108 bias:0.054 -> Level_Walk
+Jul 10, 2026 10:06:39 AM: IMU2 Win#108 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:06:39 AM: Feature data logged for IMU2: Window #108 | Level_Walk
+Jul 10, 2026 10:06:40 AM: ZUPT IMU1 pkt:9044 t:1.2s accel:1.034 gyro:4.175
+Jul 10, 2026 10:06:40 AM: WIN IMU1 #107 bias:0.071 -> Level_Walk
+Jul 10, 2026 10:06:40 AM: IMU1 Win#107 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:06:40 AM: Feature data logged for IMU1: Window #107 | Level_Walk
+Jul 10, 2026 10:06:41 AM: ZUPT IMU2 pkt:9092 t:1.4s accel:0.22 gyro:6.16
+Jul 10, 2026 10:06:41 AM: WIN IMU2 #109 bias:0.043 -> Level_Walk
+Jul 10, 2026 10:06:41 AM: IMU2 Win#109 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:06:41 AM: Feature data logged for IMU2: Window #109 | Level_Walk
+Jul 10, 2026 10:06:41 AM: ZUPT IMU1 pkt:9124 t:1.333s accel:0.424 gyro:4.672
+Jul 10, 2026 10:06:41 AM: WIN IMU1 #108 bias:0.09 -> Level_Walk
+Jul 10, 2026 10:06:41 AM: IMU1 Win#108 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:06:41 AM: Feature data logged for IMU1: Window #108 | Level_Walk
+Jul 10, 2026 10:06:42 AM: ZUPT IMU2 pkt:9171 t:1.317s accel:0.464 gyro:1.643
+Jul 10, 2026 10:06:42 AM: WIN IMU2 #110 bias:0.041 -> Level_Walk
+Jul 10, 2026 10:06:42 AM: IMU2 Win#110 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:06:42 AM: Feature data logged for IMU2: Window #110 | Level_Walk
+Jul 10, 2026 10:06:43 AM: ZUPT IMU1 pkt:9203 t:1.317s accel:-0.211 gyro:-0.86
+Jul 10, 2026 10:06:43 AM: WIN IMU1 #109 bias:0.076 -> Level_Walk
+Jul 10, 2026 10:06:43 AM: IMU1 Win#109 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:06:43 AM: Feature data logged for IMU1: Window #109 | Level_Walk
+Jul 10, 2026 10:06:43 AM: ZUPT IMU2 pkt:9242 t:1.183s accel:-0.267 gyro:-2.079
+Jul 10, 2026 10:06:43 AM: WIN IMU2 #111 bias:0.06 -> Level_Walk
+Jul 10, 2026 10:06:43 AM: IMU2 Win#111 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:06:43 AM: Feature data logged for IMU2: Window #111 | Level_Walk
+Jul 10, 2026 10:06:44 AM: ZUPT IMU1 pkt:9285 t:1.367s accel:0.142 gyro:4.241
+Jul 10, 2026 10:06:44 AM: WIN IMU1 #110 bias:0.067 -> Level_Walk
+Jul 10, 2026 10:06:44 AM: IMU1 Win#110 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:06:44 AM: Feature data logged for IMU1: Window #110 | Level_Walk
+Jul 10, 2026 10:06:45 AM: ZUPT IMU2 pkt:9318 t:1.267s accel:-0.189 gyro:-0.59
+Jul 10, 2026 10:06:45 AM: WIN IMU2 #112 bias:0.066 -> Level_Walk
+Jul 10, 2026 10:06:45 AM: IMU2 Win#112 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:45 AM: Feature data logged for IMU2: Window #112 | Level_Walk
+Jul 10, 2026 10:06:45 AM: ZUPT IMU1 pkt:9359 t:1.233s accel:0.357 gyro:8.167
+Jul 10, 2026 10:06:45 AM: WIN IMU1 #111 bias:0.071 -> Level_Walk
+Jul 10, 2026 10:06:45 AM: IMU1 Win#111 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:45 AM: Feature data logged for IMU1: Window #111 | Level_Walk
+Jul 10, 2026 10:06:46 AM: ZUPT IMU2 pkt:9393 t:1.25s accel:-0.092 gyro:-1.321
+Jul 10, 2026 10:06:46 AM: WIN IMU2 #113 bias:0.082 -> Level_Walk
+Jul 10, 2026 10:06:46 AM: IMU2 Win#113 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:46 AM: Feature data logged for IMU2: Window #113 | Level_Walk
+Jul 10, 2026 10:06:47 AM: ZUPT IMU1 pkt:9435 t:1.267s accel:-1.577 gyro:9.903
+Jul 10, 2026 10:06:47 AM: WIN IMU1 #112 bias:0.045 -> Level_Walk
+Jul 10, 2026 10:06:47 AM: IMU1 Win#112 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:47 AM: Feature data logged for IMU1: Window #112 | Level_Walk
+Jul 10, 2026 10:06:47 AM: ZUPT IMU2 pkt:9481 t:1.467s accel:-0.039 gyro:-0.686
+Jul 10, 2026 10:06:47 AM: WIN IMU2 #114 bias:0.022 -> Level_Walk
+Jul 10, 2026 10:06:47 AM: IMU2 Win#114 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:47 AM: Feature data logged for IMU2: Window #114 | Level_Walk
+Jul 10, 2026 10:06:48 AM: ZUPT IMU1 pkt:9521 t:1.433s accel:-0.089 gyro:1.644
+Jul 10, 2026 10:06:48 AM: WIN IMU1 #113 bias:0.035 -> Level_Walk
+Jul 10, 2026 10:06:48 AM: IMU1 Win#113 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:06:48 AM: Feature data logged for IMU1: Window #113 | Level_Walk
+Jul 10, 2026 10:06:49 AM: ZUPT IMU2 pkt:9569 t:1.467s accel:0.055 gyro:0.796
+Jul 10, 2026 10:06:49 AM: WIN IMU2 #115 bias:0.01 -> Level_Walk
+Jul 10, 2026 10:06:49 AM: IMU2 Win#115 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:06:49 AM: Feature data logged for IMU2: Window #115 | Level_Walk
+Jul 10, 2026 10:06:49 AM: ZUPT IMU1 pkt:9600 t:1.317s accel:-0.164 gyro:1.548
+Jul 10, 2026 10:06:49 AM: WIN IMU1 #114 bias:-0.018 -> Level_Walk
+Jul 10, 2026 10:06:49 AM: IMU1 Win#114 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:06:49 AM: Feature data logged for IMU1: Window #114 | Level_Walk
+Jul 10, 2026 10:06:50 AM: ZUPT IMU2 pkt:9639 t:1.167s accel:0.033 gyro:0.775
+Jul 10, 2026 10:06:50 AM: WIN IMU2 #116 bias:-0.002 -> Level_Walk
+Jul 10, 2026 10:06:50 AM: IMU2 Win#116 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:06:50 AM: Feature data logged for IMU2: Window #116 | Level_Walk
+Jul 10, 2026 10:06:50 AM: ZUPT IMU1 pkt:9674 t:1.233s accel:-0.206 gyro:7.13
+Jul 10, 2026 10:06:50 AM: WIN IMU1 #115 bias:0.016 -> Level_Walk
+Jul 10, 2026 10:06:50 AM: IMU1 Win#115 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:06:50 AM: Feature data logged for IMU1: Window #115 | Level_Walk
+Jul 10, 2026 10:06:51 AM: ZUPT IMU2 pkt:9714 t:1.25s accel:0.128 gyro:-0.244
+Jul 10, 2026 10:06:51 AM: WIN IMU2 #117 bias:-0.001 -> Level_Walk
+Jul 10, 2026 10:06:51 AM: IMU2 Win#117 GT:Level_Walk Pred:Level_Walk ✓
+Jul 10, 2026 10:06:51 AM: Feature data logged for IMU2: Window #117 | Level_Walk
+Jul 10, 2026 10:06:52 AM: ZUPT IMU1 pkt:9749 t:1.25s accel:-0.37 gyro:-0.409
+Jul 10, 2026 10:06:52 AM: WIN IMU1 #116 bias:0.012 -> Level_Walk
+Jul 10, 2026 10:06:52 AM: IMU1 Win#116 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:52 AM: Feature data logged for IMU1: Window #116 | Level_Walk
+Jul 10, 2026 10:06:52 AM: ZUPT IMU2 pkt:9792 t:1.3s accel:0.14 gyro:-0.586
+Jul 10, 2026 10:06:52 AM: WIN IMU2 #118 bias:0.01 -> Level_Walk
+Jul 10, 2026 10:06:52 AM: IMU2 Win#118 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:52 AM: Feature data logged for IMU2: Window #118 | Level_Walk
+Jul 10, 2026 10:06:53 AM: ZUPT IMU1 pkt:9829 t:1.333s accel:0.022 gyro:-1.099
+Jul 10, 2026 10:06:53 AM: WIN IMU1 #117 bias:-0.008 -> Level_Walk
+Jul 10, 2026 10:06:53 AM: IMU1 Win#117 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:53 AM: Feature data logged for IMU1: Window #117 | Level_Walk
+Jul 10, 2026 10:06:54 AM: ZUPT IMU2 pkt:9871 t:1.317s accel:0.005 gyro:-1.296
+Jul 10, 2026 10:06:54 AM: WIN IMU2 #119 bias:0.028 -> Level_Walk
+Jul 10, 2026 10:06:54 AM: IMU2 Win#119 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:54 AM: Feature data logged for IMU2: Window #119 | Level_Walk
+Jul 10, 2026 10:06:54 AM: ZUPT IMU1 pkt:9905 t:1.267s accel:0.023 gyro:2.978
+Jul 10, 2026 10:06:54 AM: WIN IMU1 #118 bias:0.007 -> Level_Walk
+Jul 10, 2026 10:06:54 AM: IMU1 Win#118 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:06:54 AM: Feature data logged for IMU1: Window #118 | Level_Walk
+Jul 10, 2026 10:06:55 AM: ZUPT IMU2 pkt:9943 t:1.2s accel:-0.067 gyro:-1.754
+Jul 10, 2026 10:06:55 AM: WIN IMU2 #120 bias:0.015 -> Level_Walk
+Jul 10, 2026 10:06:55 AM: IMU2 Win#120 GT:Height1_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:55 AM: Feature data logged for IMU2: Window #120 | Level_Walk
+Jul 10, 2026 10:06:56 AM: ZUPT IMU1 pkt:9987 t:1.367s accel:-0.072 gyro:0.598
+Jul 10, 2026 10:06:56 AM: WIN IMU1 #119 bias:-0.002 -> Level_Walk
+Jul 10, 2026 10:06:56 AM: IMU1 Win#119 GT:Height1_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:56 AM: Feature data logged for IMU1: Window #119 | Level_Walk
+Jul 10, 2026 10:06:56 AM: ZUPT IMU2 pkt:10023 t:1.333s accel:-0.708 gyro:-0.59
+Jul 10, 2026 10:06:56 AM: WIN IMU2 #121 bias:0.054 -> Level_Walk
+Jul 10, 2026 10:06:56 AM: IMU2 Win#121 GT:Height1_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:56 AM: Feature data logged for IMU2: Window #121 | Level_Walk
+Jul 10, 2026 10:06:57 AM: ZUPT IMU1 pkt:10065 t:1.3s accel:-0.088 gyro:2.048
+Jul 10, 2026 10:06:57 AM: WIN IMU1 #120 bias:0.01 -> Level_Walk
+Jul 10, 2026 10:06:57 AM: IMU1 Win#120 GT:Height1_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:57 AM: Feature data logged for IMU1: Window #120 | Level_Walk
+Jul 10, 2026 10:06:58 AM: ZUPT IMU2 pkt:10109 t:1.433s accel:-0.36 gyro:2.472
+Jul 10, 2026 10:06:58 AM: WIN IMU2 #122 bias:0.036 -> Level_Walk
+Jul 10, 2026 10:06:58 AM: IMU2 Win#122 GT:Height1_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:58 AM: Feature data logged for IMU2: Window #122 | Level_Walk
+Jul 10, 2026 10:06:58 AM: ZUPT IMU2 pkt:10139 t:0.5s accel:0.052 gyro:-1.177
+Jul 10, 2026 10:06:58 AM: WIN IMU2 #123 bias:-0.009 -> Level_Walk
+Jul 10, 2026 10:06:58 AM: IMU2 Win#123 GT:Height1_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:58 AM: Feature data logged for IMU2: Window #123 | Level_Walk
+Jul 10, 2026 10:06:59 AM: ZUPT IMU1 pkt:10169 t:1.733s accel:-0.11 gyro:8.709
+Jul 10, 2026 10:06:59 AM: WIN IMU1 #121 bias:0.027 -> Level_Walk
+Jul 10, 2026 10:06:59 AM: IMU1 Win#121 GT:Height1_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:59 AM: Feature data logged for IMU1: Window #121 | Level_Walk
+Jul 10, 2026 10:06:59 AM: ZUPT IMU1 pkt:10199 t:0.5s accel:0.017 gyro:7.27
+Jul 10, 2026 10:06:59 AM: WIN IMU1 #122 bias:-0.011 -> Level_Walk
+Jul 10, 2026 10:06:59 AM: IMU1 Win#122 GT:Height1_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:59 AM: Feature data logged for IMU1: Window #122 | Level_Walk
+Jul 10, 2026 10:06:59 AM: ZUPT IMU2 pkt:10214 t:1.25s accel:0.753 gyro:4.235
+Jul 10, 2026 10:06:59 AM: WIN IMU2 #124 bias:0.028 -> Level_Walk
+Jul 10, 2026 10:06:59 AM: IMU2 Win#124 GT:Height1_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:06:59 AM: Feature data logged for IMU2: Window #124 | Level_Walk
+Jul 10, 2026 10:07:00 AM: ZUPT IMU1 pkt:10262 t:1.05s accel:-0.074 gyro:2.713
+Jul 10, 2026 10:07:00 AM: WIN IMU1 #123 bias:0.018 -> Level_Walk
+Jul 10, 2026 10:07:00 AM: IMU1 Win#123 GT:Height1_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:00 AM: Feature data logged for IMU1: Window #123 | Level_Walk
+Jul 10, 2026 10:07:01 AM: ZUPT IMU2 pkt:10302 t:1.467s accel:-0.233 gyro:-3.14
+Jul 10, 2026 10:07:01 AM: WIN IMU2 #125 bias:0.061 -> Level_Walk
+Jul 10, 2026 10:07:01 AM: IMU2 Win#125 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:01 AM: Feature data logged for IMU2: Window #125 | Level_Walk
+Jul 10, 2026 10:07:01 AM: >>> Leading leg is Left for H1_D1 crossing (Start pkt: 9911, End pkt: 10281)
+Jul 10, 2026 10:07:02 AM: ZUPT IMU1 pkt:10346 t:1.4s accel:-0.032 gyro:0.972
+Jul 10, 2026 10:07:02 AM: WIN IMU1 #124 bias:0.01 -> Level_Walk
+Jul 10, 2026 10:07:02 AM: IMU1 Win#124 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:02 AM: Feature data logged for IMU1: Window #124 | Level_Walk
+Jul 10, 2026 10:07:02 AM: ZUPT IMU2 pkt:10385 t:1.383s accel:-0.148 gyro:3.564
+Jul 10, 2026 10:07:02 AM: WIN IMU2 #126 bias:0.064 -> Level_Walk
+Jul 10, 2026 10:07:02 AM: IMU2 Win#126 GT:Height2_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:02 AM: Feature data logged for IMU2: Window #126 | Level_Walk
+Jul 10, 2026 10:07:03 AM: ZUPT IMU1 pkt:10423 t:1.283s accel:0.883 gyro:9.04
+Jul 10, 2026 10:07:03 AM: WIN IMU1 #125 bias:0.023 -> Level_Walk
+Jul 10, 2026 10:07:03 AM: IMU1 Win#125 GT:Height2_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:03 AM: Feature data logged for IMU1: Window #125 | Level_Walk
+Jul 10, 2026 10:07:04 AM: ZUPT IMU2 pkt:10476 t:1.517s accel:-0.111 gyro:-1.269
+Jul 10, 2026 10:07:04 AM: WIN IMU2 #127 bias:0.044 -> Level_Walk
+Jul 10, 2026 10:07:04 AM: IMU2 Win#127 GT:Height2_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:04 AM: Feature data logged for IMU2: Window #127 | Level_Walk
+Jul 10, 2026 10:07:04 AM: ZUPT IMU1 pkt:10510 t:1.45s accel:-0.202 gyro:3.686
+Jul 10, 2026 10:07:04 AM: WIN IMU1 #126 bias:0.04 -> Level_Walk
+Jul 10, 2026 10:07:04 AM: IMU1 Win#126 GT:Height2_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:04 AM: Feature data logged for IMU1: Window #126 | Level_Walk
+Jul 10, 2026 10:07:05 AM: ZUPT IMU1 pkt:10540 t:0.5s accel:0.016 gyro:0.008
+Jul 10, 2026 10:07:05 AM: WIN IMU1 #127 bias:-0.014 -> Level_Walk
+Jul 10, 2026 10:07:05 AM: IMU1 Win#127 GT:Height2_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:05 AM: Feature data logged for IMU1: Window #127 | Level_Walk
+Jul 10, 2026 10:07:05 AM: ZUPT IMU2 pkt:10571 t:1.583s accel:-0.1 gyro:-1.07
+Jul 10, 2026 10:07:05 AM: WIN IMU2 #128 bias:0.037 -> Level_Walk
+Jul 10, 2026 10:07:05 AM: IMU2 Win#128 GT:Height2_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:05 AM: Feature data logged for IMU2: Window #128 | Level_Walk
+Jul 10, 2026 10:07:06 AM: ZUPT IMU2 pkt:10605 t:0.567s accel:0.1 gyro:-1.317
+Jul 10, 2026 10:07:06 AM: WIN IMU2 #129 bias:-0.022 -> Level_Walk
+Jul 10, 2026 10:07:06 AM: IMU2 Win#129 GT:Height2_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:06 AM: Feature data logged for IMU2: Window #129 | Level_Walk
+Jul 10, 2026 10:07:06 AM: ZUPT IMU1 pkt:10633 t:1.55s accel:-0.389 gyro:10.955
+Jul 10, 2026 10:07:06 AM: WIN IMU1 #128 bias:0.037 -> Level_Walk
+Jul 10, 2026 10:07:06 AM: IMU1 Win#128 GT:Height2_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:06 AM: Feature data logged for IMU1: Window #128 | Level_Walk
+Jul 10, 2026 10:07:07 AM: ZUPT IMU2 pkt:10664 t:0.983s accel:-0.08 gyro:-2.205
+Jul 10, 2026 10:07:07 AM: WIN IMU2 #130 bias:0.016 -> Level_Walk
+Jul 10, 2026 10:07:07 AM: IMU2 Win#130 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:07 AM: Feature data logged for IMU2: Window #130 | Level_Walk
+Jul 10, 2026 10:07:08 AM: >>> Leading leg is Right for H2_D1 crossing (Start pkt: 10353, End pkt: 10665)
+Jul 10, 2026 10:07:08 AM: ZUPT IMU1 pkt:10717 t:1.4s accel:0.058 gyro:-1.568
+Jul 10, 2026 10:07:08 AM: WIN IMU1 #129 bias:0.017 -> Level_Walk
+Jul 10, 2026 10:07:08 AM: IMU1 Win#129 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:08 AM: Feature data logged for IMU1: Window #129 | Level_Walk
+Jul 10, 2026 10:07:08 AM: ZUPT IMU2 pkt:10755 t:1.517s accel:0.187 gyro:-2.132
+Jul 10, 2026 10:07:08 AM: WIN IMU2 #131 bias:0.052 -> Level_Walk
+Jul 10, 2026 10:07:08 AM: IMU2 Win#131 GT:Height3_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:08 AM: Feature data logged for IMU2: Window #131 | Level_Walk
+Jul 10, 2026 10:07:09 AM: ZUPT IMU1 pkt:10791 t:1.233s accel:-0.007 gyro:0.724
+Jul 10, 2026 10:07:09 AM: WIN IMU1 #130 bias:0.013 -> Level_Walk
+Jul 10, 2026 10:07:09 AM: IMU1 Win#130 GT:Height3_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:09 AM: Feature data logged for IMU1: Window #130 | Level_Walk
+Jul 10, 2026 10:07:10 AM: ZUPT IMU2 pkt:10826 t:1.183s accel:-0.31 gyro:-2.438
+Jul 10, 2026 10:07:10 AM: WIN IMU2 #132 bias:0.064 -> Level_Walk
+Jul 10, 2026 10:07:10 AM: IMU2 Win#132 GT:Height3_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:10 AM: Feature data logged for IMU2: Window #132 | Level_Walk
+Jul 10, 2026 10:07:10 AM: ZUPT IMU1 pkt:10861 t:1.167s accel:-0.048 gyro:0.761
+Jul 10, 2026 10:07:10 AM: WIN IMU1 #131 bias:0.008 -> Level_Walk
+Jul 10, 2026 10:07:10 AM: IMU1 Win#131 GT:Height3_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:10 AM: Feature data logged for IMU1: Window #131 | Level_Walk
+Jul 10, 2026 10:07:11 AM: ZUPT IMU2 pkt:10895 t:1.15s accel:1.416 gyro:-2.173
+Jul 10, 2026 10:07:11 AM: WIN IMU2 #133 bias:0.056 -> Level_Walk
+Jul 10, 2026 10:07:11 AM: IMU2 Win#133 GT:Height3_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:11 AM: Feature data logged for IMU2: Window #133 | Level_Walk
+Jul 10, 2026 10:07:11 AM: ZUPT IMU1 pkt:10933 t:1.2s accel:-0.129 gyro:1.532
+Jul 10, 2026 10:07:11 AM: WIN IMU1 #132 bias:0.042 -> Level_Walk
+Jul 10, 2026 10:07:11 AM: IMU1 Win#132 GT:Height3_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:11 AM: Feature data logged for IMU1: Window #132 | Level_Walk
+Jul 10, 2026 10:07:13 AM: ZUPT IMU2 pkt:11005 t:1.833s accel:0.027 gyro:0.924
+Jul 10, 2026 10:07:13 AM: WIN IMU2 #134 bias:0.02 -> Level_Walk
+Jul 10, 2026 10:07:13 AM: IMU2 Win#134 GT:Height3_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:13 AM: Feature data logged for IMU2: Window #134 | Level_Walk
+Jul 10, 2026 10:07:13 AM: ZUPT IMU1 pkt:11042 t:1.817s accel:-0.121 gyro:2.377
+Jul 10, 2026 10:07:13 AM: WIN IMU1 #133 bias:0.045 -> Level_Walk
+Jul 10, 2026 10:07:13 AM: IMU1 Win#133 GT:Height3_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:13 AM: Feature data logged for IMU1: Window #133 | Level_Walk
+Jul 10, 2026 10:07:14 AM: ZUPT IMU2 pkt:11082 t:1.283s accel:-0.141 gyro:-1.621
+Jul 10, 2026 10:07:14 AM: WIN IMU2 #135 bias:0.064 -> Level_Walk
+Jul 10, 2026 10:07:14 AM: IMU2 Win#135 GT:Height3_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:14 AM: Feature data logged for IMU2: Window #135 | Level_Walk
+Jul 10, 2026 10:07:15 AM: ZUPT IMU1 pkt:11129 t:1.45s accel:-0.082 gyro:3.914
+Jul 10, 2026 10:07:15 AM: WIN IMU1 #134 bias:0.021 -> Level_Walk
+Jul 10, 2026 10:07:15 AM: IMU1 Win#134 GT:Height3_Depth1 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:15 AM: Feature data logged for IMU1: Window #134 | Level_Walk
+Jul 10, 2026 10:07:15 AM: ZUPT IMU2 pkt:11169 t:1.45s accel:-0.363 gyro:1.949
+Jul 10, 2026 10:07:15 AM: WIN IMU2 #136 bias:0.063 -> Level_Walk
+Jul 10, 2026 10:07:15 AM: IMU2 Win#136 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:15 AM: Feature data logged for IMU2: Window #136 | Level_Walk
+Jul 10, 2026 10:07:16 AM: >>> Leading leg is Right for H3_D1 crossing (Start pkt: 10753, End pkt: 11160)
+Jul 10, 2026 10:07:16 AM: ZUPT IMU2 pkt:11200 t:0.517s accel:0.039 gyro:1.87
+Jul 10, 2026 10:07:16 AM: WIN IMU2 #137 bias:0.001 -> Level_Walk
+Jul 10, 2026 10:07:16 AM: IMU2 Win#137 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:16 AM: Feature data logged for IMU2: Window #137 | Level_Walk
+Jul 10, 2026 10:07:16 AM: ZUPT IMU1 pkt:11221 t:1.533s accel:0.012 gyro:5.758
+Jul 10, 2026 10:07:16 AM: WIN IMU1 #135 bias:0.015 -> Level_Walk
+Jul 10, 2026 10:07:16 AM: IMU1 Win#135 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:16 AM: Feature data logged for IMU1: Window #135 | Level_Walk
+Jul 10, 2026 10:07:17 AM: ZUPT IMU1 pkt:11255 t:0.567s accel:0.089 gyro:3.445
+Jul 10, 2026 10:07:17 AM: WIN IMU1 #136 bias:0.009 -> Level_Walk
+Jul 10, 2026 10:07:17 AM: IMU1 Win#136 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:17 AM: Feature data logged for IMU1: Window #136 | Level_Walk
+Jul 10, 2026 10:07:17 AM: ZUPT IMU2 pkt:11263 t:1.05s accel:0.318 gyro:-2.122
+Jul 10, 2026 10:07:17 AM: WIN IMU2 #138 bias:-0.008 -> Level_Walk
+Jul 10, 2026 10:07:17 AM: IMU2 Win#138 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:17 AM: Feature data logged for IMU2: Window #138 | Level_Walk
+Jul 10, 2026 10:07:18 AM: ZUPT IMU2 pkt:11299 t:0.6s accel:-0.014 gyro:1.468
+Jul 10, 2026 10:07:18 AM: WIN IMU2 #139 bias:0.013 -> Level_Walk
+Jul 10, 2026 10:07:18 AM: IMU2 Win#139 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:18 AM: Feature data logged for IMU2: Window #139 | Level_Walk
+Jul 10, 2026 10:07:18 AM: ZUPT IMU1 pkt:11314 t:0.983s accel:-0.05 gyro:3.34
+Jul 10, 2026 10:07:18 AM: WIN IMU1 #137 bias:0.005 -> Level_Walk
+Jul 10, 2026 10:07:18 AM: IMU1 Win#137 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:18 AM: Feature data logged for IMU1: Window #137 | Level_Walk
+Jul 10, 2026 10:07:18 AM: ZUPT IMU1 pkt:11349 t:0.583s accel:0.028 gyro:4.314
+Jul 10, 2026 10:07:18 AM: WIN IMU1 #138 bias:0.011 -> Level_Walk
+Jul 10, 2026 10:07:18 AM: IMU1 Win#138 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:19 AM: Feature data logged for IMU1: Window #138 | Level_Walk
+Jul 10, 2026 10:07:19 AM: ZUPT IMU2 pkt:11359 t:1s accel:-0.079 gyro:-2.008
+Jul 10, 2026 10:07:19 AM: WIN IMU2 #140 bias:0.01 -> Level_Walk
+Jul 10, 2026 10:07:19 AM: IMU2 Win#140 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:19 AM: Feature data logged for IMU2: Window #140 | Level_Walk
+Jul 10, 2026 10:07:19 AM: ZUPT IMU2 pkt:11389 t:0.5s accel:0.055 gyro:-0.879
+Jul 10, 2026 10:07:19 AM: WIN IMU2 #141 bias:0.004 -> Level_Walk
+Jul 10, 2026 10:07:19 AM: IMU2 Win#141 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:19 AM: Feature data logged for IMU2: Window #141 | Level_Walk
+Jul 10, 2026 10:07:19 AM: ZUPT IMU1 pkt:11411 t:1.033s accel:0.216 gyro:-1.298
+Jul 10, 2026 10:07:19 AM: WIN IMU1 #139 bias:0.019 -> Level_Walk
+Jul 10, 2026 10:07:19 AM: IMU1 Win#139 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:19 AM: Feature data logged for IMU1: Window #139 | Level_Walk
+Jul 10, 2026 10:07:20 AM: ZUPT IMU2 pkt:11449 t:1s accel:-0.143 gyro:-2.984
+Jul 10, 2026 10:07:20 AM: WIN IMU2 #142 bias:0.013 -> Level_Walk
+Jul 10, 2026 10:07:20 AM: IMU2 Win#142 GT:Height3_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:20 AM: Feature data logged for IMU2: Window #142 | Level_Walk
+Jul 10, 2026 10:07:21 AM: ZUPT IMU1 pkt:11484 t:1.217s accel:0.268 gyro:-0.849
+Jul 10, 2026 10:07:21 AM: WIN IMU1 #140 bias:0.047 -> Level_Walk
+Jul 10, 2026 10:07:21 AM: IMU1 Win#140 GT:Height3_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:21 AM: Feature data logged for IMU1: Window #140 | Level_Walk
+Jul 10, 2026 10:07:21 AM: ZUPT IMU2 pkt:11527 t:1.3s accel:-0.029 gyro:-2.209
+Jul 10, 2026 10:07:21 AM: WIN IMU2 #143 bias:0.02 -> Level_Walk
+Jul 10, 2026 10:07:21 AM: IMU2 Win#143 GT:Height3_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:21 AM: Feature data logged for IMU2: Window #143 | Level_Walk
+Jul 10, 2026 10:07:22 AM: ZUPT IMU1 pkt:11568 t:1.4s accel:0.043 gyro:1.451
+Jul 10, 2026 10:07:22 AM: WIN IMU1 #141 bias:0.049 -> Level_Walk
+Jul 10, 2026 10:07:22 AM: IMU1 Win#141 GT:Height3_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:22 AM: Feature data logged for IMU1: Window #141 | Level_Walk
+Jul 10, 2026 10:07:23 AM: ZUPT IMU1 pkt:11601 t:0.55s accel:0.155 gyro:1.476
+Jul 10, 2026 10:07:23 AM: WIN IMU1 #142 bias:-0.002 -> Level_Walk
+Jul 10, 2026 10:07:23 AM: IMU1 Win#142 GT:Height3_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:23 AM: Feature data logged for IMU1: Window #142 | Level_Walk
+Jul 10, 2026 10:07:23 AM: ZUPT IMU2 pkt:11646 t:1.983s accel:0.034 gyro:-1.854
+Jul 10, 2026 10:07:23 AM: WIN IMU2 #144 bias:0.006 -> Level_Walk
+Jul 10, 2026 10:07:23 AM: IMU2 Win#144 GT:Height3_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:23 AM: Feature data logged for IMU2: Window #144 | Level_Walk
+Jul 10, 2026 10:07:24 AM: ZUPT IMU1 pkt:11681 t:1.333s accel:-0.366 gyro:6.257
+Jul 10, 2026 10:07:24 AM: WIN IMU1 #143 bias:0.032 -> Level_Walk
+Jul 10, 2026 10:07:24 AM: IMU1 Win#143 GT:Height3_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:24 AM: Feature data logged for IMU1: Window #143 | Level_Walk
+Jul 10, 2026 10:07:25 AM: ZUPT IMU2 pkt:11726 t:1.333s accel:-0.195 gyro:0.597
+Jul 10, 2026 10:07:25 AM: WIN IMU2 #145 bias:0.038 -> Level_Walk
+Jul 10, 2026 10:07:25 AM: IMU2 Win#145 GT:Height3_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:25 AM: Feature data logged for IMU2: Window #145 | Level_Walk
+Jul 10, 2026 10:07:25 AM: ZUPT IMU1 pkt:11762 t:1.35s accel:-0.319 gyro:4.287
+Jul 10, 2026 10:07:25 AM: WIN IMU1 #144 bias:0.081 -> Level_Walk
+Jul 10, 2026 10:07:25 AM: IMU1 Win#144 GT:Height3_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:25 AM: Feature data logged for IMU1: Window #144 | Level_Walk
+Jul 10, 2026 10:07:26 AM: ZUPT IMU1 pkt:11794 t:0.533s accel:-0.015 gyro:4.62
+Jul 10, 2026 10:07:26 AM: WIN IMU1 #145 bias:0.004 -> Level_Walk
+Jul 10, 2026 10:07:26 AM: IMU1 Win#145 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:26 AM: Feature data logged for IMU1: Window #145 | Level_Walk
+Jul 10, 2026 10:07:26 AM: ZUPT IMU2 pkt:11804 t:1.3s accel:-0.581 gyro:0.63
+Jul 10, 2026 10:07:26 AM: WIN IMU2 #146 bias:0.043 -> Level_Walk
+Jul 10, 2026 10:07:26 AM: IMU2 Win#146 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:26 AM: Feature data logged for IMU2: Window #146 | Level_Walk
+Jul 10, 2026 10:07:26 AM: >>> Leading leg is Right for H3_D2 crossing (Start pkt: 11411, End pkt: 11779)
+Jul 10, 2026 10:07:27 AM: ZUPT IMU2 pkt:11837 t:0.55s accel:0.083 gyro:-3.103
+Jul 10, 2026 10:07:27 AM: WIN IMU2 #147 bias:-0.001 -> Level_Walk
+Jul 10, 2026 10:07:27 AM: IMU2 Win#147 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:27 AM: Feature data logged for IMU2: Window #147 | Level_Walk
+Jul 10, 2026 10:07:27 AM: ZUPT IMU1 pkt:11848 t:0.9s accel:0.232 gyro:-1.951
+Jul 10, 2026 10:07:27 AM: WIN IMU1 #146 bias:0.044 -> Level_Walk
+Jul 10, 2026 10:07:27 AM: IMU1 Win#146 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:27 AM: Feature data logged for IMU1: Window #146 | Level_Walk
+Jul 10, 2026 10:07:27 AM: ZUPT IMU2 pkt:11894 t:0.95s accel:0.071 gyro:-0.879
+Jul 10, 2026 10:07:28 AM: WIN IMU2 #148 bias:0.015 -> Level_Walk
+Jul 10, 2026 10:07:28 AM: IMU2 Win#148 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:28 AM: Feature data logged for IMU2: Window #148 | Level_Walk
+Jul 10, 2026 10:07:28 AM: ZUPT IMU1 pkt:11924 t:1.267s accel:0.137 gyro:0.353
+Jul 10, 2026 10:07:28 AM: WIN IMU1 #147 bias:0.047 -> Level_Walk
+Jul 10, 2026 10:07:28 AM: IMU1 Win#147 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:28 AM: Feature data logged for IMU1: Window #147 | Level_Walk
+Jul 10, 2026 10:07:29 AM: ZUPT IMU2 pkt:11967 t:1.217s accel:-0.191 gyro:-1.804
+Jul 10, 2026 10:07:29 AM: WIN IMU2 #149 bias:0.036 -> Level_Walk
+Jul 10, 2026 10:07:29 AM: IMU2 Win#149 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:29 AM: Feature data logged for IMU2: Window #149 | Level_Walk
+Jul 10, 2026 10:07:29 AM: ZUPT IMU1 pkt:12002 t:1.3s accel:-0.056 gyro:0.855
+Jul 10, 2026 10:07:29 AM: WIN IMU1 #148 bias:0.044 -> Level_Walk
+Jul 10, 2026 10:07:29 AM: IMU1 Win#148 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:29 AM: Feature data logged for IMU1: Window #148 | Level_Walk
+Jul 10, 2026 10:07:30 AM: ZUPT IMU2 pkt:12042 t:1.25s accel:0.735 gyro:2.818
+Jul 10, 2026 10:07:30 AM: WIN IMU2 #150 bias:0.033 -> Level_Walk
+Jul 10, 2026 10:07:30 AM: IMU2 Win#150 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:30 AM: Feature data logged for IMU2: Window #150 | Level_Walk
+Jul 10, 2026 10:07:31 AM: ZUPT IMU2 pkt:12076 t:0.567s accel:-0.009 gyro:-2.14
+Jul 10, 2026 10:07:31 AM: WIN IMU2 #151 bias:0.016 -> Level_Walk
+Jul 10, 2026 10:07:31 AM: IMU2 Win#151 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:31 AM: Feature data logged for IMU2: Window #151 | Level_Walk
+Jul 10, 2026 10:07:31 AM: ZUPT IMU1 pkt:12121 t:1.983s accel:0.119 gyro:4.864
+Jul 10, 2026 10:07:31 AM: WIN IMU1 #149 bias:0.029 -> Level_Walk
+Jul 10, 2026 10:07:31 AM: IMU1 Win#149 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:31 AM: Feature data logged for IMU1: Window #149 | Level_Walk
+Jul 10, 2026 10:07:32 AM: ZUPT IMU2 pkt:12179 t:1.717s accel:0.114 gyro:-2.963
+Jul 10, 2026 10:07:32 AM: WIN IMU2 #152 bias:0.005 -> Level_Walk
+Jul 10, 2026 10:07:32 AM: IMU2 Win#152 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:32 AM: Feature data logged for IMU2: Window #152 | Level_Walk
+Jul 10, 2026 10:07:33 AM: ZUPT IMU1 pkt:12154 t:0.55s accel:0.195 gyro:9.723
+Jul 10, 2026 10:07:33 AM: WIN IMU1 #150 bias:0.003 -> Level_Walk
+Jul 10, 2026 10:07:33 AM: IMU1 Win#150 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:33 AM: Feature data logged for IMU1: Window #150 | Level_Walk
+Jul 10, 2026 10:07:33 AM: ZUPT IMU1 pkt:12211 t:0.95s accel:0.017 gyro:1.77
+Jul 10, 2026 10:07:33 AM: WIN IMU1 #151 bias:0.036 -> Level_Walk
+Jul 10, 2026 10:07:33 AM: IMU1 Win#151 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:33 AM: Feature data logged for IMU1: Window #151 | Level_Walk
+Jul 10, 2026 10:07:33 AM: ZUPT IMU2 pkt:12253 t:1.233s accel:0.039 gyro:-3.661
+Jul 10, 2026 10:07:33 AM: WIN IMU2 #153 bias:0.027 -> Level_Walk
+Jul 10, 2026 10:07:33 AM: IMU2 Win#153 GT:Height2_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:33 AM: Feature data logged for IMU2: Window #153 | Level_Walk
+Jul 10, 2026 10:07:34 AM: ZUPT IMU1 pkt:12300 t:1.483s accel:0.034 gyro:1.885
+Jul 10, 2026 10:07:34 AM: WIN IMU1 #152 bias:0.039 -> Level_Walk
+Jul 10, 2026 10:07:34 AM: IMU1 Win#152 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:34 AM: Feature data logged for IMU1: Window #152 | Level_Walk
+Jul 10, 2026 10:07:34 AM: >>> Leading leg is Left for H2_D2 crossing (Start pkt: 11849, End pkt: 12277)
+Jul 10, 2026 10:07:35 AM: ZUPT IMU1 pkt:12333 t:0.55s accel:-0.084 gyro:2.098
+Jul 10, 2026 10:07:35 AM: WIN IMU1 #153 bias:0.007 -> Level_Walk
+Jul 10, 2026 10:07:35 AM: IMU1 Win#153 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:35 AM: Feature data logged for IMU1: Window #153 | Level_Walk
+Jul 10, 2026 10:07:35 AM: ZUPT IMU2 pkt:12346 t:1.55s accel:0.154 gyro:-3.22
+Jul 10, 2026 10:07:35 AM: WIN IMU2 #154 bias:0.031 -> Level_Walk
+Jul 10, 2026 10:07:35 AM: IMU2 Win#154 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:35 AM: Feature data logged for IMU2: Window #154 | Level_Walk
+Jul 10, 2026 10:07:36 AM: ZUPT IMU1 pkt:12392 t:0.983s accel:0.03 gyro:-1.389
+Jul 10, 2026 10:07:36 AM: WIN IMU1 #154 bias:0.04 -> Level_Walk
+Jul 10, 2026 10:07:36 AM: IMU1 Win#154 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:36 AM: Feature data logged for IMU1: Window #154 | Level_Walk
+Jul 10, 2026 10:07:37 AM: ZUPT IMU2 pkt:12440 t:1.567s accel:-0.072 gyro:1.95
+Jul 10, 2026 10:07:37 AM: WIN IMU2 #155 bias:0.047 -> Level_Walk
+Jul 10, 2026 10:07:37 AM: IMU2 Win#155 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:37 AM: Feature data logged for IMU2: Window #155 | Level_Walk
+Jul 10, 2026 10:07:37 AM: ZUPT IMU1 pkt:12475 t:1.383s accel:-0.017 gyro:4.441
+Jul 10, 2026 10:07:37 AM: WIN IMU1 #155 bias:0.069 -> Level_Walk
+Jul 10, 2026 10:07:37 AM: IMU1 Win#155 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:37 AM: Feature data logged for IMU1: Window #155 | Level_Walk
+Jul 10, 2026 10:07:38 AM: ZUPT IMU2 pkt:12527 t:1.45s accel:0.065 gyro:1.109
+Jul 10, 2026 10:07:38 AM: WIN IMU2 #156 bias:0.017 -> Level_Walk
+Jul 10, 2026 10:07:38 AM: IMU2 Win#156 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:38 AM: Feature data logged for IMU2: Window #156 | Level_Walk
+Jul 10, 2026 10:07:39 AM: ZUPT IMU1 pkt:12564 t:1.483s accel:1.881 gyro:2.552
+Jul 10, 2026 10:07:39 AM: WIN IMU1 #156 bias:0.034 -> Level_Walk
+Jul 10, 2026 10:07:39 AM: IMU1 Win#156 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:39 AM: Feature data logged for IMU1: Window #156 | Level_Walk
+Jul 10, 2026 10:07:39 AM: ZUPT IMU1 pkt:12595 t:0.517s accel:0.008 gyro:7.47
+Jul 10, 2026 10:07:39 AM: WIN IMU1 #157 bias:-0.008 -> Level_Walk
+Jul 10, 2026 10:07:39 AM: IMU1 Win#157 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:39 AM: Feature data logged for IMU1: Window #157 | Level_Walk
+Jul 10, 2026 10:07:39 AM: ZUPT IMU2 pkt:12615 t:1.467s accel:-0.159 gyro:-2.15
+Jul 10, 2026 10:07:40 AM: WIN IMU2 #157 bias:0.051 -> Level_Walk
+Jul 10, 2026 10:07:40 AM: IMU2 Win#157 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:40 AM: Feature data logged for IMU2: Window #157 | Level_Walk
+Jul 10, 2026 10:07:40 AM: ZUPT IMU1 pkt:12653 t:0.967s accel:0.054 gyro:-0.996
+Jul 10, 2026 10:07:40 AM: WIN IMU1 #158 bias:0.049 -> Level_Walk
+Jul 10, 2026 10:07:40 AM: IMU1 Win#158 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:40 AM: Feature data logged for IMU1: Window #158 | Level_Walk
+Jul 10, 2026 10:07:41 AM: ZUPT IMU2 pkt:12694 t:1.317s accel:-0.336 gyro:-0.53
+Jul 10, 2026 10:07:41 AM: WIN IMU2 #158 bias:0.049 -> Level_Walk
+Jul 10, 2026 10:07:41 AM: IMU2 Win#158 GT:Height1_Depth2 Pred:Level_Walk ✗
+Jul 10, 2026 10:07:41 AM: Feature data logged for IMU2: Window #158 | Level_Walk
+Jul 10, 2026 10:07:41 AM: ZUPT IMU1 pkt:12732 t:1.317s accel:-0.001 gyro:2.09
+Jul 10, 2026 10:07:41 AM: WIN IMU1 #159 bias:0.053 -> Level_Walk
+Jul 10, 2026 10:07:41 AM: IMU1 Win#159 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:41 AM: Feature data logged for IMU1: Window #159 | Level_Walk
+Jul 10, 2026 10:07:42 AM: >>> Leading leg is Left for H1_D2 crossing (Start pkt: 12362, End pkt: 12722)
+Jul 10, 2026 10:07:42 AM: ZUPT IMU2 pkt:12769 t:1.25s accel:-0.949 gyro:2.005
+Jul 10, 2026 10:07:42 AM: WIN IMU2 #159 bias:0.067 -> Level_Walk
+Jul 10, 2026 10:07:42 AM: IMU2 Win#159 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:42 AM: Feature data logged for IMU2: Window #159 | Level_Walk
+Jul 10, 2026 10:07:43 AM: ZUPT IMU2 pkt:12801 t:0.533s accel:0.031 gyro:-2.125
+Jul 10, 2026 10:07:43 AM: WIN IMU2 #160 bias:0.003 -> Level_Walk
+Jul 10, 2026 10:07:43 AM: IMU2 Win#160 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:43 AM: Feature data logged for IMU2: Window #160 | Level_Walk
+Jul 10, 2026 10:07:43 AM: ZUPT IMU1 pkt:12809 t:1.283s accel:-0.984 gyro:3.036
+Jul 10, 2026 10:07:43 AM: WIN IMU1 #160 bias:0.092 -> Level_Walk
+Jul 10, 2026 10:07:43 AM: IMU1 Win#160 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:43 AM: Feature data logged for IMU1: Window #160 | Level_Walk
+Jul 10, 2026 10:07:43 AM: ZUPT IMU1 pkt:12840 t:0.517s accel:0.014 gyro:5.83
+Jul 10, 2026 10:07:43 AM: WIN IMU1 #161 bias:-0.005 -> Level_Walk
+Jul 10, 2026 10:07:43 AM: IMU1 Win#161 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:43 AM: Feature data logged for IMU1: Window #161 | Level_Walk
+Jul 10, 2026 10:07:43 AM: ZUPT IMU2 pkt:12855 t:0.9s accel:0.162 gyro:-0.751
+Jul 10, 2026 10:07:43 AM: WIN IMU2 #161 bias:0.006 -> Level_Walk
+Jul 10, 2026 10:07:43 AM: IMU2 Win#161 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:43 AM: Feature data logged for IMU2: Window #161 | Level_Walk
+Jul 10, 2026 10:07:44 AM: ZUPT IMU1 pkt:12910 t:1.167s accel:0.144 gyro:5.899
+Jul 10, 2026 10:07:44 AM: WIN IMU1 #162 bias:-0.01 -> Level_Walk
+Jul 10, 2026 10:07:44 AM: IMU1 Win#162 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:44 AM: Feature data logged for IMU1: Window #162 | Level_Walk
+Jul 10, 2026 10:07:45 AM: ZUPT IMU2 pkt:12945 t:1.5s accel:-0.281 gyro:-1.855
+Jul 10, 2026 10:07:45 AM: WIN IMU2 #162 bias:0.043 -> Level_Walk
+Jul 10, 2026 10:07:45 AM: IMU2 Win#162 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:45 AM: Feature data logged for IMU2: Window #162 | Level_Walk
+Jul 10, 2026 10:07:46 AM: ZUPT IMU1 pkt:12990 t:1.333s accel:-0.058 gyro:-1.129
+Jul 10, 2026 10:07:46 AM: WIN IMU1 #163 bias:-0.006 -> Level_Walk
+Jul 10, 2026 10:07:46 AM: IMU1 Win#163 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:46 AM: Feature data logged for IMU1: Window #163 | Level_Walk
+Jul 10, 2026 10:07:46 AM: ZUPT IMU2 pkt:13031 t:1.433s accel:-0.177 gyro:-1.024
+Jul 10, 2026 10:07:46 AM: WIN IMU2 #163 bias:0.018 -> Level_Walk
+Jul 10, 2026 10:07:46 AM: IMU2 Win#163 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:46 AM: Feature data logged for IMU2: Window #163 | Level_Walk
+Jul 10, 2026 10:07:47 AM: ZUPT IMU1 pkt:13068 t:1.3s accel:0.976 gyro:6.899
+Jul 10, 2026 10:07:47 AM: WIN IMU1 #164 bias:0.001 -> Level_Walk
+Jul 10, 2026 10:07:47 AM: IMU1 Win#164 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:47 AM: Feature data logged for IMU1: Window #164 | Level_Walk
+Jul 10, 2026 10:07:48 AM: ZUPT IMU1 pkt:13100 t:0.533s accel:-0.099 gyro:2.242
+Jul 10, 2026 10:07:48 AM: WIN IMU1 #165 bias:0.041 -> Level_Walk
+Jul 10, 2026 10:07:48 AM: IMU1 Win#165 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:48 AM: Feature data logged for IMU1: Window #165 | Level_Walk
+Jul 10, 2026 10:07:48 AM: ZUPT IMU2 pkt:13103 t:1.2s accel:-0.444 gyro:4.205
+Jul 10, 2026 10:07:48 AM: WIN IMU2 #164 bias:0.023 -> Level_Walk
+Jul 10, 2026 10:07:48 AM: IMU2 Win#164 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:48 AM: Feature data logged for IMU2: Window #164 | Level_Walk
+Jul 10, 2026 10:07:48 AM: ZUPT IMU1 pkt:13133 t:0.55s accel:-0.021 gyro:8.139
+Jul 10, 2026 10:07:48 AM: WIN IMU1 #166 bias:-0.018 -> Level_Walk
+Jul 10, 2026 10:07:48 AM: IMU1 Win#166 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:48 AM: Feature data logged for IMU1: Window #166 | Level_Walk
+Jul 10, 2026 10:07:48 AM: ZUPT IMU2 pkt:13140 t:0.617s accel:-0.016 gyro:0.841
+Jul 10, 2026 10:07:48 AM: WIN IMU2 #165 bias:0.002 -> Level_Walk
+Jul 10, 2026 10:07:48 AM: IMU2 Win#165 GT:NA Pred:Level_Walk ✗
+Jul 10, 2026 10:07:48 AM: Feature data logged for IMU2: Window #165 | Level_Walk
+Jul 10, 2026 10:07:48 AM: Stopping
+Jul 10, 2026 10:07:48 AM: ===== CONFUSION MATRIX: IMU1 =====
+Jul 10, 2026 10:07:48 AM: Actual\Predicted  Level_Walk     Ramp_Ascend    Stair_Ascend   Ramp_Descend   Stair_Descend  
+Jul 10, 2026 10:07:48 AM: Level_Walk        31             0              0              0              0              
+Jul 10, 2026 10:07:48 AM: Ramp_Ascend       0              0              0              0              0              
+Jul 10, 2026 10:07:48 AM: Stair_Ascend      0              0              0              0              0              
+Jul 10, 2026 10:07:48 AM: Ramp_Descend      0              0              0              0              0              
+Jul 10, 2026 10:07:48 AM: Stair_Descend     0              0              0              0              0              
+Jul 10, 2026 10:07:48 AM: IMU1 Accuracy: 31/31 = 100%
+Jul 10, 2026 10:07:48 AM: ===== CONFUSION MATRIX: IMU2 =====
+Jul 10, 2026 10:07:48 AM: Actual\Predicted  Level_Walk     Ramp_Ascend    Stair_Ascend   Ramp_Descend   Stair_Descend  
+Jul 10, 2026 10:07:48 AM: Level_Walk        30             0              0              0              0              
+Jul 10, 2026 10:07:48 AM: Ramp_Ascend       0              0              0              0              0              
+Jul 10, 2026 10:07:48 AM: Stair_Ascend      0              0              0              0              0              
+Jul 10, 2026 10:07:48 AM: Ramp_Descend      0              0              0              0              0              
+Jul 10, 2026 10:07:48 AM: Stair_Descend     0              0              0              0              0              
+Jul 10, 2026 10:07:48 AM: IMU2 Accuracy: 30/30 = 100%
+Jul 10, 2026 10:07:48 AM: Feature log closed for IMU1
+Jul 10, 2026 10:07:48 AM: Feature log closed for IMU2
+Jul 10, 2026 10:07:48 AM: All feature logs closed successfully
+Jul 10, 2026 10:07:48 AM: IMU5 stop recording ack: OK state=success
+Jul 10, 2026 10:07:48 AM: IMU6 stop recording ack: OK state=success
+Jul 10, 2026 10:07:51 AM: Export started for recording IMUs
+Jul 10, 2026 10:07:51 AM: exportRecordingData called
+Jul 10, 2026 10:07:51 AM: IMU5 export logger created: /storage/emulated/0/Android/data/com.tmsimple.ObjectCrossing/files/Subject 13/V2-20/IMU5_V2-20_Jul 10, 2026 10:07:51 AM, Subject 13.csv
+Jul 10, 2026 10:07:51 AM: IMU6 export logger created: /storage/emulated/0/Android/data/com.tmsimple.ObjectCrossing/files/Subject 13/V2-15/IMU6_V2-15_Jul 10, 2026 10:07:51 AM, Subject 13.csv
+Jul 10, 2026 10:07:53 AM: Export: enableDataRecordingNotification called for IMU5 and IMU6
+Jul 10, 2026 10:07:53 AM: onDotRecordingNotification: D4:22:CD:00:63:7D isEnabled=true isExporting=true
+Jul 10, 2026 10:07:53 AM: onDotRecordingNotification: D4:22:CD:00:9F:95 isEnabled=true isExporting=true
+Jul 10, 2026 10:07:55 AM: IMU6 requestFlashInfo called (export)
+Jul 10, 2026 10:07:55 AM: IMU5 requestFlashInfo called (export)
+Jul 10, 2026 10:07:55 AM: onDotRequestFlashInfoDone: D4:22:CD:00:63:7D used=905216 remaining=66560000
+Jul 10, 2026 10:07:55 AM: percent=1.3418% → totalPackets=1763062
+Jul 10, 2026 10:07:55 AM: IMU6 requestFileInfo called
+Jul 10, 2026 10:07:55 AM: onDotRequestFlashInfoDone: D4:22:CD:00:9F:95 used=905216 remaining=66560000
+Jul 10, 2026 10:07:55 AM: percent=1.3418% → totalPackets=1763062
+Jul 10, 2026 10:07:55 AM: IMU5 requestFileInfo called
+Jul 10, 2026 10:07:55 AM: onDotRequestFileInfoDone: D4:22:CD:00:9F:95 fileCount=1 success=true
+Jul 10, 2026 10:07:55 AM: selectExportedData OK for D4:22:CD:00:9F:95
+Jul 10, 2026 10:07:55 AM: onDotRequestFileInfoDone: D4:22:CD:00:63:7D fileCount=1 success=true
+Jul 10, 2026 10:07:55 AM: selectExportedData OK for D4:22:CD:00:63:7D
+Jul 10, 2026 10:07:56 AM: startExporting called for D4:22:CD:00:9F:95 with 1 files
+Jul 10, 2026 10:07:56 AM: startExporting called for D4:22:CD:00:63:7D with 1 files
+Jul 10, 2026 10:14:40 AM: File exported from D4:22:CD:00:9F:95: 20260710_100409
+Jul 10, 2026 10:14:40 AM: All data exported from D4:22:CD:00:9F:95
+Jul 10, 2026 10:14:40 AM: IMU5 file exists: true
+Jul 10, 2026 10:14:40 AM: Export file added to upload list: IMU5_V2-20_Jul 10, 2026 10:07:51 AM, Subject 13.csv
+Jul 10, 2026 10:14:46 AM: File exported from D4:22:CD:00:63:7D: 20260710_100409
+Jul 10, 2026 10:14:46 AM: All data exported from D4:22:CD:00:63:7D
+Jul 10, 2026 10:14:46 AM: IMU6 file exists: true
+Jul 10, 2026 10:14:46 AM: Export file added to upload list: IMU6_V2-15_Jul 10, 2026 10:07:51 AM, Subject 13.csv
+Jul 10, 2026 10:14:46 AM: Export complete for all recording IMUs
+Jul 10, 2026 10:14:46 AM: Export complete — files ready for upload
+Jul 10, 2026 10:15:28 AM: Uploading data to cloud : IMU1_V2-16_Jul 10, 2026 10:04:09 AM, Subject 13.csv
+Jul 10, 2026 10:15:28 AM: Uploading data to cloud : IMU2_V2-17_Jul 10, 2026 10:04:09 AM, Subject 13.csv
+Jul 10, 2026 10:15:28 AM: Uploading data to cloud : IMU3_V2-18_Jul 10, 2026 10:04:09 AM, Subject 13.csv
+Jul 10, 2026 10:15:28 AM: Uploading data to cloud : IMU4_V2-19_Jul 10, 2026 10:04:09 AM, Subject 13.csv
+Jul 10, 2026 10:15:28 AM: Uploading data to cloud : FeatureLog_IMU1_Subject13_Jul 10, 2026 10:04:09 AM.csv
+Jul 10, 2026 10:15:28 AM: Uploading data to cloud : FeatureLog_IMU2_Subject13_Jul 10, 2026 10:04:09 AM.csv
+Jul 10, 2026 10:15:28 AM: Uploading data to cloud : IMU5_V2-20_Jul 10, 2026 10:07:51 AM, Subject 13.csv
+Jul 10, 2026 10:15:28 AM: Uploading data to cloud : IMU6_V2-15_Jul 10, 2026 10:07:51 AM, Subject 13.csv

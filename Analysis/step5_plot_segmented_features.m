@@ -124,24 +124,33 @@ end
 
 % Segment the signals step 4 plots: IMU X (column 2) + joints (excl hip rotation).
 % vY  = normalized (0-100%),  vYt = raw time-domain (padded to mlen).
-vY={}; vYt={}; vL={}; sideArr = char([]);
+% sideArr    = each signal's own PHYSICAL side (L/R) - used for L/R grouping.
+% cycSideArr = the foot whose ZVP/terrain/role apply to that signal's cycles.
+%   For legs/pelvis/sternum this equals the own side; ARM IMUs and shoulder/elbow
+%   joints swing with the CONTRALATERAL leg, so they are segmented on - and
+%   inherit the terrain/leading-trailing labels of - the OPPOSITE foot.
+vY={}; vYt={}; vL={}; sideArr = char([]); cycSideArr = char([]);
 for i = 1:numel(Data.imu)
-    zv = sideZVP(imuSide(Data.imu(i).label), zvpL, zvpR);
+    os = imuSide(Data.imu(i).label);                                     % own physical side
+    cs = os;  if isUpperLimb(Data.imu(i).label), cs = otherSide(os); end % segmenting-foot side
+    zv = sideZVP(cs, zvpL, zvpR);
     xi = Data.imu(i).euler_ZXY_deg(:,2);
     vY{end+1}  = segAll(tt, xi, zv, NSEG);      %#ok<SAGROW>
     vYt{end+1} = segAllTime(xi, zv, mlen);      %#ok<SAGROW>
     vL{end+1}  = sprintf('IMU: %s X', Data.imu(i).label); %#ok<SAGROW>
-    if contains(Data.imu(i).label,'Right'), sideArr(end+1)='R'; else, sideArr(end+1)='L'; end %#ok<SAGROW>
+    sideArr(end+1)=os;  cycSideArr(end+1)=cs;   %#ok<SAGROW>
 end
 for j = 1:numel(Data.joints.labels)
     nm = Data.joints.labels{j};
     if contains(nm,'hip_rotation'), continue; end
-    zv = sideZVP(jointSide(nm), zvpL, zvpR);
+    os = jointSide(nm);                                                  % own physical side
+    cs = os;  if isUpperLimb(nm), cs = otherSide(os); end                % segmenting-foot side
+    zv = sideZVP(cs, zvpL, zvpR);
     yj = Data.joints.angles_deg(:,j);
     vY{end+1}  = segAll(tt, yj, zv, NSEG);      %#ok<SAGROW>
     vYt{end+1} = segAllTime(yj, zv, mlen);      %#ok<SAGROW>
     vL{end+1}  = sprintf('Joint: %s', nm); %#ok<SAGROW>
-    if endsWith(nm,'_r'), sideArr(end+1)='R'; else, sideArr(end+1)='L'; end %#ok<SAGROW>
+    sideArr(end+1)=os;  cycSideArr(end+1)=cs;   %#ok<SAGROW>
 end
 [wlT,wlS,wlE] = footWindows(Feat,'Left Foot');
 [wrT,wrS,wrE] = footWindows(Feat,'Right Foot');
@@ -198,9 +207,9 @@ while true
     sigsLR = struct('x',{},'Y',{},'label',{},'grp',{},'terr',{},'cyc',{});
     sigsLRt = sigsLR;
     for i = 1:numel(vL)
-        sd = sideArr(i);  if sd=='R', tc=terrR; else, tc=terrL; end
+        cs = cycSideArr(i);  if cs=='R', tc=terrR; else, tc=terrL; end   % terrain of the segmenting foot
         nc = size(vY{i},2);  if numel(tc)~=nc, tc=repmat({''},1,nc); end
-        gg = repmat({sd},1,nc);  cc = 1:nc;  m = numel(sigsLR)+1;
+        gg = repmat({sideArr(i)},1,nc);  cc = 1:nc;  m = numel(sigsLR)+1;  % group by physical side
         sigsLR(m).x=pctv;  sigsLR(m).Y=vY{i};   sigsLR(m).label=vL{i};  sigsLR(m).grp=gg; sigsLR(m).terr=tc; sigsLR(m).cyc=cc;
         sigsLRt(m).x=tvec; sigsLRt(m).Y=vYt{i}; sigsLRt(m).label=vL{i}; sigsLRt(m).grp=gg; sigsLRt(m).terr=tc; sigsLRt(m).cyc=cc;
     end
@@ -218,7 +227,9 @@ while true
     for q = 1:numel(ks)
         v = pairMap(ks{q}); Li=v(1); Ri=v(2);
         if isnan(Li)||isnan(Ri), continue; end
-        gg = [roleL roleR];  tc = [terrL terrR];  cc = [1:size(vY{Li},2), 1:size(vY{Ri},2)];  m = numel(sigsLT)+1;
+        [ggL,tcL] = roleTerr(cycSideArr(Li), roleL, roleR, terrL, terrR);  % each instance uses its
+        [ggR,tcR] = roleTerr(cycSideArr(Ri), roleL, roleR, terrL, terrR);  % own segmenting-foot labels
+        gg = [ggL ggR];  tc = [tcL tcR];  cc = [1:size(vY{Li},2), 1:size(vY{Ri},2)];  m = numel(sigsLT)+1;
         sigsLT(m).x=pctv;  sigsLT(m).Y=[vY{Li}  vY{Ri}];  sigsLT(m).label=ks{q}; sigsLT(m).grp=gg; sigsLT(m).terr=tc; sigsLT(m).cyc=cc;
         sigsLTt(m).x=tvec; sigsLTt(m).Y=[vYt{Li} vYt{Ri}]; sigsLTt(m).label=ks{q}; sigsLTt(m).grp=gg; sigsLTt(m).terr=tc; sigsLTt(m).cyc=cc;
     end
@@ -322,8 +333,8 @@ sig = struct('name',{},'Y',{},'Yt',{},'side',{},'terrain',{},'role',{},'cycle',{
 for q = 1:numel(border)
     Y=[]; Yt=[]; sideC={}; terrC={}; roleC={}; cycC=[];
     for i = bmap(border{q})
-        sd = sideArr(i);
-        if sd == 'R', tc = terrR; rc = roleR; else, tc = terrL; rc = roleL; end
+        sd = sideArr(i);  cs = cycSideArr(i);   % sd = physical sensor side; cs = segmenting foot
+        if cs == 'R', tc = terrR; rc = roleR; else, tc = terrL; rc = roleL; end
         nc = size(vY{i},2);
         if numel(tc) ~= nc, tc = repmat({''},1,nc); rc = repmat({''},1,nc); end
         Y     = [Y, vY{i}];                  %#ok<AGROW>
@@ -615,6 +626,16 @@ function s = imuSide(label)
 end
 function s = jointSide(name)
     if endsWith(name,'_r'), s = 'R'; else, s = 'L'; end
+end
+function tf = isUpperLimb(s)   % arm IMU label or shoulder/elbow joint name
+    s = lower(s);  tf = contains(s,'arm') || contains(s,'elbow');
+end
+function s = otherSide(s)
+    if s == 'R', s = 'L'; else, s = 'R'; end
+end
+function [r, t] = roleTerr(cs, roleL, roleR, terrL, terrR)
+% Role + terrain label arrays of the foot (cs = 'L'/'R') that segmented a signal.
+    if cs == 'R', r = roleR; t = terrR; else, r = roleL; t = terrL; end
 end
 function b = baseName(lbl)
 % Strip the side so Left/Right instances of a sensor/joint share a base name.

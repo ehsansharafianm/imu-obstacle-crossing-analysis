@@ -37,6 +37,22 @@
 				<!--The name of the PhysicalFrame representing a sensor (IMU) in Model. When loading sensor data, it will be used as a table column label.-->
 				<name_in_model>calcn_l_imu</name_in_model>
 			</ExperimentalSensor>
+			<ExperimentalSensor name="_00B4AB31">
+				<!--Right upper arm. When loading sensor data, it will be used as a table column label.-->
+				<name_in_model>humerus_r_imu</name_in_model>
+			</ExperimentalSensor>
+			<ExperimentalSensor name="_00B4AB2E">
+				<!--Left upper arm. When loading sensor data, it will be used as a table column label.-->
+				<name_in_model>humerus_l_imu</name_in_model>
+			</ExperimentalSensor>
+			<ExperimentalSensor name="_00B4AB2F">
+				<!--Right forearm (attached to ulna: elbow is humerus->ulna). When loading sensor data, it will be used as a table column label.-->
+				<name_in_model>ulna_r_imu</name_in_model>
+			</ExperimentalSensor>
+			<ExperimentalSensor name="_00B4AB28">
+				<!--Left forearm (attached to ulna: elbow is humerus->ulna). When loading sensor data, it will be used as a table column label.-->
+				<name_in_model>ulna_l_imu</name_in_model>
+			</ExperimentalSensor>
 		</ExperimentalSensors>
 	</XsensDataReaderSettings>
 </OpenSimDocument>
