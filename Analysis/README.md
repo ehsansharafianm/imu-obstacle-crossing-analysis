@@ -362,6 +362,44 @@ shows *where* over the ground it clears — the natural view for comparing clear
 against obstacle position. The continuous `pCont`/`pZvp` path gives step length
 and the walking trace for sanity-checking the reconstruction.
 
+## step6_angular_momentum.m — Angular momentum (whole-body + segmental)
+
+Standalone add-on (reads only step-1 outputs; **does not touch steps 1–5**).
+Computes angular momentum about the body centre of mass (COM), in the model
+Ground frame, from the calibrated model + the newest IK `.mot` — **whole-body,
+per-segment, and pooled into Arms / Legs / Trunk**. Purely kinematic + inertial —
+**no force data needed**.
+
+- **Input:** `../Results/OpenSim Outputs/Test N/Rajagopal_2015_calibrated.osim`
+  and `IKResults/ik_*.mot` (both from step 1). Optionally
+  `SegTrajectories_SideBased_TestN.mat` (only to derive walking speed from ZHC).
+- **Method:** low-pass the IK coordinates (`LOWPASS_HZ`, default 6 Hz), central-
+  difference for the generalized **speeds** (IK gives only positions), set each
+  coordinate value+speed into the state, `realizeVelocity`. For every body
+  `H_i = R·I_i·Rᵀ·ω_i + m_i (r_i−r_com)×(v_i−v_com)` (spin + orbital); the
+  whole-body WBAM is the **sum of the segments**, cross-checked against Simbody's
+  `calcSystemCentralMomentum` (prints the max difference — should be ~0). Valid
+  despite IMU IK having no global translation, since momentum **about the COM** is
+  translation-invariant.
+- **Body features:** set at the top. `ASK_BODY_FEATURES = false` uses the
+  hard-coded `BODY.*` defaults (mass, height, leg length, speed); `= true`
+  prompts for each (Enter keeps the default). Mass only rescales the **absolute**
+  momentum; the dimensionless value is mass-scale invariant. Leg length (or
+  `0.53*height`) and speed (given, or derived from ZHC, else `SPEED_FALLBACK`) set
+  the normalization `H / (m·V·L)`.
+- **Figures:** (1) whole-body overview (raw + normalized, X/Y/Z); (2) an
+  **interactive viewer** — checkbox **toggles** for every entity (Whole body,
+  Arms, Legs, Trunk, and each segment), axis checkboxes (X / Y / Z / |H|), a
+  raw ↔ normalized units switch, Select/Clear all, and Save PNG.
+- **Output (`../Results/Parameters Output/Test N/`):**
+  `AngularMomentum_TestN.mat` (`AM` struct: whole-body `.H_model/.H_subject/.H_norm/.Hmag`;
+  `.seg` = per-segment `.names/.group/.mass_kg/.H/.H_norm` (`nT×3×nBody`);
+  `.group` = Arms/Legs/Trunk `.labels/.H/.H_norm`; plus body/model metadata),
+  `AngularMomentum_TestN.xlsx` (whole-body + group components), and the two figures.
+- **Not yet included:** per-stride segmentation and terrain / leading-trailing
+  tagging (needs aligning the IK time base to the step-3 synced grid) — a planned
+  follow-up.
+
 ---
 
 ## Tunable settings (top of each file)
@@ -371,6 +409,8 @@ and the walking trace for sanity-checking the reconstruction.
 - **step4:** `MIN_PROMINENCE`, `MIN_PEAK_DIST`, `OMEGA_THRESH`, `ACC_THRESH`,
   `ROLL_COL_*/ROLL_SIGN_*`, `NSEG`, `ZVP_SKIP_START`.
 - **step5:** `LOG_PKT_TOL` (window↔log packet match), `TERRAIN_ORDER`.
+- **step6:** `ASK_BODY_FEATURES`, `BODY.*` (mass/height/legLen/speed),
+  `SPEED_FALLBACK`, `LOWPASS_HZ`, `FILT_ORDER`.
 
 ## Sensor map (Awinda IDs → body)
 
