@@ -1,0 +1,210 @@
+{
+  "main": {
+    "id": "4618d8d184438725",
+    "type": "split",
+    "children": [
+      {
+        "id": "13750736feda1bd8",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "505e23839fedc379",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Conventions and Glossary.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Conventions and Glossary"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "1aab07be6e3c5b16",
+    "type": "split",
+    "children": [
+      {
+        "id": "6c1f68e1038bf14e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "dc29bd8bf4df7cc2",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "51b9c842068cc855",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "499e479a7f3efd63",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "928b5d0abac78f97",
+    "type": "split",
+    "children": [
+      {
+        "id": "3b8fe39c94fcb353",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "10e91dde85f129c8",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Conventions and Glossary.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "584fd611cbfd44bd",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Conventions and Glossary.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "2a76ad1066aee4e6",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "3cce2659212871be",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "bb6738d137c62b61",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Conventions and Glossary.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "505e23839fedc379",
+  "lastOpenFiles": [
+    "Session Changelog.md.tmp.30156.a0da0846bf20",
+    "Home.md.tmp.30156.1b4cfb97c715",
+    "Camera Sync Strategy.md",
+    "Step 5 - Obstacle Features.md",
+    "Step 4 - Segmentation (ZVP).md",
+    "Step 3 - Dot vs Awinda Sync.md",
+    "Step 2 - Joint Angle Viewer.md",
+    "Step 1 - OpenSense IK.md",
+    "Session Changelog.md",
+    "Project Overview.md",
+    "Home.md",
+    "Data and Sensors.md",
+    "Step 6 - Angular Momentum.md",
+    "Pipeline Workflow.md",
+    "Conventions and Glossary.md",
+    "Camera Tracking (WorldViz PPT).md"
+  ]
+}

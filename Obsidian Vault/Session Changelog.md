@@ -1,0 +1,68 @@
+---
+tags: [changelog, summary]
+---
+
+# Session Changelog
+
+Summary of the work done on the project (most impactful first). Dates are approximate to the
+2026 working sessions.
+
+## 1. Arm IMUs + shoulder/elbow joints (steps 1–5)
+Added **4 arm IMUs** (upper arm + forearm, both sides) to capture **shoulder & elbow** angles.
+- `Setup/myIMUMappings.xml` — 4 new sensors: upper arms → `humerus_r/l_imu`, forearms → `ulna_r/l_imu`
+  (forearm on the **ulna** so the elbow angle is clean). IDs in [[Data and Sensors]].
+- No model edit needed — OpenSense builds the frames during calibration.
+- [[Step 3 - Dot vs Awinda Sync]] joint filter now keeps `arm_flex`/`arm_add`/`elbow_flex`
+  (drops `arm_rot`, like `hip_rotation`); arm IMUs carried through + an "Awinda IMUs Arms" sheet.
+- [[Step 2 - Joint Angle Viewer]] shows arm joints by default.
+- Steps 4 & 5 were already generic → arms flow through automatically.
+
+## 2. `.mtb` → `.txt` auto-conversion in step 1
+[[Step 1 - OpenSense IK]] now runs `xsens_awinda_converter.py` (Python `xsensdeviceapi`, `py -3.8`)
+on the `.mtb` in the test folder — no manual MT Manager export. Settings: `convertMtb`,
+`pythonExe`, `converterScript`, `forceConvert`. Backward-compatible (uses existing `.txt` if no `.mtb`).
+
+## 3. Awinda PacketCounter rollover fix (step 3)
+The 16-bit Awinda `PacketCounter` wraps at 65536. **Test 13** started at 57954 and wrapped through 0,
+which made packet-derived time go negative and the 60 Hz resample grid empty (crash). Fixed with
+`unwrapCounter(pkt, 65536)` in [[Step 3 - Dot vs Awinda Sync]]. General robustness fix.
+
+## 4. Drop the first two strides (step 4)
+`ZVP_SKIP_START` set **1 → 2** — the first two start-of-test strides per foot are excluded from
+segmentation, figures, and calculations. Propagates to [[Step 5 - Obstacle Features]] via saved ZVPs.
+
+## 5. Contralateral arm segmentation (steps 4 & 5)
+Arm IMUs/joints now segment on the **opposite** foot's ZVPs (arm swing is coupled to the opposite
+leg) and inherit that foot's terrain / leading-trailing labels; `.side` still names the physical arm.
+Verified in [[Step 5 - Obstacle Features]]: no duplication, column counts match labels.
+
+## 6. Step 6 — Angular momentum (new)
+Created [[Step 6 - Angular Momentum]] — whole-body + segmental (Arms/Legs/Trunk) angular momentum
+via Simbody + a manual per-segment sum (mutually validated), with an interactive toggle viewer,
+default vs prompted body features, `.mat`/`.xlsx` export, and `tic/toc` timing. Static overview
+figure removed; entity labels black.
+
+## 7. Camera system — WorldViz PPT (new, third stream)
+Added [[Camera Tracking (WorldViz PPT)]] test viewer (`test_camera_markers.m`) — **three viewers**,
+each with per-marker toggles and Line/Scatter/Both style:
+1. 3D trajectory (**Y drawn vertical**), 2. positions vs time (X/Y/Z), 3. **vertical Y vs horizontal
+XZ displacement** (2D side view).
+Findings:
+- Log is **~60 Hz** (not the 240 FPS capture rate); camera clock steady (~59.95 Hz, no internal drift).
+- Markers have **unequal counts / dropouts** (~3 % missing, occlusion).
+
+## 8. Camera sync & segmentation strategy (decided)
+See [[Camera Sync Strategy]]. Sync all three systems on the **start left-leg lift** (camera event =
+left-foot vertical-velocity peak) and rely on the camera's **real timestamps**; resample onto the
+uniform 60 Hz grid (no upsampling needed); **segment the camera at the IMU ZVPs**; interpolate short
+dropouts only, NaN the long ones, flag low-completeness strides. Next concrete step: the
+**marker→body map**.
+
+## Housekeeping / notes
+- All changes are **local**; code changes to steps 1–5 were committed earlier
+  (commits *"arm IMUs and Joints"* and *"MTB converted via python in Step1"*). Step 6, the camera
+  viewer, and this vault are **uncommitted**.
+- The large binary `.mat`/`.xlsx` outputs are versioned in the repo (history bloat risk — see
+  [[Outputs and File Formats]]).
+
+Back to [[Home]]
