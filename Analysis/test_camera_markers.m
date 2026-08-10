@@ -9,7 +9,8 @@ addpath(fileparts(mfilename('fullpath')));
 % toggle per marker and a Line/Scatter/Both style selector:
 %   1) 3D trajectory (plot3), drawn so Y is vertical (up)
 %   2) positions vs time (X/Y/Z per marker)
-%   3) vertical (Y) vs horizontal (XZ-plane) displacement - a 2D side view
+%   3) vertical (Y) vs distance along the common walking axis (PCA of XZ),
+%      glitch-cleaned - a 2D side view
 %
 % CSV format (long/tidy, one row per marker per timestamp):
 %   Timestamp, Marker_ID, VRPN_Index, X, Y, Z
@@ -275,11 +276,38 @@ end
 
 %% ----- third viewer: vertical (Y) vs horizontal (XZ) displacement (2D side view) -----
 function dispViewer(M, colors, tn, camDir, fontName)
-% 2D elevation view: vertical Y vs horizontal displacement in the XZ plane
-% (d = sqrt((X-X0)^2 + (Z-Z0)^2) from each marker's own start). Toggle per marker.
+% 2D elevation view: vertical Y vs distance along the common horizontal WALKING
+% axis (the principal axis of the XZ positions, shared by all markers, oriented
+% start->end, origin at the trial start). Lost-marker "parked" glitch samples are
+% dropped first (robust per-axis MAD gate) so they don't warp the axis. This
+% cleaning is LOCAL to this figure - the 3D and time views are untouched.
     nM = numel(M);
+
+    % --- clean glitches per marker + gather valid horizontal points ---
+    goodC = cell(1,nM);  allXZ = [];  firstXZ = nan(nM,2);  bestK = 1;  bestN = -1;
+    for k = 1:nM
+        P = M(k).xyz;  good = ~glitchMask(P);  goodC{k} = good;
+        nbad = nnz(~good);
+        if nbad > 0, fprintf('  [2D view] Marker %d: dropped %d glitch sample(s).\n', M(k).id, nbad); end
+        idx = find(good);
+        if ~isempty(idx)
+            allXZ = [allXZ; P(idx,[1 3])];   %#ok<AGROW>
+            firstXZ(k,:) = P(idx(1),[1 3]);
+            if numel(idx) > bestN, bestN = numel(idx); bestK = k; end
+        end
+    end
+
+    % --- common walking axis = principal axis (PCA) of the valid XZ points ---
+    mu = mean(allXZ,1);
+    [Vc,Dc] = eig(cov(allXZ));  [~,im] = max(diag(Dc));  v = Vc(:,im);   % 2x1 unit vector
+    % orient so it increases start->end (use the marker with the most valid data)
+    gb = find(goodC{bestK});  Pb = M(bestK).xyz;
+    if ((Pb(gb(end),[1 3]) - mu)*v) < ((Pb(gb(1),[1 3]) - mu)*v), v = -v; end
+    % origin at the common start (all markers are bunched at the start)
+    h0 = (mean(firstXZ,1,'omitnan') - mu) * v;
+
     hF = figure('Color','w','Position',[130 70 1320 780], ...
-        'Name',sprintf('PPT markers: vertical vs horizontal displacement | Test %d', tn));
+        'Name',sprintf('PPT markers: vertical vs walking-axis distance | Test %d', tn));
     ax = axes(hF,'Position',[0.30 0.11 0.66 0.80]); hold(ax,'on');
     LX = 0.02;  LW = 0.24;
 
@@ -305,7 +333,8 @@ function dispViewer(M, colors, tn, camDir, fontName)
     end
 
     S = struct('cb',cb,'ax',ax,'M',{M},'n',nM,'color',colors,'styleDD',styleDD, ...
-               'styleItems',{{'Line','Scatter','Both'}},'tn',tn,'camDir',camDir,'fontName',fontName);
+               'styleItems',{{'Line','Scatter','Both'}},'tn',tn,'camDir',camDir,'fontName',fontName, ...
+               'v',v,'mu',mu,'h0',h0,'good',{goodC});
     guidata(hF, S);  updateDV(hF);
 end
 
@@ -318,23 +347,39 @@ function updateDV(hF)
     for k = 1:S.n
         if S.cb(k).Value ~= 1, continue; end
         P = S.M(k).xyz;  c = S.color(k,:);
-        d = sqrt((P(:,1)-P(1,1)).^2 + (P(:,3)-P(1,3)).^2);   % horizontal (XZ) displacement from start
-        y = P(:,2);                                          % vertical
-        h = [];
-        if useLine, h = plot(ax, d, y, '-', 'Color', c, 'LineWidth', 1.5); end
-        if useScat, hs = scatter(ax, d, y, 12, c, 'filled'); if isempty(h), h = hs; end; end
-        legH(end+1) = h; %#ok<AGROW>
+        h = ((P(:,[1 3]) - S.mu) * S.v) - S.h0;    % distance along the walking axis (start ~ 0)
+        y = P(:,2);                                % vertical
+        bad = ~S.good{k};  h(bad) = NaN;  y(bad) = NaN;   % drop the glitch samples (line breaks)
+        hp = [];
+        if useLine, hp = plot(ax, h, y, '-', 'Color', c, 'LineWidth', 1.5); end
+        if useScat, hs = scatter(ax, h, y, 12, c, 'filled'); if isempty(hp), hp = hs; end; end
+        if isempty(hp), continue; end
+        legH(end+1) = hp; %#ok<AGROW>
         legN{end+1} = sprintf('Marker %d', S.M(k).id); %#ok<AGROW>
     end
     grid(ax,'on'); box(ax,'on'); ax.FontName = S.fontName; ax.FontWeight = 'bold';
-    xlabel(ax,'Horizontal displacement in XZ (m)','FontWeight','bold','FontSize',13);
+    xlabel(ax,'Distance along walking axis (m)','FontWeight','bold','FontSize',13);
     ylabel(ax,'Vertical  Y (m)','FontWeight','bold','FontSize',13);
-    title(ax, sprintf('Vertical vs horizontal displacement | Test %d', S.tn), ...
+    title(ax, sprintf('Vertical vs walking-axis distance (PCA of XZ, glitch-cleaned) | Test %d', S.tn), ...
           'FontName',S.fontName,'FontWeight','bold','Interpreter','none');
     if ~isempty(legH)
         legend(ax, legH, legN, 'Location','eastoutside','FontName',S.fontName,'FontSize',9);
     else
         legend(ax,'off');
+    end
+end
+
+function bad = glitchMask(P)
+% Flag lost-marker / "parked" samples as robust per-axis outliers (K MADs from
+% the median). Catches the far coordinate the PPT reports when it loses a marker
+% (e.g. an out-of-volume Z), without clipping the normal walking range. K is the
+% only tunable - lower to remove more, raise to remove less.
+    K = 8;
+    bad = false(size(P,1),1);
+    for c = 1:3
+        x = P(:,c);  m = median(x,'omitnan');
+        s = max(1.4826*median(abs(x - m),'omitnan'), 0.05);   % robust scale, floored
+        bad = bad | (abs(x - m) > K*s);
     end
 end
 

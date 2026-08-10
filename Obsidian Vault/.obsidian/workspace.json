@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Conventions and Glossary.md",
+                "file": "Camera Tracking (WorldViz PPT).md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Conventions and Glossary"
+              "title": "Camera Tracking (WorldViz PPT)"
             }
           }
         ]
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Conventions and Glossary.md",
+                "file": "Camera Tracking (WorldViz PPT).md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Conventions and Glossary.md",
+                "file": "Camera Tracking (WorldViz PPT).md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -161,7 +161,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Conventions and Glossary.md",
+                "file": "Camera Tracking (WorldViz PPT).md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -190,6 +190,7 @@
   },
   "active": "505e23839fedc379",
   "lastOpenFiles": [
+    "Conventions and Glossary.md",
     "Session Changelog.md.tmp.30156.a0da0846bf20",
     "Home.md.tmp.30156.1b4cfb97c715",
     "Camera Sync Strategy.md",
@@ -204,7 +205,6 @@
     "Data and Sensors.md",
     "Step 6 - Angular Momentum.md",
     "Pipeline Workflow.md",
-    "Conventions and Glossary.md",
     "Camera Tracking (WorldViz PPT).md"
   ]
 }
