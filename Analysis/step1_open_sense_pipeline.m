@@ -48,9 +48,15 @@ forceConvert         = false;              % re-convert even if the .txt are alr
 % =========================================================
 
 %% Resolve folders for this subject
+% Build ABSOLUTE paths from this script's own location (parent of Analysis is the
+% project root). Do NOT use relative paths here: convertMtbToTxt passes the folder
+% to abspath()/Java, whose working directory is fixed at MATLAB launch and does
+% NOT follow cd - a relative '..\Data' would resolve against MATLAB's start folder
+% (e.g. Documents\MATLAB), not the project.
 subjectName = ['Test ' num2str(subjectNum)];
-dataDir     = fullfile('..', 'Data', 'Awinda IMUs', subjectName);          % raw input
-resultsRoot = fullfile('..', 'Results', 'OpenSim Outputs', subjectName);   % FINAL outputs
+projRoot    = fileparts(fileparts(mfilename('fullpath')));                  % project root (parent of Analysis)
+dataDir     = fullfile(projRoot, 'Data', 'Awinda IMUs', subjectName);      % raw input (absolute)
+resultsRoot = fullfile(projRoot, 'Results', 'OpenSim Outputs', subjectName);% FINAL outputs (absolute)
 if ~isfolder(dataDir)
     error('Raw data folder not found: %s', dataDir);
 end

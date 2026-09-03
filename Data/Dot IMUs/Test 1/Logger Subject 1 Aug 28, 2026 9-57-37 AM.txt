@@ -1,0 +1,117 @@
+Aug 28, 2026 9:57:37 AM: Subject number set: 1
+Aug 28, 2026 9:57:37 AM: Log File Created
+Aug 28, 2026 9:57:39 AM: === IMU Discovery Mode Started ===
+Aug 28, 2026 9:57:39 AM: Scanning for all available Xsens DOT devices...
+Aug 28, 2026 9:57:39 AM: Discovery scan started - searching for 5 seconds...
+Aug 28, 2026 9:57:39 AM: IMU Found: Address= D4:22:CD:07:B0:E7, Tag= M-14
+Aug 28, 2026 9:57:39 AM: IMU Found: Address= D4:22:CD:07:B0:7C, Tag= M-12
+Aug 28, 2026 9:57:39 AM: IMU Found: Address= D4:22:CD:07:B2:6A, Tag= M-11
+Aug 28, 2026 9:57:39 AM: IMU Found: Address= D4:22:CD:07:B0:DB, Tag= M-13
+Aug 28, 2026 9:57:39 AM: IMU Found: Address= D4:22:CD:07:AF:F5, Tag= M-15
+Aug 28, 2026 9:57:39 AM: IMU Found: Address= D4:22:CD:07:B3:84, Tag= M-16
+Aug 28, 2026 9:57:44 AM: ===== Discovery scan stopped. Found 6 devices =====
+Aug 28, 2026 9:57:56 AM: IMU1: M-11, MAC: D4:22:CD:07:B2:6A
+Aug 28, 2026 9:57:56 AM: IMU2: M-12, MAC: D4:22:CD:07:B0:7C
+Aug 28, 2026 9:57:56 AM: IMU3: M-13, MAC: D4:22:CD:07:B0:DB
+Aug 28, 2026 9:57:56 AM: IMU4: M-14, MAC: D4:22:CD:07:B0:E7
+Aug 28, 2026 9:57:56 AM: IMU5: M-15, MAC: D4:22:CD:07:AF:F5
+Aug 28, 2026 9:57:56 AM: IMU6: M-16, MAC: D4:22:CD:07:B3:84
+Aug 28, 2026 9:57:56 AM: Scan started!
+Aug 28, 2026 9:57:56 AM: IMU1 IMU is disconnected!
+Aug 28, 2026 9:57:56 AM: IMU1 IMU scanned
+Aug 28, 2026 9:57:56 AM: IMU3 disconnected
+Aug 28, 2026 9:57:56 AM: IMU3 IMU scanned
+Aug 28, 2026 9:57:56 AM: IMU4 disconnected
+Aug 28, 2026 9:57:56 AM: IMU4 IMU scanned
+Aug 28, 2026 9:57:56 AM: IMU3 connected
+Aug 28, 2026 9:57:57 AM: IMU1 IMU is connected!
+Aug 28, 2026 9:57:57 AM: IMU5 disconnected
+Aug 28, 2026 9:57:57 AM: IMU5 IMU scanned
+Aug 28, 2026 9:57:57 AM: IMU4 connected
+Aug 28, 2026 9:57:57 AM: IMU5 connected
+Aug 28, 2026 9:57:57 AM: IMU2 IMU is disconnected!
+Aug 28, 2026 9:57:57 AM: IMU2 IMU scanned
+Aug 28, 2026 9:57:58 AM: IMU2 IMU is connected!
+Aug 28, 2026 9:58:00 AM: IMU5 init done
+Aug 28, 2026 9:58:00 AM: IMU5 init done
+Aug 28, 2026 9:58:01 AM: IMU6 disconnected
+Aug 28, 2026 9:58:01 AM: IMU6 IMU scanned
+Aug 28, 2026 9:58:01 AM: All 6 devices scanned
+Aug 28, 2026 9:58:02 AM: IMU6 connected
+Aug 28, 2026 9:58:02 AM: IMU5 enableDataRecordingNotification called
+Aug 28, 2026 9:58:02 AM: onDotRecordingNotification: D4:22:CD:07:AF:F5 isEnabled=true isExporting=false
+Aug 28, 2026 9:58:02 AM: IMU5 eraseRecordingData called
+Aug 28, 2026 9:58:02 AM: IMU5 re-enabled notifications after sync reconnect
+Aug 28, 2026 9:58:02 AM: onDotRecordingNotification: D4:22:CD:07:AF:F5 isEnabled=true isExporting=false
+Aug 28, 2026 9:58:02 AM: IMU5 eraseRecordingData called
+Aug 28, 2026 9:58:06 AM: IMU6 init done
+Aug 28, 2026 9:58:06 AM: IMU6 init done
+Aug 28, 2026 9:58:08 AM: IMU6 enableDataRecordingNotification called
+Aug 28, 2026 9:58:08 AM: onDotRecordingNotification: D4:22:CD:07:B3:84 isEnabled=true isExporting=false
+Aug 28, 2026 9:58:08 AM: IMU6 eraseRecordingData called
+Aug 28, 2026 9:58:08 AM: IMU6 re-enabled notifications after sync reconnect
+Aug 28, 2026 9:59:12 AM: onDotEraseDone: D4:22:CD:07:AF:F5 success=true
+Aug 28, 2026 9:59:12 AM: IMU5 erase done
+Aug 28, 2026 9:59:18 AM: onDotEraseDone: D4:22:CD:07:B3:84 success=true
+Aug 28, 2026 9:59:18 AM: IMU6 erase done
+Aug 28, 2026 9:59:18 AM: Both recording IMUs erased and ready
+Aug 28, 2026 9:59:18 AM: IMU5 and IMU6 erase complete — sync button enabled
+Aug 28, 2026 9:59:21 AM: Start Sync clicked. Device list size: 6
+Aug 28, 2026 9:59:21 AM: Sync requested.
+Aug 28, 2026 9:59:22 AM: IMU1 IMU is disconnected!
+Aug 28, 2026 9:59:22 AM: IMU3 disconnected
+Aug 28, 2026 9:59:22 AM: IMU4 disconnected
+Aug 28, 2026 9:59:22 AM: IMU5 disconnected
+Aug 28, 2026 9:59:22 AM: IMU2 IMU is disconnected!
+Aug 28, 2026 9:59:22 AM: IMU6 disconnected
+Aug 28, 2026 9:59:36 AM: IMU1 IMU is disconnected!
+Aug 28, 2026 9:59:36 AM: IMU3 disconnected
+Aug 28, 2026 9:59:36 AM: IMU4 disconnected
+Aug 28, 2026 9:59:36 AM: IMU5 disconnected
+Aug 28, 2026 9:59:36 AM: IMU2 IMU is disconnected!
+Aug 28, 2026 9:59:36 AM: IMU6 disconnected
+Aug 28, 2026 9:59:37 AM: IMU1 IMU is connected!
+Aug 28, 2026 9:59:37 AM: IMU6 connected
+Aug 28, 2026 9:59:37 AM: IMU5 connected
+Aug 28, 2026 9:59:37 AM: IMU3 connected
+Aug 28, 2026 9:59:37 AM: IMU4 connected
+Aug 28, 2026 9:59:38 AM: IMU2 IMU is connected!
+Aug 28, 2026 9:59:39 AM: IMU6 init done
+Aug 28, 2026 9:59:40 AM: IMU5 init done
+Aug 28, 2026 9:59:40 AM: IMU5 init done
+Aug 28, 2026 9:59:41 AM: IMU6 re-enabled notifications after sync reconnect
+Aug 28, 2026 9:59:41 AM: onDotRecordingNotification: D4:22:CD:07:B3:84 isEnabled=true isExporting=false
+Aug 28, 2026 9:59:42 AM: IMU5 re-enabled notifications after sync reconnect
+Aug 28, 2026 9:59:42 AM: onDotRecordingNotification: D4:22:CD:07:AF:F5 isEnabled=true isExporting=false
+Aug 28, 2026 9:59:42 AM: IMU5 re-enabled notifications after sync reconnect
+Aug 28, 2026 9:59:42 AM: onDotRecordingNotification: D4:22:CD:07:AF:F5 isEnabled=true isExporting=false
+Aug 28, 2026 10:00:10 AM: ---------- Syncing done ----------
+Aug 28, 2026 10:00:10 AM: (Main): --- Syncing is done! ---- 
+Aug 28, 2026 10:00:14 AM: IMU1_M11_Aug 28, 2026 10:00:14 AM, Subject 1.csv created
+Aug 28, 2026 10:00:14 AM: IMU2_M12_Aug 28, 2026 10:00:14 AM, Subject 1.csv created
+Aug 28, 2026 10:00:14 AM: IMU3_M13_Aug 28, 2026 10:00:14 AM, Subject 1.csv created
+Aug 28, 2026 10:00:14 AM: IMU4_M14_Aug 28, 2026 10:00:14 AM, Subject 1.csv created
+Aug 28, 2026 10:00:14 AM: Feature log created for IMU1: FeatureLog_IMU1_Subject1_Aug 28, 2026 10:00:14 AM.csv
+Aug 28, 2026 10:00:14 AM: Feature log created for IMU2: FeatureLog_IMU2_Subject1_Aug 28, 2026 10:00:14 AM.csv
+Aug 28, 2026 10:00:14 AM: Feature logging initialized for all IMUs
+Aug 28, 2026 10:00:14 AM: IMU1 measuring
+Aug 28, 2026 10:00:14 AM: IMU2 measuring
+Aug 28, 2026 10:00:14 AM: IMU3 measuring
+Aug 28, 2026 10:00:14 AM: IMU4 measuring
+Aug 28, 2026 10:00:14 AM: IMU5 recording started
+Aug 28, 2026 10:00:14 AM: IMU6 recording started
+Aug 28, 2026 10:00:14 AM: IMU6 start recording ack: OK state=success
+Aug 28, 2026 10:00:14 AM: IMU5 start recording ack: OK state=success
+Aug 28, 2026 10:00:16 AM:  ---- Data is Logging -----
+Aug 28, 2026 10:00:19 AM: Stopping
+Aug 28, 2026 10:00:19 AM: Feature log closed for IMU1
+Aug 28, 2026 10:00:19 AM: Feature log closed for IMU2
+Aug 28, 2026 10:00:19 AM: All feature logs closed successfully
+Aug 28, 2026 10:00:19 AM: IMU5 stop recording ack: OK state=success
+Aug 28, 2026 10:00:19 AM: IMU6 stop recording ack: OK state=success
+Aug 28, 2026 10:00:19 AM: Uploading data to cloud : IMU1_M11_Aug 28, 2026 10:00:14 AM, Subject 1.csv
+Aug 28, 2026 10:00:20 AM: Uploading data to cloud : IMU2_M12_Aug 28, 2026 10:00:14 AM, Subject 1.csv
+Aug 28, 2026 10:00:20 AM: Uploading data to cloud : IMU3_M13_Aug 28, 2026 10:00:14 AM, Subject 1.csv
+Aug 28, 2026 10:00:20 AM: Uploading data to cloud : IMU4_M14_Aug 28, 2026 10:00:14 AM, Subject 1.csv
+Aug 28, 2026 10:00:20 AM: Uploading data to cloud : FeatureLog_IMU1_Subject1_Aug 28, 2026 10:00:14 AM.csv
+Aug 28, 2026 10:00:20 AM: Uploading data to cloud : FeatureLog_IMU2_Subject1_Aug 28, 2026 10:00:14 AM.csv

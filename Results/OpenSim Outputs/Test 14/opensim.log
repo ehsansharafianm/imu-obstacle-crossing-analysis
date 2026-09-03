@@ -1,0 +1,127 @@
+[2026-08-11 13:07:23.136] [info] Updating Model file from 40000 to latest format...
+[2026-08-11 13:07:23.148] [info] Loaded model Rajagopal_2015 from file C:\Users\BiomechanicsLab2\AppData\Local\Temp\OpenSense\Test 14\Rajagopal_2015.osim
+[2026-08-11 13:07:23.922] [info] Heading correction computed to be -159.853 degs about ground Y.
+[2026-08-11 13:07:23.933] [info] Processing torso_imu
+[2026-08-11 13:07:23.933] [info] Computed offset for torso_imu
+[2026-08-11 13:07:23.933] [info] Offset is 
+[-0.132818,-0.0225187,0.990885]
+[0.983933,0.117353,0.134553]
+[-0.119313,0.992835,0.00657035]
+
+[2026-08-11 13:07:23.933] [info] Creating offset frame for torso_imu
+[2026-08-11 13:07:23.934] [info] Added offset frame for torso_imu.
+[2026-08-11 13:07:23.935] [info] torso_imu offset computed from torso_imu data from file.
+[2026-08-11 13:07:23.935] [info] Processing pelvis_imu
+[2026-08-11 13:07:23.935] [info] Computed offset for pelvis_imu
+[2026-08-11 13:07:23.935] [info] Offset is 
+[0.185428,-0.0602958,-0.980806]
+[0.981502,-0.0370217,0.187836]
+[-0.0476368,-0.997494,0.0523156]
+
+[2026-08-11 13:07:23.935] [info] Creating offset frame for pelvis_imu
+[2026-08-11 13:07:23.935] [info] Added offset frame for pelvis_imu.
+[2026-08-11 13:07:23.935] [info] pelvis_imu offset computed from pelvis_imu data from file.
+[2026-08-11 13:07:23.935] [info] Processing tibia_r_imu
+[2026-08-11 13:07:23.935] [info] Computed offset for tibia_r_imu
+[2026-08-11 13:07:23.936] [info] Offset is 
+[0.224437,-0.915677,-0.333411]
+[0.940485,0.293126,-0.171947]
+[0.25518,-0.274977,0.926969]
+
+[2026-08-11 13:07:23.936] [info] Creating offset frame for tibia_r_imu
+[2026-08-11 13:07:23.936] [info] Added offset frame for tibia_r_imu.
+[2026-08-11 13:07:23.936] [info] tibia_r_imu offset computed from tibia_r_imu data from file.
+[2026-08-11 13:07:23.936] [info] Processing femur_r_imu
+[2026-08-11 13:07:23.936] [info] Computed offset for femur_r_imu
+[2026-08-11 13:07:23.936] [info] Offset is 
+[0.216572,-0.97593,0.025615]
+[0.972306,0.213258,-0.0956156]
+[0.0878515,0.0456133,0.995089]
+
+[2026-08-11 13:07:23.936] [info] Creating offset frame for femur_r_imu
+[2026-08-11 13:07:23.937] [info] Added offset frame for femur_r_imu.
+[2026-08-11 13:07:23.937] [info] femur_r_imu offset computed from femur_r_imu data from file.
+[2026-08-11 13:07:23.937] [info] Processing tibia_l_imu
+[2026-08-11 13:07:23.937] [info] Computed offset for tibia_l_imu
+[2026-08-11 13:07:23.937] [info] Offset is 
+[0.109431,0.981983,0.154056]
+[0.966292,-0.0687601,-0.248097]
+[-0.233034,0.176013,-0.956407]
+
+[2026-08-11 13:07:23.937] [info] Creating offset frame for tibia_l_imu
+[2026-08-11 13:07:23.938] [info] Added offset frame for tibia_l_imu.
+[2026-08-11 13:07:23.938] [info] tibia_l_imu offset computed from tibia_l_imu data from file.
+[2026-08-11 13:07:23.938] [info] Processing femur_l_imu
+[2026-08-11 13:07:23.938] [info] Computed offset for femur_l_imu
+[2026-08-11 13:07:23.938] [info] Offset is 
+[0.134643,0.984607,-0.111443]
+[0.979832,-0.149054,-0.133088]
+[-0.14765,-0.0912764,-0.984819]
+
+[2026-08-11 13:07:23.938] [info] Creating offset frame for femur_l_imu
+[2026-08-11 13:07:23.939] [info] Added offset frame for femur_l_imu.
+[2026-08-11 13:07:23.939] [info] femur_l_imu offset computed from femur_l_imu data from file.
+[2026-08-11 13:07:23.939] [info] Processing calcn_r_imu
+[2026-08-11 13:07:23.939] [info] Computed offset for calcn_r_imu
+[2026-08-11 13:07:23.939] [info] Offset is 
+[-0.396098,0.697339,0.597348]
+[-0.0160906,-0.65573,0.754824]
+[0.918067,0.289373,0.270954]
+
+[2026-08-11 13:07:23.939] [info] Creating offset frame for calcn_r_imu
+[2026-08-11 13:07:23.939] [info] Added offset frame for calcn_r_imu.
+[2026-08-11 13:07:23.939] [info] calcn_r_imu offset computed from calcn_r_imu data from file.
+[2026-08-11 13:07:23.939] [info] Processing calcn_l_imu
+[2026-08-11 13:07:23.939] [info] Computed offset for calcn_l_imu
+[2026-08-11 13:07:23.939] [info] Offset is 
+[-0.0465765,0.819,0.5719]
+[-0.0430153,-0.573635,0.817981]
+[0.997988,0.0134982,0.0619474]
+
+[2026-08-11 13:07:23.939] [info] Creating offset frame for calcn_l_imu
+[2026-08-11 13:07:23.940] [info] Added offset frame for calcn_l_imu.
+[2026-08-11 13:07:23.940] [info] calcn_l_imu offset computed from calcn_l_imu data from file.
+[2026-08-11 13:07:23.940] [info] Processing humerus_r_imu
+[2026-08-11 13:07:23.940] [info] Computed offset for humerus_r_imu
+[2026-08-11 13:07:23.940] [info] Offset is 
+[0.0441643,-0.657986,-0.751734]
+[0.792069,-0.435512,0.427733]
+[-0.608832,-0.614316,0.501936]
+
+[2026-08-11 13:07:23.940] [info] Creating offset frame for humerus_r_imu
+[2026-08-11 13:07:23.941] [info] Added offset frame for humerus_r_imu.
+[2026-08-11 13:07:23.941] [info] humerus_r_imu offset computed from humerus_r_imu data from file.
+[2026-08-11 13:07:23.941] [info] Processing humerus_l_imu
+[2026-08-11 13:07:23.941] [info] Computed offset for humerus_l_imu
+[2026-08-11 13:07:23.941] [info] Offset is 
+[0.049344,0.996399,-0.0689524]
+[0.994798,-0.04287,0.0924058]
+[0.0891171,-0.0731534,-0.993331]
+
+[2026-08-11 13:07:23.941] [info] Creating offset frame for humerus_l_imu
+[2026-08-11 13:07:23.941] [info] Added offset frame for humerus_l_imu.
+[2026-08-11 13:07:23.941] [info] humerus_l_imu offset computed from humerus_l_imu data from file.
+[2026-08-11 13:07:23.941] [info] Processing ulna_r_imu
+[2026-08-11 13:07:23.942] [info] Computed offset for ulna_r_imu
+[2026-08-11 13:07:23.942] [info] Offset is 
+[-0.793365,-0.579088,-0.187696]
+[-0.148763,-0.114549,0.982216]
+[-0.59029,0.807178,0.00473181]
+
+[2026-08-11 13:07:23.942] [info] Creating offset frame for ulna_r_imu
+[2026-08-11 13:07:23.942] [info] Added offset frame for ulna_r_imu.
+[2026-08-11 13:07:23.942] [info] ulna_r_imu offset computed from ulna_r_imu data from file.
+[2026-08-11 13:07:23.942] [info] Processing ulna_l_imu
+[2026-08-11 13:07:23.942] [info] Computed offset for ulna_l_imu
+[2026-08-11 13:07:23.942] [info] Offset is 
+[-0.808194,-0.0569249,0.586159]
+[0.031407,0.989735,0.139422]
+[-0.588078,0.13109,-0.79811]
+
+[2026-08-11 13:07:23.942] [info] Creating offset frame for ulna_l_imu
+[2026-08-11 13:07:23.943] [info] Added offset frame for ulna_l_imu.
+[2026-08-11 13:07:23.943] [info] ulna_l_imu offset computed from ulna_l_imu data from file.
+[2026-08-11 13:07:24.083] [info] Loaded model Rajagopal_2015 from file C:\Users\BiomechanicsLab2\AppData\Local\Temp\OpenSense\Test 14\Rajagopal_2015_calibrated.osim
+[2026-08-11 13:07:24.270] [info] Loading orientations as quaternions from 'C:\Users\BiomechanicsLab2\AppData\Local\Temp\OpenSense\Test 14\STOFiles\MT_2026-08-11_12h33_01210270-000-000_orientations.sto'...
+[2026-08-11 13:07:25.179] [info] InverseKinematicsSolver found 12 model frames to track.
+[2026-08-11 13:12:01.324] [info] Wrote IK with IMU tracking results to: 'ik_MT_2026-08-11_12h33_01210270-000-000_orientations.mot'.

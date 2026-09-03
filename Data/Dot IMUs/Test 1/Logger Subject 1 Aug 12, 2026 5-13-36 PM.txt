@@ -1,0 +1,263 @@
+Aug 12, 2026 5:13:36 PM: Subject number set: 1
+Aug 12, 2026 5:13:36 PM: Log File Created
+Aug 12, 2026 5:13:51 PM: ===== DEMOGRAPHICS =====
+Aug 12, 2026 5:13:51 PM: Subject Height (cm): 1.0
+Aug 12, 2026 5:13:51 PM: Subject Weight (kg): 2.0
+Aug 12, 2026 5:13:51 PM: Hip to Knee Length (cm): 2.0
+Aug 12, 2026 5:13:51 PM: Knee to Ankle Length (cm): 3.0
+Aug 12, 2026 5:13:51 PM: Hip to Ankle Length measured (cm): 2.0
+Aug 12, 2026 5:13:51 PM: Hip to Ankle Length computed (cm): 5.0
+Aug 12, 2026 5:13:51 PM: Flat Foot Length (cm): 3.0
+Aug 12, 2026 5:13:51 PM: Elevated Foot Length (cm): 2.0
+Aug 12, 2026 5:13:51 PM: Dominant Leg: Right
+Aug 12, 2026 5:13:51 PM: Dominant Hand: Right
+Aug 12, 2026 5:13:51 PM: Obstacle heights: 10% = 0.5 cm | 20% = 1.0 cm | 30% = 1.5 cm
+Aug 12, 2026 5:13:51 PM: ========================
+Aug 12, 2026 5:13:54 PM: === IMU Discovery Mode Started ===
+Aug 12, 2026 5:13:54 PM: Scanning for all available Xsens DOT devices...
+Aug 12, 2026 5:13:54 PM: Discovery scan started - searching for 5 seconds...
+Aug 12, 2026 5:13:54 PM: IMU Found: Address= D4:22:CD:07:B0:E7, Tag= M-14
+Aug 12, 2026 5:13:54 PM: IMU Found: Address= D4:22:CD:07:B3:84, Tag= M-16
+Aug 12, 2026 5:13:54 PM: IMU Found: Address= D4:22:CD:00:63:A4, Tag= V2–19
+Aug 12, 2026 5:13:54 PM: IMU Found: Address= D4:22:CD:07:B2:6A, Tag= M-11
+Aug 12, 2026 5:13:55 PM: IMU Found: Address= D4:22:CD:07:B0:7C, Tag= M-12
+Aug 12, 2026 5:13:55 PM: IMU Found: Address= D4:22:CD:00:63:7D, Tag= V2–15
+Aug 12, 2026 5:13:55 PM: IMU Found: Address= D4:22:CD:00:9F:95, Tag= V2–20
+Aug 12, 2026 5:13:55 PM: IMU Found: Address= D4:22:CD:07:B0:DB, Tag= M-13
+Aug 12, 2026 5:13:55 PM: IMU Found: Address= D4:22:CD:00:63:8B, Tag= V2–17
+Aug 12, 2026 5:13:55 PM: IMU Found: Address= D4:22:CD:07:AF:F5, Tag= M-15
+Aug 12, 2026 5:13:55 PM: IMU Found: Address= D4:22:CD:00:A1:76, Tag= V2–18
+Aug 12, 2026 5:13:59 PM: ===== Discovery scan stopped. Found 11 devices =====
+Aug 12, 2026 5:14:08 PM: IMU1: M-11, MAC: D4:22:CD:07:B2:6A
+Aug 12, 2026 5:14:08 PM: IMU2: M-12, MAC: D4:22:CD:07:B0:7C
+Aug 12, 2026 5:14:08 PM: IMU3: M-13, MAC: D4:22:CD:07:B0:DB
+Aug 12, 2026 5:14:08 PM: IMU4: M-14, MAC: D4:22:CD:07:B0:E7
+Aug 12, 2026 5:14:08 PM: IMU5: M-15, MAC: D4:22:CD:07:AF:F5
+Aug 12, 2026 5:14:08 PM: IMU6: M-16, MAC: D4:22:CD:07:B3:84
+Aug 12, 2026 5:14:08 PM: Scan started!
+Aug 12, 2026 5:14:08 PM: IMU6 disconnected
+Aug 12, 2026 5:14:08 PM: IMU6 IMU scanned
+Aug 12, 2026 5:14:08 PM: IMU1 IMU is disconnected!
+Aug 12, 2026 5:14:08 PM: IMU1 IMU scanned
+Aug 12, 2026 5:14:08 PM: IMU3 disconnected
+Aug 12, 2026 5:14:08 PM: IMU3 IMU scanned
+Aug 12, 2026 5:14:08 PM: IMU5 disconnected
+Aug 12, 2026 5:14:08 PM: IMU5 IMU scanned
+Aug 12, 2026 5:14:08 PM: IMU3 connected
+Aug 12, 2026 5:14:08 PM: IMU6 connected
+Aug 12, 2026 5:14:08 PM: IMU1 IMU is connected!
+Aug 12, 2026 5:14:09 PM: IMU5 connected
+Aug 12, 2026 5:14:09 PM: IMU4 disconnected
+Aug 12, 2026 5:14:09 PM: IMU4 IMU scanned
+Aug 12, 2026 5:14:09 PM: IMU4 connected
+Aug 12, 2026 5:14:10 PM: IMU2 IMU is disconnected!
+Aug 12, 2026 5:14:10 PM: IMU2 IMU scanned
+Aug 12, 2026 5:14:10 PM: All 6 devices scanned
+Aug 12, 2026 5:14:10 PM: IMU2 IMU is connected!
+Aug 12, 2026 5:14:11 PM: IMU6 init done
+Aug 12, 2026 5:14:12 PM: IMU5 init done
+Aug 12, 2026 5:14:13 PM: IMU6 enableDataRecordingNotification called
+Aug 12, 2026 5:14:13 PM: onDotRecordingNotification: D4:22:CD:07:B3:84 isEnabled=true isExporting=false
+Aug 12, 2026 5:14:13 PM: IMU6 eraseRecordingData called
+Aug 12, 2026 5:14:14 PM: IMU5 enableDataRecordingNotification called
+Aug 12, 2026 5:14:14 PM: onDotRecordingNotification: D4:22:CD:07:AF:F5 isEnabled=true isExporting=false
+Aug 12, 2026 5:14:14 PM: IMU5 eraseRecordingData called
+Aug 12, 2026 5:15:23 PM: onDotEraseDone: D4:22:CD:07:B3:84 success=true
+Aug 12, 2026 5:15:23 PM: IMU6 erase done
+Aug 12, 2026 5:15:24 PM: onDotEraseDone: D4:22:CD:07:AF:F5 success=true
+Aug 12, 2026 5:15:24 PM: IMU5 erase done
+Aug 12, 2026 5:15:24 PM: Both recording IMUs erased and ready
+Aug 12, 2026 5:15:24 PM: IMU5 and IMU6 erase complete — sync button enabled
+Aug 12, 2026 5:15:29 PM: Start Sync clicked. Device list size: 6
+Aug 12, 2026 5:15:30 PM: Sync requested.
+Aug 12, 2026 5:15:31 PM: IMU1 IMU is disconnected!
+Aug 12, 2026 5:15:31 PM: IMU6 disconnected
+Aug 12, 2026 5:15:31 PM: IMU4 disconnected
+Aug 12, 2026 5:15:31 PM: IMU3 disconnected
+Aug 12, 2026 5:15:31 PM: IMU5 disconnected
+Aug 12, 2026 5:15:31 PM: IMU2 IMU is disconnected!
+Aug 12, 2026 5:15:45 PM: IMU1 IMU is disconnected!
+Aug 12, 2026 5:15:45 PM: IMU6 disconnected
+Aug 12, 2026 5:15:45 PM: IMU5 disconnected
+Aug 12, 2026 5:15:45 PM: IMU3 disconnected
+Aug 12, 2026 5:15:45 PM: IMU4 disconnected
+Aug 12, 2026 5:15:45 PM: IMU2 IMU is disconnected!
+Aug 12, 2026 5:15:45 PM: IMU6 connected
+Aug 12, 2026 5:15:45 PM: IMU4 connected
+Aug 12, 2026 5:15:45 PM: IMU3 connected
+Aug 12, 2026 5:15:46 PM: IMU1 IMU is connected!
+Aug 12, 2026 5:15:46 PM: IMU2 IMU is connected!
+Aug 12, 2026 5:15:46 PM: IMU5 connected
+Aug 12, 2026 5:15:47 PM: IMU6 init done
+Aug 12, 2026 5:15:49 PM: IMU5 init done
+Aug 12, 2026 5:15:49 PM: IMU6 re-enabled notifications after sync reconnect
+Aug 12, 2026 5:15:49 PM: ---------- Syncing done ----------
+Aug 12, 2026 5:15:51 PM: IMU5 re-enabled notifications after sync reconnect
+Aug 12, 2026 5:15:51 PM: onDotRecordingNotification: D4:22:CD:07:AF:F5 isEnabled=true isExporting=false
+Aug 12, 2026 5:16:19 PM: ---------- Syncing done ----------
+Aug 12, 2026 5:16:19 PM: (Main): --- Syncing is done! ---- 
+Aug 12, 2026 5:16:29 PM: IMU1_M11_Aug 12, 2026 5:16:29 PM, Subject 1.csv created
+Aug 12, 2026 5:16:29 PM: IMU2_M12_Aug 12, 2026 5:16:29 PM, Subject 1.csv created
+Aug 12, 2026 5:16:29 PM: IMU3_M13_Aug 12, 2026 5:16:29 PM, Subject 1.csv created
+Aug 12, 2026 5:16:29 PM: IMU4_M14_Aug 12, 2026 5:16:29 PM, Subject 1.csv created
+Aug 12, 2026 5:16:29 PM: Feature log created for IMU1: FeatureLog_IMU1_Subject1_Aug 12, 2026 5:16:29 PM.csv
+Aug 12, 2026 5:16:29 PM: Feature log created for IMU2: FeatureLog_IMU2_Subject1_Aug 12, 2026 5:16:29 PM.csv
+Aug 12, 2026 5:16:29 PM: Feature logging initialized for all IMUs
+Aug 12, 2026 5:16:29 PM: IMU1 measuring
+Aug 12, 2026 5:16:29 PM: IMU2 measuring
+Aug 12, 2026 5:16:29 PM: IMU3 measuring
+Aug 12, 2026 5:16:29 PM: IMU4 measuring
+Aug 12, 2026 5:16:29 PM: IMU5 recording started
+Aug 12, 2026 5:16:29 PM: IMU6 recording started
+Aug 12, 2026 5:16:29 PM: IMU6 start recording ack: OK state=success
+Aug 12, 2026 5:16:29 PM: IMU5 start recording ack: OK state=success
+Aug 12, 2026 5:16:30 PM:  ---- Data is Logging -----
+Aug 12, 2026 5:16:34 PM: ZUPT IMU1 pkt:308 t:0s accel:0.001 gyro:-0.007
+Aug 12, 2026 5:16:34 PM: ZUPT IMU2 pkt:307 t:0s accel:0.005 gyro:-0.032
+Aug 12, 2026 5:16:35 PM: ZUPT IMU2 pkt:345 t:0.633s accel:-0.025 gyro:-0.03
+Aug 12, 2026 5:16:35 PM: ZUPT IMU1 pkt:347 t:0.65s accel:-0.022 gyro:-0.002
+Aug 12, 2026 5:16:35 PM: CAL IMU2 Win#1 skipped (terrain: NA)
+Aug 12, 2026 5:16:35 PM: CAL IMU1 Win#1 skipped (terrain: NA)
+Aug 12, 2026 5:16:35 PM: ZUPT IMU2 pkt:377 t:0.533s accel:-0.007 gyro:-0.079
+Aug 12, 2026 5:16:35 PM: CAL IMU2 [1/10] bias:-0.001
+Aug 12, 2026 5:16:35 PM: ZUPT IMU1 pkt:386 t:0.65s accel:-0.007 gyro:-0.036
+Aug 12, 2026 5:16:35 PM: CAL IMU1 [1/10] bias:-0.001
+Aug 12, 2026 5:16:36 PM: ZUPT IMU2 pkt:408 t:0.517s accel:-0.011 gyro:-0.059
+Aug 12, 2026 5:16:36 PM: CAL IMU2 [2/10] bias:-0.001
+Aug 12, 2026 5:16:36 PM: ZUPT IMU1 pkt:427 t:0.683s accel:-0.014 gyro:-0.014
+Aug 12, 2026 5:16:36 PM: CAL IMU1 Win#3 skipped (terrain: NA)
+Aug 12, 2026 5:16:36 PM: ZUPT IMU2 pkt:442 t:0.567s accel:-0.011 gyro:-0.049
+Aug 12, 2026 5:16:36 PM: CAL IMU2 Win#4 skipped (terrain: NA)
+Aug 12, 2026 5:16:36 PM: ZUPT IMU1 pkt:460 t:0.55s accel:-0.009 gyro:-0.086
+Aug 12, 2026 5:16:36 PM: CAL IMU1 Win#4 skipped (terrain: NA)
+Aug 12, 2026 5:16:37 PM: ZUPT IMU2 pkt:479 t:0.617s accel:-0.01 gyro:-0.066
+Aug 12, 2026 5:16:37 PM: CAL IMU2 Win#5 skipped (terrain: NA)
+Aug 12, 2026 5:16:37 PM: ZUPT IMU1 pkt:499 t:0.65s accel:-0.025 gyro:0.015
+Aug 12, 2026 5:16:37 PM: CAL IMU1 Win#5 skipped (terrain: NA)
+Aug 12, 2026 5:16:37 PM: >>> Leading leg is Left for H1_D1 crossing (Start pkt: 448, End pkt: 454)
+Aug 12, 2026 5:16:37 PM: ZUPT IMU2 pkt:515 t:0.6s accel:-0.009 gyro:0.065
+Aug 12, 2026 5:16:37 PM: CAL IMU2 Win#6 skipped (terrain: NA)
+Aug 12, 2026 5:16:38 PM: ZUPT IMU1 pkt:529 t:0.5s accel:-0.033 gyro:-0.007
+Aug 12, 2026 5:16:38 PM: CAL IMU1 Win#6 skipped (terrain: Height1_Depth2)
+Aug 12, 2026 5:16:38 PM: ZUPT IMU2 pkt:547 t:0.533s accel:-0.009 gyro:-0.03
+Aug 12, 2026 5:16:38 PM: CAL IMU2 Win#7 skipped (terrain: Height1_Depth2)
+Aug 12, 2026 5:16:38 PM: ZUPT IMU1 pkt:564 t:0.583s accel:-0.024 gyro:-0.079
+Aug 12, 2026 5:16:38 PM: CAL IMU1 Win#7 skipped (terrain: NA)
+Aug 12, 2026 5:16:39 PM: ZUPT IMU2 pkt:585 t:0.633s accel:-0.015 gyro:-0.084
+Aug 12, 2026 5:16:39 PM: CAL IMU2 Win#8 skipped (terrain: NA)
+Aug 12, 2026 5:16:39 PM: ZUPT IMU1 pkt:596 t:0.533s accel:-0.025 gyro:0
+Aug 12, 2026 5:16:39 PM: CAL IMU1 Win#8 skipped (terrain: NA)
+Aug 12, 2026 5:16:39 PM: >>> Leading leg is Left for H1_D2 crossing (Start pkt: 524, End pkt: 563)
+Aug 12, 2026 5:16:39 PM: ZUPT IMU1 pkt:627 t:0.517s accel:-0.001 gyro:-0.056
+Aug 12, 2026 5:16:39 PM: CAL IMU1 Win#9 skipped (terrain: NA)
+Aug 12, 2026 5:16:39 PM: ZUPT IMU2 pkt:620 t:0.583s accel:-0.015 gyro:-0.021
+Aug 12, 2026 5:16:39 PM: CAL IMU2 Win#9 skipped (terrain: NA)
+Aug 12, 2026 5:16:40 PM: ZUPT IMU2 pkt:650 t:0.5s accel:-0.011 gyro:0.02
+Aug 12, 2026 5:16:40 PM: CAL IMU2 Win#10 skipped (terrain: Height2_Depth1)
+Aug 12, 2026 5:16:40 PM: ZUPT IMU1 pkt:661 t:0.567s accel:-0.041 gyro:-0.031
+Aug 12, 2026 5:16:40 PM: CAL IMU1 Win#10 skipped (terrain: Height2_Depth1)
+Aug 12, 2026 5:16:40 PM: ZUPT IMU2 pkt:684 t:0.567s accel:-0.011 gyro:-0.03
+Aug 12, 2026 5:16:40 PM: CAL IMU2 Win#11 skipped (terrain: Height2_Depth1)
+Aug 12, 2026 5:16:40 PM: ZUPT IMU1 pkt:697 t:0.6s accel:-0.007 gyro:0.011
+Aug 12, 2026 5:16:40 PM: CAL IMU1 Win#11 skipped (terrain: NA)
+Aug 12, 2026 5:16:41 PM: ZUPT IMU2 pkt:720 t:0.6s accel:-0.022 gyro:0.024
+Aug 12, 2026 5:16:41 PM: CAL IMU2 Win#12 skipped (terrain: NA)
+Aug 12, 2026 5:16:41 PM: >>> Leading leg is Unknown for H2_D1 crossing (Start pkt: 644, End pkt: 698)
+Aug 12, 2026 5:16:41 PM: ZUPT IMU1 pkt:731 t:0.567s accel:-0.02 gyro:0.011
+Aug 12, 2026 5:16:41 PM: CAL IMU1 Win#12 skipped (terrain: NA)
+Aug 12, 2026 5:16:41 PM: ZUPT IMU2 pkt:757 t:0.617s accel:-0.022 gyro:-0.026
+Aug 12, 2026 5:16:41 PM: CAL IMU2 Win#13 skipped (terrain: Height2_Depth2)
+Aug 12, 2026 5:16:41 PM: ZUPT IMU1 pkt:763 t:0.533s accel:0.002 gyro:-0.04
+Aug 12, 2026 5:16:41 PM: CAL IMU1 Win#13 skipped (terrain: Height2_Depth2)
+Aug 12, 2026 5:16:42 PM: ZUPT IMU2 pkt:793 t:0.6s accel:-0.027 gyro:-0.049
+Aug 12, 2026 5:16:42 PM: CAL IMU2 Win#14 skipped (terrain: NA)
+Aug 12, 2026 5:16:42 PM: ZUPT IMU1 pkt:800 t:0.617s accel:-0.014 gyro:-0.041
+Aug 12, 2026 5:16:42 PM: CAL IMU1 Win#14 skipped (terrain: NA)
+Aug 12, 2026 5:16:42 PM: >>> Leading leg is Left for H2_D2 crossing (Start pkt: 751, End pkt: 790)
+Aug 12, 2026 5:16:43 PM: ZUPT IMU2 pkt:823 t:0.5s accel:-0.007 gyro:-0.039
+Aug 12, 2026 5:16:43 PM: CAL IMU2 Win#15 skipped (terrain: NA)
+Aug 12, 2026 5:16:43 PM: ZUPT IMU1 pkt:830 t:0.5s accel:-0 gyro:-0.037
+Aug 12, 2026 5:16:43 PM: CAL IMU1 Win#15 skipped (terrain: NA)
+Aug 12, 2026 5:16:43 PM: ZUPT IMU2 pkt:857 t:0.567s accel:-0.011 gyro:-0.042
+Aug 12, 2026 5:16:43 PM: CAL IMU2 Win#16 skipped (terrain: Height3_Depth1)
+Aug 12, 2026 5:16:43 PM: ZUPT IMU1 pkt:863 t:0.55s accel:-0.01 gyro:0.007
+Aug 12, 2026 5:16:43 PM: CAL IMU1 Win#16 skipped (terrain: Height3_Depth1)
+Aug 12, 2026 5:16:44 PM: ZUPT IMU1 pkt:895 t:0.533s accel:-0.019 gyro:-0.008
+Aug 12, 2026 5:16:44 PM: CAL IMU1 Win#17 skipped (terrain: NA)
+Aug 12, 2026 5:16:44 PM: ZUPT IMU2 pkt:895 t:0.633s accel:-0.008 gyro:-0.086
+Aug 12, 2026 5:16:44 PM: CAL IMU2 Win#17 skipped (terrain: NA)
+Aug 12, 2026 5:16:44 PM: >>> Leading leg is Left for H3_D1 crossing (Start pkt: 846, End pkt: 887)
+Aug 12, 2026 5:16:44 PM: ZUPT IMU2 pkt:929 t:0.567s accel:-0.033 gyro:-0.023
+Aug 12, 2026 5:16:44 PM: CAL IMU2 Win#18 skipped (terrain: NA)
+Aug 12, 2026 5:16:44 PM: ZUPT IMU1 pkt:930 t:0.583s accel:-0.011 gyro:-0.076
+Aug 12, 2026 5:16:44 PM: CAL IMU1 Win#18 skipped (terrain: NA)
+Aug 12, 2026 5:16:45 PM: ZUPT IMU1 pkt:963 t:0.55s accel:-0.028 gyro:0.024
+Aug 12, 2026 5:16:45 PM: CAL IMU1 Win#19 skipped (terrain: Height3_Depth2)
+Aug 12, 2026 5:16:45 PM: ZUPT IMU2 pkt:971 t:0.7s accel:-0.013 gyro:0.001
+Aug 12, 2026 5:16:45 PM: CAL IMU2 Win#19 skipped (terrain: Height3_Depth2)
+Aug 12, 2026 5:16:45 PM: ZUPT IMU1 pkt:995 t:0.533s accel:-0.018 gyro:0.04
+Aug 12, 2026 5:16:45 PM: CAL IMU1 Win#20 skipped (terrain: Height3_Depth2)
+Aug 12, 2026 5:16:46 PM: ZUPT IMU2 pkt:1009 t:0.633s accel:-0.02 gyro:-0.014
+Aug 12, 2026 5:16:46 PM: CAL IMU2 Win#20 skipped (terrain: NA)
+Aug 12, 2026 5:16:46 PM: ZUPT IMU1 pkt:1026 t:0.517s accel:-0.02 gyro:-0.042
+Aug 12, 2026 5:16:46 PM: CAL IMU1 Win#21 skipped (terrain: NA)
+Aug 12, 2026 5:16:46 PM: >>> Leading leg is Left for H3_D2 crossing (Start pkt: 959, End pkt: 1001)
+Aug 12, 2026 5:16:46 PM: ZUPT IMU2 pkt:1045 t:0.6s accel:-0.017 gyro:-0.026
+Aug 12, 2026 5:16:46 PM: CAL IMU2 Win#21 skipped (terrain: NA)
+Aug 12, 2026 5:16:47 PM: ZUPT IMU1 pkt:1064 t:0.633s accel:-0.009 gyro:-0.024
+Aug 12, 2026 5:16:47 PM: CAL IMU1 Win#22 skipped (terrain: NA)
+Aug 12, 2026 5:16:47 PM: ZUPT IMU2 pkt:1078 t:0.55s accel:-0.018 gyro:-0.078
+Aug 12, 2026 5:16:47 PM: CAL IMU2 Win#22 skipped (terrain: NA)
+Aug 12, 2026 5:16:47 PM: ZUPT IMU1 pkt:1099 t:0.583s accel:-0.003 gyro:-0.063
+Aug 12, 2026 5:16:47 PM: CAL IMU1 Win#23 skipped (terrain: NA)
+Aug 12, 2026 5:16:47 PM: ZUPT IMU2 pkt:1111 t:0.55s accel:-0.016 gyro:0.003
+Aug 12, 2026 5:16:47 PM: CAL IMU2 Win#23 skipped (terrain: NA)
+Aug 12, 2026 5:16:48 PM: ZUPT IMU1 pkt:1130 t:0.517s accel:-0.028 gyro:-0.037
+Aug 12, 2026 5:16:48 PM: CAL IMU1 Win#24 skipped (terrain: NA)
+Aug 12, 2026 5:16:48 PM: ZUPT IMU2 pkt:1141 t:0.5s accel:-0.01 gyro:-0.044
+Aug 12, 2026 5:16:48 PM: CAL IMU2 Win#24 skipped (terrain: NA)
+Aug 12, 2026 5:16:48 PM: Stopping
+Aug 12, 2026 5:16:48 PM: Feature log closed for IMU1
+Aug 12, 2026 5:16:48 PM: Feature log closed for IMU2
+Aug 12, 2026 5:16:48 PM: All feature logs closed successfully
+Aug 12, 2026 5:16:48 PM: IMU6 stop recording ack: OK state=success
+Aug 12, 2026 5:16:48 PM: IMU5 stop recording ack: OK state=success
+Aug 12, 2026 5:16:49 PM: Export started for recording IMUs
+Aug 12, 2026 5:16:49 PM: exportRecordingData called
+Aug 12, 2026 5:16:49 PM: IMU5 export logger created: /storage/emulated/0/Android/data/com.tmsimple.ObjectCrossing/files/Subject 1/M15/IMU5_M15_Aug 12, 2026 5:16:49 PM, Subject 1.csv
+Aug 12, 2026 5:16:49 PM: IMU6 export logger created: /storage/emulated/0/Android/data/com.tmsimple.ObjectCrossing/files/Subject 1/M16/IMU6_M16_Aug 12, 2026 5:16:49 PM, Subject 1.csv
+Aug 12, 2026 5:16:51 PM: Export: enableDataRecordingNotification called for IMU5 and IMU6
+Aug 12, 2026 5:16:51 PM: onDotRecordingNotification: D4:22:CD:07:B3:84 isEnabled=true isExporting=true
+Aug 12, 2026 5:16:51 PM: onDotRecordingNotification: D4:22:CD:07:AF:F5 isEnabled=true isExporting=true
+Aug 12, 2026 5:16:53 PM: IMU6 requestFlashInfo called (export)
+Aug 12, 2026 5:16:53 PM: IMU5 requestFlashInfo called (export)
+Aug 12, 2026 5:16:53 PM: onDotRequestFlashInfoDone: D4:22:CD:07:B3:84 used=229376 remaining=66560000
+Aug 12, 2026 5:16:53 PM: percent=0.3434% → totalPackets=451269
+Aug 12, 2026 5:16:53 PM: IMU6 requestFileInfo called
+Aug 12, 2026 5:16:53 PM: onDotRequestFlashInfoDone: D4:22:CD:07:AF:F5 used=229376 remaining=66560000
+Aug 12, 2026 5:16:53 PM: percent=0.3434% → totalPackets=451269
+Aug 12, 2026 5:16:53 PM: IMU5 requestFileInfo called
+Aug 12, 2026 5:16:53 PM: onDotRequestFileInfoDone: D4:22:CD:07:B3:84 fileCount=1 success=true
+Aug 12, 2026 5:16:53 PM: selectExportedData OK for D4:22:CD:07:B3:84
+Aug 12, 2026 5:16:53 PM: onDotRequestFileInfoDone: D4:22:CD:07:AF:F5 fileCount=1 success=true
+Aug 12, 2026 5:16:53 PM: selectExportedData OK for D4:22:CD:07:AF:F5
+Aug 12, 2026 5:16:54 PM: startExporting called for D4:22:CD:07:B3:84 with 1 files
+Aug 12, 2026 5:16:54 PM: startExporting called for D4:22:CD:07:AF:F5 with 1 files
+Aug 12, 2026 5:17:29 PM: File exported from D4:22:CD:07:B3:84: 20260812_171629
+Aug 12, 2026 5:17:29 PM: All data exported from D4:22:CD:07:B3:84
+Aug 12, 2026 5:17:29 PM: IMU6 file exists: true
+Aug 12, 2026 5:17:29 PM: Export file added to upload list: IMU6_M16_Aug 12, 2026 5:16:49 PM, Subject 1.csv
+Aug 12, 2026 5:17:29 PM: File exported from D4:22:CD:07:AF:F5: 20260812_171629
+Aug 12, 2026 5:17:29 PM: All data exported from D4:22:CD:07:AF:F5
+Aug 12, 2026 5:17:29 PM: IMU5 file exists: true
+Aug 12, 2026 5:17:29 PM: Export file added to upload list: IMU5_M15_Aug 12, 2026 5:16:49 PM, Subject 1.csv
+Aug 12, 2026 5:17:29 PM: Export complete for all recording IMUs
+Aug 12, 2026 5:17:29 PM: Export complete — files ready for upload
+Aug 12, 2026 5:17:33 PM: Uploading data to cloud : IMU1_M11_Aug 12, 2026 5:16:29 PM, Subject 1.csv
+Aug 12, 2026 5:17:33 PM: Uploading data to cloud : IMU2_M12_Aug 12, 2026 5:16:29 PM, Subject 1.csv
+Aug 12, 2026 5:17:33 PM: Uploading data to cloud : IMU3_M13_Aug 12, 2026 5:16:29 PM, Subject 1.csv
+Aug 12, 2026 5:17:33 PM: Uploading data to cloud : IMU4_M14_Aug 12, 2026 5:16:29 PM, Subject 1.csv
+Aug 12, 2026 5:17:33 PM: Uploading data to cloud : FeatureLog_IMU1_Subject1_Aug 12, 2026 5:16:29 PM.csv
+Aug 12, 2026 5:17:33 PM: Uploading data to cloud : FeatureLog_IMU2_Subject1_Aug 12, 2026 5:16:29 PM.csv
+Aug 12, 2026 5:17:33 PM: Uploading data to cloud : IMU6_M16_Aug 12, 2026 5:16:49 PM, Subject 1.csv
+Aug 12, 2026 5:17:33 PM: Uploading data to cloud : IMU5_M15_Aug 12, 2026 5:16:49 PM, Subject 1.csv
