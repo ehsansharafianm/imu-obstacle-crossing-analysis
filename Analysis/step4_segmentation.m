@@ -157,6 +157,8 @@ end
 Seg = struct();
 Seg.test = Data.test;  Seg.fs = Data.fs;  Seg.nseg = NSEG;  Seg.pct = pct;
 Seg.zvpL = zvpL;       Seg.zvpR = zvpR;
+Seg.toeL = toeL(:);    Seg.hsL = hsL(:);               % toe-off / heel-strike sample
+Seg.toeR = toeR(:);    Seg.hsR = hsR(:);               % indices into Data.time, per foot
 Seg.dt = dt;           Seg.timeAxis = tvec;            % time-domain x-axis (s)
 Seg.signal = struct('label',{},'type',{},'side',{},'strides',{},'mean',{},'sd',{}, ...
                     'nStrides',{},'stridesTime',{},'meanTime',{},'sdTime',{});
