@@ -26,7 +26,7 @@ tags: [reference, glossary, conventions]
 - **Leading / Trailing** — which limb crosses the obstacle first / second (from the Logger).
 - **Contralateral arm rule** — arm signals segment on the **opposite** foot's ZVPs, since arm swing
   is coupled to the opposite leg ([[Step 4 - Segmentation (ZVP)]], [[Step 5 - Obstacle Features]]).
-- **WBAM** — whole-body angular momentum about the COM; a dynamic-balance measure ([[Step 6 - Angular Momentum]]).
+- **WBAM** — whole-body angular momentum about the COM; a dynamic-balance measure ([[Step X - Angular Momentum]]).
 - **FeatureLog** — Dot per-foot CSV of labelled crossing windows (height, stride, packets).
 - **Logger** — Dot text log naming the leading leg per crossing with a packet range.
 

@@ -39,4 +39,4 @@ The **foot-clearance (height) trajectory** answers the core question — how hig
 through each crossing — per limb and terrain. Its peak is the clearance measure; shape vs gait%/time
 shows *when*, vs distance shows *where* over the ground.
 
-Prev: [[Step 4 - Segmentation (ZVP)]] · related: [[Step 6 - Angular Momentum]] · [[Outputs and File Formats]]
+Prev: [[Step 4 - Segmentation (ZVP)]] · related: [[Step X - Angular Momentum]] · [[Outputs and File Formats]]

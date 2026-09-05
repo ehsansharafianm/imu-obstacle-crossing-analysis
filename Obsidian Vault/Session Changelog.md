@@ -37,7 +37,7 @@ leg) and inherit that foot's terrain / leading-trailing labels; `.side` still na
 Verified in [[Step 5 - Obstacle Features]]: no duplication, column counts match labels.
 
 ## 6. Step 6 — Angular momentum (new)
-Created [[Step 6 - Angular Momentum]] — whole-body + segmental (Arms/Legs/Trunk) angular momentum
+Created [[Step X - Angular Momentum]] — whole-body + segmental (Arms/Legs/Trunk) angular momentum
 via Simbody + a manual per-segment sum (mutually validated), with an interactive toggle viewer,
 default vs prompted body features, `.mat`/`.xlsx` export, and `tic/toc` timing. Static overview
 figure removed; entity labels black.
@@ -58,11 +58,37 @@ uniform 60 Hz grid (no upsampling needed); **segment the camera at the IMU ZVPs*
 dropouts only, NaN the long ones, flag low-completeness strides. Next concrete step: the
 **marker→body map**.
 
+## 9. Camera pipeline realized — steps 6–9 (new) 🎉
+The camera is fully integrated as a numbered pipeline. See [[Camera Pipeline - Achievements]].
+- [[Step 6 - Camera Sync and Viewers]] — sync camera markers to the 60 Hz IMU grid via the 3× left-leg
+  raise gesture (single shift, ~0 drift), then angles / trajectories-vs-time / 3D viewers with per-leg
+  gait-event overlays (ZVP, toe-off, heel-strike), a foot-angle sanity overlay, and auto-fit.
+- [[Step 7 - Camera Stride Segmentation]] — camera foot markers cut on the step-4 ZVPs (+ ZHC overlay);
+  saves `CameraSegmented_TestN.mat`.
+- [[Step 8 - Leading-Trailing Features (Camera)]] — step-5 features extended with the camera; saves
+  `SegTrajectories_WithCamera_TestN.mat` (`S5.camera.*`).
+- [[Step 9 - Crossing Parameters]] — foot placement (lift/landing) + height & **min** clearance per
+  crossing; saves `CrossingParams_TestN.mat/.xlsx` + arc/param/clearance figures. Prompts for leg length.
+
+## 10. CV-side trajectory refinement (new)
+`refine_trajectory.m` (CV repo) cleans the raw reconstructed workbook → `testN_trajectory_refined.xlsx`
+(despike out-of-volume / non-negative height, short-gap fill, smoothing; time/sampling untouched) and
+writes it into `Data/Camera CV/Test N/`. Step 6 prefers the `*_refined` file. `plot_trajectory` and
+`refine_trajectory` are scripts (prompt for the test number).
+
+## 11. Gait events saved in step 4
+[[Step 4 - Segmentation (ZVP)]] now also saves toe-off / heel-strike sample indices
+(`Seg.toeL/hsL/toeR/hsR`) next to the ZVPs, so the camera viewers can overlay them per leg.
+
+## 12. Numbering note
+The angular-momentum add-on is `stepX_angular_momentum.m` → renamed here to [[Step X - Angular Momentum]]
+so steps **6–9** name the camera pipeline.
+
 ## Housekeeping / notes
-- All changes are **local**; code changes to steps 1–5 were committed earlier
-  (commits *"arm IMUs and Joints"* and *"MTB converted via python in Step1"*). Step 6, the camera
-  viewer, and this vault are **uncommitted**.
-- The large binary `.mat`/`.xlsx` outputs are versioned in the repo (history bloat risk — see
-  [[Outputs and File Formats]]).
+- Steps 6–9 and step 4's change are **committed & pushed** to the analysis repo
+  (`imu-obstacle-crossing-analysis`); `refine_trajectory` / `plot_trajectory` to the CV repo
+  (`obstacle-crossing-computer-vision`). This vault update is committed with them.
+- The large binary `.mat`/`.xlsx` outputs and `Data/`/`Results/` blobs are generally left uncommitted
+  (history-bloat risk) — see [[Outputs and File Formats]].
 
 Back to [[Home]]

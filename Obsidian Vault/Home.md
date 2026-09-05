@@ -15,17 +15,26 @@ Open this folder as an Obsidian vault; every note links to the others.
 - [[Conventions and Glossary]] — axes, terrain labels, terminology
 - [[Session Changelog]] — summary of the latest work
 
-## The analysis steps
+## The IMU pipeline (steps 1–5)
 1. [[Step 1 - OpenSense IK]] — raw Awinda → OpenSim inverse kinematics (+ auto `.mtb` conversion)
 2. [[Step 2 - Joint Angle Viewer]] — inspect the IK joint angles
 3. [[Step 3 - Dot vs Awinda Sync]] — compare + sync both IMU systems, export combined data
-4. [[Step 4 - Segmentation (ZVP)]] — gait events + stride segmentation + foot trajectory
+4. [[Step 4 - Segmentation (ZVP)]] — gait events (ZVP, toe-off, heel-strike) + stride segmentation + foot trajectory
 5. [[Step 5 - Obstacle Features]] — leading/trailing limb, terrain, foot clearance
-6. [[Step 6 - Angular Momentum]] — whole-body + segmental angular momentum
 
-## Third measurement system (in progress)
-- [[Camera Tracking (WorldViz PPT)]] — optical marker position tracking
-- [[Camera Sync Strategy]] — how the camera will be synced to the IMUs and segmented
+## The camera pipeline (steps 6–9) ✅ integrated
+> 🎉 See [[Camera Pipeline - Achievements]] for the full story.
+6. [[Step 6 - Camera Sync and Viewers]] — sync camera markers to the 60 Hz IMU grid + interactive viewers
+7. [[Step 7 - Camera Stride Segmentation]] — cut camera foot markers into strides on the IMU ZVPs
+8. [[Step 8 - Leading-Trailing Features (Camera)]] — step-5 features extended with the camera
+9. [[Step 9 - Crossing Parameters]] — foot placement + height/min clearance per crossing
+
+## Add-on
+- [[Step X - Angular Momentum]] — whole-body + segmental angular momentum (`stepX_angular_momentum.m`)
+
+## Camera reference
+- [[Camera Tracking (WorldViz PPT)]] — optical marker position tracking (+ CV-side `refine_trajectory`)
+- [[Camera Sync Strategy]] — how the camera is synced to the IMUs and segmented (now realized)
 
 ## Reference
 - [[Outputs and File Formats]] — what each step writes and how to read it

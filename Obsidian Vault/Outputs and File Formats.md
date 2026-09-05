@@ -31,7 +31,7 @@ Results/
 - **`S5`** (`SegTrajectories_SideBased_TestN.mat`, [[Step 5 - Obstacle Features]]) — `.signal(k)`
   (`.Y/.Yt/.side/.terrain/.role/.cycle`), `.zhc` height trajectories, `.zhc.all` per-cycle table,
   `.Feat`, `.log`.
-- **`AM`** (`AngularMomentum_TestN.mat`, [[Step 6 - Angular Momentum]]) — whole-body
+- **`AM`** (`AngularMomentum_TestN.mat`, [[Step X - Angular Momentum]]) — whole-body
   `.H_model/.H_subject/.H_norm/.Hmag`, `.seg` (per-segment), `.group` (Arms/Legs/Trunk).
 
 ## Conventions

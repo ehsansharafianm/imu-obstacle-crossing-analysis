@@ -1,11 +1,15 @@
 ---
 tags: [step, angular-momentum, balance, opensim]
-aliases: [step6, step6_angular_momentum, WBAM]
+aliases: [stepX, stepX_angular_momentum, WBAM]
 ---
 
-# Step 6 — Angular Momentum
+# Step X — Angular Momentum
 
-**File:** `Analysis/step6_angular_momentum.m`
+> [!note] Numbering
+> This experimental add-on is `stepX_angular_momentum.m` (not part of the numbered camera pipeline).
+> Steps **6–9** are the camera pipeline — see [[Camera Pipeline - Achievements]].
+
+**File:** `Analysis/stepX_angular_momentum.m`
 Whole-body **and** segmental angular momentum about the body centre of mass (COM), in the model
 Ground frame. Standalone add-on — reads only step-1 outputs, **does not modify steps 1–5**.
 

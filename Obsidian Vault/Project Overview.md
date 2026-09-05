@@ -13,7 +13,7 @@ Insufficient foot clearance and poor rotational balance are major causes of trip
 and falls, so the headline measures are:
 - **Foot clearance** — how high the foot is lifted over each obstacle (see [[Step 5 - Obstacle Features]]).
 - **Joint kinematics** — hip/knee/ankle and now shoulder/elbow angles (see [[Step 3 - Dot vs Awinda Sync]]).
-- **Whole-body angular momentum (WBAM)** — a dynamic-balance measure (see [[Step 6 - Angular Momentum]]).
+- **Whole-body angular momentum (WBAM)** — a dynamic-balance measure (see [[Step X - Angular Momentum]]).
 
 ## Measurement systems
 Three systems record the same trials (see [[Data and Sensors]]):
