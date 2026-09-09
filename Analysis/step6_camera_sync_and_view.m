@@ -57,6 +57,10 @@ MK_COLOR = struct('L_toe',[0.45 0.20 0.70], 'L_heel',[0.15 0.55 0.20], ...
 %% ===================== INPUT + PATHS =====================
 % Set TN before running (e.g. `TN = 22;`) to skip the prompt for batch runs.
 if exist('TN','var') && ~isempty(TN), tn = TN; else, tn = input('  Input Test Number: '); end
+% Sync mode: automatic peak-based (default: just press Enter, or y) or manual.
+syncAns    = input('  Sync automatically? (y/n) [Enter = auto]: ', 's');
+manualSync = any(strcmpi(strtrim(syncAns), {'n','no'}));   % empty or y/yes -> automatic
+% (In manual mode the offset is entered LATER, after a preview of both signals.)
 root = fileparts(fileparts(mfilename('fullpath')));      % parent of Analysis
 base = fullfile(root, 'Results','Parameters Output', ['Test ' num2str(tn)]);
 matFile = fullfile(base, sprintf('AllData_Test%d.mat', tn));
@@ -101,35 +105,73 @@ for k = 1:numel(MARKERS)
 end
 
 %% ===================== RAISE PEAKS (camera + IMU) =====================
+% The IMU trace (EX/EXs) and camera height are always needed for the sync figure.
+% Peak detection is REQUIRED for auto sync but only informational for manual sync.
+iL = find(strcmp({Data.imu.label}, IMU_SYNC_LABEL), 1);
+if isempty(iL), error('IMU trace "%s" not found in Data.imu.', IMU_SYNC_LABEL); end
+EX = Data.imu(iL).euler_ZXY_deg(:, IMU_SYNC_COL);
+EX = EX - mean(EX(1:min(20,end)), 'omitnan');
+
 sm = SYNC_MARKER;
 [cPt, ~] = raisePeaks(tCam, camRaw.(sm)(:,3), CAM_RAISE_MIN_MM, CAM_RAISE_MIN_SEP);
 if numel(cPt) < 3
     sm = SYNC_FALLBACK;
     [cPt, ~] = raisePeaks(tCam, camRaw.(sm)(:,3), CAM_RAISE_MIN_MM, CAM_RAISE_MIN_SEP);
 end
-if isempty(cPt), error('No camera leg-raise peaks found (marker %s, > %g mm).', sm, CAM_RAISE_MIN_MM); end
-[cStartT, cEndT] = tripletEnds(cPt, TRIPLET_SPAN_S);
-fprintf('\nCamera raises (%s z): %d peaks; start@ %.3f s, end@ %.3f s\n', sm, numel(cPt), cStartT, cEndT);
-
-iL = find(strcmp({Data.imu.label}, IMU_SYNC_LABEL), 1);
-if isempty(iL), error('IMU trace "%s" not found in Data.imu.', IMU_SYNC_LABEL); end
-EX = Data.imu(iL).euler_ZXY_deg(:, IMU_SYNC_COL);
-EX = EX - mean(EX(1:min(20,end)), 'omitnan');
 [pP,vP] = raisePeaks(tg, EX,  IMU_RAISE_MIN_DEG, IMU_RAISE_MIN_SEP);
 [pN,vN] = raisePeaks(tg, -EX, IMU_RAISE_MIN_DEG, IMU_RAISE_MIN_SEP);
 if mean3(vP) >= mean3(vN), iSign = 1; iPt = pP; else, iSign = -1; iPt = pN; end
 EXs = iSign * EX;
-if isempty(iPt), error('No IMU leg-raise peaks >= %g deg found in %s.', IMU_RAISE_MIN_DEG, IMU_SYNC_LABEL); end
-[iStartT, iEndT] = tripletEnds(iPt, TRIPLET_SPAN_S);
-fprintf('IMU raises (%s X, sign %+d): %d peaks; start@ %.3f s, end@ %.3f s\n', ...
-        IMU_SYNC_LABEL, iSign, numel(iPt), iStartT, iEndT);
+if ~isempty(cPt), [cStartT,cEndT] = tripletEnds(cPt, TRIPLET_SPAN_S); else, cStartT = NaN; cEndT = NaN; end
+if ~isempty(iPt), [iStartT,iEndT] = tripletEnds(iPt, TRIPLET_SPAN_S); else, iStartT = NaN; iEndT = NaN; end
 
-%% ===================== SYNC: single shift + drift check =====================
-dtShift = iStartT - cStartT;
-drift   = iEndT - (cEndT + dtShift);
-tCamAl  = tCam + dtShift;
-fprintf('\n=== Sync ===\n  shift (IMU - camera) = %+.3f s\n  end-triplet residual = %+.3f s over %.1f s  (%.3f %%)\n', ...
-        dtShift, drift, iEndT - iStartT, 100*drift/max(iEndT-iStartT,eps));
+%% ===================== SYNC: auto (peaks) or manual (typed offset) =====================
+if manualSync
+    % Preview both signals (raw, unshifted, amplitude-normalised) so you can read
+    % the offset (IMU - camera) off the plot, then type it. The auto-detected
+    % offset is printed as a suggestion you can accept or override.
+    nrm  = @(x)(x - min(x,[],'omitnan')) / max(max(x,[],'omitnan') - min(x,[],'omitnan'), eps);
+    zcp  = camRaw.(sm)(:,3);
+    fprev = figure('Color','w','Name',sprintf('Step 6 - manual sync preview | Test %d', tn),'Position',[80 90 1300 480]);
+    plot(tCam, nrm(zcp), '-', 'Color', COL_CAM, 'LineWidth', LINE_WIDTH, 'DisplayName', sprintf('Camera %s height', sm)); hold on;
+    plot(tg,   nrm(EXs), '-', 'Color', COL_IMU, 'LineWidth', LINE_WIDTH, 'DisplayName', sprintf('IMU %s X', IMU_SYNC_LABEL));
+    grid on; xlabel('Time (s)','FontName',FONT_NAME,'FontSize',LABEL_SIZE); ylabel('normalised','FontName',FONT_NAME,'FontSize',LABEL_SIZE);
+    title('Read offset (IMU - camera) from the two starts, then enter it at the prompt','FontName',FONT_NAME,'FontSize',TITLE_SIZE);
+    legend('FontName',FONT_NAME,'Location','best'); drawnow;
+    % Manual: type the two PEAK TIMES you read off the preview; the code subtracts
+    % them (offset = IMU peak - camera peak). Press Enter to accept the auto-detected
+    % peak, so pressing Enter for both gives exactly the automatic result.
+    defI = iStartT; defC = cStartT;   % auto-detected gesture starts (used as Enter-defaults)
+    if ~isnan(defI) && ~isnan(defC)
+        fprintf('  Auto-detected gesture: IMU peak@ %.3f s, camera peak@ %.3f s  (offset %+.3f)\n', defI, defC, defI-defC);
+    end
+    if ~isnan(defI), pI = sprintf('  IMU  peak time (s)   [Enter = %.3f]: ', defI); else, pI = '  IMU  peak time (s): '; end
+    tI = input(pI);  if isempty(tI), tI = defI; end
+    if ~isnan(defC), pC = sprintf('  Camera peak time (s) [Enter = %.3f]: ', defC); else, pC = '  Camera peak time (s): '; end
+    tC = input(pC);  if isempty(tC), tC = defC; end
+    if isgraphics(fprev), close(fprev); end
+    if isnan(tI) || isnan(tC)
+        error('Need both peak times (IMU and camera). Auto detection was unavailable, so type both explicitly.');
+    end
+    dtShift = tI - tC;           % offset = IMU peak - camera peak
+    if ~isnan(cEndT) && ~isnan(iEndT)       % end residual with this offset (small = well aligned)
+        drift = iEndT - (cEndT + dtShift);
+    else
+        drift = NaN;
+    end
+    fprintf('\n=== Sync (MANUAL) ===\n  IMU peak %.3f - camera peak %.3f  ->  offset = %+.3f s\n', tI, tC, dtShift);
+    if ~isnan(drift), fprintf('  end-triplet residual with this offset = %+.3f s\n', drift); end
+else
+    if isempty(cPt), error('No camera leg-raise peaks (marker %s, > %g mm). Re-run and choose MANUAL sync.', sm, CAM_RAISE_MIN_MM); end
+    if isempty(iPt), error('No IMU leg-raise peaks >= %g deg in %s. Re-run and choose MANUAL sync.', IMU_RAISE_MIN_DEG, IMU_SYNC_LABEL); end
+    fprintf('\nCamera raises (%s z): %d peaks; start@ %.3f s, end@ %.3f s\n', sm, numel(cPt), cStartT, cEndT);
+    fprintf('IMU raises (%s X, sign %+d): %d peaks; start@ %.3f s, end@ %.3f s\n', IMU_SYNC_LABEL, iSign, numel(iPt), iStartT, iEndT);
+    dtShift = iStartT - cStartT;
+    drift   = iEndT - (cEndT + dtShift);
+    fprintf('\n=== Sync (AUTO) ===\n  shift (IMU - camera) = %+.3f s\n  end-triplet residual = %+.3f s over %.1f s  (%.3f %%)\n', ...
+            dtShift, drift, iEndT - iStartT, 100*drift/max(iEndT-iStartT,eps));
+end
+tCamAl = tCam + dtShift;
 
 %% ===================== RESAMPLE ONTO Data.time =====================
 Cam = struct('test',tn,'fs',fs,'time',tg,'units','mm','sync_marker',sm,'markerNames',{MARKERS});

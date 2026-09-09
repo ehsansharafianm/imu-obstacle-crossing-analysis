@@ -38,6 +38,7 @@ Open this folder as an Obsidian vault; every note links to the others.
 
 ## Reference
 - [[Outputs and File Formats]] — what each step writes and how to read it
+- [[Heading Drift and De-drift]] — the IMU heading-drift problem and the anatomical heading-lock fix
 
 ---
 > [!note] Three data streams

@@ -7,6 +7,25 @@ tags: [changelog, summary]
 Summary of the work done on the project (most impactful first). Dates are approximate to the
 2026 working sessions.
 
+## ★ Latest (2026-09) — IMU heading drift diagnosed & fixed
+Full write-up in [[Heading Drift and De-drift]]. The September trials (21/22/24/101) had joint angles
+winding hundreds–thousands of degrees. Proved the cause is **IMU heading (yaw) drift** baked into the
+Awinda quaternions (magnetometer unreliable in the lab), **not** OpenSim — the flexion/tilt channel
+you see in step 3 is gravity-clean, but the hidden heading channel drifts ~800 deg and OpenSim turns
+it into winding joints. Recording-side VRU won't persist (MTw2 fw 4.6.0) and offline reprocess can't
+recover heading, so the fix is post-hoc: an **anatomical heading-lock** — freeze each limb segment's
+heading to a clean base (legs→pelvis, arms→torso) at t=0 (knees/ankles are hinges → limbs share one
+heading), removing differential drift while keeping gravity-anchored tilt. Validated on Test 101
+(both legs): every IMU roughly halved, no left↔right flip, winding gone. Integrated into **step1**
+(`y/n` de-drift → `IKResults_dedrift` + BEFORE→AFTER table); **step2/step3** have matching `y/n` so
+step4/5/6/8/9 inherit; targeted `ankle_angle_l` cleanup added in step2/step3. `stepX` still TODO.
+
+## ★ Latest (2026-09) — step 6 manual camera sync
+[[Step 6 - Camera Sync and Viewers]] now asks **auto (default, Enter) or manual** sync. Manual shows a
+**preview** of both signals, prints the auto-detected peaks, and you type the **IMU peak time** and
+**camera peak time** (Enter accepts the auto value) → it computes `offset = IMU − camera` for you and
+reports the end residual as a self-check. Auto path is unchanged.
+
 ## 1. Arm IMUs + shoulder/elbow joints (steps 1–5)
 Added **4 arm IMUs** (upper arm + forearm, both sides) to capture **shoulder & elbow** angles.
 - `Setup/myIMUMappings.xml` — 4 new sensors: upper arms → `humerus_r/l_imu`, forearms → `ulna_r/l_imu`

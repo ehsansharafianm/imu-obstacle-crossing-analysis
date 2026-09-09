@@ -32,6 +32,8 @@ end
 subjectNum           = input('Enter test number: ');
 visChoice            = input('Show the 3D tracking visualization in Step 3? (y/n): ', 's');
 visualizeTracking    = any(strcmpi(strtrim(visChoice), {'y', 'yes'}));  % default: no visualization
+dedriftChoice        = input('Apply heading de-drift + re-run IK (for heading/turn-drift trials)? (y/n): ', 's');
+applyDedrift         = any(strcmpi(strtrim(dedriftChoice), {'y', 'yes'}));  % writes IKResults_dedrift
 sensorToOpenSim      = Vec3(-pi/2, 0, 0);  % rotation from IMU space to OpenSim world frame
 baseIMUName          = 'pelvis_imu';       % base IMU that sets the heading (forward) direction
 baseIMUHeading       = '-z';               % axis of the base IMU pointing forward
@@ -231,6 +233,7 @@ fprintf('Wrote IK results to: %s\n', ikWork);
 fprintf('\n=== Step 4: Orientation tracking error summary ===\n');
 warnThresholdDeg = 5;   % flag any IMU whose max error exceeds this (degrees)
 errorsFile = fullfile(ikWork, ['ik_' trial '_orientations_orientationErrors.sto']);
+errMean = containers.Map('KeyType','char','ValueType','double');  % per-IMU mean err (for de-drift gate)
 
 if ~isfile(errorsFile)
     warning('Orientation errors file not found: %s', errorsFile);
@@ -250,6 +253,7 @@ else
     fprintf('%-14s %10s %10s\n', 'IMU', 'mean(deg)', 'max(deg)');
     for c = 2:numel(labels)
         col = data(:, c) * (180/pi);
+        errMean(labels{c}) = mean(col);          % capture for the de-drift gate
         flag = '';
         if max(col) > warnThresholdDeg
             flag = '   <-- CHECK';
@@ -257,6 +261,81 @@ else
         fprintf('%-14s %10.3f %10.3f%s\n', labels{c}, mean(col), max(col), flag);
     end
     fprintf('(IMUs with max error > %g deg are flagged.)\n', warnThresholdDeg);
+end
+
+%% ============ STEP 5: OPTIONAL ANATOMICAL HEADING-LOCK + IK RE-RUN ============
+% For heading/turn-drift trials. A knee/ankle/elbow is a hinge, so a limb's
+% segments physically must share ONE heading (yaw about vertical). We therefore
+% FREEZE each limb segment's heading relative to a clean base (legs -> pelvis,
+% arms -> torso) at the value it had at t=0 (calibration), removing the
+% differential heading DRIFT while keeping the anatomical offset and all the
+% gravity-anchored tilt. The residual whole-limb heading then falls into the
+% rotation DOFs (hip_rotation / arm_rot), which are discarded anyway - so
+% hip_flexion, knee, ankle, arm_flex, elbow come out drift-free. IMU-only, no
+% reference/gate guessing. Writes IKResults_dedrift; raw IKResults is untouched.
+if applyDedrift
+    fprintf('\n=== Step 5: Anatomical heading-lock + IK re-run ===\n');
+    % segment -> clean reference whose heading it is locked to
+    LOCK_PAIRS = { 'femur_r_imu','pelvis_imu'; 'tibia_r_imu','pelvis_imu'; 'calcn_r_imu','pelvis_imu'; ...
+                   'femur_l_imu','pelvis_imu'; 'tibia_l_imu','pelvis_imu'; 'calcn_l_imu','pelvis_imu'; ...
+                   'humerus_r_imu','torso_imu'; 'ulna_r_imu','torso_imu'; ...
+                   'humerus_l_imu','torso_imu'; 'ulna_l_imu','torso_imu' };
+    ddCells = quatCells;
+    fprintf('%-14s  %-12s %12s\n', 'segment', 'locked-to', 'headingDrift(deg)');
+    for p = 1:size(LOCK_PAIRS,1)
+        si = find(strcmp(bodyNames, LOCK_PAIRS{p,1}), 1);
+        ri = find(strcmp(bodyNames, LOCK_PAIRS{p,2}), 1);
+        if isempty(si) || isempty(ri), continue; end
+        % Swing-twist heading (2*atan2(qz,qw)): stable through the leg's full range
+        % (unlike Tait-Bryan yaw, which gimbal-locks when a segment pitches through
+        % vertical each swing). A world-Z pre-rotation adds to it exactly.
+        rel   = qheadingLocal(quatCells{ri}) - qheadingLocal(quatCells{si});
+        alpha = rel - rel(1);                         % differential heading DRIFT (0 at t=0)
+        ddCells{si} = rotZpre(alpha, quatCells{si});  % add it back about world-up (keeps tilt)
+        fprintf('%-14s  %-12s %12.1f\n', LOCK_PAIRS{p,1}, LOCK_PAIRS{p,2}, rad2deg(alpha(end)));
+    end
+    if true
+        ddSto = fullfile(stoWork, [trial '_orientations_dedrift.sto']);
+        writeQuaternionSto(ddSto, time, bodyNames, ddCells, DATA_RATE);
+        ddSto = abspath(ddSto);
+        ddIKWork = abspath(fullfile(workRoot, 'IKResults_dedrift'));
+        if ~isfolder(ddIKWork), mkdir(ddIKWork); end
+        cd(workRoot);
+        imuIKdd = IMUInverseKinematicsTool();
+        imuIKdd.set_model_file(calibratedModelFile);
+        imuIKdd.set_orientations_file(ddSto);
+        imuIKdd.set_sensor_to_opensim_rotations(sensorToOpenSim);
+        imuIKdd.set_time_range(0, tStart);
+        imuIKdd.set_time_range(1, tEnd);
+        imuIKdd.set_results_directory(ddIKWork);
+        try
+            imuIKdd.run(false);
+        catch ME
+            warning('De-drift IK run failed: %s', ME.message);
+        end
+        cd(origDir);
+        ddOut = fullfile(resultsRoot, 'IKResults_dedrift');
+        if isfolder(ddOut), [~,~] = rmdir(ddOut, 's'); end
+        copyfile(ddIKWork, ddOut);
+        fprintf('De-drifted IK results -> %s\n', ddOut);
+
+        % Before -> after per-IMU tracking error (Step-4 original vs de-drifted).
+        ddErrFile = fullfile(ddOut, ['ik_' trial '_orientations_dedrift_orientationErrors.sto']);
+        if isfile(ddErrFile)
+            fide = fopen(ddErrFile,'r'); lne = fgetl(fide);
+            while ischar(lne) && ~strcmpi(strtrim(lne),'endheader'), lne = fgetl(fide); end
+            elabs = strsplit(strtrim(fgetl(fide)), sprintf('\t'));
+            edata = cell2mat(textscan(fide, repmat('%f',1,numel(elabs)), 'Delimiter','\t','CollectOutput',true));
+            fclose(fide);
+            fprintf('\n=== Tracking error: BEFORE -> AFTER heading-lock (mean deg) ===\n');
+            fprintf('%-14s %10s %10s\n','IMU','before','after');
+            for c = 2:numel(elabs)
+                aft = mean(edata(:,c)*180/pi,'omitnan');
+                if isKey(errMean, elabs{c}), bef = errMean(elabs{c}); else, bef = NaN; end
+                fprintf('%-14s %10.2f %10.2f\n', elabs{c}, bef, aft);
+            end
+        end
+    end
 end
 
 %% ===================== COPY OUTPUTS TO RESULTS (Drive) =====================
@@ -289,6 +368,29 @@ function p = abspath(p)
 % Absolute, canonical path (resolves '..'). OpenSim's native file I/O needs
 % absolute paths - relative ones fail on synced/virtual drives (Google Drive).
     p = char(java.io.File(p).getCanonicalPath());
+end
+
+function h = qheadingLocal(Q)
+% Heading (twist about world-up Z) from quaternion rows [q0 q1 q2 q3]=[w x y z].
+    h = unwrap(2*atan2(Q(:,4), Q(:,1)));
+end
+
+function r = qmulLocal(a, b)
+% Hamilton product of quaternion rows [w x y z].
+    w0=a(:,1); x0=a(:,2); y0=a(:,3); z0=a(:,4);
+    w1=b(:,1); x1=b(:,2); y1=b(:,3); z1=b(:,4);
+    r = [w0.*w1-x0.*x1-y0.*y1-z0.*z1, ...
+         w0.*x1+x0.*w1+y0.*z1-z0.*y1, ...
+         w0.*y1-x0.*z1+y0.*w1+z0.*x1, ...
+         w0.*z1+x0.*y1-y0.*x1+z0.*w1];
+end
+
+function Qc = rotZpre(alpha, Q)
+% Pre-multiply each quaternion row of Q by a world-up (Z) rotation of alpha(t).
+% A world-vertical rotation changes only heading and preserves tilt exactly.
+    c = cos(alpha/2); s = sin(alpha/2);
+    qz = [c, zeros(numel(alpha),2), s];
+    Qc = qmulLocal(qz, Q);
 end
 
 function convertMtbToTxt(dataDir, pythonExe, converterScript, force)

@@ -9,7 +9,21 @@ addpath(fileparts(mfilename('fullpath')));
 subj_raw = input('  Input Test Number: ', 's');
 if isempty(subj_raw), subjectNumber = 1; else, subjectNumber = str2double(subj_raw); end
 
-ikDir = fullfile('..', 'Results', 'OpenSim Outputs', ['Test ' num2str(subjectNumber)], 'IKResults');
+% Optionally view the heading de-drifted IK results (from dedrift_orientations_ik.m).
+% Default = original IKResults, so existing behaviour is unchanged.
+ddRaw = input('  Use de-drifted IK results? (y/n) [n]: ', 's');
+useDD = any(strcmpi(strtrim(ddRaw), {'y','yes'}));
+outRoot = fullfile('..', 'Results', 'OpenSim Outputs', ['Test ' num2str(subjectNumber)]);
+ikDir = fullfile(outRoot, 'IKResults');
+if useDD
+    ddDir = fullfile(outRoot, 'IKResults_dedrift');
+    if isfolder(ddDir) && ~isempty(dir(fullfile(ddDir, 'ik_*.mot')))
+        ikDir = ddDir;
+        fprintf('Using DE-DRIFTED IK results.\n');
+    else
+        warning('De-drifted results requested but none in %s - using original IKResults.', ddDir);
+    end
+end
 f = dir(fullfile(ikDir, 'ik_*.mot'));
 if isempty(f)
     error('No ik_*.mot found in %s. Run the pipeline first.', ikDir);
@@ -55,6 +69,21 @@ EXPORT_RESOLUTION = 300;      % DPI for the Save-PNG button
 %% READ DATA
 %% ========================================================================
 [t, data, labels] = readMot(motFile);
+
+% Targeted per-coordinate cleanup (ONLY the named joints; all others untouched) -
+% mirrors step3 so the viewer shows the same cleaned signal. Detrend removes slow
+% baseline drift and keeps the stride shape; low-pass / clamp are cosmetic (off).
+CLEAN_JOINTS     = {'ankle_angle_l'};  % coordinates to clean ({} = none)
+CLEAN_DRIFT_SEC  = 4.0;                % baseline-drift removal (s); [] = skip
+CLEAN_LOWPASS_HZ = [];                 % zero-phase low-pass (Hz); [] = skip
+CLEAN_CLAMP_DEG  = [];                 % [lo hi] clamp (deg); [] = skip
+for cj = 1:numel(CLEAN_JOINTS)
+    jc = find(strcmp(labels, CLEAN_JOINTS{cj}), 1);
+    if isempty(jc), continue; end
+    data(:,jc) = cleanSignal(t, data(:,jc), CLEAN_DRIFT_SEC, CLEAN_LOWPASS_HZ, CLEAN_CLAMP_DEG);
+    fprintf('Cleaned joint signal: %s\n', CLEAN_JOINTS{cj});
+end
+
 nJoints = numel(labels);
 subjectLabel = ['Test ' num2str(subjectNumber)];
 
@@ -224,4 +253,24 @@ function [t, data, labels] = readMot(file)
     t      = M(:, 1);
     data   = M(:, 2:end);
     labels = labels(2:end);     % drop the 'time' label
+end
+
+function y = cleanSignal(t, y, driftWinSec, lowpassHz, clampRange)
+% Targeted single-coordinate cleanup. Detrend removes slow baseline drift while
+% keeping the start level and within-stride shape (signal-honest). Optional
+% zero-phase low-pass and clamp are cosmetic (pass [] to skip each).
+    if numel(y) < 5, return; end
+    fs = 1/median(diff(t),'omitnan');
+    if ~isempty(driftWinSec)
+        w = max(3, round(driftWinSec*fs)); if mod(w,2)==0, w = w+1; end
+        mid = movmedian(y, w, 'omitnan');
+        y = y - (mid - mid(1));                 % subtract baseline drift vs the start
+    end
+    if ~isempty(lowpassHz) && lowpassHz > 0
+        [b,a] = butter(2, min(0.99, lowpassHz/(fs/2)));
+        y = filtfilt(b, a, y);
+    end
+    if numel(clampRange) == 2
+        y = min(max(y, clampRange(1)), clampRange(2));
+    end
 end

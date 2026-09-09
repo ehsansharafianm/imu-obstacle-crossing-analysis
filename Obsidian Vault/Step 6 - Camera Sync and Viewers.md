@@ -22,6 +22,14 @@ viewers. (Combines the earlier sync step and the "view all synced signals" step.
   camera clock so they coincide (single shift; the end triplet gives a drift check — ~0 for test22).
   Both are ~60 Hz, so it's an interp onto `Data.time`, **not** a rate change; `time_s` untouched;
   real dropouts stay NaN. See [[Camera Sync Strategy]].
+- **Auto or manual (prompt):** at startup it asks `Sync automatically? (y/n) [Enter = auto]`.
+  - **Auto** (default): the peak-based sync above (unchanged).
+  - **Manual** (`n`): pops a **preview** of both signals (amplitude-normalised, unshifted), prints the
+    auto-detected peaks, then asks for the **IMU peak time** and the **camera peak time** (press Enter
+    to accept the auto value). It computes `offset = IMU peak − camera peak` itself and reports the
+    end-triplet residual as a self-check (small = well aligned). Use manual when auto locks onto a
+    wrong peak (e.g. a walking swing instead of the raise gesture). `offset` convention: applied as
+    `tCam + offset`, so **positive shifts the camera later**.
 - **Viewers (all on the shared clock):**
   1. **Angles vs time** — every IMU Euler + OpenSim joint angle (listbox).
   2. **Trajectories vs time** — camera markers + ZHC IMU foot height; per-leg gait-event overlays

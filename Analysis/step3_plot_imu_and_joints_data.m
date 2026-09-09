@@ -9,6 +9,12 @@ addpath(fileparts(mfilename('fullpath')));
 subj_raw = input('  Input Test Number: ', 's');
 if isempty(subj_raw), subjectNumber = 2; else, subjectNumber = str2double(subj_raw); end
 
+% Optionally source the joint angles from the heading de-drifted IK results
+% (from dedrift_orientations_ik.m) so step4/5/9 run on the corrected joints.
+% Default = original IKResults, so existing behaviour is unchanged.
+ddRaw = input('  Use de-drifted IK joints? (y/n) [n]: ', 's');
+USE_DEDRIFT_IK = any(strcmpi(strtrim(ddRaw), {'y','yes'}));
+
 %% ========================================================================
 %% APPEARANCE SETTINGS — ADJUST HERE
 %% ========================================================================
@@ -267,7 +273,17 @@ end
 %% JOINT ANGLES (OpenSim IK, Awinda) -> apply Awinda delay + upsample to 60 Hz
 %% ========================================================================
 jLabels = {}; jU = [];
-ikDir = fullfile('..','Results','OpenSim Outputs', subjFolder, 'IKResults');
+ikSub = 'IKResults';
+if USE_DEDRIFT_IK
+    ddDir = fullfile('..','Results','OpenSim Outputs', subjFolder, 'IKResults_dedrift');
+    if isfolder(ddDir) && ~isempty(dir(fullfile(ddDir,'ik_*.mot')))
+        ikSub = 'IKResults_dedrift';
+        fprintf('Joint angles: using DE-DRIFTED IK results.\n');
+    else
+        warning('De-drifted IK requested but none in %s - using original IKResults.', ddDir);
+    end
+end
+ikDir = fullfile('..','Results','OpenSim Outputs', subjFolder, ikSub);
 mots  = dir(fullfile(ikDir, 'ik_*.mot'));
 if isempty(mots)
     warning('No IK .mot in %s - joint angles skipped (run step 1 first).', ikDir);
@@ -277,6 +293,23 @@ else
     [~,nw] = max([mots.datenum]);
     motFile = fullfile(ikDir, mots(nw).name);
     [jt, jData, jLabels] = readMot(motFile);          % jt in s, jData N x nJoint
+
+    % --- Targeted per-coordinate signal cleanup (ONLY the named joints; every
+    %     other joint passes through untouched). Use for a single coordinate that
+    %     still shows baseline drift after the orientation de-drift (e.g. ankle_l).
+    %     Detrend is signal-honest (removes slow baseline wander, keeps stride
+    %     shape); the optional low-pass / clamp are cosmetic, so off by default.
+    CLEAN_JOINTS     = {'ankle_angle_l'};  % coordinates to clean ({} = none)
+    CLEAN_DRIFT_SEC  = 4.0;                % remove baseline drift slower than this (s); [] = skip
+    CLEAN_LOWPASS_HZ = [];                 % zero-phase low-pass (Hz); [] = skip
+    CLEAN_CLAMP_DEG  = [];                 % [lo hi] physiological clamp (deg); [] = skip
+    for cj = 1:numel(CLEAN_JOINTS)
+        jc = find(strcmp(jLabels, CLEAN_JOINTS{cj}), 1);
+        if isempty(jc), continue; end
+        jData(:,jc) = cleanSignal(jt, jData(:,jc), CLEAN_DRIFT_SEC, CLEAN_LOWPASS_HZ, CLEAN_CLAMP_DEG);
+        fprintf('  Cleaned joint signal: %s\n', CLEAN_JOINTS{cj});
+    end
+
     % Keep lower-limb (ankle / knee / hip) AND upper-limb (shoulder / elbow)
     % coordinates. Drop knee beta, hip rotation, and shoulder rotation (arm_rot) -
     % rotation about the long axis is the least reliable DOF from a single IMU, so
@@ -669,6 +702,26 @@ function [t, data, labels] = readMot(file)
     C = cell2mat(textscan(fid, repmat('%f',1,numel(labels)), 'Delimiter','\t', 'CollectOutput', true));
     fclose(fid);
     t = C(:,1); data = C(:,2:end); labels = labels(2:end);
+end
+
+function y = cleanSignal(t, y, driftWinSec, lowpassHz, clampRange)
+% Targeted single-coordinate cleanup. Detrend removes slow baseline drift while
+% keeping the start level and the within-stride shape (signal-honest). Optional
+% zero-phase low-pass and clamp are cosmetic (pass [] to skip each).
+    if numel(y) < 5, return; end
+    fs = 1/median(diff(t),'omitnan');
+    if ~isempty(driftWinSec)
+        w = max(3, round(driftWinSec*fs)); if mod(w,2)==0, w = w+1; end
+        mid = movmedian(y, w, 'omitnan');
+        y = y - (mid - mid(1));                 % subtract baseline drift vs the start
+    end
+    if ~isempty(lowpassHz) && lowpassHz > 0
+        [b,a] = butter(2, min(0.99, lowpassHz/(fs/2)));
+        y = filtfilt(b, a, y);
+    end
+    if numel(clampRange) == 2
+        y = min(max(y, clampRange(1)), clampRange(2));
+    end
 end
 
 function buildComboViewer(titleStr, T, Y, L, defOn, fontName, figDir, subjNum)
