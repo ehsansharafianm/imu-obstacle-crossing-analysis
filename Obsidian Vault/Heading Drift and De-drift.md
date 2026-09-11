@@ -80,5 +80,33 @@ strides, not the turns.
 step2 & step3 (`CLEAN_JOINTS = {'ankle_angle_l'}`): detrend on (signal-honest), optional low-pass /
 clamp off (cosmetic).
 
+## Update (2026-09-11) — joint-level cleanup + the hard limits
+- **ZVP baseline detrend** in [[Step 4 - Segmentation (ZVP)]] (default ON): anchors each joint at its
+  mid-stance baseline (first strides) and subtracts the slow wander; re-saves `AllData` so step5-8
+  inherit. Fixes a **baseline shift** (e.g. the Test 101 ankles). Does NOT fix posture-dependent drift.
+- **Test 102 — the reference itself drifts.** The heading-lock references all legs to the pelvis; on
+  Test 102 the pelvis IMU drifts ~12°, so the correction copies the pelvis drift into the legs (the
+  left leg even got *worse*). The residual is **posture-dependent** (larger in flexion, ~flat at
+  mid-stance), so the ZVP baseline anchor can't reach it. **Trials with a clean pelvis (101) are the
+  trustworthy ones.**
+- **step7 metrics now all-IMU (ZHC); camera = validation:** height = peak Z, stride = net-XY per ZVP
+  cycle; camera peak-Z kept as `heightCam`. Dot-app numbers retired.
+
+## Limitations (for the paper)
+- **Absolute joint angles are drift-limited** on the badly-drifting trials. Heading is *unobservable*
+  from the IMU alone without an absolute reference (magnetometer corrupted; camera not used inside the
+  IMU pipeline), so the residual can't be fully removed — it's the **IMU-only floor**, not lack of
+  effort. Typical IMU-IK accuracy is ~5–10° even at best.
+- **What is clean / reportable:**
+  - **Foot clearance** — from the **camera** (drift-free, gold standard).
+  - **Joint ROM / excursion** = **max − min per stride** — *drift-immune* (within one ~1 s stride the
+    drift is ~0.5°, so it cancels in max−min). The standard obstacle-crossing joint measure.
+  - **Stride length** — from ZHC (per-stride, ZUPT-bounded).
+  - **IMU-vs-camera agreement** (`heightCam` vs ZHC height) — a methods contribution.
+- **Recommendation:** lead with the clean metrics (camera clearance, joint ROM, stride length);
+  report absolute peak angles as *secondary* with the IMU-accuracy caveat; present IMU-vs-camera
+  agreement as a result, not a weakness. **VRU/AHS at capture** would prevent the drift but does not
+  persist on the current MTw2 firmware — open item with Movella (see [[Lab Checklist - IMU Drift]]).
+
 ## Related
 [[Session Changelog]] · [[Data and Sensors]] · [[Step 5 - Camera Sync and Viewers]] · [[Home]]

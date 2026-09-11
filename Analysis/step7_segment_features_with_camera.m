@@ -26,6 +26,10 @@ FONT_NAME     = 'Arial';
 % with step 3. e.g. code 21 -> W2_H1.
 TERRAIN_ORDER = {'Level_Walk','W1_H1','W1_H2','W1_H3','W2_H1','W2_H2','W2_H3'};
 LOG_PKT_TOL   = 1500;   % max packet distance to match a window to a crossing
+% Max/min angle bar figures (Leading vs Trailing):
+BARMM_IMU_SYSTEM = 'Dot';                                       % reference IMU system: 'Dot' or 'Awinda'
+BARMM_IMU_SEGS   = {'Thigh','Shank','Foot'};                    % IMU segments (matched in the label)
+BARMM_JOINTS     = {'hip_flexion','knee_angle','ankle_angle'};  % joints for the bars
 
 %% ===================== INPUT =====================
 % Set TN before running (e.g. `TN = 22;`) to skip the prompt for batch runs.
@@ -57,23 +61,45 @@ iRDot = find(strcmp({Data.imu.label},'Right Foot (Dot)'),1);
 if isempty(iLDot) || isempty(iRDot), error('Left/Right Foot (Dot) IMU not found in Data.'); end
 pktL = Data.imu(iLDot).packet;  pktR = Data.imu(iRDot).packet;
 
-%% ===================== LEVEL_WALK labels from the app FeatureLog =====================
-% App terrain labels are now trusted ONLY for LEVEL WALK (a clean baseline set).
-% Obstacle crossings + leading/trailing come from the CAMERA (below), not the app.
+%% ===================== per-cycle ZHC height + stride (the single feature source) =====================
+% Every height/stride now comes from ONE source: the IMU-constructed (ZHC) foot
+% trajectory, per ZVP-to-ZVP cycle. height = peak Z (clearance above stance),
+% stride = net horizontal (XY) displacement over the cycle. The camera foot-marker
+% peak Z is kept alongside (heightCam) as an independent validation on the crossings.
+nWinL0 = max(numel(zvpL)-1,0);  nWinR0 = max(numel(zvpR)-1,0);
+zhcH = struct('L',nan(1,nWinL0),'R',nan(1,nWinR0));
+zhcS = struct('L',nan(1,nWinL0),'R',nan(1,nWinR0));
+if isfield(Seg,'zhc')
+    zhcH.L = zhcPeakHeight(Seg.zhc.L.posGait, nWinL0);  zhcH.R = zhcPeakHeight(Seg.zhc.R.posGait, nWinR0);
+    zhcS.L = zhcStride(    Seg.zhc.L.posGait, nWinL0);  zhcS.R = zhcStride(    Seg.zhc.R.posGait, nWinR0);
+else
+    warning('Seg.zhc missing - IMU height/stride will be NaN (re-run step 4).');
+end
+
+%% ===================== LEVEL_WALK strides (labels from app; metrics from ZHC) =====================
+% The app is trusted ONLY to mark which strides are Level_Walk. The metrics come
+% from ZHC (the app's Max_Height_m/Max_Stride_Length_m are retired).
 Feat = struct('label',{'Left Foot','Right Foot'},'terrain',{{},{}}, ...
-              'startPkt',{[],[]},'endPkt',{[],[]},'height',{[],[]},'stride',{[],[]});
+              'startPkt',{[],[]},'endPkt',{[],[]},'height',{[],[]},'stride',{[],[]},'heightCam',{[],[]});
 feetLbl = {'IMU1','Left Foot'; 'IMU2','Right Foot'};
+sideCh  = 'LR';
 for f = 1:2
     fp = findFile(dataDir, ['FeatureLog_' feetLbl{f,1} '_*.csv']);
-    if isempty(fp), warning('No FeatureLog for %s (%s) - no Level_Walk from app.', feetLbl{f,2}, feetLbl{f,1}); continue; end
+    if isempty(fp), warning('No FeatureLog for %s (%s) - no Level_Walk.', feetLbl{f,2}, feetLbl{f,1}); continue; end
     T = readtable(fp);  gt = string(T.Ground_Truth);
     keep = gt == "Level_Walk";
-    Feat(f).terrain  = cellstr(gt(keep));
-    Feat(f).startPkt = T.Start_Packet(keep);
-    Feat(f).endPkt   = T.End_Packet(keep);
-    Feat(f).height   = T.Max_Height_m(keep);
-    Feat(f).stride   = T.Max_Stride_Length_m(keep);
-    fprintf('  %-12s <- %d Level_Walk windows (app)\n', feetLbl{f,2}, nnz(keep));
+    sp = T.Start_Packet(keep);  ep = T.End_Packet(keep);  nlw = numel(sp);
+    sc = sideCh(f);
+    if sc=='R', zvpS = zvpR; pktS = pktR; else, zvpS = zvpL; pktS = pktL; end
+    Feat(f).terrain   = cellstr(gt(keep));
+    Feat(f).startPkt  = sp;  Feat(f).endPkt = ep;
+    Feat(f).height    = nan(nlw,1);  Feat(f).stride = nan(nlw,1);  Feat(f).heightCam = nan(nlw,1);
+    for w = 1:nlw
+        c = pktToCycle(sp(w), ep(w), zvpS, pktS);   % which ZVP cycle this app window sits in
+        Feat(f).height(w) = safeIdx(zhcH.(sc), c);
+        Feat(f).stride(w) = safeIdx(zhcS.(sc), c);
+    end
+    fprintf('  %-12s <- %d Level_Walk strides (metrics from ZHC)\n', feetLbl{f,2}, nlw);
 end
 
 %% ===================== OBSTACLE CROSSINGS + LEADING/TRAILING from the CAMERA =====================
@@ -101,7 +127,8 @@ for r = 1:height(C)
     if okL
         aP = pkM.(ll)(zvM.(ll)(cL));  bP = pkM.(ll)(zvM.(ll)(cL+1));  fi = 1 + (ll=='R');
         Feat(fi).terrain{end+1}=terr; Feat(fi).startPkt(end+1)=aP; Feat(fi).endPkt(end+1)=bP;
-        Feat(fi).height(end+1)=pkH.(ll); Feat(fi).stride(end+1)=NaN;
+        Feat(fi).height(end+1)=safeIdx(zhcH.(ll),cL); Feat(fi).stride(end+1)=safeIdx(zhcS.(ll),cL);
+        Feat(fi).heightCam(end+1)=pkH.(ll);          % camera peak-Z: validation only
         sAll(end+1)=aP; eAll(end+1)=bP; usedThis=true; %#ok<SAGROW>
         if ~spans0(Cam, ll, zvM.(ll)(cL), zvM.(ll)(cL+1)), nSpanBad = nSpanBad + 1; end
     end
@@ -111,7 +138,8 @@ for r = 1:height(C)
         if okT
             aP = pkM.(tl)(zvM.(tl)(cT));  bP = pkM.(tl)(zvM.(tl)(cT+1));  fi = 1 + (tl=='R');
             Feat(fi).terrain{end+1}=terr; Feat(fi).startPkt(end+1)=aP; Feat(fi).endPkt(end+1)=bP;
-            Feat(fi).height(end+1)=pkH.(tl); Feat(fi).stride(end+1)=NaN;
+            Feat(fi).height(end+1)=safeIdx(zhcH.(tl),cT); Feat(fi).stride(end+1)=safeIdx(zhcS.(tl),cT);
+            Feat(fi).heightCam(end+1)=pkH.(tl);          % camera peak-Z: validation only
             sAll(end+1)=aP; eAll(end+1)=bP; %#ok<SAGROW>
         end
     end
@@ -131,13 +159,14 @@ obsTerr    = TERRAIN_ORDER(~strcmp(TERRAIN_ORDER,'Level_Walk'));   % obstacles o
 fprintf('\n=== Feature summary (Test %d): mean +/- SD ===\n', tn);
 for k = 1:numel(Feat)
     fprintf('\n  %s\n', Feat(k).label);
-    fprintf('    %-16s %5s   %14s   %14s\n', 'Terrain','n','Stride(m)','Height(m)');
+    fprintf('    %-16s %5s   %12s   %12s   %12s\n', 'Terrain','n','Stride_imu','H_imu(m)','H_cam(m)');
     for ti = 1:numel(obsTerr)
         sel = strcmp(Feat(k).terrain, obsTerr{ti});
         if ~any(sel), continue; end
-        s = Feat(k).stride(sel);  h = Feat(k).height(sel);
-        fprintf('    %-16s %5d   %6.3f+/-%-5.3f   %6.3f+/-%-5.3f\n', obsTerr{ti}, nnz(sel), ...
-                mean(s,'omitnan'), std(s,'omitnan'), mean(h,'omitnan'), std(h,'omitnan'));
+        s = Feat(k).stride(sel);  h = Feat(k).height(sel);  hc = Feat(k).heightCam(sel);
+        fprintf('    %-16s %5d   %5.3f+/-%-4.3f   %5.3f+/-%-4.3f   %5.3f+/-%-4.3f\n', obsTerr{ti}, nnz(sel), ...
+                mean(s,'omitnan'), std(s,'omitnan'), mean(h,'omitnan'), std(h,'omitnan'), ...
+                mean(hc,'omitnan'), std(hc,'omitnan'));
     end
 end
 
@@ -269,6 +298,29 @@ while true
     drawGrouped(subplot(2,2,2), terrains, hL, hR, 'Max height (m)',     sprintf('Max height - Left vs Right (Test %d)', tn),     FONT_NAME, {'Left','Right'});
     drawGrouped(subplot(2,2,3), terrains, sLead, sTrail, 'Stride length (m)', sprintf('Stride length - Leading vs Trailing (Test %d)', tn), FONT_NAME, {'Leading','Trailing'});
     drawGrouped(subplot(2,2,4), terrains, hLead, hTrail, 'Max height (m)',     sprintf('Max height - Leading vs Trailing (Test %d)', tn),     FONT_NAME, {'Leading','Trailing'});
+
+    % --- Figures: MAX/MIN angle bars per TERRAIN, Leading vs Trailing ---
+    % Per stride we take max & min of the X angle, grouped by terrain (Level_Walk +
+    % every width/height) and split Leading vs Trailing. Level_Walk (no role) is
+    % shown as the baseline in BOTH bars. One figure for IMUs, one for joints;
+    % rows = segment/joint, columns = MAX | MIN. IMU system = Dot (reference).
+    imuCats = BARMM_IMU_SEGS;  nCi = numel(imuCats);
+    figMMi = figure('Color','w','Name',sprintf('IMU %s max/min by terrain | Test %d', BARMM_IMU_SYSTEM, tn),'Position',[30 30 1320 900]); %#ok<NASGU>
+    for cc = 1:nCi
+        idx = find(startsWith(vL,'IMU:') & contains(vL, imuCats{cc}) & contains(vL, BARMM_IMU_SYSTEM));
+        [mxL,mxT,mnL,mnT] = maxMinByTerrain(idx, vY, cycSideArr, terrL, terrR, roleL, roleR, terrains);
+        drawGrouped(subplot(nCi,2,2*cc-1), terrains, mxL, mxT, 'Max (deg)', sprintf('%s (%s) - MAX', imuCats{cc}, BARMM_IMU_SYSTEM), FONT_NAME, {'Leading','Trailing'});
+        drawGrouped(subplot(nCi,2,2*cc),   terrains, mnL, mnT, 'Min (deg)', sprintf('%s (%s) - MIN', imuCats{cc}, BARMM_IMU_SYSTEM), FONT_NAME, {'Leading','Trailing'});
+    end
+
+    jCats = BARMM_JOINTS;  nCj = numel(jCats);
+    figMMj = figure('Color','w','Name',sprintf('Joint max/min by terrain | Test %d', tn),'Position',[60 60 1320 900]); %#ok<NASGU>
+    for cc = 1:nCj
+        idx = find(startsWith(vL,'Joint:') & contains(vL, jCats{cc}));
+        [mxL,mxT,mnL,mnT] = maxMinByTerrain(idx, vY, cycSideArr, terrL, terrR, roleL, roleR, terrains);
+        drawGrouped(subplot(nCj,2,2*cc-1), terrains, mxL, mxT, 'Max (deg)', sprintf('%s - MAX', jCats{cc}), FONT_NAME, {'Leading','Trailing'});
+        drawGrouped(subplot(nCj,2,2*cc),   terrains, mnL, mnT, 'Min (deg)', sprintf('%s - MIN', jCats{cc}), FONT_NAME, {'Leading','Trailing'});
+    end
 
     % --- Figures 2-5: stride viewers (normalized + time-domain) ---
     % Left/Right (one signal per sensor/joint) - both x-axes share metadata.
@@ -779,6 +831,70 @@ function Hd = heightPerDistance(pos, nWin, distAxis)
         Hd(:,c) = interp1(du, Z(iu), distAxis, 'linear', NaN);
     end
 end
+
+function P = zhcPeakHeight(pos, nWin)
+% Peak foot height (max Z, clearance above the stance-reset) per ZVP cycle.
+    H = zheight(pos, nWin);                 % rows x nWin
+    if isempty(H), P = nan(1, max(nWin,0)); return; end
+    P = max(H, [], 1, 'omitnan');           % 1 x nWin
+    P(~isfinite(P)) = NaN;
+end
+
+function S = zhcStride(pos, nWin)
+% Stride length per ZVP cycle = net horizontal (XY) displacement over the cycle
+% (first-to-last finite sample). Heading-insensitive (a magnitude); ZUPT bounds it.
+    S = nan(1, max(nWin,0));
+    if isempty(pos) || nWin < 1, return; end
+    for c = 1:min(size(pos,3), nWin)
+        X = pos(:,1,c); Y = pos(:,2,c);  g = isfinite(X) & isfinite(Y);
+        X = X(g); Y = Y(g);
+        if numel(X) < 2, continue; end
+        S(c) = hypot(X(end)-X(1), Y(end)-Y(1));
+    end
+end
+
+function c = pktToCycle(sPkt, ePkt, zvp, pkt)
+% Map a packet window [sPkt,ePkt] to the ZVP cycle whose span contains its midpoint.
+    c = NaN;
+    if numel(zvp) < 2, return; end
+    zp = pkt(zvp);  mid = 0.5*(sPkt + ePkt);
+    for k = 1:numel(zvp)-1
+        if mid >= zp(k) && mid < zp(k+1), c = k; return; end
+    end
+end
+
+function v = safeIdx(a, i)
+% a(i) with bounds/NaN guard.
+    if ~isnan(i) && i >= 1 && i <= numel(a), v = a(i); else, v = NaN; end
+end
+
+function [mxL, mxT, mnL, mnT] = maxMinByTerrain(idxList, vY, cycSideArr, terrL, terrR, roleL, roleR, terrains)
+% Per-stride MAX and MIN of the given signals, grouped by terrain and split
+% Leading/Trailing. Returns 1 x numel(terrains) cell arrays of per-stride values.
+%   obstacle stride -> its terrain, its Leading/Trailing bucket
+%   Level_Walk stride (no role) -> its terrain, BOTH buckets (baseline)
+%   'Unknown' role -> skipped. Each vY{i} column is a stride of its segmenting foot.
+    nT = numel(terrains);
+    [mxL, mxT, mnL, mnT] = deal(repmat({[]}, 1, nT));
+    for i = idxList(:)'
+        if cycSideArr(i)=='R', role = roleR; terr = terrR; else, role = roleL; terr = terrL; end
+        Y = vY{i};  nc = min([size(Y,2), numel(role), numel(terr)]);
+        for c = 1:nc
+            col = Y(:,c);
+            if all(~isfinite(col)), continue; end
+            ti = find(strcmp(terrains, terr{c}), 1);  if isempty(ti), continue; end
+            mx = max(col,[],'omitnan');  mn = min(col,[],'omitnan');
+            if strcmp(role{c},'Leading')
+                mxL{ti}(end+1)=mx; mnL{ti}(end+1)=mn; %#ok<AGROW>
+            elseif strcmp(role{c},'Trailing')
+                mxT{ti}(end+1)=mx; mnT{ti}(end+1)=mn; %#ok<AGROW>
+            elseif strcmpi(terr{c},'Level_Walk')                 % no role -> baseline in both
+                mxL{ti}(end+1)=mx; mnL{ti}(end+1)=mn;            %#ok<AGROW>
+                mxT{ti}(end+1)=mx; mnT{ti}(end+1)=mn;            %#ok<AGROW>
+            end
+        end
+    end
+end
 function s = imuSide(label)
     if contains(label,'Right'), s = 'R'; else, s = 'L'; end
 end
@@ -821,7 +937,7 @@ function exportWindowsLT(base, tn, Feat, Data, zvpL, zvpR, iLDot, iRDot, logE, t
     if exist(xls,'file'), delete(xls); end
     PAIR_TOL = 400;        % packets - max start gap to pair a Left & Right window
     feet = {'Left Foot','L',iLDot,zvpL; 'Right Foot','R',iRDot,zvpR};
-    rTerr={}; rSide={}; rRole={}; ws=[]; we=[]; cyc=[]; ds=[]; de=[]; cts=[]; cte=[]; hh=[]; ss=[];
+    rTerr={}; rSide={}; rRole={}; ws=[]; we=[]; cyc=[]; ds=[]; de=[]; cts=[]; cte=[]; hh=[]; ss=[]; hc=[];
     for f = 1:size(feet,1)
         k = find(strcmp({Feat.label}, feet{f,1}), 1);  sd = feet{f,2};  idx = feet{f,3};  zvp = feet{f,4};
         if isempty(k) || isempty(idx) || numel(zvp) < 2, continue; end
@@ -837,7 +953,7 @@ function exportWindowsLT(base, tn, Feat, Data, zvpL, zvpR, iLDot, iRDot, logE, t
             ws(end+1)=Feat(k).startPkt(w);   we(end+1)=Feat(k).endPkt(w);       %#ok<AGROW>
             cyc(end+1)=c;  ds(end+1)=cycS(c);  de(end+1)=cycE(c);              %#ok<AGROW>
             cts(end+1)=t(zvp(c));  cte(end+1)=t(zvp(c+1));                     %#ok<AGROW>
-            hh(end+1)=Feat(k).height(w);  ss(end+1)=Feat(k).stride(w);         %#ok<AGROW>
+            hh(end+1)=Feat(k).height(w);  ss(end+1)=Feat(k).stride(w);  hc(end+1)=Feat(k).heightCam(w);  %#ok<AGROW>
         end
     end
     % Level-walk windows (both feet) for a dedicated sheet.
@@ -879,27 +995,27 @@ function exportWindowsLT(base, tn, Feat, Data, zvpL, zvpR, iLDot, iRDot, logE, t
     [~, po] = sort(key);  rows = rows(po,:);
 
     % --- 'Left and Right' sheet: Left & Right of each crossing side by side ---
-    cT={}; LRo={}; Lws=[]; Lwe=[]; Lcy=[]; Lh=[]; Lst=[];
-           RRo={}; Rws=[]; Rwe=[]; Rcy=[]; Rh=[]; Rst=[];
+    cT={}; LRo={}; Lws=[]; Lwe=[]; Lcy=[]; Lh=[]; Lst=[]; Lhc=[];
+           RRo={}; Rws=[]; Rwe=[]; Rcy=[]; Rh=[]; Rst=[]; Rhc=[];
     for p = 1:size(rows,1)
         li = rows(p,1);  ri = rows(p,2);
         if li > 0, cT{end+1}=rTerr{li}; else, cT{end+1}=rTerr{ri}; end %#ok<AGROW>
         if li > 0
-            LRo{end+1}=rRole{li}; Lws(end+1)=ws(li); Lwe(end+1)=we(li); Lcy(end+1)=cyc(li); Lh(end+1)=hh(li); Lst(end+1)=ss(li); %#ok<AGROW>
+            LRo{end+1}=rRole{li}; Lws(end+1)=ws(li); Lwe(end+1)=we(li); Lcy(end+1)=cyc(li); Lh(end+1)=hh(li); Lst(end+1)=ss(li); Lhc(end+1)=hc(li); %#ok<AGROW>
         else
-            LRo{end+1}=''; Lws(end+1)=NaN; Lwe(end+1)=NaN; Lcy(end+1)=NaN; Lh(end+1)=NaN; Lst(end+1)=NaN; %#ok<AGROW>
+            LRo{end+1}=''; Lws(end+1)=NaN; Lwe(end+1)=NaN; Lcy(end+1)=NaN; Lh(end+1)=NaN; Lst(end+1)=NaN; Lhc(end+1)=NaN; %#ok<AGROW>
         end
         if ri > 0
-            RRo{end+1}=rRole{ri}; Rws(end+1)=ws(ri); Rwe(end+1)=we(ri); Rcy(end+1)=cyc(ri); Rh(end+1)=hh(ri); Rst(end+1)=ss(ri); %#ok<AGROW>
+            RRo{end+1}=rRole{ri}; Rws(end+1)=ws(ri); Rwe(end+1)=we(ri); Rcy(end+1)=cyc(ri); Rh(end+1)=hh(ri); Rst(end+1)=ss(ri); Rhc(end+1)=hc(ri); %#ok<AGROW>
         else
-            RRo{end+1}=''; Rws(end+1)=NaN; Rwe(end+1)=NaN; Rcy(end+1)=NaN; Rh(end+1)=NaN; Rst(end+1)=NaN; %#ok<AGROW>
+            RRo{end+1}=''; Rws(end+1)=NaN; Rwe(end+1)=NaN; Rcy(end+1)=NaN; Rh(end+1)=NaN; Rst(end+1)=NaN; Rhc(end+1)=NaN; %#ok<AGROW>
         end
     end
-    Tlr = table(cT', LRo', Lws', Lwe', Lcy', round(Lh',4), round(Lst',4), ...
-                     RRo', Rws', Rwe', Rcy', round(Rh',4), round(Rst',4), ...
+    Tlr = table(cT', LRo', Lws', Lwe', Lcy', round(Lh',4), round(Lst',4), round(Lhc',4), ...
+                     RRo', Rws', Rwe', Rcy', round(Rh',4), round(Rst',4), round(Rhc',4), ...
         'VariableNames', {'Terrain', ...
-            'Left_Role','Left_StartPkt','Left_EndPkt','Left_Cycle','Left_Height_m','Left_Stride_m', ...
-            'Right_Role','Right_StartPkt','Right_EndPkt','Right_Cycle','Right_Height_m','Right_Stride_m'});
+            'Left_Role','Left_StartPkt','Left_EndPkt','Left_Cycle','Left_Height_m','Left_Stride_m','Left_HeightCam_m', ...
+            'Right_Role','Right_StartPkt','Right_EndPkt','Right_Cycle','Right_Height_m','Right_Stride_m','Right_HeightCam_m'});
     writetable(Tlr, xls, 'Sheet', 'Left and Right');  nSheets = nSheets + 1;
 
     % --- 'Leading vs Trailing' sheet: crossings with both feet and a known lead ---

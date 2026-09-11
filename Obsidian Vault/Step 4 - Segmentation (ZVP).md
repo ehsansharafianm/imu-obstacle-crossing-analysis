@@ -8,6 +8,15 @@ aliases: [step4, step4_segmentation]
 **File:** `Analysis/step4_segmentation.m`
 Detects gait events per side, cuts every signal into strides, and reconstructs the foot path.
 
+## ZVP baseline detrend (optional, default ON)
+Prompt: `Apply ZVP baseline detrend to joints? (y/n) [Enter = y]`. For each joint it samples the value
+at its **mid-stance (ZVP)**, fits a slow trend through those baselines, and subtracts it — holding the
+baseline at the early-strides level (start-region median). Removes slow baseline **drift** while
+keeping within-stride shape and crossing peaks (mid-stance posture is obstacle-independent).
+Non-destructive (raw kept as `Data.joints.angles_deg_raw`); re-saves `AllData` so step5-8 inherit.
+Knobs: `DETREND_JOINTS`, `REF_MODE` ('start'|'overall'), `REF_STRIDES`, `SMOOTH_STRIDES`, `ZVP_WIN`.
+**Limit:** fixes a baseline shift, not posture-dependent residual — see [[Heading Drift and De-drift]].
+
 ## Gait events (ZVP = zero-velocity point / mid-stance)
 Per side, from that side's **Dot foot IMU**:
 - **Toe-offs** = inverted minima of foot **roll = Euler X**.

@@ -91,6 +91,41 @@ drawSide(subplot(2,2,3), t, rollR, toeR, hsR, zvpR, ...
 drawNorms(subplot(2,2,4), t, omR, accR, zvpR, OMEGA_THRESH, ACC_THRESH, ...
           'Right Foot (Dot) - detection norms', COL_OMEGA, COL_ACC, COL_ZVP, sd);
 
+%% ===================== ZVP-ANCHORED JOINT DETREND (optional) =====================
+% Remove slow baseline drift from joints while preserving the crossing peaks.
+% At mid-stance (ZVP) the stance foot is flat and the joint sits in a repeatable,
+% OBSTACLE-INDEPENDENT posture, so its value there should be ~constant across the
+% trial - any slow change is drift. We sample each joint at its own mid-stance,
+% fit a slow trend through those baselines, and subtract it, holding the baseline
+% at a robust reference level (the joint keeps its real posture; only the wander is
+% removed; swing-phase crossing peaks are untouched). Non-destructive: the raw stays
+% in Data.joints.angles_deg_raw, and the cleaned Data is re-saved so step5-8 inherit.
+ddAns = input('  Apply ZVP baseline detrend to joints? (y/n) [Enter = y]: ', 's');
+if ~any(strcmpi(strtrim(ddAns), {'n','no'}))   % default (Enter) or y -> apply; only n skips
+    DETREND_JOINTS = {'hip_flexion_r','hip_flexion_l','knee_angle_r','knee_angle_l', ...
+                      'ankle_angle_r','ankle_angle_l'};   % joints to clean ({} = none)
+    REF_MODE       = 'start';   % 'start' = hold the early mid-stance level | 'overall' = center/flatten
+    REF_STRIDES    = 5;         % # leading strides used for the 'start' reference level
+    SMOOTH_STRIDES = 5;         % robust smoothing window (strides) for the slow drift curve
+    ZVP_WIN        = 3;         % +/- samples around each ZVP for the baseline median
+    if ~isfield(Data.joints,'angles_deg_raw')
+        Data.joints.angles_deg_raw = Data.joints.angles_deg;   % keep the raw once
+    end
+    fprintf('\n=== ZVP baseline detrend (ref = %s) ===\n', REF_MODE);
+    fprintf('  %-16s %12s %10s\n','joint','driftRemoved','baseHeld');
+    for j = 1:numel(Data.joints.labels)
+        nm = Data.joints.labels{j};
+        if ~any(strcmp(nm, DETREND_JOINTS)), continue; end
+        zvp = sideZVP(zvpSideJoint(nm), zvpL, zvpR);
+        [yc, dInfo] = zvpDetrend(t, Data.joints.angles_deg_raw(:,j), zvp, ...   % always from raw -> idempotent
+                                 ZVP_WIN, SMOOTH_STRIDES, REF_MODE, REF_STRIDES);
+        Data.joints.angles_deg(:,j) = yc;
+        fprintf('  %-16s %12.1f %10.1f\n', nm, dInfo.driftRemoved, dInfo.refLevel);
+    end
+    save(matFile, 'Data', '-append');   % re-save so step5-8 read the cleaned joints
+    fprintf('  Re-saved cleaned joints -> %s\n', matFile);
+end
+
 %% ===================== STRIDE SEGMENTATION =====================
 pct = linspace(0, 100, NSEG)';
 segT = {}; segY = {}; segL = {};
@@ -494,6 +529,36 @@ function s = otherSide(s)
 end
 function zvp = sideZVP(side, zvpL, zvpR)
     if side == 'R', zvp = zvpR; else, zvp = zvpL; end
+end
+
+function [yc, info] = zvpDetrend(t, y, zvp, win, smoothStrides, refMode, refStrides)
+% Remove slow baseline drift from a joint angle, anchored on mid-stance (ZVP).
+%   b_i  = window-median of y around each ZVP  (obstacle-independent baseline)
+%   D(t) = robust slow trend through the b_i   (the drift)
+%   ref  = level to hold the baseline at: 'start' (median of first refStrides
+%          baselines) or 'overall' (median of all) - keeps the real posture, not 0
+%   yc   = y - (D(t) - ref)     -> baseline flat at ref, swing/crossing peaks kept
+    info = struct('driftRemoved', 0, 'refLevel', NaN);
+    yc = y;
+    t = t(:); y = y(:);
+    zvp = zvp(:); zvp = zvp(zvp >= 1 & zvp <= numel(y));
+    if numel(zvp) < 4, return; end                       % too few strides to trust
+    b = zeros(numel(zvp), 1);
+    for i = 1:numel(zvp)
+        a = max(1, zvp(i)-win); c = min(numel(y), zvp(i)+win);
+        b(i) = median(y(a:c), 'omitnan');
+    end
+    Ds = movmedian(b, max(1, round(smoothStrides)), 'omitnan');   % robust slow drift
+    if strcmpi(refMode, 'overall')
+        ref = median(Ds, 'omitnan');
+    else
+        k = min(refStrides, numel(Ds)); ref = median(Ds(1:k), 'omitnan');
+    end
+    D    = interp1(t(zvp), Ds, t, 'linear', 'extrap');   % drift at every sample
+    corr = D - ref;                                      % 0 at the reference level
+    yc   = y - corr;
+    info.driftRemoved = corr(end) - corr(1);
+    info.refLevel     = ref;
 end
 
 function drawSide(ax, t, ang, toeOff, hs, zvp, ttl, cAng, cToe, cHs, cZvp, sd)

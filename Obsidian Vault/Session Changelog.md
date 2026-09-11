@@ -7,7 +7,25 @@ tags: [changelog, summary]
 Summary of the work done on the project (most impactful first). Dates are approximate to the
 2026 working sessions.
 
-## ★ Latest (2026-09) — camera-driven labelling: step 5 removed, step 7 rewritten, step 5 sync fixed
+## ★ Latest (2026-09-11) — joint drift cleanup, ZHC features, drift-immune metrics
+- **ZVP baseline detrend for joints** ([[Step 4 - Segmentation (ZVP)]], optional, default ON): anchors
+  each joint at its mid-stance (ZVP) baseline over the first strides and subtracts the slow wander,
+  keeping the crossing peaks. Re-saves `AllData` so step5-8 inherit. Fixes baseline-shift drift (e.g.
+  the Test 101 ankles); cannot reach posture-dependent residual.
+- **step7 features are now all-IMU (ZHC); camera = validation** ([[Step 7 - Leading-Trailing Features (Camera)]]):
+  height = ZHC peak-Z, stride = ZHC net-XY displacement per ZVP cycle. The opaque Movella-Dot-app
+  numbers are retired. Camera foot-marker peak-Z kept alongside (`heightCam`) as an independent check,
+  with new columns in the export + console.
+- **Max/min bar figures (step7):** per terrain (Level_Walk + every W/H) x Leading/Trailing, for IMUs
+  (Thigh/Shank/Foot, **Dot** reference) and joints (hip/knee/ankle) - one figure each, MAX | MIN panels.
+- **Findings + limitations** in [[Heading Drift and De-drift]]: Test 102 has a drifting **pelvis** (the
+  heading-lock's reference) so its legs stay soft; the residual is posture-dependent and can't be
+  post-processed to accuracy. Reportable clean metrics = **camera clearance + joint ROM (max-min) +
+  stride length**; absolute peak angles are drift-limited (IMU-only floor).
+- **Hardware next steps** in [[Lab Checklist - IMU Drift]] (bench test decides sensor-vs-environment;
+  Movella support for VRU persistence on MTw2).
+
+## ★ (2026-09) — camera-driven labelling: step 5 removed, step 7 rewritten, step 5 sync fixed
 Study goal captured in [[Study Rationale and Goal]].
 - **Labelling now comes from the camera.** The app terrain labels + Dot "Logger" leading-leg log were
   unreliable, so **step 5 was deleted**. Obstacle type + leading/trailing per crossing now come from the
