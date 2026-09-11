@@ -7,7 +7,33 @@ tags: [changelog, summary]
 Summary of the work done on the project (most impactful first). Dates are approximate to the
 2026 working sessions.
 
-## ★ Latest (2026-09) — IMU heading drift diagnosed & fixed
+## ★ Latest (2026-09) — camera-driven labelling: step 5 removed, step 8 rewritten, step 6 sync fixed
+Study goal captured in [[Study Rationale and Goal]].
+- **Labelling now comes from the camera.** The app terrain labels + Dot "Logger" leading-leg log were
+  unreliable, so **step 5 was deleted**. Obstacle type + leading/trailing per crossing now come from the
+  **CV-side step 3 crossings** (`testN_crossings.xlsx`), which the CV pipeline writes to **both** the CV
+  results and the IMU `Results/Parameters Output/Test N/`. Terrain groups are now `W{width}_H{height}`
+  (width first), e.g. `W2_H1`.
+- **[[Step 8 - Leading-Trailing Features (Camera)]] rewritten** to be camera-driven: it maps each
+  crossing's y=0 time to the IMU clock (`t_cam + step-6 shift`) and tags the **stride the crossing lands
+  in** — leading foot's stride (`lead_cross_s`) = Leading, trailing foot's stride = Trailing — then runs
+  the same viewers/export as before. **Level_Walk** still comes from the app FeatureLog (`Ground_Truth`);
+  the Logger log is no longer read. Verified on test101 (55 crossings mapped, 0 unmatched).
+- **Step 6 sync bug fixed.** Auto-sync was locking onto walking/crossings, not the leg-raise gesture:
+  (a) obstacle crossings reach the same L_toe height as the raises, and (b) the IMU sign-picker chose the
+  −EX *walking* side (walking −EX ≈ −70° > the raise's +EX ≈ +55°). Now: the camera **start raise** is
+  taken **before the first crossing** (from step 3), the **end raise** is the last tall peak, and the IMU
+  picks the foot-X **sign that brackets the trial** (raises appear only at start+end). Crucially the raise
+  threshold is now set from the **raise level (median of the tallest peaks)**, not a fixed 45° floor — the
+  first raise (43°) was falling just under 45° and being skipped, which caused a residual. Alignment =
+  single shift on the **first peak**; the **final peak** measures drift. On test102: shift +20.1 s →
+  **−6.00 s**, drift −34.9 s → **−0.004 s (0.000 %)** — the clocks are essentially locked (no rate
+  mismatch after all; it was the missed first peak). **test101 IMUs are corrupt — benchmark on test102.**
+- **CV matlab files renamed** to a numbered pipeline: `step1_plot_trajectory`, `step2_refine_trajectory`
+  (adds an obstacle >60 cm height cut), `step3_detect_crossings` (guided trial-by-trial obstacle
+  labelling + total-time X/Y/Z overview with per-cycle #/lead→trail labels).
+
+## ★ (2026-09) — IMU heading drift diagnosed & fixed
 Full write-up in [[Heading Drift and De-drift]]. The September trials (21/22/24/101) had joint angles
 winding hundreds–thousands of degrees. Proved the cause is **IMU heading (yaw) drift** baked into the
 Awinda quaternions (magnetometer unreliable in the lab), **not** OpenSim — the flexion/tilt channel

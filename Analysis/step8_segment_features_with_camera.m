@@ -6,21 +6,26 @@ addpath(fileparts(mfilename('fullpath')));
 %% ========================================================================
 %% STEP 8 - Leading/Trailing features for ALL signals + camera trajectories
 %% ========================================================================
-% Everything step 5 does (read FeatureLogs + the "Logger Subject ..." leading-leg
-% log, classify each obstacle cycle Leading/Trailing, and plot every IMU / joint /
-% ZHC foot-height signal by Left/Right and by Leading/Trailing per terrain), PLUS
-% the CAMERA-reconstructed foot-marker trajectories from step 6 (L/R toe & heel
-% height), segmented on the SAME ZVP cycles and shown in the same Left/Right and
-% Leading/Trailing viewers. Obstacles are not segmented (they are the reference).
-% So step 8 compares, per gait cycle and grouped by obstacle terrain and by
-% leading/trailing limb: IMU angles, joint angles, ZHC foot height (IMU), and the
-% camera marker heights - side by side.
+% Classifies every gait cycle by obstacle type and by Leading/Trailing limb, then
+% plots and exports all signals (IMU angles, joint angles, ZHC foot height, and the
+% step-6 CAMERA foot-marker heights) grouped by Left/Right and by Leading/Trailing.
+%
+% LABEL SOURCE (new): the obstacle crossings and the leading/trailing leg come from
+% the CAMERA - step 3's testN_crossings.xlsx (obstacle_code + lead/trail leg + y=0
+% crossing times). Each crossing time is put on the IMU clock (t_cam + step-6 shift)
+% and matched to the ZVP stride it lands in: the leading foot's stride (containing
+% lead_cross_s) is tagged Leading, the trailing foot's stride (trail_cross_s) Trailing,
+% both with the obstacle type W{width}_H{height}. The app FeatureLog is used ONLY for
+% the Level_Walk baseline strides; the Dot "Logger Subject" leading-leg log is no
+% longer used. (This replaces the old app-terrain + Logger approach; step 5 removed.)
 
 %% ===================== SETTINGS =====================
 FONT_NAME     = 'Arial';
-TERRAIN_ORDER = {'Level_Walk','Height1_Depth1','Height2_Depth1','Height3_Depth1', ...
-                 'Height1_Depth2','Height2_Depth2','Height3_Depth2'};
-LOG_PKT_TOL   = 1500;   % max packet distance to match a window to a log crossing
+% Obstacle groups use the step-3 code = [width][height] (width 1=5cm,2=15cm;
+% height 1/2/3 = 10/20/30% of leg length). Width first, height second - consistent
+% with step 3. e.g. code 21 -> W2_H1.
+TERRAIN_ORDER = {'Level_Walk','W1_H1','W1_H2','W1_H3','W2_H1','W2_H2','W2_H3'};
+LOG_PKT_TOL   = 1500;   % max packet distance to match a window to a crossing
 
 %% ===================== INPUT =====================
 % Set TN before running (e.g. `TN = 22;`) to skip the prompt for batch runs.
@@ -30,37 +35,93 @@ dataDir = fullfile(root,'Data','Dot IMUs', ['Test ' num2str(tn)]);
 if ~isfolder(dataDir), error('Not found: %s', dataDir); end
 feet = {'IMU1','Left Foot'; 'IMU2','Right Foot'};
 
-%% ===================== READ FEATURE LOGS =====================
-Feat = struct('label',{},'terrain',{},'startPkt',{},'endPkt',{},'height',{},'stride',{});
-for f = 1:size(feet,1)
-    fp = findFile(dataDir, ['FeatureLog_' feet{f,1} '_*.csv']);
-    if isempty(fp), warning('No FeatureLog for %s (%s).', feet{f,2}, feet{f,1}); continue; end
-    T  = readtable(fp);
-    gt = string(T.Ground_Truth);
-    keep = gt ~= "NA" & ~ismissing(gt);
-    k = numel(Feat) + 1;
-    Feat(k).label    = feet{f,2};
-    Feat(k).terrain  = cellstr(gt(keep));
-    Feat(k).startPkt = T.Start_Packet(keep);
-    Feat(k).endPkt   = T.End_Packet(keep);
-    Feat(k).height   = T.Max_Height_m(keep);
-    Feat(k).stride   = T.Max_Stride_Length_m(keep);
-    fprintf('  %-12s <- %d labelled windows\n', feet{f,2}, nnz(keep));
+%% ===================== LOAD SYNCED DATA + SEGMENTS + CAMERA =====================
+base    = fullfile(root,'Results','Parameters Output', ['Test ' num2str(tn)]);
+allFile = fullfile(base, sprintf('AllData_Test%d.mat', tn));
+segFile = fullfile(base, sprintf('SegmentedParams_Test%d.mat', tn));
+if ~isfile(allFile) || ~isfile(segFile)
+    error('AllData/SegmentedParams for Test %d not found - run step 3 and step 4 first.', tn);
 end
-if isempty(Feat), error('No FeatureLog files found in %s', dataDir); end
+Sd = load(allFile,'Data'); Data = Sd.Data;
+Sg = load(segFile,'Seg');  Seg  = Sg.Seg;
+camFile = fullfile(base, sprintf('CameraSynced_Test%d.mat', tn));
+hasCam  = isfile(camFile);
+if ~hasCam, error('No %s - run step 6 first (the camera crossings need the sync).', camFile); end
+Sc = load(camFile,'Cam'); Cam = Sc.Cam;
+shift = 0;
+if isfield(Cam,'sync') && isfield(Cam.sync,'shift_s') && ~isempty(Cam.sync.shift_s), shift = Cam.sync.shift_s; end
+fprintf('  Camera->IMU sync shift = %+.3f s (from step 6).\n', shift);
+zvpL = Seg.zvpL;  zvpR = Seg.zvpR;  tt = Data.time;
+iLDot = find(strcmp({Data.imu.label},'Left Foot (Dot)'),1);
+iRDot = find(strcmp({Data.imu.label},'Right Foot (Dot)'),1);
+if isempty(iLDot) || isempty(iRDot), error('Left/Right Foot (Dot) IMU not found in Data.'); end
+pktL = Data.imu(iLDot).packet;  pktR = Data.imu(iRDot).packet;
 
-% Dedup consecutive contiguous same-Height/Depth windows -> keep higher height.
-for k = 1:numel(Feat)
-    n0 = numel(Feat(k).terrain);
-    [Feat(k).terrain, Feat(k).startPkt, Feat(k).endPkt, Feat(k).height, Feat(k).stride] = ...
-        dedupHeight(Feat(k).terrain, Feat(k).startPkt, Feat(k).endPkt, Feat(k).height, Feat(k).stride);
-    nRem = n0 - numel(Feat(k).terrain);
-    if nRem > 0, fprintf('  %s: removed %d duplicate Height/Depth window(s).\n', Feat(k).label, nRem); end
+%% ===================== LEVEL_WALK labels from the app FeatureLog =====================
+% App terrain labels are now trusted ONLY for LEVEL WALK (a clean baseline set).
+% Obstacle crossings + leading/trailing come from the CAMERA (below), not the app.
+Feat = struct('label',{'Left Foot','Right Foot'},'terrain',{{},{}}, ...
+              'startPkt',{[],[]},'endPkt',{[],[]},'height',{[],[]},'stride',{[],[]});
+feetLbl = {'IMU1','Left Foot'; 'IMU2','Right Foot'};
+for f = 1:2
+    fp = findFile(dataDir, ['FeatureLog_' feetLbl{f,1} '_*.csv']);
+    if isempty(fp), warning('No FeatureLog for %s (%s) - no Level_Walk from app.', feetLbl{f,2}, feetLbl{f,1}); continue; end
+    T = readtable(fp);  gt = string(T.Ground_Truth);
+    keep = gt == "Level_Walk";
+    Feat(f).terrain  = cellstr(gt(keep));
+    Feat(f).startPkt = T.Start_Packet(keep);
+    Feat(f).endPkt   = T.End_Packet(keep);
+    Feat(f).height   = T.Max_Height_m(keep);
+    Feat(f).stride   = T.Max_Stride_Length_m(keep);
+    fprintf('  %-12s <- %d Level_Walk windows (app)\n', feetLbl{f,2}, nnz(keep));
 end
 
-%% ===================== READ LEADING/TRAILING LOG =====================
-logE = readLeadLog(dataDir);
-fprintf('  Logger: %d leading-leg crossing entries.\n', numel(logE));
+%% ===================== OBSTACLE CROSSINGS + LEADING/TRAILING from the CAMERA =====================
+% Read step-3's labelled crossings, map each crossing's y=0 time to the IMU clock
+% (t_cam + shift), find the stride it lands in on the leading and trailing feet,
+% and synthesise obstacle windows + a leading-leg log entry - so the rest of step 8
+% (viewers, export) runs exactly as before, now driven by the camera.
+crossXls = fullfile(base, sprintf('test%d_crossings.xlsx', tn));
+if ~isfile(crossXls), error('No camera crossings file: %s (run step 3 for this test).', crossXls); end
+C = readtable(crossXls,'Sheet','crossings','VariableNamingRule','preserve');
+logE = struct('terr',{},'lead',{},'s',{},'e',{});
+nUse=0; nUnlab=0; nNoCyc=0; nSpanBad=0;
+for r = 1:height(C)
+    code = strtrim(char(string(C.obstacle_code(r))));
+    if isempty(regexp(code,'^\d\d$','once')), nUnlab = nUnlab + 1; continue; end   % not labelled -> skip
+    ll = pickSide(C.lead_leg(r));  tl = pickSide(C.trail_leg(r));
+    lct = C.lead_cross_s(r);  tct = C.trail_cross_s(r);
+    if ll==' ' || isnan(lct), nNoCyc = nNoCyc + 1; continue; end                   % no leading crossing
+    terr = sprintf('W%s_H%s', code(1), code(2));
+    zvM = struct('L',zvpL,'R',zvpR);  pkM = struct('L',pktL,'R',pktR);
+    pkH = struct('L', C.L_peakz_mm(r)/1000, 'R', C.R_peakz_mm(r)/1000);
+    sAll=[]; eAll=[]; usedThis=false;
+    % leading foot: the stride containing this foot's y=0 crossing
+    [cL, okL] = cycleAtTime(zvM.(ll), tt, lct+shift);
+    if okL
+        aP = pkM.(ll)(zvM.(ll)(cL));  bP = pkM.(ll)(zvM.(ll)(cL+1));  fi = 1 + (ll=='R');
+        Feat(fi).terrain{end+1}=terr; Feat(fi).startPkt(end+1)=aP; Feat(fi).endPkt(end+1)=bP;
+        Feat(fi).height(end+1)=pkH.(ll); Feat(fi).stride(end+1)=NaN;
+        sAll(end+1)=aP; eAll(end+1)=bP; usedThis=true; %#ok<SAGROW>
+        if ~spans0(Cam, ll, zvM.(ll)(cL), zvM.(ll)(cL+1)), nSpanBad = nSpanBad + 1; end
+    end
+    % trailing foot: the stride containing this foot's y=0 crossing
+    if tl~=' ' && ~isnan(tct)
+        [cT, okT] = cycleAtTime(zvM.(tl), tt, tct+shift);
+        if okT
+            aP = pkM.(tl)(zvM.(tl)(cT));  bP = pkM.(tl)(zvM.(tl)(cT+1));  fi = 1 + (tl=='R');
+            Feat(fi).terrain{end+1}=terr; Feat(fi).startPkt(end+1)=aP; Feat(fi).endPkt(end+1)=bP;
+            Feat(fi).height(end+1)=pkH.(tl); Feat(fi).stride(end+1)=NaN;
+            sAll(end+1)=aP; eAll(end+1)=bP; %#ok<SAGROW>
+        end
+    end
+    if ~usedThis, nNoCyc = nNoCyc + 1; continue; end
+    e = numel(logE)+1; logE(e).terr=terr; logE(e).lead=ll; logE(e).s=min(sAll); logE(e).e=max(eAll);
+    nUse = nUse + 1;
+end
+fprintf('  Camera crossings: %d used, %d unlabelled (skipped), %d without a matching IMU stride.\n', nUse, nUnlab, nNoCyc);
+if nSpanBad > 0, fprintf('  NOTE: %d leading stride(s) whose camera y did not clearly cross 0 - review in the viewer.\n', nSpanBad); end
+if nUse == 0, warning('No labelled camera crossings mapped to strides - did you label them in step 3?'); end
 
 %% ===================== FULL TERRAIN SET =====================
 terrains   = TERRAIN_ORDER;                              % canonical, even if empty
@@ -80,21 +141,9 @@ for k = 1:numel(Feat)
     end
 end
 
-%% ===================== LOAD SYNCED DATA + SEGMENT (once) =====================
-base    = fullfile(root,'Results','Parameters Output', ['Test ' num2str(tn)]);
-allFile = fullfile(base, sprintf('AllData_Test%d.mat', tn));
-segFile = fullfile(base, sprintf('SegmentedParams_Test%d.mat', tn));
-if ~isfile(allFile) || ~isfile(segFile)
-    warning('AllData/SegmentedParams for Test %d not found - run step 3 and step 4 first.', tn);
-    return;
-end
-Sd = load(allFile,'Data'); Data = Sd.Data;
-Sg = load(segFile,'Seg');  Seg  = Sg.Seg;
-camFile = fullfile(base, sprintf('CameraSynced_Test%d.mat', tn));
-hasCam  = isfile(camFile);
-if hasCam, Sc = load(camFile,'Cam'); Cam = Sc.Cam;
-else, warning('No %s - camera trajectories omitted (run step 6).', camFile); end
-zvpL = Seg.zvpL;  zvpR = Seg.zvpR;  tt = Data.time;  NSEG = Seg.nseg;
+%% ===================== SEGMENT SETUP =====================
+% (Data, Seg and Cam were loaded above, with the camera crossings.)
+NSEG = Seg.nseg;
 pctv = linspace(0,100,NSEG)';
 % Time-domain grid: raw samples per cycle, padded to the longest cycle; relative
 % time (0 s at each cycle start).
@@ -612,6 +661,37 @@ function c = bestCycle(cycS, cycE, ws, we)
     ov = min(cycE,b) - max(cycS,a);  ov(ov < 0) = 0;
     [mx, c] = max(ov);
     if mx <= 0, [~, c] = min(abs((cycS+cycE)/2 - (a+b)/2)); end
+end
+
+function s = pickSide(v)
+% Normalise a lead/trail-leg cell value to a single 'L'/'R' char, or ' ' if absent.
+    s = upper(strtrim(char(string(v))));
+    if isempty(s) || ~(s(1)=='L' || s(1)=='R'), s = ' '; else, s = s(1); end
+end
+
+function [c, ok] = cycleAtTime(zvp, tt, T)
+% Which ZVP stride contains IMU time T. Strides are contiguous, so any T inside
+% [tt(zvp(1)), tt(zvp(end))] lands in exactly one. ok=false if T is outside them.
+    c = NaN; ok = false;
+    if numel(zvp) < 2 || isnan(T), return; end
+    tb = tt(zvp);  tb = tb(:);
+    if T < tb(1) || T > tb(end), return; end
+    c = find(tb(1:end-1) <= T & T < tb(2:end), 1);
+    if isempty(c)
+        if T == tb(end), c = numel(tb)-1; else, return; end
+    end
+    ok = true;
+end
+
+function tf = spans0(Cam, side, a, b)
+% Does the camera TOE marker on this side cross y=0 within samples a..b? Used only
+% to flag crossings whose selected stride looks off (returns true when it can't judge).
+    tf = true;
+    mk = [side '_toe'];
+    if ~isfield(Cam,'markers') || ~isfield(Cam.markers, mk), return; end
+    y = Cam.markers.(mk)(a:b, 2);  y = y(isfinite(y));
+    if numel(y) < 2, return; end
+    tf = (min(y) < 0) && (max(y) > 0);
 end
 
 function s = segAll(t, y, zvp, Nseg)

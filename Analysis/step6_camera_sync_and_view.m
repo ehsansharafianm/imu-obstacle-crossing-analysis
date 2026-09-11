@@ -12,7 +12,8 @@ addpath(fileparts(mfilename('fullpath')));
 % the SAME uniform 60 Hz grid as the synced IMU/joint data (AllData, step 3),
 % using the 3x left-leg-raise gesture: find the first raise peak in the camera
 % L_toe height and in the IMU Left-Foot Euler-X, shift the camera clock so they
-% coincide (single shift; end triplet gives the drift check), then resample onto
+% coincide (single shift, first-peak anchor; the FINAL raise peak gives the drift
+% check - a large drift flags a bad recording, e.g. a wrong-rate camera), resample onto
 % Data.time (both ~60 Hz -> interp onto the grid, NOT a rate change; time_s and
 % real dropouts preserved). Saves CameraSynced_TestN.mat/.xlsx + CameraSync PNG.
 %
@@ -33,9 +34,13 @@ CAM_RAISE_MIN_MM  = 350;    % height that isolates a leg-raise from a walking sw
 CAM_RAISE_MIN_SEP = 0.6;    % s, min separation between raise peaks
 IMU_SYNC_LABEL    = 'Left Foot (Dot)';  % IMU trace for the first-raise reference
 IMU_SYNC_COL      = 2;      % Euler ZXY -> X (roll); 1=Z 2=X 3=Y
-IMU_RAISE_MIN_DEG = 45;     % raises reach ~60 deg; walking swings stay below this
+IMU_RAISE_MIN_DEG = 30;     % floor only; the real threshold is relative to the raise level (below)
 IMU_RAISE_MIN_SEP = 0.6;    % s
-TRIPLET_SPAN_S = 4.0;       % the 3-raise gesture spans < this (to group a triplet)
+CAM_RAISE_FRAC = 0.70;      % camera raise threshold = max(CAM_RAISE_MIN_MM, this * raise level)
+IMU_RAISE_FRAC = 0.70;      % IMU raise threshold    = max(IMU_RAISE_MIN_DEG, this * raise level)
+                            % raise level = median of the tallest peaks, so the whole 3+3 raise
+                            % cluster is caught even if the FIRST raise is a bit smaller.
+TRIPLET_SPAN_S = 4.0;       % (kept for reference) the 3-raise gesture spans < this
 MAX_GAP_S      = 0.10;      % don't interpolate the camera across gaps longer than this
 MARKERS = {'L_toe','L_heel','R_toe','R_heel','obstacle1','obstacle2'};
 
@@ -105,25 +110,56 @@ for k = 1:numel(MARKERS)
 end
 
 %% ===================== RAISE PEAKS (camera + IMU) =====================
-% The IMU trace (EX/EXs) and camera height are always needed for the sync figure.
-% Peak detection is REQUIRED for auto sync but only informational for manual sync.
+% Isolate the 3x left-leg-raise gesture that BRACKETS the walking. Obstacle crossings
+% reach the same L_toe height as the raises, so we cannot separate them by height
+% alone - but the raises come BEFORE the first crossing and AFTER the last one:
+%   - CAMERA: the first tall L_toe peak before the first crossing = the START raise;
+%     the last tall peak = the END raise.
+%   - IMU: the raise shows as the foot-X SIGN that appears only at the start & end
+%     (walking/crossings dominate the OTHER sign through the middle), so pick the
+%     sign whose strong peaks bracket the trial.
 iL = find(strcmp({Data.imu.label}, IMU_SYNC_LABEL), 1);
 if isempty(iL), error('IMU trace "%s" not found in Data.imu.', IMU_SYNC_LABEL); end
 EX = Data.imu(iL).euler_ZXY_deg(:, IMU_SYNC_COL);
 EX = EX - mean(EX(1:min(20,end)), 'omitnan');
 
-sm = SYNC_MARKER;
-[cPt, ~] = raisePeaks(tCam, camRaw.(sm)(:,3), CAM_RAISE_MIN_MM, CAM_RAISE_MIN_SEP);
-if numel(cPt) < 3
-    sm = SYNC_FALLBACK;
-    [cPt, ~] = raisePeaks(tCam, camRaw.(sm)(:,3), CAM_RAISE_MIN_MM, CAM_RAISE_MIN_SEP);
+% first obstacle-crossing time (from step 3) bounds the camera START-raise search
+firstBeginCam = Inf;
+cxFile = fullfile(base, sprintf('test%d_crossings.xlsx', tn));
+if isfile(cxFile)
+    try
+        Cx = readtable(cxFile,'Sheet','crossings','VariableNamingRule','preserve');
+        if ~isempty(Cx) && ismember('begin_s', Cx.Properties.VariableNames)
+            firstBeginCam = min(Cx.begin_s(isfinite(Cx.begin_s)));
+        end
+    catch
+    end
 end
-[pP,vP] = raisePeaks(tg, EX,  IMU_RAISE_MIN_DEG, IMU_RAISE_MIN_SEP);
-[pN,vN] = raisePeaks(tg, -EX, IMU_RAISE_MIN_DEG, IMU_RAISE_MIN_SEP);
-if mean3(vP) >= mean3(vN), iSign = 1; iPt = pP; else, iSign = -1; iPt = pN; end
+if ~isfinite(firstBeginCam), firstBeginCam = Inf; end
+
+% CAMERA raises: tall L_toe peaks; first (before the first crossing) = start, last = end
+sm = SYNC_MARKER;  zc0 = camRaw.(sm)(:,3);
+camThr = raiseThresh(zc0, CAM_RAISE_FRAC, CAM_RAISE_MIN_MM);
+[cAll,~] = raisePeaks(tCam, zc0, camThr, CAM_RAISE_MIN_SEP);
+if numel(cAll) < 2
+    sm = SYNC_FALLBACK;  zc0 = camRaw.(sm)(:,3);
+    camThr = raiseThresh(zc0, CAM_RAISE_FRAC, CAM_RAISE_MIN_MM);
+    [cAll,~] = raisePeaks(tCam, zc0, camThr, CAM_RAISE_MIN_SEP);
+end
+if isempty(cAll)
+    cStartT = NaN; cEndT = NaN; cPt = [];
+else
+    pre = cAll(cAll < firstBeginCam);  if isempty(pre), pre = cAll; end
+    cStartT = pre(1);           % first raise, before the first crossing
+    cEndT   = cAll(end);        % last raise (end gesture)
+    cPt = [cStartT; cEndT];
+end
+
+% IMU raises: sign that brackets the trial (start+end), first/last of that sign
+[iRp, iSign] = imuRaisePeaks(tg, EX, IMU_RAISE_MIN_DEG, IMU_RAISE_FRAC, IMU_RAISE_MIN_SEP);
 EXs = iSign * EX;
-if ~isempty(cPt), [cStartT,cEndT] = tripletEnds(cPt, TRIPLET_SPAN_S); else, cStartT = NaN; cEndT = NaN; end
-if ~isempty(iPt), [iStartT,iEndT] = tripletEnds(iPt, TRIPLET_SPAN_S); else, iStartT = NaN; iEndT = NaN; end
+if isempty(iRp), iStartT = NaN; iEndT = NaN; iPt = [];
+else, iStartT = iRp(1); iEndT = iRp(end); iPt = [iStartT; iEndT]; end
 
 %% ===================== SYNC: auto (peaks) or manual (typed offset) =====================
 if manualSync
@@ -160,15 +196,15 @@ if manualSync
         drift = NaN;
     end
     fprintf('\n=== Sync (MANUAL) ===\n  IMU peak %.3f - camera peak %.3f  ->  offset = %+.3f s\n', tI, tC, dtShift);
-    if ~isnan(drift), fprintf('  end-triplet residual with this offset = %+.3f s\n', drift); end
+    if ~isnan(drift), fprintf('  drift at final peak with this offset = %+.3f s\n', drift); end
 else
     if isempty(cPt), error('No camera leg-raise peaks (marker %s, > %g mm). Re-run and choose MANUAL sync.', sm, CAM_RAISE_MIN_MM); end
     if isempty(iPt), error('No IMU leg-raise peaks >= %g deg in %s. Re-run and choose MANUAL sync.', IMU_RAISE_MIN_DEG, IMU_SYNC_LABEL); end
     fprintf('\nCamera raises (%s z): %d peaks; start@ %.3f s, end@ %.3f s\n', sm, numel(cPt), cStartT, cEndT);
     fprintf('IMU raises (%s X, sign %+d): %d peaks; start@ %.3f s, end@ %.3f s\n', IMU_SYNC_LABEL, iSign, numel(iPt), iStartT, iEndT);
-    dtShift = iStartT - cStartT;
-    drift   = iEndT - (cEndT + dtShift);
-    fprintf('\n=== Sync (AUTO) ===\n  shift (IMU - camera) = %+.3f s\n  end-triplet residual = %+.3f s over %.1f s  (%.3f %%)\n', ...
+    dtShift = iStartT - cStartT;                 % single shift, anchored on the FIRST peak
+    drift   = iEndT - (cEndT + dtShift);         % drift measured at the FINAL peak
+    fprintf('\n=== Sync (AUTO) ===\n  shift (IMU - camera) = %+.3f s  (first-peak alignment)\n  drift at final peak  = %+.3f s over %.1f s  (%.3f %%)\n', ...
             dtShift, drift, iEndT - iStartT, 100*drift/max(iEndT-iStartT,eps));
 end
 tCamAl = tCam + dtShift;
@@ -203,15 +239,24 @@ fprintf('\nSaved %s\n       %s\n', outMat, outXls);
 
 %% ===================== SYNC-CHECK FIGURE (saved PNG) =====================
 zc = Cam.raw.markers.(sm)(:,3);
+% Figure references: in MANUAL mode use the peaks YOU entered so the markers and
+% zoom windows match your chosen alignment (not the auto-detector's guess). After
+% the shift the camera peak lands at tI (= tC + dtShift), so both markers are at tI.
+if manualSync
+    camMk = tI;  imuMk = tI;  zStart = tI;
+    if ~isnan(iEndT), zEnd = iEndT; else, zEnd = tI + 10; end
+else
+    camMk = cPt + dtShift;  imuMk = iPt;  zStart = iStartT;  zEnd = iEndT;
+end
 f1 = figure('Color','w','Name',sprintf('Step 6 - camera<->IMU sync | Test %d', tn),'Position',[70 70 1360 820]);
-subplot(2,1,1); syncOverlay(tCamAl, zc, cPt+dtShift, tg, EXs, iPt, ...
+subplot(2,1,1); syncOverlay(tCamAl, zc, camMk, tg, EXs, imuMk, ...
     sprintf('Full trial - camera %s height (aligned) vs IMU %s X', sm, IMU_SYNC_LABEL), COL_CAM, COL_IMU, LINE_WIDTH, FONT_NAME, LABEL_SIZE);
 xlim([tg(1) tg(end)]);
 title(sprintf('Test %d  |  shift = %+.3f s,  end-drift = %+.3f s', tn, dtShift, drift), 'FontName',FONT_NAME,'FontSize',TITLE_SIZE,'FontWeight','bold');
-subplot(2,2,3); syncOverlay(tCamAl, zc, cPt+dtShift, tg, EXs, iPt, 'Start gesture (zoom)', COL_CAM, COL_IMU, LINE_WIDTH, FONT_NAME, LABEL_SIZE);
-xlim([iStartT-2.5, iStartT+6]);
-subplot(2,2,4); syncOverlay(tCamAl, zc, cPt+dtShift, tg, EXs, iPt, 'End gesture (zoom)', COL_CAM, COL_IMU, LINE_WIDTH, FONT_NAME, LABEL_SIZE);
-xlim([iEndT-2.5, iEndT+6]);
+subplot(2,2,3); syncOverlay(tCamAl, zc, camMk, tg, EXs, imuMk, 'Start gesture (zoom)', COL_CAM, COL_IMU, LINE_WIDTH, FONT_NAME, LABEL_SIZE);
+xlim([zStart-2.5, zStart+6]);
+subplot(2,2,4); syncOverlay(tCamAl, zc, camMk, tg, EXs, imuMk, 'End gesture (zoom)', COL_CAM, COL_IMU, LINE_WIDTH, FONT_NAME, LABEL_SIZE);
+xlim([zEnd-2.5, zEnd+6]);
 png1 = fullfile(base, sprintf('CameraSync_Test%d.png', tn));
 exportgraphics(f1, png1, 'Resolution', 200);
 fprintf('Saved %s\n', png1);
@@ -307,13 +352,42 @@ function [pt, pv] = raisePeaks(t, y, minH, minSepS)
     sel = sort(cand(keep));  pt = t(sel); pv = y(sel);
 end
 
-function [startT, endT] = tripletEnds(pt, spanS)
-    startT = pt(1);
-    endGrp = pt(pt >= pt(end) - spanS);  endT = endGrp(1);
+function thr = raiseThresh(y, frac, floorV)
+% Threshold from the RAISE LEVEL = median of the tallest peaks (the 3 start + 3 end
+% raises), so the whole cluster is captured even when the FIRST raise is a little
+% smaller than the others. Floored by floorV (to keep walking/noise out).
+    y = y(isfinite(y));
+    if numel(y) < 3, thr = floorV; return; end
+    im = [false; y(2:end-1) > y(1:end-2) & y(2:end-1) >= y(3:end); false];
+    pk = sort(y(im), 'descend');  pk = pk(pk > 0);
+    if isempty(pk), thr = floorV; return; end
+    lvl = median(pk(1:min(6, numel(pk))));     % ~level of the 6 raises
+    thr = max(floorV, frac * lvl);
 end
 
-function m = mean3(v)
-    if isempty(v), m = 0; else, m = mean(v(1:min(3,end))); end
+function [pt, sgn] = imuRaisePeaks(t, EX, floorDeg, frac, sep)
+% Choose the EX sign whose strong peaks BRACKET the trial (the leg-raise gesture at
+% start+end) rather than recurring through the middle (walking/crossings dominate
+% the other sign there). Return that sign's peak times and the sign.
+    pt = []; sgn = 1;
+    if isempty(t), return; end
+    T = t(end) - t(1);  lo = t(1) + 0.20*T;  hi = t(1) + 0.80*T;   % middle 60% = walking
+    bestScore = inf;
+    for s = [1 -1]
+        y = s * EX;
+        thr = raiseThresh(y, frac, floorDeg);
+        [p,~] = raisePeaks(t, y, thr, sep);
+        if isempty(p), continue; end
+        midN = nnz(p >= lo & p <= hi);          % strong peaks in the middle (walking)
+        if midN < bestScore, bestScore = midN; sgn = s; pt = p; end
+    end
+end
+
+function p = pctl(x, q)
+% Simple percentile (no toolbox): q in [0,100].
+    x = sort(x(isfinite(x)));
+    if isempty(x), p = NaN; return; end
+    p = x(min(numel(x), max(1, round(q/100 * numel(x)))));
 end
 
 function G = resampleToGrid(tsrc, V, tg, maxGap)
