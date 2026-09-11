@@ -3,9 +3,9 @@ close all
 addpath(fileparts(mfilename('fullpath')));
 
 %% ========================================================================
-%% STEP 6 - Camera trajectories: sync to the IMU grid + interactive viewers
+%% STEP 5 - Camera trajectories: sync to the IMU grid + interactive viewers
 %% ========================================================================
-% (Combines the former step 6 "sync" and step 7 "view all synced signals".)
+% (Combines the former step 5 "sync" and step 6 "view all synced signals".)
 %
 % PART A - SYNC. Reads the 3-camera reconstruction (L/R toe & heel + obstacle
 % markers) from Data/Camera CV/Test N/ (prefers *_refined.xlsx) and lands it on
@@ -24,7 +24,7 @@ addpath(fileparts(mfilename('fullpath')));
 %          obstacle toggle.
 %   FIG 3 TRAJECTORIES (3D) - the same markers as X/Y/Z paths (rotatable).
 %
-% Inputs: AllData_TestN.mat (step 3, required), Camera CV workbook (step 6 CV/
+% Inputs: AllData_TestN.mat (step 3, required), Camera CV workbook (step 5 CV/
 % refine), SegmentedParams_TestN.mat (step 4, optional - adds ZHC/ZVP).
 
 %% ===================== SETTINGS =====================
@@ -168,7 +168,7 @@ if manualSync
     % offset is printed as a suggestion you can accept or override.
     nrm  = @(x)(x - min(x,[],'omitnan')) / max(max(x,[],'omitnan') - min(x,[],'omitnan'), eps);
     zcp  = camRaw.(sm)(:,3);
-    fprev = figure('Color','w','Name',sprintf('Step 6 - manual sync preview | Test %d', tn),'Position',[80 90 1300 480]);
+    fprev = figure('Color','w','Name',sprintf('Step 5 - manual sync preview | Test %d', tn),'Position',[80 90 1300 480]);
     plot(tCam, nrm(zcp), '-', 'Color', COL_CAM, 'LineWidth', LINE_WIDTH, 'DisplayName', sprintf('Camera %s height', sm)); hold on;
     plot(tg,   nrm(EXs), '-', 'Color', COL_IMU, 'LineWidth', LINE_WIDTH, 'DisplayName', sprintf('IMU %s X', IMU_SYNC_LABEL));
     grid on; xlabel('Time (s)','FontName',FONT_NAME,'FontSize',LABEL_SIZE); ylabel('normalised','FontName',FONT_NAME,'FontSize',LABEL_SIZE);
@@ -248,7 +248,7 @@ if manualSync
 else
     camMk = cPt + dtShift;  imuMk = iPt;  zStart = iStartT;  zEnd = iEndT;
 end
-f1 = figure('Color','w','Name',sprintf('Step 6 - camera<->IMU sync | Test %d', tn),'Position',[70 70 1360 820]);
+f1 = figure('Color','w','Name',sprintf('Step 5 - camera<->IMU sync | Test %d', tn),'Position',[70 70 1360 820]);
 subplot(2,1,1); syncOverlay(tCamAl, zc, camMk, tg, EXs, imuMk, ...
     sprintf('Full trial - camera %s height (aligned) vs IMU %s X', sm, IMU_SYNC_LABEL), COL_CAM, COL_IMU, LINE_WIDTH, FONT_NAME, LABEL_SIZE);
 xlim([tg(1) tg(end)]);
@@ -319,9 +319,41 @@ iRd = find(strcmp({Data.imu.label},'Right Foot (Dot)'),1);
 if ~isempty(iLd), ev.L.ang = Data.imu(iLd).euler_ZXY_deg(:,2); end
 if ~isempty(iRd), ev.R.ang = Data.imu(iRd).euler_ZXY_deg(:,2); end
 
+%% ===================== CAMERA CROSSINGS (step 3) for the fig-2 overlay =====================
+% Read step-3's per-cycle crossings (leading/trailing + y=0 times) and put them on the
+% IMU clock (t_cam + dtShift) so each crossing CYCLE can be shaded on the vs-time viewer
+% - this shows exactly how the camera cycle periods sit on the IMU / trajectory signals.
+cross = [];
+cxFile = fullfile(base, sprintf('test%d_crossings.xlsx', tn));
+if isfile(cxFile)
+    try
+        Cx = readtable(cxFile,'Sheet','crossings','VariableNamingRule','preserve');
+        % ONLY show crossings you have LABELLED in step 3 (obstacle_code = two digits);
+        % unlabelled cycles are not real/among-interest crossings, so skip them. Pass
+        % numbers are kept as-is (so the overlay may start at e.g. 3 if 1-2 are unlabelled).
+        code = tblstr(Cx,'obstacle_code');
+        keep = arrayfun(@(s) ~isempty(regexp(char(s),'^\s*\d\d\s*$','once')), code);
+        if ~any(keep)
+            fprintf('(No LABELLED crossings in %s - label obstacles in step 3 to overlay them.)\n', cxFile);
+        else
+            pass=tblcol(Cx,'pass'); bgn=tblcol(Cx,'begin_s')+dtShift; fin=tblcol(Cx,'end_s')+dtShift;
+            lcs=tblcol(Cx,'lead_cross_s')+dtShift; tcs=tblcol(Cx,'trail_cross_s')+dtShift;
+            lead=tblstr(Cx,'lead_leg'); trail=tblstr(Cx,'trail_leg');
+            cross = struct('pass',pass(keep), 'begin',bgn(keep), 'fin',fin(keep), ...
+                           'lead_s',lcs(keep), 'trail_s',tcs(keep), 'code',{code(keep)}, ...
+                           'lead',{lead(keep)}, 'trail',{trail(keep)});
+            fprintf('Loaded %d LABELLED camera crossing cycles for the fig-2 overlay (of %d total).\n', nnz(keep), height(Cx));
+        end
+    catch ME
+        warning('Could not read crossings for the overlay (%s).', ME.message);
+    end
+else
+    fprintf('(No %s yet - run step 3 to overlay crossing cycles on fig 2.)\n', cxFile);
+end
+
 %% ===================== OPEN THE VIEWERS =====================
 buildAnglesViewer(sprintf('Angles: IMU Euler + joints  |  Test %d', tn), Ta, Ya, La, DEFAULT_ANGLES, FONT_NAME);
-buildTrajTimeViewer(sprintf('Trajectories vs time (o=ZVP, v=toe-off, s=heel-strike)  |  Test %d', tn), traj, obst, ev, DEFAULT_MARKERS, FONT_NAME);
+buildTrajTimeViewer(sprintf('Trajectories vs time (o=ZVP, v=toe-off, s=heel-strike; shaded=crossing cycle)  |  Test %d', tn), traj, obst, ev, cross, DEFAULT_MARKERS, FONT_NAME);
 buildTraj3DViewer(sprintf('Trajectories 3D (X/Y/Z)  |  Test %d', tn), traj, obst, ev, DEFAULT_3D, FONT_NAME);
 fprintf('\nDone. Camera synced to Data.time; viewers open: angles (fig1), trajectories vs time (fig2), 3D (fig3).\n');
 
@@ -435,6 +467,19 @@ function te = idx2t(tg, idx)
 % Sample indices -> times on the grid tg (drop any out-of-range index).
     idx = idx(:); idx = idx(idx >= 1 & idx <= numel(tg)); te = tg(idx);
 end
+function v = tblcol(T, nm)
+% Numeric column by name (column vector); NaNs if the column is missing.
+    if ismember(nm, T.Properties.VariableNames), v = T.(nm); v = v(:); else, v = nan(height(T),1); end
+end
+function s = tblstr(T, nm)
+% String column by name (column vector); empty strings if missing.
+    if ismember(nm, T.Properties.VariableNames), s = string(T.(nm)); s = s(:); else, s = strings(height(T),1); end
+end
+function c = legColor(s)
+% Leg colour from an 'L'/'R' string: Left = blue, Right = red (matches step 3).
+    s = upper(strtrim(char(string(s))));
+    if ~isempty(s) && s(1) == 'R', c = [0.85 0.25 0.20]; else, c = [0.20 0.45 0.80]; end
+end
 function markEvents(ax, tt, yv, te, mk, c)
 % Mark event times te on a time-series trace: sample the trace value at the
 % nearest sample within 50 ms; skip events that fall in a gap.
@@ -507,7 +552,7 @@ end
 function clrAngles(hF), S = guidata(hF); set(S.lb,'Value',[]); updAngles(hF); end
 
 %% ----- FIG 2: trajectories vs time (marker checkboxes + axis selector) -----
-function buildTrajTimeViewer(titleStr, traj, obst, ev, defMk, fontName)
+function buildTrajTimeViewer(titleStr, traj, obst, ev, cross, defMk, fontName)
     nM = numel(traj);
     hF = figure('Color','w','Name',titleStr,'Position',[80 70 1440 800]);
     ax = axes(hF,'Position',[0.255 0.10 0.70 0.82]);
@@ -533,11 +578,14 @@ function buildTrajTimeViewer(titleStr, traj, obst, ev, defMk, fontName)
         'String','Foot angle (right y)','Value',0,'BackgroundColor','w','FontName',fontName,'Callback',@(~,~) updTrajTV(hF));
     obstCb = uicontrol(hF,'Style','checkbox','Units','normalized','Position',[LX+0.15 0.846 0.09 0.03], ...
         'String','Obstacle','Value',0,'Enable',onoff(~isempty(obst)),'BackgroundColor','w','FontName',fontName,'Callback',@(~,~) updTrajTV(hF));
-    uicontrol(hF,'Style','pushbutton','Units','normalized','Position',[LX 0.812 0.10 0.03], ...
+    crossCb = uicontrol(hF,'Style','checkbox','Units','normalized','Position',[LX 0.812 0.22 0.03], ...
+        'String','Crossing cycles (shade + y=0)','Value',double(~isempty(cross)),'Enable',onoff(~isempty(cross)), ...
+        'BackgroundColor','w','FontName',fontName,'FontWeight','bold','Callback',@(~,~) updTrajTV(hF));
+    uicontrol(hF,'Style','pushbutton','Units','normalized','Position',[LX 0.778 0.10 0.03], ...
         'String','Select all','FontName',fontName,'Callback',@(~,~) setAllTV(hF,true));
-    uicontrol(hF,'Style','pushbutton','Units','normalized','Position',[LX+0.105 0.812 0.10 0.03], ...
+    uicontrol(hF,'Style','pushbutton','Units','normalized','Position',[LX+0.105 0.778 0.10 0.03], ...
         'String','Clear all','FontName',fontName,'Callback',@(~,~) setAllTV(hF,false));
-    pnl = uipanel(hF,'Title','Markers','Units','normalized','Position',[LX 0.03 PW 0.77], ...
+    pnl = uipanel(hF,'Title','Markers','Units','normalized','Position',[LX 0.03 PW 0.735], ...
         'BackgroundColor','w','FontName',fontName,'FontSize',11,'FontWeight','bold');
     rh = 1/max(nM,1); cb = gobjects(nM,1);
     for k = 1:nM
@@ -545,8 +593,8 @@ function buildTrajTimeViewer(titleStr, traj, obst, ev, defMk, fontName)
             'String',traj(k).name,'Value',double(any(strcmp(traj(k).name,defMk))), ...
             'ForegroundColor',traj(k).color,'BackgroundColor','w','FontName',fontName,'FontSize',11,'FontWeight','bold','Callback',@(~,~) updTrajTV(hF));
     end
-    S = struct('ax',ax,'cb',cb,'axCb',axCb,'sDD',sDD,'sItems',{sItems},'zvpCb',zvpCb,'toCb',toCb,'hsCb',hsCb,'footCb',footCb,'obstCb',obstCb, ...
-               'traj',traj,'obst',obst,'ev',ev,'nM',nM,'axNames',{axNames},'titleStr',titleStr,'fontName',fontName);
+    S = struct('ax',ax,'cb',cb,'axCb',axCb,'sDD',sDD,'sItems',{sItems},'zvpCb',zvpCb,'toCb',toCb,'hsCb',hsCb,'footCb',footCb,'obstCb',obstCb,'crossCb',crossCb, ...
+               'traj',traj,'obst',obst,'ev',ev,'cross',cross,'nM',nM,'axNames',{axNames},'titleStr',titleStr,'fontName',fontName);
     guidata(hF, S); updTrajTV(hF);
 end
 function updTrajTV(hF)
@@ -559,6 +607,14 @@ function updTrajTV(hF)
     % --- LEFT axis: the trajectories (mm) ---
     yyaxis(ax,'left'); cla(ax); hold(ax,'on'); ax.YAxis(1).Color = [0 0 0];
     legH = []; legN = {}; sidesSel = {};
+    % crossing-cycle shading (drawn first so it sits BEHIND the traces)
+    showCross = isfield(S,'cross') && ~isempty(S.cross) && S.crossCb.Value==1;
+    if showCross
+        for i = 1:numel(S.cross.begin)
+            b = S.cross.begin(i); e = S.cross.fin(i);
+            if isfinite(b) && isfinite(e), xregion(ax, b, e, 'FaceColor',[0.80 0.84 0.92], 'FaceAlpha',0.20); end
+        end
+    end
     xr = [inf -inf]; yr = [inf -inf];   % data extent of the selected traces (for auto-fit)
     for k = 1:S.nM
         if S.cb(k).Value ~= 1, continue; end
@@ -583,6 +639,24 @@ function updTrajTV(hF)
     % --- auto-fit the left axis to the selected data (best zoom on each change) ---
     if isfinite(xr(1)) && xr(2) > xr(1), xlim(ax, xr + 0.02*(xr(2)-xr(1))*[-1 1]); end
     if isfinite(yr(1)) && yr(2) > yr(1), ylim(ax, yr + 0.06*(yr(2)-yr(1))*[-1 1]); end
+    % crossing y=0 times (star=leading, dotted=trailing) + pass number at the top
+    if showCross
+        yl = ylim(ax); cr = S.cross;
+        for i = 1:numel(cr.begin)
+            lc = legColor(cr.lead(i));
+            if isfinite(cr.lead_s(i)),  xline(ax, cr.lead_s(i),  '-', 'Color', lc, 'LineWidth', 1.1); end
+            if isfinite(cr.trail_s(i)), xline(ax, cr.trail_s(i), ':', 'Color', legColor(cr.trail(i)), 'LineWidth', 1.1); end
+            if isfinite(cr.begin(i)) && isfinite(cr.fin(i)) && isfinite(cr.pass(i))
+                lbl = sprintf('%d', cr.pass(i));
+                if isfield(cr,'code') && strlength(cr.code(i))>0, lbl = sprintf('%d\n%s', cr.pass(i), char(cr.code(i))); end
+                text(ax, 0.5*(cr.begin(i)+cr.fin(i)), yl(2), lbl, 'Color', lc, ...
+                    'FontSize',7,'FontWeight','bold','HorizontalAlignment','center','VerticalAlignment','top','Clipping','on');
+            end
+        end
+        legH(end+1) = patch(ax, [nan nan nan], [nan nan nan], [0.80 0.84 0.92], 'FaceAlpha',0.5, 'EdgeColor','none'); legN{end+1} = 'crossing cycle'; %#ok<AGROW>
+        legH(end+1) = plot(ax, nan, nan, '-', 'Color',[0.20 0.45 0.80], 'LineWidth',1.2); legN{end+1} = 'leading y=0 (L blue / R red)'; %#ok<AGROW>
+        legH(end+1) = plot(ax, nan, nan, ':', 'Color',[0.45 0.45 0.45], 'LineWidth',1.2); legN{end+1} = 'trailing y=0'; %#ok<AGROW>
+    end
     if S.obstCb.Value == 1 && ~isempty(S.obst)
         xl = xlim(ax);
         for o = 1:numel(S.obst)

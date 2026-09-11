@@ -7,19 +7,19 @@ tags: [changelog, summary]
 Summary of the work done on the project (most impactful first). Dates are approximate to the
 2026 working sessions.
 
-## ★ Latest (2026-09) — camera-driven labelling: step 5 removed, step 8 rewritten, step 6 sync fixed
+## ★ Latest (2026-09) — camera-driven labelling: step 5 removed, step 7 rewritten, step 5 sync fixed
 Study goal captured in [[Study Rationale and Goal]].
 - **Labelling now comes from the camera.** The app terrain labels + Dot "Logger" leading-leg log were
   unreliable, so **step 5 was deleted**. Obstacle type + leading/trailing per crossing now come from the
   **CV-side step 3 crossings** (`testN_crossings.xlsx`), which the CV pipeline writes to **both** the CV
   results and the IMU `Results/Parameters Output/Test N/`. Terrain groups are now `W{width}_H{height}`
   (width first), e.g. `W2_H1`.
-- **[[Step 8 - Leading-Trailing Features (Camera)]] rewritten** to be camera-driven: it maps each
-  crossing's y=0 time to the IMU clock (`t_cam + step-6 shift`) and tags the **stride the crossing lands
+- **[[Step 7 - Leading-Trailing Features (Camera)]] rewritten** to be camera-driven: it maps each
+  crossing's y=0 time to the IMU clock (`t_cam + step-5 shift`) and tags the **stride the crossing lands
   in** — leading foot's stride (`lead_cross_s`) = Leading, trailing foot's stride = Trailing — then runs
   the same viewers/export as before. **Level_Walk** still comes from the app FeatureLog (`Ground_Truth`);
   the Logger log is no longer read. Verified on test101 (55 crossings mapped, 0 unmatched).
-- **Step 6 sync bug fixed.** Auto-sync was locking onto walking/crossings, not the leg-raise gesture:
+- **Step 5 sync bug fixed.** Auto-sync was locking onto walking/crossings, not the leg-raise gesture:
   (a) obstacle crossings reach the same L_toe height as the raises, and (b) the IMU sign-picker chose the
   −EX *walking* side (walking −EX ≈ −70° > the raise's +EX ≈ +55°). Now: the camera **start raise** is
   taken **before the first crossing** (from step 3), the **end raise** is the last tall peak, and the IMU
@@ -46,8 +46,8 @@ heading), removing differential drift while keeping gravity-anchored tilt. Valid
 (`y/n` de-drift → `IKResults_dedrift` + BEFORE→AFTER table); **step2/step3** have matching `y/n` so
 step4/5/6/8/9 inherit; targeted `ankle_angle_l` cleanup added in step2/step3. `stepX` still TODO.
 
-## ★ Latest (2026-09) — step 6 manual camera sync
-[[Step 6 - Camera Sync and Viewers]] now asks **auto (default, Enter) or manual** sync. Manual shows a
+## ★ Latest (2026-09) — step 5 manual camera sync
+[[Step 5 - Camera Sync and Viewers]] now asks **auto (default, Enter) or manual** sync. Manual shows a
 **preview** of both signals, prints the auto-detected peaks, and you type the **IMU peak time** and
 **camera peak time** (Enter accepts the auto value) → it computes `offset = IMU − camera` for you and
 reports the end residual as a self-check. Auto path is unchanged.
@@ -81,7 +81,7 @@ Arm IMUs/joints now segment on the **opposite** foot's ZVPs (arm swing is couple
 leg) and inherit that foot's terrain / leading-trailing labels; `.side` still names the physical arm.
 Verified in [[Step 5 - Obstacle Features]]: no duplication, column counts match labels.
 
-## 6. Step 6 — Angular momentum (new)
+## 6. Step 5 — Angular momentum (new)
 Created [[Step X - Angular Momentum]] — whole-body + segmental (Arms/Legs/Trunk) angular momentum
 via Simbody + a manual per-segment sum (mutually validated), with an interactive toggle viewer,
 default vs prompted body features, `.mat`/`.xlsx` export, and `tic/toc` timing. Static overview
@@ -103,22 +103,22 @@ uniform 60 Hz grid (no upsampling needed); **segment the camera at the IMU ZVPs*
 dropouts only, NaN the long ones, flag low-completeness strides. Next concrete step: the
 **marker→body map**.
 
-## 9. Camera pipeline realized — steps 6–9 (new) 🎉
+## 9. Camera pipeline realized — steps 5–9 (new) 🎉
 The camera is fully integrated as a numbered pipeline. See [[Camera Pipeline - Achievements]].
-- [[Step 6 - Camera Sync and Viewers]] — sync camera markers to the 60 Hz IMU grid via the 3× left-leg
+- [[Step 5 - Camera Sync and Viewers]] — sync camera markers to the 60 Hz IMU grid via the 3× left-leg
   raise gesture (single shift, ~0 drift), then angles / trajectories-vs-time / 3D viewers with per-leg
   gait-event overlays (ZVP, toe-off, heel-strike), a foot-angle sanity overlay, and auto-fit.
-- [[Step 7 - Camera Stride Segmentation]] — camera foot markers cut on the step-4 ZVPs (+ ZHC overlay);
+- [[Step 6 - Camera Stride Segmentation]] — camera foot markers cut on the step-4 ZVPs (+ ZHC overlay);
   saves `CameraSegmented_TestN.mat`.
-- [[Step 8 - Leading-Trailing Features (Camera)]] — step-5 features extended with the camera; saves
+- [[Step 7 - Leading-Trailing Features (Camera)]] — step-5 features extended with the camera; saves
   `SegTrajectories_WithCamera_TestN.mat` (`S5.camera.*`).
-- [[Step 9 - Crossing Parameters]] — foot placement (lift/landing) + height & **min** clearance per
+- [[Step 8 - Crossing Parameters]] — foot placement (lift/landing) + height & **min** clearance per
   crossing; saves `CrossingParams_TestN.mat/.xlsx` + arc/param/clearance figures. Prompts for leg length.
 
 ## 10. CV-side trajectory refinement (new)
 `refine_trajectory.m` (CV repo) cleans the raw reconstructed workbook → `testN_trajectory_refined.xlsx`
 (despike out-of-volume / non-negative height, short-gap fill, smoothing; time/sampling untouched) and
-writes it into `Data/Camera CV/Test N/`. Step 6 prefers the `*_refined` file. `plot_trajectory` and
+writes it into `Data/Camera CV/Test N/`. Step 5 prefers the `*_refined` file. `plot_trajectory` and
 `refine_trajectory` are scripts (prompt for the test number).
 
 ## 11. Gait events saved in step 4
@@ -130,7 +130,7 @@ The angular-momentum add-on is `stepX_angular_momentum.m` → renamed here to [[
 so steps **6–9** name the camera pipeline.
 
 ## Housekeeping / notes
-- Steps 6–9 and step 4's change are **committed & pushed** to the analysis repo
+- Steps 5–9 and step 4's change are **committed & pushed** to the analysis repo
   (`imu-obstacle-crossing-analysis`); `refine_trajectory` / `plot_trajectory` to the CV repo
   (`obstacle-crossing-computer-vision`). This vault update is committed with them.
 - The large binary `.mat`/`.xlsx` outputs and `Data/`/`Results/` blobs are generally left uncommitted

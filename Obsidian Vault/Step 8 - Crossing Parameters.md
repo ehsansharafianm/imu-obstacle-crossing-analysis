@@ -1,18 +1,18 @@
 ---
 tags: [step, camera, clearance, parameters, obstacle]
-aliases: [step9, step9_crossing_parameters]
+aliases: [step8, step8_crossing_parameters]
 ---
 
-# Step 9 — Crossing Parameters (Placement & Clearance)
+# Step 8 — Crossing Parameters (Placement & Clearance)
 
-**File:** `Analysis/step9_crossing_parameters.m`
+**File:** `Analysis/step8_crossing_parameters.m`
 The payoff step: per obstacle-crossing cycle, read the **camera** foot positions at the key **IMU**
 moments and report the crossing parameters. Prompts for **leg length (cm)**.
 
 ## Inputs
-- `CameraSynced_TestN.mat` ([[Step 6 - Camera Sync and Viewers]]) — positions.
+- `CameraSynced_TestN.mat` ([[Step 5 - Camera Sync and Viewers]]) — positions.
 - `SegmentedParams_TestN.mat` ([[Step 4 - Segmentation (ZVP)]]) — ZVP indices.
-- `SegTrajectories_WithCamera_TestN.mat` ([[Step 8 - Leading-Trailing Features (Camera)]]) — which
+- `SegTrajectories_WithCamera_TestN.mat` ([[Step 7 - Leading-Trailing Features (Camera)]]) — which
   cycles are crossings + Leading/Trailing role.
 
 ## Obstacle model
@@ -42,4 +42,4 @@ Positions come from the camera; the moments (ZVP) come from the IMU ([[Step 4 - 
 test22 (leg 90 cm): leading planted ~950 mm back & clears highest; trailing lands ~600–800 mm past &
 clears lowest; min clearance falls with obstacle height (tallest/widest → a slightly negative heel min).
 
-Prev: [[Step 8 - Leading-Trailing Features (Camera)]] · related: [[Camera Pipeline - Achievements]]
+Prev: [[Step 7 - Leading-Trailing Features (Camera)]] · related: [[Camera Pipeline - Achievements]]

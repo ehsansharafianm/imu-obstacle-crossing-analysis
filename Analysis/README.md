@@ -300,7 +300,7 @@ else so it slices by terrain / side / leading-trailing:
 | `S5.zhc.height_gait.L/.R` | height only, `NSEG × Ncyc` (0–100 %) — the matrices the viewers plot |
 | `S5.zhc.height_time.L/.R` | height only, `maxLen × Ncyc` (time); x-axis = `S5.zhc.time` |
 | `S5.zhc.height_dist.L/.R` | height only, `NSEG × Ncyc` vs horizontal distance; x-axis = `S5.zhc.dist` (m) |
-| `S5.zhc.all` | **combined per-cycle table (Left then Right) — the step-6 stats input** |
+| `S5.zhc.all` | **combined per-cycle table (Left then Right) — the step-5 stats input** |
 | &nbsp;&nbsp;`.side/.terrain/.role/.cycle` | `1×Ncyc` labels for every cycle |
 | &nbsp;&nbsp;`.Hgait/.Htime/.Hdist` | height in all three domains, `samples × Ncyc`, column-aligned to the labels |
 | &nbsp;&nbsp;`.peak` | `1×Ncyc` peak clearance (m) per cycle |
@@ -341,7 +341,7 @@ plot(S.zhc.dist, mean(Hd(:,sel),2,'omitnan'));
 xlabel('Horizontal distance (m)'); ylabel('Height (m)');
 ```
 
-For **step 6 statistics**, `S5.zhc.all` is the convenient one-stop table — every
+For **step 5 statistics**, `S5.zhc.all` is the convenient one-stop table — every
 cycle already labelled by side / terrain / role, with its height in all three
 domains and a ready `.peak` clearance:
 
@@ -362,7 +362,7 @@ shows *where* over the ground it clears — the natural view for comparing clear
 against obstacle position. The continuous `pCont`/`pZvp` path gives step length
 and the walking trace for sanity-checking the reconstruction.
 
-## step6_angular_momentum.m — Angular momentum (whole-body + segmental)
+## step5_angular_momentum.m — Angular momentum (whole-body + segmental)
 
 Standalone add-on (reads only step-1 outputs; **does not touch steps 1–5**).
 Computes angular momentum about the body centre of mass (COM), in the model
@@ -409,7 +409,7 @@ per-segment, and pooled into Arms / Legs / Trunk**. Purely kinematic + inertial 
 - **step4:** `MIN_PROMINENCE`, `MIN_PEAK_DIST`, `OMEGA_THRESH`, `ACC_THRESH`,
   `ROLL_COL_*/ROLL_SIGN_*`, `NSEG`, `ZVP_SKIP_START`.
 - **step5:** `LOG_PKT_TOL` (window↔log packet match), `TERRAIN_ORDER`.
-- **step6:** `ASK_BODY_FEATURES`, `BODY.*` (mass/height/legLen/speed),
+- **step5:** `ASK_BODY_FEATURES`, `BODY.*` (mass/height/legLen/speed),
   `SPEED_FALLBACK`, `LOWPASS_HZ`, `FILT_ORDER`.
 
 ## Sensor map (Awinda IDs → body)

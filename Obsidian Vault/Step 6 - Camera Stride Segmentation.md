@@ -1,16 +1,16 @@
 ---
 tags: [step, camera, segmentation, stride]
-aliases: [step7, step7_segment_camera_trajectories]
+aliases: [step6, step6_segment_camera_trajectories]
 ---
 
-# Step 7 — Camera Stride Segmentation
+# Step 6 — Camera Stride Segmentation
 
-**File:** `Analysis/step7_segment_camera_trajectories.m`
+**File:** `Analysis/step6_segment_camera_trajectories.m`
 Cuts the four camera foot markers into strides, on the **same ZVP boundaries** as the IMU, so camera
 strides line up one-to-one with the IMU/joint strides.
 
 ## Inputs
-- `CameraSynced_TestN.mat` (from [[Step 6 - Camera Sync and Viewers]]).
+- `CameraSynced_TestN.mat` (from [[Step 5 - Camera Sync and Viewers]]).
 - `SegmentedParams_TestN.mat` (from [[Step 4 - Segmentation (ZVP)]]) — `zvpL`/`zvpR` and the ZHC foot path.
 
 ## What it does
@@ -31,4 +31,4 @@ strides line up one-to-one with the IMU/joint strides.
 > (the foot was out of the camera volume). The left clearance curve is physiological (heel peaks
 > earlier, toe later).
 
-Prev: [[Step 6 - Camera Sync and Viewers]] · next: [[Step 8 - Leading-Trailing Features (Camera)]]
+Prev: [[Step 5 - Camera Sync and Viewers]] · next: [[Step 7 - Leading-Trailing Features (Camera)]]

@@ -20,7 +20,7 @@ Results/
     ├── SegmentedParams_TestN.mat          (step 4)
     ├── WindowFeatures_SideBased_TestN.xlsx(step 5)
     ├── SegTrajectories_SideBased_TestN.mat(step 5)
-    └── AngularMomentum_TestN.mat / .xlsx  (step 6)
+    └── AngularMomentum_TestN.mat / .xlsx  (step 5)
 ```
 
 ## Key MATLAB structs

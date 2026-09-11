@@ -1,11 +1,11 @@
 ---
 tags: [step, camera, leading-trailing, features]
-aliases: [step8, step8_segment_features_with_camera]
+aliases: [step7, step7_segment_features_with_camera]
 ---
 
-# Step 8 — Leading/Trailing Features (with Camera)
+# Step 7 — Leading/Trailing Features (with Camera)
 
-**File:** `Analysis/step8_segment_features_with_camera.m`
+**File:** `Analysis/step7_segment_features_with_camera.m`
 Everything [[Step 5 - Obstacle Features]] does (read the FeatureLogs + Logger, classify each obstacle
 cycle **Leading/Trailing** per terrain, plot every IMU / joint / ZHC signal by side and by role) —
 **plus** the camera foot-marker heights, in the same group viewers.
@@ -13,7 +13,7 @@ cycle **Leading/Trailing** per terrain, plot every IMU / joint / ZHC signal by s
 ## Inputs
 - `Data/Dot IMUs/Test N/` — `FeatureLog_IMU1/2_*.csv` + `Logger*.txt` (leading-leg lines).
 - `AllData_TestN.mat` ([[Step 3 - Dot vs Awinda Sync]]), `SegmentedParams_TestN.mat`
-  ([[Step 4 - Segmentation (ZVP)]]), `CameraSynced_TestN.mat` ([[Step 6 - Camera Sync and Viewers]]).
+  ([[Step 4 - Segmentation (ZVP)]]), `CameraSynced_TestN.mat` ([[Step 5 - Camera Sync and Viewers]]).
 
 ## What it does
 - Reuses step 5's machinery (window→stride matching, leading/trailing labelling, interactive
@@ -26,10 +26,10 @@ cycle **Leading/Trailing** per terrain, plot every IMU / joint / ZHC signal by s
   tagged side/terrain/role). A **different** filename so it doesn't clobber step 5's
   `SegTrajectories_SideBased`.
 
-> [!important] This is what step 9 slices
-> `S5.camera.terrainL/roleL/terrainR/roleR` (per-cycle labels) are how [[Step 9 - Crossing Parameters]]
+> [!important] This is what step 8 slices
+> `S5.camera.terrainL/roleL/terrainR/roleR` (per-cycle labels) are how [[Step 8 - Crossing Parameters]]
 > knows which cycles are crossings and each leg's role.
 
 test22: the camera reproduces the classic pattern — leading toe clears higher/earlier than trailing.
 
-Prev: [[Step 7 - Camera Stride Segmentation]] · next: [[Step 9 - Crossing Parameters]]
+Prev: [[Step 6 - Camera Stride Segmentation]] · next: [[Step 8 - Crossing Parameters]]

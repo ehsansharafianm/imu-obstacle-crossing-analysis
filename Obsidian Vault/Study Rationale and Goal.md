@@ -61,4 +61,4 @@ The results bridge laboratory joint-kinematics research and wearable obstacle-cr
 > Use a consistent landmark per distance — e.g. **toe** for the pre-obstacle (lift-off) distance and **heel** for the post-obstacle (landing) distance. Fix this in the experimental protocol.
 
 ---
-How this maps onto the pipeline: leading/trailing per crossing and obstacle type come from the **camera** ([[Step 8 - Leading-Trailing Features (Camera)]], fed by the CV-side step-3 crossings); segment/joint angles and foot trajectories come from the IMU/OpenSim steps ([[Step 4 - Segmentation (ZVP)]]); foot-placement distances relative to the obstacle come from [[Step 9 - Crossing Parameters]]. See [[Project Overview]] and [[Pipeline Workflow]].
+How this maps onto the pipeline: leading/trailing per crossing and obstacle type come from the **camera** ([[Step 7 - Leading-Trailing Features (Camera)]], fed by the CV-side step-3 crossings); segment/joint angles and foot trajectories come from the IMU/OpenSim steps ([[Step 4 - Segmentation (ZVP)]]); foot-placement distances relative to the obstacle come from [[Step 8 - Crossing Parameters]]. See [[Project Overview]] and [[Pipeline Workflow]].

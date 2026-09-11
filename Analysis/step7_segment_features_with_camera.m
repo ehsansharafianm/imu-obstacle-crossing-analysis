@@ -4,15 +4,15 @@ close all
 addpath(fileparts(mfilename('fullpath')));
 
 %% ========================================================================
-%% STEP 8 - Leading/Trailing features for ALL signals + camera trajectories
+%% STEP 7 - Leading/Trailing features for ALL signals + camera trajectories
 %% ========================================================================
 % Classifies every gait cycle by obstacle type and by Leading/Trailing limb, then
 % plots and exports all signals (IMU angles, joint angles, ZHC foot height, and the
-% step-6 CAMERA foot-marker heights) grouped by Left/Right and by Leading/Trailing.
+% step-5 CAMERA foot-marker heights) grouped by Left/Right and by Leading/Trailing.
 %
 % LABEL SOURCE (new): the obstacle crossings and the leading/trailing leg come from
 % the CAMERA - step 3's testN_crossings.xlsx (obstacle_code + lead/trail leg + y=0
-% crossing times). Each crossing time is put on the IMU clock (t_cam + step-6 shift)
+% crossing times). Each crossing time is put on the IMU clock (t_cam + step-5 shift)
 % and matched to the ZVP stride it lands in: the leading foot's stride (containing
 % lead_cross_s) is tagged Leading, the trailing foot's stride (trail_cross_s) Trailing,
 % both with the obstacle type W{width}_H{height}. The app FeatureLog is used ONLY for
@@ -46,11 +46,11 @@ Sd = load(allFile,'Data'); Data = Sd.Data;
 Sg = load(segFile,'Seg');  Seg  = Sg.Seg;
 camFile = fullfile(base, sprintf('CameraSynced_Test%d.mat', tn));
 hasCam  = isfile(camFile);
-if ~hasCam, error('No %s - run step 6 first (the camera crossings need the sync).', camFile); end
+if ~hasCam, error('No %s - run step 5 first (the camera crossings need the sync).', camFile); end
 Sc = load(camFile,'Cam'); Cam = Sc.Cam;
 shift = 0;
 if isfield(Cam,'sync') && isfield(Cam.sync,'shift_s') && ~isempty(Cam.sync.shift_s), shift = Cam.sync.shift_s; end
-fprintf('  Camera->IMU sync shift = %+.3f s (from step 6).\n', shift);
+fprintf('  Camera->IMU sync shift = %+.3f s (from step 5).\n', shift);
 zvpL = Seg.zvpL;  zvpR = Seg.zvpR;  tt = Data.time;
 iLDot = find(strcmp({Data.imu.label},'Left Foot (Dot)'),1);
 iRDot = find(strcmp({Data.imu.label},'Right Foot (Dot)'),1);
@@ -79,7 +79,7 @@ end
 %% ===================== OBSTACLE CROSSINGS + LEADING/TRAILING from the CAMERA =====================
 % Read step-3's labelled crossings, map each crossing's y=0 time to the IMU clock
 % (t_cam + shift), find the stride it lands in on the leading and trailing feet,
-% and synthesise obstacle windows + a leading-leg log entry - so the rest of step 8
+% and synthesise obstacle windows + a leading-leg log entry - so the rest of step 7
 % (viewers, export) runs exactly as before, now driven by the camera.
 crossXls = fullfile(base, sprintf('test%d_crossings.xlsx', tn));
 if ~isfile(crossXls), error('No camera crossings file: %s (run step 3 for this test).', crossXls); end
@@ -175,7 +175,7 @@ if hasZHC
     HdR = heightPerDistance(Seg.zhc.R.posGait, nWinR, distAxis);
 end
 
-% ---- Camera foot-marker height (Z) segmented per cycle (step 6 data) ----
+% ---- Camera foot-marker height (Z) segmented per cycle (step 5 data) ----
 % Same ZVP windows as everything else: Left markers on zvpL, Right on zvpR.
 % Cg* = normalized (0-100%, NSEG rows), Ct* = time-domain (padded to mlen rows).
 CgLtoe=[];CgLheel=[];CgRtoe=[];CgRheel=[]; CtLtoe=[];CtLheel=[];CtRtoe=[];CtRheel=[];
@@ -303,13 +303,13 @@ while true
     end
     defLR = {'IMU: Left Foot (Dot) X','IMU: Right Foot (Dot) X'};
     defLT = {'IMU: Foot (Dot) X'};
-    fig2 = buildGroupViewer(sprintf('Step 8 - Left vs Right (gait %%) | Test %d', tn), sigsLR, defLR, ...
+    fig2 = buildGroupViewer(sprintf('Step 7 - Left vs Right (gait %%) | Test %d', tn), sigsLR, defLR, ...
                             FONT_NAME, base, tn, terrains, TERRAIN_ORDER, {'L','R'}, 'LR', false, false, 'terrain', 'Gait cycle (%)', 100);
-    fig3 = buildGroupViewer(sprintf('Step 8 - Leading vs Trailing (gait %%) | Test %d', tn), sigsLT, defLT, ...
+    fig3 = buildGroupViewer(sprintf('Step 7 - Leading vs Trailing (gait %%) | Test %d', tn), sigsLT, defLT, ...
                             FONT_NAME, base, tn, obsTerr, TERRAIN_ORDER, {'Leading','Trailing','Unknown'}, 'LeadTrail', true, true, 'group', 'Gait cycle (%)', 100);
-    fig4 = buildGroupViewer(sprintf('Step 8 - Left vs Right (time) | Test %d', tn), sigsLRt, defLR, ...
+    fig4 = buildGroupViewer(sprintf('Step 7 - Left vs Right (time) | Test %d', tn), sigsLRt, defLR, ...
                             FONT_NAME, base, tn, terrains, TERRAIN_ORDER, {'L','R'}, 'LR_time', false, false, 'terrain', 'Time (s)', tvec(end));
-    fig5 = buildGroupViewer(sprintf('Step 8 - Leading vs Trailing (time) | Test %d', tn), sigsLTt, defLT, ...
+    fig5 = buildGroupViewer(sprintf('Step 7 - Leading vs Trailing (time) | Test %d', tn), sigsLTt, defLT, ...
                             FONT_NAME, base, tn, obsTerr, TERRAIN_ORDER, {'Leading','Trailing','Unknown'}, 'LeadTrail_time', true, true, 'group', 'Time (s)', tvec(end));
 
     % --- Figures 6-9: ZHC height-trajectory viewers (same template as 2-5) ---
@@ -327,13 +327,13 @@ while true
         trLTt = struct('x',xTz,'Y',[HtL HtR],'label','ZHC Height: Foot', ...
                        'grp',{[roleL roleR]},'terr',{[terrL terrR]},'cyc',[1:size(HtL,2), 1:size(HtR,2)]);
         defTr  = {'ZHC Height: Left Foot','ZHC Height: Right Foot'};  defTr1 = {'ZHC Height: Foot'};
-        fig6 = buildGroupViewer(sprintf('Step 8 - Trajectory Left vs Right (gait %%) | Test %d', tn), trLR, defTr, ...
+        fig6 = buildGroupViewer(sprintf('Step 7 - Trajectory Left vs Right (gait %%) | Test %d', tn), trLR, defTr, ...
                                 FONT_NAME, base, tn, terrains, TERRAIN_ORDER, {'L','R'}, 'TrajLR', false, false, 'terrain', 'Gait cycle (%)', 100, 'Height (m)', true);
-        fig7 = buildGroupViewer(sprintf('Step 8 - Trajectory Leading vs Trailing (gait %%) | Test %d', tn), trLT, defTr1, ...
+        fig7 = buildGroupViewer(sprintf('Step 7 - Trajectory Leading vs Trailing (gait %%) | Test %d', tn), trLT, defTr1, ...
                                 FONT_NAME, base, tn, obsTerr, TERRAIN_ORDER, {'Leading','Trailing','Unknown'}, 'TrajLeadTrail', true, true, 'group', 'Gait cycle (%)', 100, 'Height (m)', true);
-        fig8 = buildGroupViewer(sprintf('Step 8 - Trajectory Left vs Right (time) | Test %d', tn), trLRt, defTr, ...
+        fig8 = buildGroupViewer(sprintf('Step 7 - Trajectory Left vs Right (time) | Test %d', tn), trLRt, defTr, ...
                                 FONT_NAME, base, tn, terrains, TERRAIN_ORDER, {'L','R'}, 'TrajLR_time', false, false, 'terrain', 'Time (s)', xTz(end), 'Height (m)', true);
-        fig9 = buildGroupViewer(sprintf('Step 8 - Trajectory Leading vs Trailing (time) | Test %d', tn), trLTt, defTr1, ...
+        fig9 = buildGroupViewer(sprintf('Step 7 - Trajectory Leading vs Trailing (time) | Test %d', tn), trLTt, defTr1, ...
                                 FONT_NAME, base, tn, obsTerr, TERRAIN_ORDER, {'Leading','Trailing','Unknown'}, 'TrajLeadTrail_time', true, true, 'group', 'Time (s)', xTz(end), 'Height (m)', true);
         % Height vs horizontal distance (foot-clearance-over-distance).
         hdLR  = struct('x',{},'Y',{},'label',{},'grp',{},'terr',{},'cyc',{});
@@ -341,9 +341,9 @@ while true
         hdLR(2).x=distAxis; hdLR(2).Y=HdR; hdLR(2).label='ZHC Height: Right Foot'; hdLR(2).grp=repmat({'R'},1,size(HdR,2)); hdLR(2).terr=terrR; hdLR(2).cyc=1:size(HdR,2);
         hdLT  = struct('x',distAxis,'Y',[HdL HdR],'label','ZHC Height: Foot', ...
                        'grp',{[roleL roleR]},'terr',{[terrL terrR]},'cyc',[1:size(HdL,2), 1:size(HdR,2)]);
-        fig10 = buildGroupViewer(sprintf('Step 8 - Height vs distance Left vs Right | Test %d', tn), hdLR, defTr, ...
+        fig10 = buildGroupViewer(sprintf('Step 7 - Height vs distance Left vs Right | Test %d', tn), hdLR, defTr, ...
                                 FONT_NAME, base, tn, terrains, TERRAIN_ORDER, {'L','R'}, 'TrajLR_dist', false, false, 'terrain', 'Horizontal distance (m)', distAxis(end), 'Height (m)', true);
-        fig11 = buildGroupViewer(sprintf('Step 8 - Height vs distance Leading vs Trailing | Test %d', tn), hdLT, defTr1, ...
+        fig11 = buildGroupViewer(sprintf('Step 7 - Height vs distance Leading vs Trailing | Test %d', tn), hdLT, defTr1, ...
                                 FONT_NAME, base, tn, obsTerr, TERRAIN_ORDER, {'Leading','Trailing','Unknown'}, 'TrajLeadTrail_dist', true, true, 'group', 'Horizontal distance (m)', distAxis(end), 'Height (m)', true);
         trajFigs = [fig6 fig7 fig8 fig9 fig10 fig11];
     end
@@ -366,13 +366,13 @@ while true
         camLTt  = struct('x',tvec,'Y',{[CtLtoe CtRtoe]}, 'label','Cam: toe', 'grp',{[roleL roleR]},'terr',{[terrL terrR]},'cyc',[1:size(CtLtoe,2),1:size(CtRtoe,2)]);
         camLTt(2)= struct('x',tvec,'Y',[CtLheel CtRheel],'label','Cam: heel','grp',{[roleL roleR]},'terr',{[terrL terrR]},'cyc',[1:size(CtLheel,2),1:size(CtRheel,2)]);
         defCamLR = {'Cam: L_toe','Cam: R_toe'};  defCamLT = {'Cam: toe'};
-        figC1 = buildGroupViewer(sprintf('Step 8 - Camera Left vs Right (gait %%) | Test %d', tn), camLR, defCamLR, ...
+        figC1 = buildGroupViewer(sprintf('Step 7 - Camera Left vs Right (gait %%) | Test %d', tn), camLR, defCamLR, ...
                                  FONT_NAME, base, tn, terrains, TERRAIN_ORDER, {'L','R'}, 'CamLR', false, false, 'terrain', 'Gait cycle (%)', 100, 'Height (mm)', true);
-        figC2 = buildGroupViewer(sprintf('Step 8 - Camera Leading vs Trailing (gait %%) | Test %d', tn), camLT, defCamLT, ...
+        figC2 = buildGroupViewer(sprintf('Step 7 - Camera Leading vs Trailing (gait %%) | Test %d', tn), camLT, defCamLT, ...
                                  FONT_NAME, base, tn, obsTerr, TERRAIN_ORDER, {'Leading','Trailing','Unknown'}, 'CamLeadTrail', true, true, 'group', 'Gait cycle (%)', 100, 'Height (mm)', true);
-        figC3 = buildGroupViewer(sprintf('Step 8 - Camera Left vs Right (time) | Test %d', tn), camLRt, defCamLR, ...
+        figC3 = buildGroupViewer(sprintf('Step 7 - Camera Left vs Right (time) | Test %d', tn), camLRt, defCamLR, ...
                                  FONT_NAME, base, tn, terrains, TERRAIN_ORDER, {'L','R'}, 'CamLR_time', false, false, 'terrain', 'Time (s)', tvec(end), 'Height (mm)', true);
-        figC4 = buildGroupViewer(sprintf('Step 8 - Camera Leading vs Trailing (time) | Test %d', tn), camLTt, defCamLT, ...
+        figC4 = buildGroupViewer(sprintf('Step 7 - Camera Leading vs Trailing (time) | Test %d', tn), camLTt, defCamLT, ...
                                  FONT_NAME, base, tn, obsTerr, TERRAIN_ORDER, {'Leading','Trailing','Unknown'}, 'CamLeadTrail_time', true, true, 'group', 'Time (s)', tvec(end), 'Height (mm)', true);
         camFigs = [figC1 figC2 figC3 figC4];
     end
@@ -471,7 +471,7 @@ if hasZHC
     S5.zhc.time = xTz;                                 % time axis (s)  for height_time
     S5.zhc.dist = distAxis;                            % distance axis (m) for height_dist
     % Combined, per-cycle-tagged table (Left then Right) - the one-stop input for
-    % step 6 statistics: every cycle labelled by side/terrain/role, with its height
+    % step 5 statistics: every cycle labelled by side/terrain/role, with its height
     % in all three domains (gait %, time, distance) as column-aligned matrices.
     S5.zhc.all.side    = [repmat({'L'},1,size(HgL,2)), repmat({'R'},1,size(HgR,2))];
     S5.zhc.all.terrain = [terrL terrR];

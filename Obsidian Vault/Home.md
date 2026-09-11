@@ -23,14 +23,14 @@ Open this folder as an Obsidian vault; every note links to the others.
 4. [[Step 4 - Segmentation (ZVP)]] — gait events (ZVP, toe-off, heel-strike) + stride segmentation + foot trajectory
 
 > [!warning] Step 5 removed
-> The old **Step 5 - Obstacle Features** relied on the app terrain labels + Dot "Logger" leading-leg log, which were unreliable. It is deleted. Obstacle type + leading/trailing now come from the **camera** (CV-side step 3 crossings), consumed by **Step 8**. Level-walk strides still come from the app FeatureLog.
+> The old **Step 5 - Obstacle Features** relied on the app terrain labels + Dot "Logger" leading-leg log, which were unreliable. It is deleted. Obstacle type + leading/trailing now come from the **camera** (CV-side step 3 crossings), consumed by **Step 7**. Level-walk strides still come from the app FeatureLog.
 
-## The camera pipeline (steps 6–9) ✅ integrated
+## The camera pipeline (steps 5–8) ✅ integrated
 > 🎉 See [[Camera Pipeline - Achievements]] for the full story.
-6. [[Step 6 - Camera Sync and Viewers]] — sync camera markers to the 60 Hz IMU grid + interactive viewers
-7. [[Step 7 - Camera Stride Segmentation]] — cut camera foot markers into strides on the IMU ZVPs
-8. [[Step 8 - Leading-Trailing Features (Camera)]] — **camera-driven** leading/trailing + obstacle-type classification of all signals
-9. [[Step 9 - Crossing Parameters]] — foot placement + height/min clearance per crossing
+5. [[Step 5 - Camera Sync and Viewers]] — sync camera markers to the 60 Hz IMU grid + interactive viewers
+6. [[Step 6 - Camera Stride Segmentation]] — cut camera foot markers into strides on the IMU ZVPs
+7. [[Step 7 - Leading-Trailing Features (Camera)]] — **camera-driven** leading/trailing + obstacle-type classification of all signals
+8. [[Step 8 - Crossing Parameters]] — foot placement + height/min clearance per crossing
 
 ## Add-on
 - [[Step X - Angular Momentum]] — whole-body + segmental angular momentum (`stepX_angular_momentum.m`)

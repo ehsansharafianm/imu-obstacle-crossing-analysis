@@ -1,11 +1,11 @@
 ---
 tags: [step, camera, sync, viewer]
-aliases: [step6, step6_camera_sync_and_view]
+aliases: [step5, step5_camera_sync_and_view]
 ---
 
-# Step 6 — Camera Sync + Viewers
+# Step 5 — Camera Sync + Viewers
 
-**File:** `Analysis/step6_camera_sync_and_view.m`
+**File:** `Analysis/step5_camera_sync_and_view.m`
 Syncs the camera marker trajectory to the IMU/joint 60 Hz grid, then opens three interactive
 viewers. (Combines the earlier sync step and the "view all synced signals" step.)
 
@@ -42,7 +42,7 @@ viewers. (Combines the earlier sync step and the "view all synced signals" step.
 - **`CameraSync_TestN.png`** — the sync-check figure.
 
 > [!note] Batch
-> Set `TN` before running to skip the prompt. Only step 6 reads `Data/Camera CV/`; steps 7–9 read the
-> `CameraSynced` file, so refining + re-running step 6 propagates everywhere.
+> Set `TN` before running to skip the prompt. Only step 5 reads `Data/Camera CV/`; steps 6–9 read the
+> `CameraSynced` file, so refining + re-running step 5 propagates everywhere.
 
-Next: [[Step 7 - Camera Stride Segmentation]] · related: [[Camera Pipeline - Achievements]] · [[Outputs and File Formats]]
+Next: [[Step 6 - Camera Stride Segmentation]] · related: [[Camera Pipeline - Achievements]] · [[Outputs and File Formats]]

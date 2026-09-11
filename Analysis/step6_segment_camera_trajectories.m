@@ -3,10 +3,10 @@ close all
 addpath(fileparts(mfilename('fullpath')));
 
 %% ========================================================================
-%% STEP 7 - Segment the camera marker trajectories into strides
+%% STEP 6 - Segment the camera marker trajectories into strides
 %% ========================================================================
 % Same stride segmentation as step 4, applied to the camera-reconstructed foot
-% markers (from step 6) instead of the IMU/joint signals. Uses the SAME ZVP
+% markers (from step 5) instead of the IMU/joint signals. Uses the SAME ZVP
 % (zero-velocity) stride boundaries step 4 detected and saved, so camera strides
 % line up with the IMU/joint strides. Only the four foot markers are segmented
 % (L/R toe & heel); obstacle markers are not.
@@ -16,7 +16,7 @@ addpath(fileparts(mfilename('fullpath')));
 % Seg.nseg points (0-100% gait cycle) and (b) kept raw in the time domain.
 %
 % Inputs (run first):
-%   CameraSynced_TestN.mat   (Cam)  - step 6   [camera markers on the 60 Hz grid]
+%   CameraSynced_TestN.mat   (Cam)  - step 5   [camera markers on the 60 Hz grid]
 %   SegmentedParams_TestN.mat (Seg) - step 4   [Seg.zvpL/zvpR, nseg, pct, timeAxis]
 % Output:
 %   CameraSegmented_TestN.mat (CamSeg) + optional PNGs (Save PNG buttons).
@@ -41,7 +41,7 @@ if ~isfolder(base)
 end
 camFile = fullfile(base, sprintf('CameraSynced_Test%d.mat', tn));
 segFile = fullfile(base, sprintf('SegmentedParams_Test%d.mat', tn));
-if ~isfile(camFile), error('Not found: %s  (run step 6 for Test %d first).', camFile, tn); end
+if ~isfile(camFile), error('Not found: %s  (run step 5 for Test %d first).', camFile, tn); end
 if ~isfile(segFile), error('Not found: %s  (run step 4 for Test %d first).', segFile, tn); end
 load(camFile, 'Cam');
 load(segFile, 'Seg');

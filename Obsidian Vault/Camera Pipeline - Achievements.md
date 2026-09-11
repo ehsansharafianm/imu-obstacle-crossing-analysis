@@ -27,14 +27,14 @@ minimum clearance shrinks as obstacles get taller. That agreement across systems
 1. **Refine (CV side)** — `matlab/refine_trajectory.m` in the CV repo cleans the raw reconstructed
    marker workbook → `testN_trajectory_refined.xlsx` (despike out-of-volume / non-negative height,
    short-gap fill, smoothing) and drops it straight into `Data/Camera CV/Test N/`. See [[Camera Tracking (WorldViz PPT)]].
-2. **[[Step 6 - Camera Sync and Viewers]]** — sync the camera to the 60 Hz IMU grid via the 3× left-leg
+2. **[[Step 5 - Camera Sync and Viewers]]** — sync the camera to the 60 Hz IMU grid via the 3× left-leg
    raise gesture (one shift; ~0 drift over the trial), then explore everything together (angles,
    trajectories vs time, 3D) with gait-event overlays.
-3. **[[Step 7 - Camera Stride Segmentation]]** — cut the camera foot markers into strides on the
+3. **[[Step 6 - Camera Stride Segmentation]]** — cut the camera foot markers into strides on the
    **same ZVP boundaries** as the IMU, and overlay the ZHC IMU foot height for a direct comparison.
-4. **[[Step 8 - Leading-Trailing Features (Camera)]]** — add the camera to step 5's leading/trailing
+4. **[[Step 7 - Leading-Trailing Features (Camera)]]** — add the camera to step 5's leading/trailing
    feature analysis, per terrain.
-5. **[[Step 9 - Crossing Parameters]]** — the payoff: placement + clearance parameters and figures.
+5. **[[Step 8 - Crossing Parameters]]** — the payoff: placement + clearance parameters and figures.
 
 ## Why it works
 - **One clock.** Everything lands on `Data.time` (60 Hz). The camera's clap-synced timestamps plus the
@@ -47,10 +47,10 @@ minimum clearance shrinks as obstacles get taller. That agreement across systems
 ## Obstacle model (test22 convention)
 Obstacle **centred at y = 0**, base on the floor (z = 0). Heights = **10/20/30 %** of leg length
 (`Height1/2/3`), depths = **5 cm / 15 cm** (`Depth1/2`) → the six objects. Leg length is entered at
-run time (step 9).
+run time (step 8).
 
 ## Status
-- Steps 6–9 written, run, and committed to the analysis repo; the CV refine tool committed to the CV repo.
+- Steps 5–9 written, run, and committed to the analysis repo; the CV refine tool committed to the CV repo.
 - Validated on **test22** (leg-length example 90 cm): 6 left + 6 right crossings, all 6 terrains
   labelled leading/trailing.
 - Bar-plot error bars are zero for now (one crossing per condition) — they populate with repeated trials.

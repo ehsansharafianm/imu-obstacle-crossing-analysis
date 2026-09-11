@@ -81,4 +81,4 @@ step2 & step3 (`CLEAN_JOINTS = {'ankle_angle_l'}`): detrend on (signal-honest), 
 clamp off (cosmetic).
 
 ## Related
-[[Session Changelog]] · [[Data and Sensors]] · [[Step 6 - Camera Sync and Viewers]] · [[Home]]
+[[Session Changelog]] · [[Data and Sensors]] · [[Step 5 - Camera Sync and Viewers]] · [[Home]]
