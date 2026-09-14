@@ -85,8 +85,8 @@ bodyOrder = {'Left Foot','Right Foot','Left Thigh','Right Thigh', ...
 systems(1).name='Awinda'; systems(1).folder='Awinda IMUs'; systems(1).rate=RATE_AWINDA; systems(1).ext='txt'; systems(1).euler='ZXY';
 systems(1).defs = { '00B4AB26','Sternum'; '00B4AB22','Pelvis'; ...
                     '00B4AB23','Left Foot'; '00B4AB29','Right Foot'; ...
-                    '00B4AB2D','Left Thigh'; '00B4AB2B','Right Thigh'; ...
-                    '00B4AB25','Left Shank'; '00B4AB27','Right Shank'; ...
+                    '00B4AB2D','Left Thigh'; {'00B4AB24','00B4AB2B'},'Right Thigh'; ...
+                    '00B4AB25','Left Shank'; {'00B4AB30','00B4AB27'},'Right Shank'; ...
                     '00B4AB2E','Left Upper Arm'; '00B4AB31','Right Upper Arm'; ...
                     '00B4AB28','Left Forearm';   '00B4AB2F','Right Forearm' };
 
@@ -127,10 +127,15 @@ for b = 1:numel(bodyOrder)
         if ~isfolder(dataDir), continue; end
         row = find(strcmp(S0.defs(:,2), body), 1);
         if isempty(row), continue; end
-        key = S0.defs{row,1};
-        if strcmp(S0.ext,'csv'), pat = [key '_*.csv']; else, pat = ['*' key '*.txt']; end
-        fp = findFile(dataDir, pat);
-        if isempty(fp), warning('%s %s: file not found (%s).', S0.name, body, pat); continue; end
+        keys = S0.defs{row,1};
+        if ~iscell(keys), keys = {keys}; end   % allow multiple serials (new first, old fallback)
+        fp = ''; pat = '';
+        for ki = 1:numel(keys)
+            if strcmp(S0.ext,'csv'), pat = [keys{ki} '_*.csv']; else, pat = ['*' keys{ki} '*.txt']; end
+            fp = findFile(dataDir, pat);
+            if ~isempty(fp), break; end
+        end
+        if isempty(fp), warning('%s %s: file not found (tried %s).', S0.name, body, strjoin(keys, ', ')); continue; end
         [cols, M] = readIMUFile(fp);
         pkt = M(:, find(strcmpi(cols,'PacketCounter'),1));
         if strcmp(S0.name,'Dot')

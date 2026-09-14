@@ -117,22 +117,38 @@ end
 trial = tok{1};
 fprintf('Detected trial prefix: %s\n', trial);
 
+% Fallback serials per body: the primary id (in myIMUMappings.xml) is the
+% CURRENT/preferred sensor; if its file isn't in the recording, these older
+% serials are tried in order. Lets one XML serve trials recorded with either
+% the new or the old right-leg sensors. Add pairs here if you swap more.
+altIds = struct();
+altIds.femur_r_imu = {'_00B4AB2B'};   % right thigh: new _00B4AB24, old _00B4AB2B
+altIds.tibia_r_imu = {'_00B4AB27'};   % right shank: new _00B4AB30, old _00B4AB27
+
 % Read each sensor's quaternion columns.
 nS        = numel(sensorMap);
 bodyNames = cell(1, nS);
 quatCells = cell(1, nS);          % each entry: N x 4  [q0 q1 q2 q3]
 nF        = inf;
 for s = 1:nS
-    fp = findSensorFile(dataDir, trial, sensorMap(s).id);
+    body = sensorMap(s).body;
+    % Candidate ids: preferred (XML) first, then any fallbacks for this body.
+    cands = [{sensorMap(s).id}, getAlt(altIds, body)];
+    fp = ''; usedId = '';
+    for c = 1:numel(cands)
+        fp = findSensorFile(dataDir, trial, cands{c});
+        if ~isempty(fp), usedId = cands{c}; break; end
+    end
     if isempty(fp)
-        error('No file for sensor %s (body %s) in %s', ...
-              sensorMap(s).id, sensorMap(s).body, dataDir);
+        error('No file for body %s (tried %s) in %s', ...
+              body, strjoin(cands, ', '), dataDir);
     end
     q = readSensorQuat(fp);
-    bodyNames{s} = sensorMap(s).body;
+    bodyNames{s} = body;
     quatCells{s} = q;
     nF = min(nF, size(q, 1));
-    fprintf('  %-12s <- %s  (%d frames)\n', sensorMap(s).body, sensorMap(s).id, size(q, 1));
+    fb = ''; if ~strcmpi(usedId, sensorMap(s).id), fb = '  [fallback]'; end
+    fprintf('  %-12s <- %s  (%d frames)%s\n', body, usedId, size(q, 1), fb);
 end
 
 % Trim all sensors to the common frame count and build the time vector.
@@ -447,6 +463,11 @@ function map = readIMUMappings(xmlFile)
         map(k).id   = strtrim(tok{k}{1});
         map(k).body = strtrim(tok{k}{2});
     end
+end
+
+function a = getAlt(altIds, body)
+% Fallback serial list for a body, or {} if none defined.
+    if isfield(altIds, body), a = altIds.(body); else, a = {}; end
 end
 
 function fp = findSensorFile(dataDir, trial, sensorId)

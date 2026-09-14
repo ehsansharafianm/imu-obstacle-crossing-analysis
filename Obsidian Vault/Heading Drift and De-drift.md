@@ -92,6 +92,66 @@ clamp off (cosmetic).
 - **step7 metrics now all-IMU (ZHC); camera = validation:** height = peak Z, stride = net-XY per ZVP
   cycle; camera peak-Z kept as `heightCam`. Dot-app numbers retired.
 
+## Update (2026-09-14) — controlled turn/sensor experiment: it is capture quality, not hardware
+Ran a designed experiment to settle **sharp turns vs. a bad sensor** as the drift cause, then a
+protocol fix. Result: **the IMUs are healthy; the drift is capture-quality / environmental** (magnetometer
+disturbance at sharp turns, plus per-recording start-up initialisation). See [[Lab Checklist - IMU Drift]].
+
+### The trials
+- **Old right-leg sensors** (femur_r `00B4AB2B`, tibia_r `00B4AB27`): **Test 25** = 4 min right-turn loop,
+  **Test 26** = left-turn loop, **Test 27** = straight + smooth turns.
+- **New right-leg sensors** (femur_r `00B4AB24`, tibia_r `00B4AB30`) **+ still-start at recording start:**
+  **Test 28** = straight, **Test 29** = right-turn (same lab spot as 25), **Test 30** = real experiment,
+  sharp right turns.
+
+### What the data showed (IK mean tracking error, deg)
+- **25/26/27 (old):** references drift on the turn loops — pelvis/torso **23.6/22.2** on T25, but **0.1/0.0**
+  on the straight T27. The worst-drifting *side moves between trials* (right leg on 25/27, left leg/arm on
+  26). "Drift that moves" ⇒ **environmental, not a broken unit**.
+- **28/29/30 (new + still-start):** pelvis/torso ≈ **0° even through sharp right turns** (T29 pelvis 0.1 vs
+  T25 23.6, same spot). Legs clean on 28/29; on the real-experiment **Test 30** the references and the whole
+  **right** side are clean (pelvis 0.1, torso 1.1, right leg 8–12°, right arm 9°) while the drift has moved to
+  the **left** limbs (left leg 18–36°, left arm 41–42°).
+
+### Bench tests (rigid wood board — OpenSim-independent)
+Two/three sensors bolted to one board must hold a **constant relative orientation**; any wander = drift.
+- **2-sensor (`2B`+`2D`):** relative rotation wandered **~25°** (relative heading ~60°) over 7 min — so *one*
+  unit drifts, but this pair can't say which.
+- **3-sensor (`2B`+`23`+`25`):** `2B` agreed with **both** others to within **3.6–7°** ⇒ **`2B` is CLEAN**.
+  No single unit is reliably bad; there is a general **~5–25° heading-drift floor** on the bench = the lab's
+  magnetic environment. Method now lives in `diag_drift_check.m`.
+
+### The decisive proof — same sensor, opposite result
+The **pelvis** (`00B4AB22`, never swapped) went **23.6° → 0.1°** between T25 and T29 — both sharp right turns,
+same location, T29 with *more* turning (28.6 vs 25.6 °/s). Raw pelvis-vs-torso relative drift **165° → 2.8°**.
+Same units, so **only the capture session changed**. The lever is the **stand-still ~5–10 s at recording
+start** (gyro-bias + heading init), plus gentle turns. The right-leg *sensor swap coincided with the good
+session but is not what fixed it* (the unswapped trunk sensors improved just as much; the old units are healthy).
+
+### What we changed / built
+- **Right-leg sensors swapped** for convenience (kept the new set). Pipeline made **serial-flexible** — prefers
+  the new serial, auto-falls back to the old: step1 `altIds`, step3 dual-serial `defs`, `diag_drift_check.m`.
+  One config runs old (≤27) and new (28+) trials with no edits.
+- **`diag_drift_check.m`** created (the checklist referenced it; now real): per-sensor tilt/heading drift +
+  IK tracking error, side-by-side across trials.
+- **Protocol locked:** still-start + straight walkway + gentle turns (the Test 28/29/30 recipe).
+
+### Reading Test 30 (usable now)
+Trust absolute angles on **pelvis, torso, right leg, right arm**. For the **left** limbs on sharp-turn trials,
+use the **drift-immune** measures (**joint ROM = max−min per stride**, **camera clearance**) and analyse
+**straight strides, not the turns** (the 100–120° max spikes are all in the turns).
+
+## Future step — camera-aided heading correction (if results are not good enough)
+The residual left-side drift on sharp-turn trials is **absolute-heading** error, which the IMU **cannot** recover
+alone (mag corrupted; heading unobservable). The **synced camera is a drift-free absolute reference** — the one
+thing that *can* fix absolute heading. **Not built yet** (camera is currently used for clearance/labelling/
+validation, not to correct IMU heading). **Plan:** if the current tools (de-drift on clean-reference trials +
+ZVP detrend + straight-stride ROM + per-joint cleanup) leave the absolute limb angles — especially the **left**
+side on sharp turns — not good enough, build a **per-stride camera heading lock**: use the camera trajectory to
+pin each limb/segment's heading at stance, removing the absolute drift the anatomical (pelvis/torso) lock can't.
+This is the highest-ceiling option and would make even sharp-turn absolute angles reportable. Everything else we
+need we **already have** in the pipeline. See [[Step 5 - Camera Sync and Viewers]], [[Camera Sync Strategy]].
+
 ## Limitations (for the paper)
 - **Absolute joint angles are drift-limited** on the badly-drifting trials. Heading is *unobservable*
   from the IMU alone without an absolute reference (magnetometer corrupted; camera not used inside the

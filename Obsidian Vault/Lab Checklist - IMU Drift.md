@@ -45,9 +45,22 @@ Run a **3-min pilot** (walk the loop with the turns), then in `step1` read the
 - [ ] Or run `diag_drift_check.m` — the `drift(deg)` column single-digit, midline flat.
 - [ ] `pelvis`/`torso` near 0° (they're the heading-lock reference — a drifting pelvis poisons everything, cf. Test 102).
 
+## Resolution (2026-09-14) — bench test done: sensors are clean, it was capture quality
+The §0 bench test and a designed turn/sensor experiment were run (full write-up in
+[[Heading Drift and De-drift]]). Outcome:
+- **Bench (rigid board):** suspect `00B4AB2B` agreed with two other sensors within **3.6–7°** → **clean**.
+  No unit is reliably bad; a **~5–25° environmental heading-drift floor** exists on the bench.
+- **Decisive:** the **pelvis** (`00B4AB22`, never swapped) went **23.6° → 0.1°** between two sharp-right-turn
+  trials at the **same spot** — so only the **recording session** changed, not the hardware.
+- **The lever that fixed it:** **stand still ~5–10 s at the start of every recording** (gyro-bias + heading
+  init), plus gentle turns. Tests 28/29/30 with this recipe hold pelvis/torso ≈ 0° through sharp turns.
+- **MFM** was attempted but not needed (units are healthy); right-leg sensors were swapped to a new set for
+  convenience (`2B→24`, `27→30`) with the pipeline made serial-flexible (old serials auto-fallback).
+- **Quick check tool:** `diag_drift_check.m` (per-sensor drift + IK error across trials).
+
 ## Bottom line
-The **bench test (§0)** is the decider. If the sensors are clean in open space
-(most likely), the real fixes are **environmental (§2) + capture settings (§3)** —
-not the sensors. If a unit drifts in open space, **MFM/RMA that unit (§1)**.
+The **bench test (§0)** is the decider — and it cleared the sensors. The real fixes are the
+**capture protocol (still-start, §3) + gentler turns (§2)**, not the hardware. Add the
+**still-start** to every recording and verify with `diag_drift_check.m` (pelvis/torso ≈ 0°, legs < ~10°).
 
 Related: [[Heading Drift and De-drift]] · [[Data and Sensors]] · [[Home]]

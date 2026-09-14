@@ -7,7 +7,26 @@ tags: [changelog, summary]
 Summary of the work done on the project (most impactful first). Dates are approximate to the
 2026 working sessions.
 
-## ★ Latest (2026-09-11) — joint drift cleanup, ZHC features, drift-immune metrics
+## ★ Latest (2026-09-14) — turn/sensor experiment: drift is capture quality, not the IMUs
+- **Controlled trials** ([[Heading Drift and De-drift]]): Tests **25/26/27** (old right-leg sensors; right-turn /
+  left-turn / straight) and **28/29/30** (new right-leg sensors `24`/`30` + **still-start**; straight / right-turn /
+  real experiment). Designed to separate **sharp turns vs. a bad sensor**.
+- **Verdict — the IMUs are healthy; the cause is capture quality / environment.** Decisive proof: the **pelvis**
+  (`00B4AB22`, never swapped) went **23.6° → 0.1°** between T25 and T29 — same sharp right turns, same spot, T29 with
+  *more* turning. Same sensor ⇒ only the **recording session** changed. The lever is the **stand-still ~5–10 s at
+  recording start** (gyro-bias + heading init) + gentle turns.
+- **Bench tests (rigid board):** the suspect `00B4AB2B` agreed with two other sensors within **3.6–7°** ⇒ **clean**.
+  No unit is reliably bad; there is a **~5–25° environmental heading-drift floor**. Sensor swap coincided with a good
+  session but was **not** the fix (unswapped trunk sensors improved just as much).
+- **Test 30 (real experiment, sharp right turns) is usable:** pelvis/torso ≈ 0°, right side clean; the drift moved to
+  the **left** limbs — report those via **ROM + camera clearance**, analyse **straight strides**.
+- **Built:** `diag_drift_check.m` (cross-trial per-sensor drift + IK error; the checklist referenced it, now real).
+  **Serial-flexible pipeline** — prefers the new right-leg serials, auto-falls back to the old: `step1` `altIds`,
+  `step3` dual-serial `defs`, `diag_drift_check.m`. One config runs old (≤27) and new (28+) trials.
+- **Future (only if needed):** **camera-aided heading correction** — use the drift-free synced camera to fix
+  *absolute* heading on sharp-turn trials. Not built; current tools are enough for the study's metrics.
+
+## (2026-09-11) — joint drift cleanup, ZHC features, drift-immune metrics
 - **ZVP baseline detrend for joints** ([[Step 4 - Segmentation (ZVP)]], optional, default ON): anchors
   each joint at its mid-stance (ZVP) baseline over the first strides and subtracts the slow wander,
   keeping the crossing peaks. Re-saves `AllData` so step5-8 inherit. Fixes baseline-shift drift (e.g.

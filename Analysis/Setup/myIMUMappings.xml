@@ -13,12 +13,12 @@
 				<!--The name of the PhysicalFrame representing a sensor (IMU) in Model. When loading sensor data, it will be used as a table column label.-->
 				<name_in_model>pelvis_imu</name_in_model>
 			</ExperimentalSensor>
-			<ExperimentalSensor name="_00B4AB27">
-				<!--The name of the PhysicalFrame representing a sensor (IMU) in Model. When loading sensor data, it will be used as a table column label.-->
+			<ExperimentalSensor name="_00B4AB30">
+				<!--Right shank (tibia_r). Swapped in from 00B4AB27 for Test 28+ (see vault: sensors are healthy; swap for the turn-drift experiment).-->
 				<name_in_model>tibia_r_imu</name_in_model>
 			</ExperimentalSensor>
-			<ExperimentalSensor name="_00B4AB2B">
-				<!--The name of the PhysicalFrame representing a sensor (IMU) in Model. When loading sensor data, it will be used as a table column label.-->
+			<ExperimentalSensor name="_00B4AB24">
+				<!--Right thigh (femur_r). Swapped in from 00B4AB2B for Test 28+.-->
 				<name_in_model>femur_r_imu</name_in_model>
 			</ExperimentalSensor>
 			<ExperimentalSensor name="_00B4AB25">
