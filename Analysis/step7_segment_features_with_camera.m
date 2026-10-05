@@ -107,8 +107,10 @@ end
 % (t_cam + shift), find the stride it lands in on the leading and trailing feet,
 % and synthesise obstacle windows + a leading-leg log entry - so the rest of step 7
 % (viewers, export) runs exactly as before, now driven by the camera.
-crossXls = fullfile(base, sprintf('test%d_crossings.xlsx', tn));
-if ~isfile(crossXls), error('No camera crossings file: %s (run step 3 for this test).', crossXls); end
+% crossings are camera INPUT data owned by the CV project; the IMU project keeps its own
+% copy under Data/Camera CV/Test N and pulls/updates it from the CV project as needed.
+crossXls = getCameraInput(tn, root, 'crossings');
+if isempty(crossXls), error('No camera crossings file available (run step 3 in the CV project for test %d).', tn); end
 C = readtable(crossXls,'Sheet','crossings','VariableNamingRule','preserve');
 logE = struct('terr',{},'lead',{},'s',{},'e',{});
 nUse=0; nUnlab=0; nNoCyc=0; nSpanBad=0;

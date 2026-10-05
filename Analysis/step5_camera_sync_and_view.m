@@ -79,7 +79,9 @@ load(matFile, 'Data');
 tg = Data.time(:);                 % uniform 60 Hz IMU/joint grid (t=0 at IMU sync)
 fs = Data.fs;
 
-% --- locate the camera trajectory workbook (prefer *_refined) ---
+% --- pull the refined trajectory from the CV project (fetch / compare / ask), then
+%     locate the camera trajectory workbook (prefer *_refined) ---
+getCameraInput(tn, root, 'refined');
 camDir = fullfile(root, 'Data','Camera CV', ['Test ' num2str(tn)]);
 if ~isfolder(camDir), camDir = fullfile('..','Data','Camera CV', ['Test ' num2str(tn)]); end
 if ~isfolder(camDir), error('Camera CV folder not found: %s', camDir); end
@@ -123,9 +125,11 @@ if isempty(iL), error('IMU trace "%s" not found in Data.imu.', IMU_SYNC_LABEL); 
 EX = Data.imu(iL).euler_ZXY_deg(:, IMU_SYNC_COL);
 EX = EX - mean(EX(1:min(20,end)), 'omitnan');
 
-% first obstacle-crossing time (from step 3) bounds the camera START-raise search
+% The IMU project pulls the crossings from the CV project as needed (fetch / compare /
+% ask). Resolve it ONCE here; the fig-2 overlay below reuses the same cxFile. It also
+% bounds the camera START-raise search by the first obstacle-crossing time.
 firstBeginCam = Inf;
-cxFile = fullfile(base, sprintf('test%d_crossings.xlsx', tn));
+cxFile = getCameraInput(tn, root, 'crossings');
 if isfile(cxFile)
     try
         Cx = readtable(cxFile,'Sheet','crossings','VariableNamingRule','preserve');
@@ -324,7 +328,7 @@ if ~isempty(iRd), ev.R.ang = Data.imu(iRd).euler_ZXY_deg(:,2); end
 % IMU clock (t_cam + dtShift) so each crossing CYCLE can be shaded on the vs-time viewer
 % - this shows exactly how the camera cycle periods sit on the IMU / trajectory signals.
 cross = [];
-cxFile = fullfile(base, sprintf('test%d_crossings.xlsx', tn));
+% cxFile was already resolved once above (getCameraInput) - reuse it, do not ask again.
 if isfile(cxFile)
     try
         Cx = readtable(cxFile,'Sheet','crossings','VariableNamingRule','preserve');
