@@ -28,6 +28,20 @@ one IMU, dropped by analogy with hip_rotation). Add `arm_rot` back in the `keepJ
 - **`AllData_TestN.mat`** — `Data` struct: `.time`, `.fs`, `.sync`, `.imu(k)` (Euler/packet/acc/gyro/quat), `.joints`.
 - Figures: sync check, IMU comparison, combined (joints + IMU).
 
+## Partial trials — Dot drives the grid, Awinda blanks (2026-10-12)
+The shared time grid used to be the **overlap** of all sensors (`min` of ends), so if the Awinda stopped
+early it truncated the whole dataset. Now the grid **starts** at the common start and **ends at the full
+Dot coverage**; Awinda Euler channels and the OpenSim joints past their end are **NaN (blank)** (via
+`interp1` with no `extrap`). So the Dot (and everything derived from it — ZVP, ZHC, stride, clearance) is
+processed to **full length**, and Awinda/joints simply stop where the link died. Prints a `NOTE:` when it
+extends. Identical to before when the two systems are the same length. Motivated by the **Test 103 Awinda
+mid-trial collapse** — see [[Heading Drift and De-drift]] and [[Lab Checklist - IMU Drift]].
+
+## Serial-flexible right-side sensors
+Right thigh/shank/foot each accept a **new** serial with the **old** as auto-fallback, so one config runs
+old and new trials: thigh `00B4AB24`/`2B`, shank `00B4AB30`/`27`, foot `00B4AB32`/`29`. Prints `[fallback]`
+when the old serial is used. Mirrored in `step1` (`altIds`) and `diag_drift_check.m`.
+
 ## ⚠️ Fixes / gotchas
 - **Awinda `PacketCounter` rollover** — 16-bit counter wraps at 65536. On Test 13 it started at
   57954, wrapped through 0, breaking the packet-derived time (empty resample grid). Fixed with

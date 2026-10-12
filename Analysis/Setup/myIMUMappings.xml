@@ -29,8 +29,8 @@
 				<!--The name of the PhysicalFrame representing a sensor (IMU) in Model. When loading sensor data, it will be used as a table column label.-->
 				<name_in_model>femur_l_imu</name_in_model>
 			</ExperimentalSensor>
-			<ExperimentalSensor name="_00B4AB29">
-				<!--The name of the PhysicalFrame representing a sensor (IMU) in Model. When loading sensor data, it will be used as a table column label.-->
+			<ExperimentalSensor name="_00B4AB32">
+				<!--Right foot (calcn_r). Swapped in from 00B4AB29 for the newer trials; step1 altIds falls back to 00B4AB29 for older ones.-->
 				<name_in_model>calcn_r_imu</name_in_model>
 			</ExperimentalSensor>
 			<ExperimentalSensor name="_00b4AB23">

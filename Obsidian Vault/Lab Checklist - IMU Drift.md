@@ -13,6 +13,19 @@ One page to diagnose and reduce the Awinda heading drift. Context in
 > mostly **environmental (magnetometer)**, not a broken sensor. Do the bench test
 > first; it tells you which problem you actually have.
 
+## ⚡ Mid-trial link collapse (Test 103) — a different failure from drift
+Separate from heading drift: on **Test 103** the whole Awinda network **died at ~548 s** of a ~685 s trial
+(all 12 sensors stopped at the *same* packet; the Dot + camera ran to the end). Diagnosis from the data:
+dropped packets stayed **~0 right up to the cutoff** (0.026 % over the trial, 1 packet in the final 10 s) —
+a **clean cliff, no ramp-up**. That rules out range-fade / RF congestion (those degrade gradually) and
+points to an **abrupt base-side event**: the Awinda **Station lost USB power / the link reset** (bump,
+port power-save, unpowered-hub brown-out), killing all children at once while MT Manager kept the file open.
+- [ ] **Plug the Station into a rear motherboard USB port** (not a front port / unpowered hub); strain-relieve the cable.
+- [ ] **Disable USB selective-suspend / power management** on that port.
+- [ ] **Watch the live sample counter through the whole trial** — if it freezes, the base dropped (not the subject).
+- Pipeline now **handles this**: the Dot is processed full-length and Awinda/joints go blank after the drop
+  (see [[Step 3 - Dot vs Awinda Sync]] / [[Heading Drift and De-drift]]); use Dot + camera for the tail.
+
 ## 0. Decisive bench test — sensor vs environment  ⭐ do this first
 - [ ] Strap `00B4AB2B`, `00B4AB22`, **+ one known-good sensor** to a **rigid non-magnetic board** (wood/plastic, no screws).
 - [ ] In MT Manager, record ~2 min in an **open area away from all metal**: 30 s still → slow rotations through all headings → 30 s still.

@@ -7,7 +7,26 @@ tags: [changelog, summary]
 Summary of the work done on the project (most impactful first). Dates are approximate to the
 2026 working sessions.
 
-## ★ Latest (2026-09-14) — turn/sensor experiment: drift is capture quality, not the IMUs
+## ★ Latest (2026-10-12) — Test 103 Awinda collapse: partial-trial handling + interactive ZVP editor
+- **Awinda mid-trial collapse diagnosed (Test 103).** The whole Awinda network died at **~548 s** of a
+  ~685 s trial (all 12 sensors stopped at the same packet; Dot ran ~702 s, camera ~685 s). Packet loss was
+  **~0 up to the cutoff** (clean cliff) → an **abrupt base/USB power event**, not range-fade or a bad sensor.
+  Captured in [[Lab Checklist - IMU Drift]] (prevention) and [[Heading Drift and De-drift]].
+- **Partial-trial handling** ([[Step 3 - Dot vs Awinda Sync]]): the shared grid now runs to the **full Dot
+  coverage** instead of the Dot∩Awinda overlap — the Dot (and ZVP/ZHC/stride/clearance from it) is processed
+  full-length and Awinda Euler + OpenSim joints go **NaN (blank)** after the link drops. step4 keeps every
+  stride **column** (blank tail strides stay aligned; `omitnan` reductions), and the ZVP detrend interpolates
+  from finite baselines only. Identical to before when both systems are full length.
+- **Interactive ZVP cleaning** ([[Step 4 - Segmentation (ZVP)]]): a menu — **[Enter]** = reuse the test's
+  saved edits (edit on first run), **1** = edit now, **2** = automatic. Edit shows a **per-leg figure**
+  (angle + norms, every ZVP numbered), **Left then Right**: remove by index, add by time; saved as **times**
+  to `ZVP_Edits_TestN.xlsx` and reused next run. The cleaned ZVPs feed the detrend, segmentation and all
+  downstream steps.
+- **Right foot serial-flexible** (`00B4AB32` new / `00B4AB29` old), matching the thigh/shank pattern across
+  `myIMUMappings.xml`, step1 `altIds`, step3 `defs`, `diag_drift_check.m`. Also fixed a step3 crash
+  (`key`→`keys`) from the earlier dual-serial change.
+
+## ★ (2026-09-14) — turn/sensor experiment: drift is capture quality, not the IMUs
 - **Controlled trials** ([[Heading Drift and De-drift]]): Tests **25/26/27** (old right-leg sensors; right-turn /
   left-turn / straight) and **28/29/30** (new right-leg sensors `24`/`30` + **still-start**; straight / right-turn /
   real experiment). Designed to separate **sharp turns vs. a bad sensor**.

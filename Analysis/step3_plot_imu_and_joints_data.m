@@ -84,7 +84,7 @@ bodyOrder = {'Left Foot','Right Foot','Left Thigh','Right Thigh', ...
 
 systems(1).name='Awinda'; systems(1).folder='Awinda IMUs'; systems(1).rate=RATE_AWINDA; systems(1).ext='txt'; systems(1).euler='ZXY';
 systems(1).defs = { '00B4AB26','Sternum'; '00B4AB22','Pelvis'; ...
-                    '00B4AB23','Left Foot'; '00B4AB29','Right Foot'; ...
+                    '00B4AB23','Left Foot'; {'00B4AB32','00B4AB29'},'Right Foot'; ...
                     '00B4AB2D','Left Thigh'; {'00B4AB24','00B4AB2B'},'Right Thigh'; ...
                     '00B4AB25','Left Shank'; {'00B4AB30','00B4AB27'},'Right Shank'; ...
                     '00B4AB2E','Left Upper Arm'; '00B4AB31','Right Upper Arm'; ...
@@ -129,11 +129,11 @@ for b = 1:numel(bodyOrder)
         if isempty(row), continue; end
         keys = S0.defs{row,1};
         if ~iscell(keys), keys = {keys}; end   % allow multiple serials (new first, old fallback)
-        fp = ''; pat = '';
+        fp = ''; pat = ''; usedKey = keys{1};
         for ki = 1:numel(keys)
             if strcmp(S0.ext,'csv'), pat = [keys{ki} '_*.csv']; else, pat = ['*' keys{ki} '*.txt']; end
             fp = findFile(dataDir, pat);
-            if ~isempty(fp), break; end
+            if ~isempty(fp), usedKey = keys{ki}; break; end
         end
         if isempty(fp), warning('%s %s: file not found (tried %s).', S0.name, body, strjoin(keys, ', ')); continue; end
         [cols, M] = readIMUFile(fp);
@@ -176,7 +176,8 @@ for b = 1:numel(bodyOrder)
         xCell{end+1}  = X;                                  %#ok<AGROW>
         qCell{end+1}  = Q;                                  %#ok<AGROW>
         xNamesCell{end+1} = xN;                             %#ok<AGROW>
-        fprintf('  %-22s <- %s  (%d frames)\n', labels{end}, key, size(M,1));
+        fb = ''; if numel(keys) > 1 && ~strcmpi(usedKey, keys{1}), fb = '  [fallback]'; end
+        fprintf('  %-22s <- %s  (%d frames)%s\n', labels{end}, usedKey, size(M,1), fb);
     end
 end
 nItem = numel(labels);
@@ -224,28 +225,45 @@ if SYNC_ENABLE
     preD_t=tCell{iLD}; preD_x=eCell{iLD}(:,COL_X);
 
     if ~isnan(tLA) && ~isnan(tLD)
-        % Align Awinda's left-foot peak to Dot's, then keep ONLY the span both
-        % systems cover (drop the early part of the longer Dot). Re-zero time
-        % so t = 0 at the start of that overlap (= when Awinda starts here).
+        % Align Awinda's left-foot peak to Dot's. Grid START = the span both
+        % systems cover (so t = 0 has every sensor live); re-zero time there.
+        % Grid END = the full DOT coverage, NOT the overlap. The Dot (and the
+        % camera) run longer than the Awinda whenever the Awinda wireless link
+        % drops mid-trial (e.g. Test 103: Awinda died ~548 s, Dot ran ~702 s).
+        % Extending the grid to the Dot end keeps the Dot processed to full
+        % length; the Awinda Euler channels and the OpenSim joints past their
+        % end become NaN (blank) via interp1's out-of-domain NaN, instead of
+        % truncating the whole dataset to where the Awinda stopped.
         shiftAw = tLD - tLA;                          % Awinda (& joints) shift
-        alStart = -inf; alEnd = inf;                  % overlap in the aligned frame
+        alStart = -inf; alEnd = inf; dotEnd = inf;    % aligned frame
         for i = 1:nItem
             ti = tCell{i}; if endsWith(labels{i},'(Awinda)'), ti = ti + shiftAw; end
             alStart = max(alStart, ti(1));
-            alEnd   = min(alEnd,   ti(end));
+            alEnd   = min(alEnd,   ti(end));          % overlap end (both systems)
+            if endsWith(labels{i},'(Dot)'), dotEnd = min(dotEnd, ti(end)); end
         end
-        tgAligned = (alStart : 1/TARGET_RATE : alEnd)';   % overlap grid (aligned frame)
+        gridEnd = alEnd;                              % default: legacy overlap end
+        if isfinite(dotEnd) && dotEnd > alEnd + 1/TARGET_RATE
+            gridEnd = dotEnd;                         % Awinda dropped early -> keep full Dot
+            fprintf(['  NOTE: Awinda ends %.1f s before the Dot. Extending the time grid to the\n' ...
+                     '        full Dot coverage (%.1f s); Awinda + joint channels are NaN (blank)\n' ...
+                     '        past %.1f s so the Dot is still processed to full length.\n'], ...
+                     dotEnd - alEnd, gridEnd, alEnd);
+        end
+        tgAligned = (alStart : 1/TARGET_RATE : gridEnd)'; % shared grid (aligned frame)
         tg = tgAligned - tgAligned(1);                    % re-zeroed: t=0 at window start
         for i = 1:nItem
             ti = tCell{i}; if endsWith(labels{i},'(Awinda)'), ti = ti + shiftAw; end
+            % No 'extrap': query points past a channel's own end return NaN, so
+            % an early-stopping Awinda leaves a blank tail while the Dot is full.
             eCell{i} = interp1(ti, eCell{i}, tgAligned, RESAMPLE_METHOD);
             xCell{i} = interp1(ti, xCell{i}, tgAligned, RESAMPLE_METHOD);
             qCell{i} = interp1(ti, qCell{i}, tgAligned, RESAMPLE_METHOD);
             qCell{i} = qCell{i} ./ vecnorm(qCell{i}, 2, 2);
             tCell{i} = tg;
         end
-        fprintf('  Dot=reference. Awinda shifted %+.3f s; cropped to overlap [%.3f, %.3f] s -> %d samples each (t=0 at start).\n', ...
-                shiftAw, alStart, alEnd, numel(tg));
+        fprintf('  Dot=reference. Awinda shifted %+.3f s; grid [%.3f, %.3f] s -> %d samples each (t=0 at start).\n', ...
+                shiftAw, alStart, gridEnd, numel(tg));
     else
         shiftAw = NaN; tgAligned = [];
         warning('Left-foot X peak not found in a system - sync skipped.');

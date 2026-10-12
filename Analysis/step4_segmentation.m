@@ -66,30 +66,100 @@ rollL = ROLL_SIGN_L * EL(:, colL);
 rollR = ROLL_SIGN_R * ER(:, colR);
 
 %% ===================== DETECT GAIT EVENTS + ZVP =====================
-[toeL, hsL, ~, zvpL, omL, accL] = detectGaitEvents(rollL, Data.imu(iL).gyro, Data.imu(iL).acc, ...
+[toeL, hsL, ~, zvpL0, omL, accL] = detectGaitEvents(rollL, Data.imu(iL).gyro, Data.imu(iL).acc, ...
                                    MIN_PROMINENCE, MIN_PEAK_DIST, OMEGA_THRESH, ACC_THRESH);
-[toeR, hsR, ~, zvpR, omR, accR] = detectGaitEvents(rollR, Data.imu(iR).gyro, Data.imu(iR).acc, ...
+[toeR, hsR, ~, zvpR0, omR, accR] = detectGaitEvents(rollR, Data.imu(iR).gyro, Data.imu(iR).acc, ...
                                    MIN_PROMINENCE, MIN_PEAK_DIST, OMEGA_THRESH, ACC_THRESH);
 
-% Drop leading ZVP(s) so segmentation starts at a consistent stride.
-if numel(zvpL) > ZVP_SKIP_START, zvpL = zvpL(ZVP_SKIP_START+1:end); end
-if numel(zvpR) > ZVP_SKIP_START, zvpR = zvpR(ZVP_SKIP_START+1:end); end
+%% ===================== ZVP CLEANING MODE =====================
+% [Enter] = default: reuse the saved edits for this test if they exist; the FIRST
+%           time (no saved file yet) it drops straight into editing (LEFT then
+%           RIGHT) and saves the result, so next time Enter just loads it.
+% e       = edit: show EVERY detected ZVP (indexed), then per leg (LEFT first,
+%           then RIGHT) remove by index and add by time; saved to Excel in
+%           Results/ so a later run can reuse it without redoing it.
+% a       = automatic: raw detection, drop the first ZVP_SKIP_START leading
+%           strides (the old no-clean behaviour); nothing saved.
+% Whatever is chosen becomes zvpL/zvpR and feeds the detrend, the segmentation
+% and every downstream step.
+sd = {FONT_NAME, TITLE_SIZE, LABEL_SIZE, TICK_SIZE, LINE_WIDTH};
+zvpCols = {COL_ANGLE, COL_TOE, COL_HS, COL_ZVP, COL_OMEGA, COL_ACC};
+zvpFile = fullfile(base, sprintf('ZVP_Edits_Test%d.xlsx', tn));
+
+% Load any saved edits ONCE up front so the menu can show their count/date and
+% [Enter] can reuse them without re-reading. haveSaved drives the default.
+haveSaved = isfile(zvpFile);  zvpL_s = []; zvpR_s = [];
+if haveSaved
+    [zvpL_s, zvpR_s] = loadZVPedits(zvpFile, t);
+    di = dir(zvpFile);
+end
+fprintf('\n============== ZVP cleaning  |  Test %d ==============\n', tn);
+if haveSaved
+    savedWhen = datetime(di.datenum, 'ConvertFrom', 'datenum', 'Format', 'yyyy-MM-dd HH:mm');
+    fprintf('  Saved edits : FOUND  (%d left, %d right ZVPs; saved %s)\n', ...
+            numel(zvpL_s), numel(zvpR_s), char(savedWhen));
+    fprintf('                %s\n', zvpFile);
+    fprintf('  ----------------------------------------------------------\n');
+    fprintf('   [Enter]  use the SAVED edits          (recommended)\n');
+    fprintf('    1       edit now  (revise / redo)    -> re-saves\n');
+    fprintf('    2       automatic detection          (no cleaning, not saved)\n');
+else
+    fprintf('  Saved edits : none yet for Test %d\n', tn);
+    fprintf('  ----------------------------------------------------------\n');
+    fprintf('   [Enter]  EDIT now  (first time)       -> will be saved for next time\n');
+    fprintf('    2       automatic detection          (no cleaning, not saved)\n');
+end
+fprintf('  ==========================================================\n');
+choice = strtrim(input('  Choice: ', 's'));
+
+% Map the menu choice to a mode. [Enter] = default (saved if present, else edit);
+% 1 = edit; 2 = automatic.
+if isempty(choice)
+    if haveSaved, zmode = 's'; else, zmode = 'e'; end
+elseif strcmp(choice, '1')
+    zmode = 'e';
+else                       % '2' (or anything else) = automatic
+    zmode = 'a';
+end
+
+if strcmp(zmode, 's')                       % ---- reuse saved edits ----
+    if haveSaved
+        zvpL = zvpL_s;  zvpR = zvpR_s;
+        fprintf('  -> Using SAVED edits: Left %d, Right %d ZVPs.\n', numel(zvpL), numel(zvpR));
+    else
+        warning('No saved edits at %s - switching to edit.', zvpFile);
+        zmode = 'e';                         % no file -> edit
+    end
+end
+
+if strcmp(zmode, 'e')                       % ---- interactive edit ----
+    startL = zvpL0; startR = zvpR0;          % edit starts from the raw detection ...
+    if haveSaved
+        pa = lower(strtrim(input('  Start from the saved edits instead of raw detection? (y/n) [y]: ', 's')));
+        if ~any(strcmp(pa, {'n','no'})), startL = zvpL_s; startR = zvpR_s; end
+    end
+    zvpL = editOneLeg('Left',  t, rollL, toeL, hsL, startL, omL, accL, OMEGA_THRESH, ACC_THRESH, axName{colL}, zvpCols, sd, Data.test);
+    zvpR = editOneLeg('Right', t, rollR, toeR, hsR, startR, omR, accR, OMEGA_THRESH, ACC_THRESH, axName{colR}, zvpCols, sd, Data.test);
+    saveZVPedits(zvpFile, t, zvpL, zvpR);
+    fprintf('  Saved edited ZVPs -> %s\n', zvpFile);
+else                                        % ---- automatic ('a' or anything else) ----
+    zvpL = zvpL0; zvpR = zvpR0;
+    if numel(zvpL) > ZVP_SKIP_START, zvpL = zvpL(ZVP_SKIP_START+1:end); end
+    if numel(zvpR) > ZVP_SKIP_START, zvpR = zvpR(ZVP_SKIP_START+1:end); end
+end
+zvpL = zvpL(:)';  zvpR = zvpR(:)';           % consistent row vectors
 
 fprintf('\n=== Gait events (Test %d) ===\n', Data.test);
 fprintf('  Left  (roll %s): %d toe-offs, %d ZVP\n', axName{colL}, numel(toeL), numel(zvpL));
 fprintf('  Right (roll %s): %d toe-offs, %d ZVP\n', axName{colR}, numel(toeR), numel(zvpR));
 
-%% ===================== FIGURE 1 - ZVP DETECTION =====================
-figure('Color','w','Name',sprintf('Step 4 - ZVP  |  Test %d', Data.test), 'Position',[80 80 1320 770]);
-sd = {FONT_NAME, TITLE_SIZE, LABEL_SIZE, TICK_SIZE, LINE_WIDTH};
-drawSide(subplot(2,2,1), t, rollL, toeL, hsL, zvpL, ...
-         sprintf('Left Foot (Dot) - roll (%s) & events', axName{colL}), COL_ANGLE, COL_TOE, COL_HS, COL_ZVP, sd);
-drawNorms(subplot(2,2,2), t, omL, accL, zvpL, OMEGA_THRESH, ACC_THRESH, ...
-          'Left Foot (Dot) - detection norms', COL_OMEGA, COL_ACC, COL_ZVP, sd);
-drawSide(subplot(2,2,3), t, rollR, toeR, hsR, zvpR, ...
-         sprintf('Right Foot (Dot) - roll (%s) & events', axName{colR}), COL_ANGLE, COL_TOE, COL_HS, COL_ZVP, sd);
-drawNorms(subplot(2,2,4), t, omR, accR, zvpR, OMEGA_THRESH, ACC_THRESH, ...
-          'Right Foot (Dot) - detection norms', COL_OMEGA, COL_ACC, COL_ZVP, sd);
+%% ===================== FIGURES - ZVP PER LEG =====================
+% Separate Left and Right figures (angle on top, detection norms below; every
+% ZVP numbered). In edit mode editOneLeg already left the final figures open.
+if ~strcmp(zmode, 'e')
+    drawLeg('Left',  t, rollL, toeL, hsL, zvpL, omL, accL, OMEGA_THRESH, ACC_THRESH, axName{colL}, zvpCols, sd, Data.test);
+    drawLeg('Right', t, rollR, toeR, hsR, zvpR, omR, accR, OMEGA_THRESH, ACC_THRESH, axName{colR}, zvpCols, sd, Data.test);
+end
 
 %% ===================== ZVP-ANCHORED JOINT DETREND (optional) =====================
 % Remove slow baseline drift from joints while preserving the crossing peaks.
@@ -300,8 +370,11 @@ function A = segmentAll(t, y, zvp, Nseg, method)
         tq = linspace(tt(1), tt(end), Nseg);
         A(:,s) = interp1(tt(ok), seg(ok), tq, method);
     end
-    A(:, all(isnan(A),1)) = [];
-    if isempty(A), A = nan(Nseg,1); end
+    % Keep EVERY stride column, including all-NaN ones. A blank stride means the
+    % Awinda link had already dropped by that stride (Dot ZVPs still define it).
+    % Preserving the columns keeps same-side signals column-aligned, so per-stride
+    % terrain/role labels line up across Dot, Awinda and joints. (Previously all-NaN
+    % columns were deleted, which is only safe when every signal is full length.)
 end
 
 function A = segmentAllTime(y, zvp, maxLen)
@@ -316,8 +389,8 @@ function A = segmentAllTime(y, zvp, maxLen)
         seg = y(a:b);  nkeep = min(numel(seg), maxLen);
         A(1:nkeep, s) = seg(1:nkeep);
     end
-    A(:, all(isnan(A),1)) = [];
-    if isempty(A), A = nan(maxLen,1); end
+    % Keep every stride column (blank tail strides stay NaN) so same-side signals
+    % remain column-aligned once the Awinda drops out mid-trial. See segmentAll.
 end
 
 function m = strideMax(zvp)   % longest stride length (samples, inclusive)
@@ -549,12 +622,19 @@ function [yc, info] = zvpDetrend(t, y, zvp, win, smoothStrides, refMode, refStri
         b(i) = median(y(a:c), 'omitnan');
     end
     Ds = movmedian(b, max(1, round(smoothStrides)), 'omitnan');   % robust slow drift
+    % Drop ZVPs whose baseline is NaN (their stride fell in the Awinda-dropout
+    % tail, where the joint is blank). Interpolating from only the finite ZVPs
+    % keeps the drift estimate clean right up to the dropout instead of a NaN
+    % from the boundary bleeding back into the last good strides.
+    good = ~isnan(Ds);
+    if nnz(good) < 2, return; end
+    zvpG = zvp(good); DsG = Ds(good);
     if strcmpi(refMode, 'overall')
-        ref = median(Ds, 'omitnan');
+        ref = median(DsG, 'omitnan');
     else
-        k = min(refStrides, numel(Ds)); ref = median(Ds(1:k), 'omitnan');
+        k = min(refStrides, numel(DsG)); ref = median(DsG(1:k), 'omitnan');
     end
-    D    = interp1(t(zvp), Ds, t, 'linear', 'extrap');   % drift at every sample
+    D    = interp1(t(zvpG), DsG, t, 'linear', 'extrap');  % drift at every sample
     corr = D - ref;                                      % 0 at the reference level
     yc   = y - corr;
     info.driftRemoved = corr(end) - corr(1);
@@ -589,6 +669,88 @@ function drawNorms(ax, t, omega, accN, zvp, omThr, accThr, ttl, cOm, cAcc, cZvp,
     xlabel(ax, 'Time (s)', 'FontSize', ls, 'FontWeight','bold', 'FontName', fn);
     ylabel(ax, 'Norm', 'FontSize', ls, 'FontWeight','bold', 'FontName', fn);
     legend(ax, {'|gyro|','|acc|','\omega thr','acc thr','ZVP'}, 'Location','best');
+end
+
+function fh = drawLeg(sideName, t, roll, toe, hs, zvp, om, acc, omThr, accThr, axLabel, cols, sd, testNum)
+% One figure for a leg: roll + events on top, detection norms below, each ZVP
+% labelled with its index (1..N). cols = {ANGLE, TOE, HS, ZVP, OMEGA, ACC}.
+    [cAng, cToe, cHs, cZvp, cOm, cAcc] = deal(cols{:});
+    fh = figure('Color','w','Name',sprintf('Step 4 - ZVP %s | Test %d', sideName, testNum), ...
+                'Position',[90 70 1120 820]);
+    axTop = subplot(2,1,1);
+    drawSide(axTop, t, roll, toe, hs, zvp, ...
+             sprintf('%s Foot (Dot) - roll (%s) & events  (ZVP # shown)', sideName, axLabel), ...
+             cAng, cToe, cHs, cZvp, sd);
+    labelZVP(axTop, t, roll, zvp);
+    axBot = subplot(2,1,2);
+    drawNorms(axBot, t, om, acc, zvp, omThr, accThr, ...
+              sprintf('%s Foot (Dot) - detection norms  (ZVP # shown)', sideName), cOm, cAcc, cZvp, sd);
+    labelZVP(axBot, t, om, zvp);
+end
+
+function labelZVP(ax, t, yseries, zvp)
+% Number each ZVP (1..N) just above its marker so the user can remove by index.
+    if isempty(zvp), return; end
+    yl = ylim(ax); off = 0.04*(yl(2)-yl(1));
+    for k = 1:numel(zvp)
+        if isempty(yseries), yy = yl(2)-off; else, yy = yseries(zvp(k)); end
+        text(ax, t(zvp(k)), yy+off, num2str(k), 'FontWeight','bold','FontSize',9, ...
+             'Color',[0 0 0], 'HorizontalAlignment','center', 'Clipping','on');
+    end
+end
+
+function zvp = editOneLeg(sideName, t, roll, toe, hs, zvp, om, acc, omThr, accThr, axLabel, cols, sd, testNum)
+% Interactive ZVP clean for ONE leg: show the indexed figure, REMOVE by index,
+% then ADD by time (snapped to the nearest sample), redraw, repeat until OK.
+% Returns the final ZVP sample indices (row). Leaves the final figure open.
+    zvp = sort(unique(zvp(:)'));
+    fh  = drawLeg(sideName, t, roll, toe, hs, zvp, om, acc, omThr, accThr, axLabel, cols, sd, testNum);
+    while true
+        fprintf('\n--- %s leg: %d ZVP points (indices 1..%d shown on the figure) ---\n', ...
+                sideName, numel(zvp), numel(zvp));
+        rem = input(sprintf('  %s: indices to REMOVE  (e.g. [1 5 9], [] = none): ', sideName));
+        if ~isempty(rem)
+            rem = round(rem(:)');  rem = rem(rem >= 1 & rem <= numel(zvp));
+            zvp(rem) = [];
+        end
+        add = input(sprintf('  %s: times (s) to ADD    (e.g. [12.3 40.1], [] = none): ', sideName));
+        if ~isempty(add)
+            zvp = [zvp, snapTimes(t, add)]; %#ok<AGROW>
+        end
+        zvp = sort(unique(zvp));
+        if ~isempty(fh) && isvalid(fh), close(fh); end
+        fh = drawLeg(sideName, t, roll, toe, hs, zvp, om, acc, omThr, accThr, axLabel, cols, sd, testNum);
+        done = strtrim(input(sprintf('  %s: done? (y = keep, n = edit again) [y]: ', sideName), 's'));
+        if ~any(strcmpi(done, {'n','no'})), break; end
+    end
+end
+
+function idx = snapTimes(t, times)
+% Nearest-sample index in t for each requested time (s). Unique, sorted.
+    idx = zeros(1, numel(times));
+    for k = 1:numel(times), [~, idx(k)] = min(abs(t(:) - times(k))); end
+    idx = unique(idx);
+end
+
+function saveZVPedits(xlsFile, t, zvpL, zvpR)
+% Persist the edited ZVPs as TIMES (s) so they survive a step-3 re-run (the grid
+% can shift). One sheet, NaN-padded Left/Right columns.
+    tl = t(zvpL(:)); tr = t(zvpR(:));
+    n  = max(numel(tl), numel(tr));
+    Lt = nan(n,1); Rt = nan(n,1);
+    Lt(1:numel(tl)) = tl(:);  Rt(1:numel(tr)) = tr(:);
+    T  = table((1:n)', Lt, Rt, 'VariableNames', {'Index','Left_Time_s','Right_Time_s'});
+    d  = fileparts(xlsFile);  if ~isempty(d) && ~isfolder(d), mkdir(d); end
+    if isfile(xlsFile), delete(xlsFile); end
+    writetable(T, xlsFile, 'Sheet', 'ZVP');
+end
+
+function [zvpL, zvpR] = loadZVPedits(xlsFile, t)
+% Read saved ZVP TIMES and snap each to the nearest sample in the current grid.
+    T = readtable(xlsFile, 'Sheet', 'ZVP');
+    zvpL = snapTimes(t, T.Left_Time_s(~isnan(T.Left_Time_s)));
+    zvpR = snapTimes(t, T.Right_Time_s(~isnan(T.Right_Time_s)));
+    zvpL = sort(unique(zvpL));  zvpR = sort(unique(zvpR));
 end
 
 function buildViewer(titleStr, T, Y, L, defOn, fontName, figDir, tn, xlab, xmax, pngTag)

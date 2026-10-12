@@ -26,10 +26,11 @@ TREND_WIN_S = 10;        % moving-average window for the slow drift trend (s)
 
 % Awinda sensor ID -> body segment (from the README sensor map)
 ID = { '00B4AB22','pelvis'; '00B4AB26','torso';
-       '00B4AB23','foot_L'; '00B4AB29','foot_R';
+       '00B4AB23','foot_L'; '00B4AB32','foot_R';    % right foot 29->32 (newer trials)
        '00B4AB2D','thigh_L';'00B4AB24','thigh_R';   % right thigh 2B->24 (Test 28+)
        '00B4AB25','shank_L';'00B4AB30','shank_R';   % right shank 27->30 (Test 28+)
        '00B4AB2B','thigh_R';'00B4AB27','shank_R';   % old right-leg serials (Test <=27)
+       '00B4AB29','foot_R';                          % old right foot (older trials)
        '00B4AB2E','uarm_L'; '00B4AB31','uarm_R';
        '00B4AB28','farm_L'; '00B4AB2F','farm_R' };
 % reference segment each limb segment is locked/compared to

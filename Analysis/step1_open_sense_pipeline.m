@@ -124,6 +124,7 @@ fprintf('Detected trial prefix: %s\n', trial);
 altIds = struct();
 altIds.femur_r_imu = {'_00B4AB2B'};   % right thigh: new _00B4AB24, old _00B4AB2B
 altIds.tibia_r_imu = {'_00B4AB27'};   % right shank: new _00B4AB30, old _00B4AB27
+altIds.calcn_r_imu = {'_00B4AB29'};   % right foot:  new _00B4AB32, old _00B4AB29
 
 % Read each sensor's quaternion columns.
 nS        = numel(sensorMap);
