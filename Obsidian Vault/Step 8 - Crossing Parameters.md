@@ -31,7 +31,11 @@ Prompt: `[Enter]=AUTO (from obstacle markers)  or  <legLen_cm>  or  [h1 h2 h3]`.
   Enter to accept or type an override. Falls back to manual if an H-level has no marker data.
 - **One number** = leg length cm → H1/H2/H3 = 10/20/30 % (not radius-corrected; it's already the plate height).
 - **`[h1 h2 h3]`** = the three heights in cm, used directly (not radius-corrected).
-- Saved provenance: `CP.heightSource` (`auto-markers`/`manual`), `CP.markerRadius_mm`.
+- Saved provenance: `CP.heightSource` (`auto-markers`/`manual`), `CP.markerRadius_mm` (20 mm).
+- **Diagnostic plot** (opens automatically, before the single accept/override prompt): obstacle marker Z vs
+  time — grey = all `obstacle1`/`obstacle2` samples, coloured dots = per-crossing median by H, dashed line =
+  measured level (height written on it), thin dotted = applied (−2 cm). All numbers in **cm** (plot + console);
+  the internal clearance math stays in mm.
 > [!note] AUTO averaging assumes **one bar per block** (both markers at the same height). If two different-height
 > bars are ever used simultaneously, switch to nearest-marker-per-crossing instead.
 

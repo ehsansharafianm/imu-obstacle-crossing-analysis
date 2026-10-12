@@ -63,28 +63,22 @@ roleC = struct('L', {S5.camera.roleL},    'R', {S5.camera.roleR});
 heights_mm = [];  legLen_cm = NaN;  hin = [];  heightSource = 'manual';
 if     exist('HEIGHTS_CM','var') && ~isempty(HEIGHTS_CM), hin = HEIGHTS_CM(:)';
 elseif exist('LEGLEN_CM','var')  && ~isempty(LEGLEN_CM),  hin = LEGLEN_CM;
-elseif exist('AUTO_HEIGHTS','var') && ~isempty(AUTO_HEIGHTS) && AUTO_HEIGHTS
+else
+    % AUTO first: measure the obstacle markers, print + PLOT the heights, THEN ask
+    % once - press Enter to accept them, or type your own numbers to override.
     [meas_mm, hinfo] = autoObstacleHeights(Cam, zvp, terrC);
     heights_mm = meas_mm - MARKER_RADIUS_MM;          % plate top = marker centre - radius
-    printAutoHeights(meas_mm, heights_mm, MARKER_RADIUS_MM, hinfo);  heightSource = 'auto-markers';
-else
-    fprintf('\nObstacle heights:  [Enter]=AUTO (from obstacle markers)   or type  <legLen_cm>   or  [h1 h2 h3]\n');
-    raw = strtrim(input('  Choice: ', 's'));
-    if isempty(raw)                                   % ---- AUTO (default) ----
-        [meas_mm, hinfo] = autoObstacleHeights(Cam, zvp, terrC);
-        heights_mm = meas_mm - MARKER_RADIUS_MM;      % plate top = marker centre - radius
-        printAutoHeights(meas_mm, heights_mm, MARKER_RADIUS_MM, hinfo);
-        if any(isnan(heights_mm))
-            fprintf('  Some H-levels had no usable marker data -> enter manually.\n');
-            hin = input('  Leg length cm (one number) OR 3 heights [h1 h2 h3] cm: ');  heights_mm = [];
-        else
-            ov = strtrim(input('  Accept? [Enter]=yes  OR override (<legLen_cm> or [h1 h2 h3]): ', 's'));
-            if isempty(ov), heightSource = 'auto-markers';
-            else,           hin = str2num(ov); heights_mm = []; end %#ok<ST2NM>
-        end
-    else                                              % ---- manual (typed) ----
-        hin = str2num(raw); %#ok<ST2NM>
-        if isempty(hin), error('Unrecognised "%s": press Enter (auto), one number, or [h1 h2 h3].', raw); end
+    printAutoHeights(meas_mm, heights_mm, MARKER_RADIUS_MM, hinfo);
+    plotObstacleDiag(Cam, meas_mm, heights_mm, MARKER_RADIUS_MM, hinfo, tn);
+    if exist('AUTO_HEIGHTS','var') && ~isempty(AUTO_HEIGHTS) && AUTO_HEIGHTS
+        heightSource = 'auto-markers';                % batch auto -> no prompt
+    elseif any(isnan(heights_mm))
+        fprintf('  Some H-levels had no usable marker data -> enter manually.\n');
+        hin = input('  Leg length cm (one number) OR 3 heights [h1 h2 h3] cm: ');  heights_mm = [];
+    else
+        ov = strtrim(input('  Accept the auto heights? [Enter]=yes  OR type your own (<legLen_cm> or [h1 h2 h3] cm): ', 's'));
+        if isempty(ov), heightSource = 'auto-markers';
+        else,           hin = str2num(ov); heights_mm = []; end %#ok<ST2NM>
     end
 end
 
@@ -353,6 +347,7 @@ function [heights_mm, info] = autoObstacleHeights(Cam, zvp, terrC)
 % spikes and to two close levels (grouping is by the KNOWN label, not by value).
     oz = obstacleTopZ(Cam);  N = numel(oz);
     byH = {[],[],[]};
+    tcAll = []; hcAll = []; HAll = [];      % per-crossing centre time, height, H (for the diag plot)
     for side = {'L','R'}
         sd = side{1};  z = zvp.(sd);  tr = terrC.(sd);
         for c = 1:numel(tr)
@@ -363,10 +358,14 @@ function [heights_mm, info] = autoObstacleHeights(Cam, zvp, terrC)
             i0 = z(c);  i1 = z(min(c+1, numel(z)));
             a = max(1, min(i0,i1));  b = min(N, max(i0,i1));
             hc = robustMed(oz(a:b));
-            if ~isnan(hc), byH{H}(end+1) = hc; end
+            if ~isnan(hc)
+                byH{H}(end+1) = hc;
+                tcAll(end+1) = Cam.time(round((a+b)/2)); hcAll(end+1) = hc; HAll(end+1) = H; %#ok<AGROW>
+            end
         end
     end
-    heights_mm = nan(1,3);  info = struct('n',[0 0 0],'spread',[NaN NaN NaN]);
+    heights_mm = nan(1,3);  info = struct('n',[0 0 0],'spread',[NaN NaN NaN], ...
+                                          'tc',tcAll,'hc',hcAll,'Hc',HAll);
     for H = 1:3
         v = byH{H};
         if ~isempty(v)
@@ -375,6 +374,38 @@ function [heights_mm, info] = autoObstacleHeights(Cam, zvp, terrC)
             info.spread(H) = 1.4826 * median(abs(v - md),'omitnan');   % ~robust SD
         end
     end
+end
+
+function plotObstacleDiag(Cam, meas_mm, applied_mm, radius_mm, info, tn)
+% Diagnostic: obstacle-marker Z vs time (ALL points, both markers) with the
+% detected per-H levels overlaid, so the measured/applied heights can be eyeballed.
+    t = Cam.time;
+    o1 = []; o2 = [];                                   % all marker Z samples, in cm
+    if isfield(Cam.markers,'obstacle1'), o1 = Cam.markers.obstacle1(:,3)/10; end
+    if isfield(Cam.markers,'obstacle2'), o2 = Cam.markers.obstacle2(:,3)/10; end
+    meas_cm = meas_mm/10;  appl_cm = applied_mm/10;  hc_cm = info.hc/10;
+    cH = [0.00 0.45 0.74; 0.85 0.33 0.10; 0.47 0.67 0.19];   % H1 H2 H3 colours
+    figure('Color','w','Name',sprintf('Step 8 - obstacle height check | Test %d', tn), ...
+           'Position',[80 90 1360 560]); hold on; grid on; box on;
+    if ~isempty(o1), scatter(t, o1, 6, [0.6 0.6 0.6], 'filled', 'MarkerFaceAlpha',0.25); end
+    if ~isempty(o2), scatter(t, o2, 6, [0.8 0.8 0.8], 'filled', 'MarkerFaceAlpha',0.25); end
+    % per-crossing measured heights, coloured by H group
+    for H = 1:3
+        m = info.Hc == H;
+        if any(m), scatter(info.tc(m), hc_cm(m), 46, cH(H,:), 'filled', 'MarkerEdgeColor','k'); end
+    end
+    % measured level (dashed, labelled with the height) + applied level (thin dotted)
+    for H = 1:3
+        if isnan(meas_cm(H)), continue; end
+        yline(meas_cm(H), '--', sprintf('H%d  %.1f cm', H, meas_cm(H)), 'Color',cH(H,:), ...
+              'LineWidth',1.2, 'FontWeight','bold', 'LabelHorizontalAlignment','left');
+        yline(appl_cm(H), ':',  sprintf('appl %.1f', appl_cm(H)), 'Color',cH(H,:), ...
+              'LineWidth',0.8, 'LabelHorizontalAlignment','right');
+    end
+    xlabel('time (s)'); ylabel('obstacle marker Z (cm)');
+    title(sprintf('Obstacle Z vs time (grey = all marker samples; dots = per-crossing median by H).  applied = measured - %.1f cm', radius_mm/10));
+    legend({'obstacle1','obstacle2','H1','H2','H3'}, 'Location','best');
+    drawnow;
 end
 
 function oz = obstacleTopZ(Cam)
@@ -401,13 +432,13 @@ end
 
 function printAutoHeights(meas_mm, applied_mm, radius_mm, info)
     fprintf('  Auto obstacle heights (robust median of obstacle markers, grouped by H-level):\n');
-    fprintf('    applied = measured - %.0f mm marker radius (plate top)\n', radius_mm);
+    fprintf('    applied = measured - %.1f cm marker radius (plate top)\n', radius_mm/10);
     for H = 1:3
         if isnan(meas_mm(H))
             fprintf('    H%d = (no usable marker data)\n', H);
         else
-            fprintf('    H%d : measured %4.0f -> applied %4.0f mm   (n=%d crossings, ~SD %.0f mm)\n', ...
-                    H, meas_mm(H), applied_mm(H), info.n(H), info.spread(H));
+            fprintf('    H%d : measured %4.1f -> applied %4.1f cm   (n=%d crossings, ~SD %.1f cm)\n', ...
+                    H, meas_mm(H)/10, applied_mm(H)/10, info.n(H), info.spread(H)/10);
         end
     end
 end
