@@ -26,8 +26,8 @@ Prompt: `[Enter]=AUTO (from obstacle markers)  or  <legLen_cm>  or  [h1 h2 h3]`.
   **averaged per frame** (combines both + fills dropouts). Per crossing: obstacle top = **MAD-gated median** of
   that signal over the ZVP cycle (rejects occlusion spikes). Crossings are **grouped by H-level** (read from the
   terrain label) and each level = **median across its crossings** — robust even when two levels are close
-  (grouping is by the known label, not by value). **Applied = measured − `MARKER_RADIUS_MM` (25 mm = 2.5 cm)** to
-  get the plate top (markers sit at the sphere centre). Prints `measured → applied` + per-level n and ~SD; press
+  (grouping is by the known label, not by value). **Applied = measured − `MARKER_RADIUS_MM` (20 mm = 2.0 cm)** to
+  get the plate top (markers sit at the sphere centre; radius 20 mm). Prints `measured → applied` + per-level n and ~SD; press
   Enter to accept or type an override. Falls back to manual if an H-level has no marker data.
 - **One number** = leg length cm → H1/H2/H3 = 10/20/30 % (not radius-corrected; it's already the plate height).
 - **`[h1 h2 h3]`** = the three heights in cm, used directly (not radius-corrected).

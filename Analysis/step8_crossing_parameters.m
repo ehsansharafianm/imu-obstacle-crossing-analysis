@@ -27,7 +27,7 @@ addpath(fileparts(mfilename('fullpath')));
 % Terrain groups use the step-3/step-7 code = W{width}_H{height} (width first).
 TERRAIN_ORDER = {'Level_Walk','W1_H1','W1_H2','W1_H3','W2_H1','W2_H2','W2_H3'};
 ZVP_NEAR_W = 5;         % if a marker is NaN at the exact ZVP frame, use nearest finite within +/- this
-MARKER_RADIUS_MM = 25;  % AUTO heights only: plate top = measured marker-centre height - this radius (25 mm = 2.5 cm)
+MARKER_RADIUS_MM = 20;  % AUTO heights only: plate top = measured marker-centre height - this radius (20 mm = 2.0 cm)
 FONT_NAME  = 'Arial';
 
 %% ===================== INPUT + LOAD =====================
