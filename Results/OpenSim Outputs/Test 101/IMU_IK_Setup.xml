@@ -6,10 +6,10 @@
 		<!--Name/path to the xml .osim file.-->
 		<model_file>C:\Users\BiomechanicsLab2\AppData\Local\Temp\OpenSense\Test 101\Rajagopal_2015_calibrated.osim</model_file>
 		<!--The time range for the study.-->
-		<time_range>0 927.75</time_range>
+		<time_range>0 650.70000000000005</time_range>
 		<!--Space fixed Euler angles (XYZ order) from IMU Space to OpenSim. Default to (0, 0, 0).-->
 		<sensor_to_opensim_rotations>-1.5707963267948966 0 0</sensor_to_opensim_rotations>
 		<!--Name/path to a .sto file of sensor frame orientations as quaternions.-->
-		<orientations_file>C:\Users\BiomechanicsLab2\AppData\Local\Temp\OpenSense\Test 101\STOFiles\MT_2026-09-08_09h54_01210270-000-000_orientations.sto</orientations_file>
+		<orientations_file>C:\Users\BiomechanicsLab2\AppData\Local\Temp\OpenSense\Test 101\STOFiles\MT_2026-09-22_10h00_01210270-000-000_orientations.sto</orientations_file>
 	</IMUInverseKinematicsTool>
 </OpenSimDocument>
