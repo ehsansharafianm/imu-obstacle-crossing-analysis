@@ -4,6 +4,19 @@ tags: [changelog, summary]
 
 # Session Changelog
 
+## ★ Latest (2026-10-19) — Step 9: group analysis across participants
+- **[[Step 9 - Group Crossing Analysis]]** (`step9_group_crossing_analysis.m`): the capstone — aggregates
+  steps 1–8 outputs across the cohort into group **mean ± SD** (two-level average, no normalization).
+  Metrics: Tier-1 clearance/placement (incl. **min clearance ≤ toe**), **spatiotemporal** (stride, cadence
+  steps/min, speed), joint & **IMU-segment ROM**, and **peak timing** (% GC) with a **per-signal extremum**
+  map (`PK_EXTREMUM`: hip/knee/foot/shank = min; ankle/thigh/foot-height = max).
+- **Test 106 cleaning** (group-only; steps 1–8 untouched): MAD-median + drop codes 11/13/23 on
+  hip/knee/thigh for a mid-trial thigh-IMU artifact.
+- **Outputs** (`Results/Group Analysis/`): a **Markdown** results file (LLM/human-readable tables), an xlsx
+  (5 sheets), the `G` `.mat`, and PNG figures (shared `ST` style, show/hide checkboxes, PNG only).
+- **`definition_figures.m`** — presentation schematics defining each parameter (crossing trajectory +
+  distances, ROM = max−min, peak timing per signal), grid off, PNG.
+
 Summary of the work done on the project (most impactful first). Dates are approximate to the
 2026 working sessions.
 
