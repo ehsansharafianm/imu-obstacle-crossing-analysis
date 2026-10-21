@@ -15,7 +15,6 @@ addpath(fileparts(mfilename('fullpath')));
 
 %% ===================== CONFIG =====================
 DEF_TEST = 104;                 % participant to pull the clean example from
-COHORT_TESTS = [101 102 103 104 105 106 107];   % cohort for the sign-normalization templates
 ROM_JOINT = 'knee_angle';       % joint for the ROM definition
 ROM_SEG   = 'Thigh';            % IMU segment for the ROM definition (Dot)
 SEG_SYS   = 'Dot';
@@ -32,10 +31,10 @@ CP = load(fullfile(base,sprintf('CrossingParams_Test%d.mat',DEF_TEST)));  CP = C
 Sg = load(fullfile(base,sprintf('SegmentedParams_Test%d.mat',DEF_TEST))); Sg = Sg.Seg;
 S5f = fullfile(base,sprintf('SegTrajectories_WithCamera_Test%d.mat',DEF_TEST));
 S5 = load(S5f); fn = fieldnames(S5); S5 = S5.(fn{1});
-% Normalize hip/segment sign conventions (same data-driven templates as step9) so
-% the example reads with a consistent flexion/tilt direction on both legs.
+% Normalize hip/segment sign conventions (same rule as step9) so the example reads
+% with a consistent flexion/tilt direction on both legs.
 SNT = signNormTools();
-Sg  = SNT.apply(Sg, S5, SNT.build(COHORT_TESTS, root, SEG_SYS), SEG_SYS);
+Sg  = SNT.apply(Sg, S5, SNT.load(root), SEG_SYS);
 NSEG = Sg.nseg;  pct = linspace(0,100,NSEG)';
 
 %% ===================== FIG 1 - OBSTACLE CROSSING =====================

@@ -1,9 +1,10 @@
 function T = signNormTools()
 % SIGNNORMTOOLS  Data-driven left/right + per-trial SIGN normalization.
 %
-%   T = signNormTools();  returns function handles:
-%       TPL = T.build(tests, root [,segSys])   build reference sign templates
-%       Sg  = T.apply(Sg, S5, TPL [,segSys])   flip a loaded Seg struct to match
+%   T   = signNormTools();
+%   TPL = T.load(root);               load the saved cohort templates (fast)
+%   Sg  = T.apply(Sg, S5, TPL [,seg]) flip a loaded Seg to a consistent convention
+%   TPL = T.build(tests, root [,seg]) (RE)build templates from the cohort and SAVE
 %
 % WHY: the OpenSim IK joint angles and (occasionally) the Dot segment tilts come
 % out with inconsistent signs between the two legs and between trials/participants
@@ -11,18 +12,24 @@ function T = signNormTools()
 % DIRECTIONAL peak (flexion vs extension) that pools sides or participants. ROM
 % (max-min) is sign-invariant, so it is unaffected; only directional peaks need this.
 %
-% HOW: for each target signal, collect every participant x side mean LEVEL-WALK
-% stride (referenced to begin-ZVP), iteratively sign-align them by correlation to a
-% common template, then fix the absolute polarity so the primary direction (anchor)
-% dominates with the expected sign. apply() flips each side of one participant whose
-% level-walk curve correlates negatively with that template.
+% HOW: for each sign-stable signal a reference template is built ONCE from the whole
+% cohort (iterative correlation sign-alignment of every participant x side mean
+% LEVEL-WALK stride, then a physiological polarity anchor) and saved to
+% signTemplates.mat. apply() then flips each participant x side whose own level-walk
+% curve correlates NEGATIVELY with the template (whole-shape correlation is robust to
+% the drift spikes that a single-extremum rule gets wrong). apply() needs only the
+% data already in memory, so no second pass over the big .mat files -> fast.
 %
-% SCOPE: only signals whose sign is internally consistent within a trial are
-% listed (hip joint + the three Dot segments). Knee/ankle joints flip sign between
-% walking and crossing (angle wrapping) and are deliberately NOT normalized here;
-% their directional peaks are not reported.
-    T.build = @buildSignTemplates;
+% Rebuild the templates (commit the updated .mat) whenever the cohort changes:
+%   signNormTools().build([101 102 ... ], fileparts(fileparts(mfilename('fullpath'))))
+%
+% SCOPE: only signals whose sign is internally consistent within a trial are listed
+% (hip joint + the three Dot segments). Knee/ankle joints flip sign between walking
+% and crossing (angle wrapping) and are deliberately NOT normalized here; their
+% directional peaks are not reported.
+    T.load  = @loadTemplates;
     T.apply = @applySignNorm;
+    T.build = @buildTemplates;
 end
 
 function DEF = targetSignals()
@@ -34,23 +41,17 @@ function DEF = targetSignals()
             'Foot','Seg','min' };          % toe-down dominant, negative
 end
 
-function TPL = buildSignTemplates(tests, root, segSys)
-    if nargin < 3 || isempty(segSys), segSys = 'Dot'; end
-    DEF = targetSignals();
-    TPL = struct('sig',{},'kind',{},'anchor',{},'curve',{});
-    for i = 1:size(DEF,1)
-        sig = DEF{i,1};  kind = DEF{i,2};  anchor = DEF{i,3};
-        C = [];
-        for tn = tests
-            [Sg, S5] = loadSeg(root, tn);  if isempty(Sg), continue; end
-            for sd = {'L','R'}
-                c = lwMeanCurve(Sg, S5, sig, kind, sd{1}, segSys);
-                if ~all(isnan(c)), C = [C, c(:)]; end %#ok<AGROW>
-            end
-        end
-        tpl = setPolarity(alignSigns(C), anchor);
-        TPL(end+1) = struct('sig',sig,'kind',kind,'anchor',anchor,'curve',tpl); %#ok<AGROW>
+function f = tplFile(root)
+    f = fullfile(root,'Analysis','signTemplates.mat');
+end
+
+function TPL = loadTemplates(root)
+    f = tplFile(root);
+    if ~isfile(f)
+        error('signNormTools:noTemplates', ...
+            'signTemplates.mat not found. Run signNormTools().build(tests, root) once.');
     end
+    d = load(f);  TPL = d.TPL;
 end
 
 function Sg = applySignNorm(Sg, S5, TPL, segSys)
@@ -60,13 +61,34 @@ function Sg = applySignNorm(Sg, S5, TPL, segSys)
         for sd = {'L','R'}
             s = sd{1};
             k = sigIndex(Sg, TPL(i).sig, TPL(i).kind, s, segSys);  if isempty(k), continue; end
-            c = lwCurveFromIdx(Sg, S5, k, s);
-            if all(isnan(c)), continue; end
+            c = lwCurveFromIdx(Sg, S5, k, s);  if all(isnan(c)), continue; end
             if localcorr(c, TPL(i).curve) < 0
-                Sg.signal(k).strides = -Sg.signal(k).strides;   % ROM is sign-invariant; this only flips direction
+                Sg.signal(k).strides = -Sg.signal(k).strides;   % ROM is sign-invariant
             end
         end
     end
+end
+
+function TPL = buildTemplates(tests, root, segSys)
+    if nargin < 3 || isempty(segSys), segSys = 'Dot'; end
+    DEF = targetSignals();
+    TPL = struct('sig',{},'kind',{},'anchor',{},'curve',{});
+    for i = 1:size(DEF,1)
+        sig = DEF{i,1};  kind = DEF{i,2};  anchor = DEF{i,3};
+        C = [];
+        for tn = tests
+            [Sg, S5] = loadSeg(root, tn);  if isempty(Sg), continue; end
+            for sd = {'L','R'}
+                k = sigIndex(Sg, sig, kind, sd{1}, segSys);  if isempty(k), continue; end
+                c = lwCurveFromIdx(Sg, S5, k, sd{1});
+                if ~all(isnan(c)), C = [C, c(:)]; end %#ok<AGROW>
+            end
+        end
+        tpl = setPolarity(alignSigns(C), anchor);
+        TPL(end+1) = struct('sig',sig,'kind',kind,'anchor',anchor,'curve',tpl); %#ok<AGROW>
+    end
+    save(tplFile(root), 'TPL');
+    fprintf('Saved sign templates (%d signals) -> %s\n', numel(TPL), tplFile(root));
 end
 
 % -------------------- helpers --------------------
@@ -88,12 +110,6 @@ function k = sigIndex(Sg, sig, kind, s, segSys)
         lbl = sprintf('IMU: %s %s (%s) X', w, sig, segSys);
     end
     k = find(strcmp({Sg.signal.label}, lbl), 1);
-end
-
-function c = lwMeanCurve(Sg, S5, sig, kind, s, segSys)
-    k = sigIndex(Sg, sig, kind, s, segSys);
-    if isempty(k), c = nan(Sg.nseg,1); return; end
-    c = lwCurveFromIdx(Sg, S5, k, s);
 end
 
 function c = lwCurveFromIdx(Sg, S5, k, s)

@@ -198,11 +198,13 @@ PKT = struct();  for q = PKALL,     PKT.(q{1})  = nan(nT, nCR); end
 PEX = struct();  for q = 1:size(PEAKDEF,1), PEX.(PEAKDEF{q,1}) = nan(nT, nCR); end   % peak excursion, deg
 nCross = zeros(nT,1);  usedTests = false(nT,1);
 
-% Data-driven SIGN normalization templates (hip joint + Dot segments). Corrects the
+% Data-driven SIGN normalization (hip joint + Dot segments). Corrects the
 % inconsistent left/right & per-trial sign conventions before directional peaks are
 % taken; ROM/timing are sign-robust. Knee/ankle joints are deliberately not included.
+% Templates are loaded from signTemplates.mat (rebuild via signNormTools().build if
+% the cohort changes).
 SNT = signNormTools();
-SIGN_TPL = SNT.build(TESTS, root, SEG_SYS);
+SIGN_TPL = SNT.load(root);
 
 %% ===================== PER-PARTICIPANT AGGREGATION =====================
 for ti = 1:nT
