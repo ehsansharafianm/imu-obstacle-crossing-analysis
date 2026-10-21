@@ -4,7 +4,37 @@ tags: [changelog, summary]
 
 # Session Changelog
 
-## ★ Latest (2026-10-19) — Step 9: group analysis across participants
+## ★ Latest (2026-10-21) — Step 9 overhaul: sign normalization, recovered peaks, clearance-referenced timing
+Focus: making the group directional kinematics **correct and task-meaningful**. See [[Step 9 - Group Crossing Analysis]].
+- **Data-driven SIGN normalization** (`Analysis/signNormTools.m`). The IK joints (and occasionally the Dot
+  tilts) come out with **inconsistent signs between legs and between trials** (rotated sensor-to-body
+  calibration flips a limb's angle), which corrupts any directional peak that pools sides/participants. Fix:
+  per signal, a level-walk **reference template** is built once from the cohort (iterative correlation
+  alignment + physiological polarity anchor), saved to `signTemplates.mat`; each participant×side whose
+  level-walk curve correlates negatively with it is flipped **before** peaks/timing. **ROM is sign-invariant
+  so it and all `OVERRIDE`s are untouched.** Built once & cached → no per-run cost (step9 ~43 s, was ~77 s).
+- **Recovered knee & ankle directional peaks** (after first wrongly dropping them). There is **no angle
+  wrapping** (max per-sample jump ≤12°): (a) **knee flexion** is sign-invariant — `max(|y−stance|)`
+  (`ext='abs'`), since the knee only flexes (≈ knee ROM); (b) **ankle dorsi/plantarflexion** separate
+  cleanly once the ankle is sign-normalized. Dorsiflexion reads physiological (~15°); **ankle
+  plantarflexion is drift-inflated on ~half the participants → low-confidence** (clean/`OVERRIDE`).
+- **Peak-angle FIGURES reworked:** value bars with the **red level-walk line** (like ROM; gap = change),
+  ordered **before** ROM, in three **joint+segment combo figures** (`drawComboFigure`) that also carry each
+  structure's ROM per panel — so the **standalone ROM figures were removed** (ROM tables stay in md/xlsx).
+- **Peak TIMING redefined — relative to OBSTACLE CLEARANCE** (`peakTimeRelByCond`): `(peak %GC) − (foot-apex
+  %GC)`, signed (**negative = peak before clearing**); the apex = foot over the top of the obstacle. One
+  combined 2×3 figure (`Group_PeakTiming`), 0-line = clearance. Replaces the ZVP-referenced %GC. *(True toe
+  y=0 unusable — crossing arc is in the raw camera clock, a different time base from the synced signals.)*
+- **Step 3 QC sign check** (`signCheckStep3`, [[Step 3 - Dot vs Awinda Sync]]): warns on left/right
+  sign mismatches (detrended) so a flipped-limb calibration is caught early; **warning-only, saves nothing**.
+  Surfaced a systematic **right-ankle flip on every participant**.
+- **Definition figures:** `def_PeakAngles` now **row 1 = joints / row 2 = segments** (2×3, incl. knee
+  flexion + ankle dorsi/plantar); new **`def_PeakTiming`** illustrates the clearance-referenced timing.
+- Earlier in-session: added **right-foot serial-flexible mapping** (`00B4AB32`/old `00B4AB29`), step3
+  AUTO raw/de-drift per-joint safeguard, step4 interactive ZVP editor, step8 auto obstacle height, and the
+  Step 9 **% change vs level walk**, **manual `OVERRIDE`** table, and **named peak-angle** parameters.
+
+## (2026-10-19) — Step 9: group analysis across participants
 - **[[Step 9 - Group Crossing Analysis]]** (`step9_group_crossing_analysis.m`): the capstone — aggregates
   steps 1–8 outputs across the cohort into group **mean ± SD** (two-level average, no normalization).
   Metrics: Tier-1 clearance/placement (incl. **min clearance ≤ toe**), **spatiotemporal** (stride, cadence
