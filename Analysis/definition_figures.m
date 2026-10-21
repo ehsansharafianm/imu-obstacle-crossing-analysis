@@ -88,17 +88,19 @@ savePNGdef(f2, outDir, 'def_ROM');
 % per signal, for the limb where it reads best; peaks coloured red (primary) /
 % green (secondary). {signal, kind, role(example limb), nice, {name, ext, PorS}...}
 C_LEAD = [0.17 0.49 0.72];  C_TRAIL = [0.89 0.52 0.20];  C_REF = [0.35 0.35 0.35];
-% Only signals with VALID, sign-stable directional peaks: hip joint + Dot segments.
-% (Knee/ankle joints flip sign between walking and crossing, so they have no
-% directional peak - they are defined by ROM instead; see def_ROM / step9.)
+% Row 1 = JOINTS (hip / knee / ankle), row 2 = SEGMENTS (thigh / shank / foot).
+% Knee flexion is sign-invariant ('abs' = larger-magnitude excursion from stance);
+% ankle dorsi/plantar + hip & the Dot segments are sign-normalized (signNormTools).
 PANELS = {   % signal, kind, nice, {peak name, ext, P/S}
- 'hip_flexion','Joint','Hip flexion / extension',        { 'Hip peak flexion','min','P';   'Hip peak extension','max','S' };
- 'Thigh',      'Seg',  'Thigh flexion / extension',      { 'Thigh flexion (forward tilt)','max','P'; 'Thigh extension (backward tilt)','min','S' };
- 'Shank',      'Seg',  'Shank (knee segment)',           { 'Shank backward (heel up)','min','P'; 'Shank forward (reach)','max','S' };
- 'Foot',       'Seg',  'Foot (ankle segment)',           { 'Foot toe-down','min','P';     'Foot toe-up','max','S' };
+ 'hip_flexion','Joint','Hip',   { 'Hip peak flexion','min','P';   'Hip peak extension','max','S' };
+ 'knee_angle', 'Joint','Knee',  { 'Knee peak flexion','abs','P' };
+ 'ankle_angle','Joint','Ankle', { 'Ankle dorsiflexion','max','P'; 'Ankle plantarflexion','min','P' };
+ 'Thigh',      'Seg',  'Thigh', { 'Thigh flexion (forward tilt)','max','P'; 'Thigh extension (backward tilt)','min','S' };
+ 'Shank',      'Seg',  'Shank', { 'Shank backward (heel up)','min','P'; 'Shank forward (reach)','max','S' };
+ 'Foot',       'Seg',  'Foot',  { 'Foot toe-down','min','P';     'Foot toe-up','max','S' };
 };
-f3 = figure('Color','w','Position',[30 60 1480 940]);
-tl3 = tiledlayout(f3,2,2,'TileSpacing','compact','Padding','compact');
+f3 = figure('Color','w','Position',[25 45 1760 940]);
+tl3 = tiledlayout(f3,2,3,'TileSpacing','compact','Padding','compact');
 for i = 1:size(PANELS,1)
     sig = PANELS{i,1};  kind = PANELS{i,2};
     yL = smoothSig(meanCrossStrideRole(Sg, S5, sig, kind, 'Leading',  SEG_SYS));
@@ -106,7 +108,7 @@ for i = 1:size(PANELS,1)
     drawPeakDef(nexttile(tl3), pct, yL, yT, PANELS{i,3}, PANELS{i,4}, i==1, ...
         FN,SZ_T,SZ_L,SZ_TK,SZ_ANN,BOXW,LW,C_LEAD,C_TRAIL,C_REF);
 end
-title(tl3,'Peak angle variables  =  excursion from stance (begin-ZVP).   Leading (blue) vs Trailing (orange); values in degrees', ...
+title(tl3,'Peak angle variables  =  excursion from stance (begin-ZVP).   Row 1 = joints, row 2 = segments.   Leading (blue) vs Trailing (orange); degrees', ...
     'FontName',FN,'FontSize',SZ_T,'FontWeight','bold');
 savePNGdef(f3, outDir, 'def_PeakAngles');
 
@@ -198,18 +200,24 @@ function drawPeakDef(ax, pct, yL, yT, ttl, peaks, showLeg, FN,SZ_T,SZ_L,SZ_TK,SZ
     fs = max(10, SZ_ANN-3);
     for p = 1:size(peaks,1)
         nm = peaks{p,1};  ext = peaks{p,2};
-        if strcmpi(ext,'min'), [vL,iL]=min(yL); [vT,iT]=min(yT);  va='top'; else, [vL,iL]=max(yL); [vT,iT]=max(yT);  va='bottom'; end
+        switch lower(ext)
+            case 'min', [vL,iL]=min(yL); [vT,iT]=min(yT);
+            case 'max', [vL,iL]=max(yL); [vT,iT]=max(yT);
+            otherwise,  [vL,iL]=farFromRef(yL,refL); [vT,iT]=farFromRef(yT,refT);  % 'abs': sign-invariant
+        end
+        vaL = 'top'; if vL >= refL, vaL = 'bottom'; end
+        vaT = 'top'; if vT >= refT, vaT = 'bottom'; end
         % Leading
         plot(ax, [pct(iL) pct(iL)], [refL vL], '-', 'Color',cLead, 'LineWidth',2.2);
         plot(ax, pct(iL), vL, 'o','Color',cLead,'MarkerFaceColor',cLead,'MarkerSize',9);
         haL = 'left'; if pct(iL) > 55, haL = 'right'; end
-        text(ax, pct(iL), vL, sprintf(' %s  L %.0f° ', nm, abs(vL-refL)), 'HorizontalAlignment',haL,'VerticalAlignment',va, ...
+        text(ax, pct(iL), vL, sprintf(' %s  L %.0f° ', nm, abs(vL-refL)), 'HorizontalAlignment',haL,'VerticalAlignment',vaL, ...
             'FontName',FN,'FontSize',fs,'FontWeight','bold','Color',cLead);
         % Trailing
         plot(ax, [pct(iT) pct(iT)], [refT vT], '-', 'Color',cTrail, 'LineWidth',2.2);
         plot(ax, pct(iT), vT, 'o','Color',cTrail,'MarkerFaceColor',cTrail,'MarkerSize',9);
         haT = 'left'; if pct(iT) > 55, haT = 'right'; end
-        text(ax, pct(iT), vT, sprintf(' T %.0f° ', abs(vT-refT)), 'HorizontalAlignment',haT,'VerticalAlignment',va, ...
+        text(ax, pct(iT), vT, sprintf(' T %.0f° ', abs(vT-refT)), 'HorizontalAlignment',haT,'VerticalAlignment',vaT, ...
             'FontName',FN,'FontSize',fs,'FontWeight','bold','Color',cTrail);
     end
     xlabel(ax,'Gait cycle (%)','FontName',FN,'FontSize',SZ_L,'FontWeight','bold');
@@ -239,6 +247,12 @@ end
 
 function w = sideWord(s)
     if s=='R', w = 'Right'; else, w = 'Left'; end
+end
+
+function [v,i] = farFromRef(y, ref)
+% The sample with the largest magnitude excursion from the stance reference (used for
+% a sign-invariant peak, e.g. knee flexion).
+    [~,i] = max(abs(y - ref));  v = y(i);
 end
 
 function m = meanFootHeightRole(Sg, S5, role)
