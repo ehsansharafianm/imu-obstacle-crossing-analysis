@@ -75,6 +75,14 @@ strides, not the turns.
 - **stepX (angular momentum)** reads `ik_*.mot` directly -> still needs a de-drift toggle (TODO).
 - **Rule:** pick de-drift once and stay consistent (y in step1 + step3, and stepX once wired).
 
+### AUTO safeguard (step 3, default) — a backfiring de-drift can't corrupt a joint
+The de-drift is **not always better**: on **Test 107** the anatomical lock diverged on the LEFT thigh and
+wound `hip_flexion_l` to **27,544°** (raw was a clean 158°; femur_l IK error 13°→33°). So step 3's IK prompt
+is now `[Enter]=auto  r=raw  d=de-drift`. **AUTO** uses raw as the base and, per joint, switches to the
+de-drift value **only if de-drift lowered the tracking error of EVERY IMU that joint depends on** (hip→femur,
+knee→femur+tibia, ankle→tibia+calcn, arm→humerus, elbow→humerus+ulna; pelvis/torso unchanged). De-drift is
+thus applied where it helps and never where it hurts. Falls back to raw if the `*orientationErrors.sto` are missing.
+
 ### Targeted joint cleanup
 `ankle_angle_l` still showed baseline drift after the lock -> a per-coordinate cleanup was added in
 step2 & step3 (`CLEAN_JOINTS = {'ankle_angle_l'}`): detrend on (signal-honest), optional low-pass /

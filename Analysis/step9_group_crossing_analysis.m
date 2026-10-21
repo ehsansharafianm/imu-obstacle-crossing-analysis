@@ -60,6 +60,70 @@ PKALL  = [PKT_JOINTS, {'FootHeight'}, PKT_SEGS];                 % all peak-timi
 % figure shows BOTH - flip any of these to 'min' once you see which is the real peak.
 PK_EXTREMUM = struct('hip_flexion','min', 'knee_angle','min', 'ankle_angle','max', ...
                      'FootHeight','max', 'Foot','min', 'Shank','min', 'Thigh','max');
+
+%% -------------------- MANUAL OVERRIDES (optional) --------------------
+% ONE ROW PER value you want to set by hand. Each row:
+%     GROUP , SIGNAL , CONDITION , MEAN , SD
+% - GROUP   : 'T1' | 'SPT' | 'ROM' | 'SROM' | 'PKT'
+% - SIGNAL  : T1  -> clr_toe, clr_heel, clr_min, lift_dist, land_dist
+%             SPT -> stride, cadence, speed
+%             ROM -> hip_flexion, knee_angle, ankle_angle
+%             SROM-> Foot, Shank, Thigh
+%             PKT -> hip_flexion, knee_angle, ankle_angle, FootHeight, Foot, Shank, Thigh
+% - CONDITION: one of (exact strings) --
+%       W1_H1_Leading  W1_H1_Trailing   W1_H2_Leading  W1_H2_Trailing
+%       W1_H3_Leading  W1_H3_Trailing   W2_H1_Leading  W2_H1_Trailing
+%       W2_H2_Leading  W2_H2_Trailing   W2_H3_Leading  W2_H3_Trailing
+%       Level_Walk   (only for SPT / ROM / SROM / PKT, NOT T1)
+% - MEAN / SD: the value in the SHOWN units (T1 & stride = cm, cadence = steps/min,
+%              speed = m/s, ROM/segment = deg, peak timing = % GC).  Use NaN to KEEP
+%              the computed value for that one (so you can set only the bar or only
+%              the error bar). Add as many rows as you like; empty {} = all computed.
+% Overrides feed the figures AND the Markdown/xlsx.
+% Template: joint-ROM SD for every condition. MEAN stays nan (computed); fill the
+% last column (SD, deg) where you want a manual error bar, leave nan to keep computed.
+OVERRIDE = {
+%    GROUP   SIGNAL          CONDITION          MEAN   SD
+     'ROM', 'hip_flexion',  'W1_H1_Leading',    nan,   23  ;
+     'ROM', 'hip_flexion',  'W1_H1_Trailing',   nan,   16 ;
+     'ROM', 'hip_flexion',  'W1_H2_Leading',    nan,   28  ;
+     'ROM', 'hip_flexion',  'W1_H2_Trailing',   nan,   nan ;
+     'ROM', 'hip_flexion',  'W1_H3_Leading',    nan,   30  ;
+     'ROM', 'hip_flexion',  'W1_H3_Trailing',   nan,   nan ;
+     'ROM', 'hip_flexion',  'W2_H1_Leading',    nan,   21  ;
+     'ROM', 'hip_flexion',  'W2_H1_Trailing',   nan,   nan ;
+     'ROM', 'hip_flexion',  'W2_H2_Leading',    nan,   14 ;
+     'ROM', 'hip_flexion',  'W2_H2_Trailing',   nan,   nan ;
+     'ROM', 'hip_flexion',  'W2_H3_Leading',    nan,   23 ;
+     'ROM', 'hip_flexion',  'W2_H3_Trailing',   nan,   nan ;
+     'ROM', 'hip_flexion',  'Level_Walk',       nan,   nan ;
+     'ROM', 'knee_angle',   'W1_H1_Leading',    nan,   32 ;
+     'ROM', 'knee_angle',   'W1_H1_Trailing',   nan,   nan ;
+     'ROM', 'knee_angle',   'W1_H2_Leading',    nan,   37 ;
+     'ROM', 'knee_angle',   'W1_H2_Trailing',   nan,   nan ;
+     'ROM', 'knee_angle',   'W1_H3_Leading',    nan,   28 ;
+     'ROM', 'knee_angle',   'W1_H3_Trailing',   nan,   nan ;
+     'ROM', 'knee_angle',   'W2_H1_Leading',    nan,   27 ;
+     'ROM', 'knee_angle',   'W2_H1_Trailing',   nan,   nan ;
+     'ROM', 'knee_angle',   'W2_H2_Leading',    nan,   26 ;
+     'ROM', 'knee_angle',   'W2_H2_Trailing',   nan,   nan ;
+     'ROM', 'knee_angle',   'W2_H3_Leading',    nan,   31 ;
+     'ROM', 'knee_angle',   'W2_H3_Trailing',   nan,   nan ;
+     'ROM', 'knee_angle',   'Level_Walk',       nan,   nan ;
+     'ROM', 'ankle_angle',  'W1_H1_Leading',    nan,   28 ;
+     'ROM', 'ankle_angle',  'W1_H1_Trailing',   nan,   31 ;
+     'ROM', 'ankle_angle',  'W1_H2_Leading',    nan,   nan ;
+     'ROM', 'ankle_angle',  'W1_H2_Trailing',   nan,   29 ;
+     'ROM', 'ankle_angle',  'W1_H3_Leading',    nan,   nan ;
+     'ROM', 'ankle_angle',  'W1_H3_Trailing',   nan,   28 ;
+     'ROM', 'ankle_angle',  'W2_H1_Leading',    nan,   nan ;
+     'ROM', 'ankle_angle',  'W2_H1_Trailing',   nan,   27 ;
+     'ROM', 'ankle_angle',  'W2_H2_Leading',    nan,   nan ;
+     'ROM', 'ankle_angle',  'W2_H2_Trailing',   nan,   25 ;
+     'ROM', 'ankle_angle',  'W2_H3_Leading',    nan,   nan ;
+     'ROM', 'ankle_angle',  'W2_H3_Trailing',   nan,   29 ;
+     'ROM', 'ankle_angle',  'Level_Walk',       nan,   nan ;
+};
 T1PARAMS = {'clr_toe','clr_heel','clr_min','lift_dist','land_dist'};   % Tier-1 (mm internally); stride is in the spatiotemporal set
 T1LABEL  = {'Toe clearance','Heel clearance','Min clearance','Take-off dist','Landing dist'};
 T1YLAB   = {'Clearance (cm)','Clearance (cm)','Clearance (cm)','Distance (cm)','Distance (cm)'};
@@ -78,6 +142,7 @@ ST.barEdgeW  = 0.8;    % bar outline thickness
 ST.errW      = 1.2;    % error-bar line thickness
 ST.levelW    = 2.6;    % level-walk reference line thickness
 ST.levelLblSz= 13;     % level-walk label font size
+ST.pctSz     = 12;     % "% vs level" label font size (on bars)
 ST.bold      = true;   % bold tick labels + axis labels
 ST.gridOn    = false;  % template: grid off, box on
 ST.pngDPI    = 300;    % PNG resolution
@@ -203,6 +268,29 @@ G.condName = condName;  G.condR = condR;  G.terrains = TERRAINS;  G.roles = ROLE
 G.joints = JOINTS;  G.segments = SEGMENTS;  G.t1params = T1PARAMS;  G.stparams = STPARAMS;  G.pkall = PKALL;
 G.pkExtremum = PK_EXTREMUM;  G.cohort = COHORT;  G.cleaning = CLEAN;
 G.perParticipant = struct('T1',P1,'ROM',ROM,'SROM',SROM,'SPT',SPT,'PKT',PKT,'tests',TESTS,'used',usedTests,'nCross',nCross);
+
+%% ===================== APPLY MANUAL OVERRIDES =====================
+% Each OVERRIDE row {GROUP, SIGNAL, CONDITION, MEAN, SD} replaces that one cell's
+% mean and/or SD (NaN = keep computed). Condition is resolved by name. Applied
+% before saving/plotting so all outputs are consistent.
+for r = 1:size(OVERRIDE,1)
+    gname = OVERRIDE{r,1};  key = OVERRIDE{r,2};  cond = OVERRIDE{r,3};
+    mv = OVERRIDE{r,4};     sv  = OVERRIDE{r,5};
+    if strcmp(gname,'T1'), conds = condName;  scaleOv = 10; else, conds = condR;  scaleOv = 1; end
+    if ~isfield(G, gname) || ~isfield(G.(gname), key)
+        warning('OVERRIDE row %d: unknown %s.%s - skipped.', r, gname, key);  continue;
+    end
+    ci = find(strcmp(conds, cond), 1);
+    if isempty(ci)
+        warning('OVERRIDE row %d: condition "%s" not valid for group %s - skipped.', r, cond, gname);  continue;
+    end
+    if ~isnan(mv), G.(gname).(key).mean(ci) = mv * scaleOv; end
+    if ~isnan(sv), G.(gname).(key).sd(ci)   = sv * scaleOv; end
+    if ~isnan(mv) || ~isnan(sv)   % only report rows that actually set something
+        fprintf('  OVERRIDE: %-4s %-12s @ %-16s  mean=%s  sd=%s\n', gname, key, cond, ovStr(mv), ovStr(sv));
+    end
+end
+G.override = OVERRIDE;
 
 %% ===================== SAVE .mat =====================
 if ~isfolder(outDir), mkdir(outDir); end
@@ -439,6 +527,10 @@ function sp = cleanSpecFor(CLEAN, tn, base)
     end
 end
 
+function s = ovStr(v)
+    if isnan(v), s = '(kept)'; else, s = num2str(v); end
+end
+
 function [ci, code] = condIdx(condR, terr, role)
 % Map a stride's terrain/role to its condition index in condR (+ its terrain code).
     if strcmpi(terr,'Level_Walk')
@@ -546,15 +638,25 @@ end
 
 function mdTable(fid, header, conds, keys, niceHdr, S, divisor, dec)
 % Write one Markdown table: rows = condition, cols = each key's "mean ± SD", + n.
+% If the conditions include Level_Walk, each non-level cell also gets (% vs level).
     if isscalar(dec), dec = repmat(dec,1,numel(keys)); end
+    lvi = find(strcmp(conds,'Level_Walk'),1);
     fprintf(fid, '## %s\n\n', header);
     fprintf(fid, '| Condition | %s | n |\n', strjoin(niceHdr, ' | '));
     fprintf(fid, '%s|\n', repmat('|---', 1, numel(keys)+2));
     for ci = 1:numel(conds)
         fprintf(fid, '| %s ', conds{ci});  nn = 0;
         for k = 1:numel(keys)
-            m = S.(keys{k}).mean(ci)/divisor;  sd = S.(keys{k}).sd(ci)/divisor;
-            if isnan(m), cell = '–'; else, cell = sprintf('%.*f ± %.*f', dec(k), m, dec(k), sd); end
+            m = S.(keys{k}).mean(ci);  sd = S.(keys{k}).sd(ci);
+            if isnan(m)
+                cell = '–';
+            else
+                cell = sprintf('%.*f ± %.*f', dec(k), m/divisor, dec(k), sd/divisor);
+                if ~isempty(lvi) && ci ~= lvi
+                    lv = S.(keys{k}).mean(lvi);
+                    if isfinite(lv) && lv ~= 0, cell = sprintf('%s (%+.0f%%)', cell, (m-lv)/lv*100); end
+                end
+            end
             fprintf(fid, '| %s ', cell);
             nn = max(nn, S.(keys{k}).n(ci));
         end
@@ -592,10 +694,13 @@ function [mL,sL,mT,sT] = seriesByTerrain(S, condList, terrains, roles, scale)
     end
 end
 
-function [hb, hebL, hebT] = drawGroupedBars(ax, cats, mL, sL, mT, sT, ylab, ttl, ST)
+function [hb, hebL, hebT, pctH] = drawGroupedBars(ax, cats, mL, sL, mT, sT, ylab, ttl, ST, levelVal)
 % Grouped bars (Leading vs Trailing) with SD error bars, styled from ST. The
 % Leading/Trailing error bars are separate objects so each series (bars + its
 % error bars) can be toggled together. Box on + thick border, grid per ST.gridOn.
+% If levelVal (the signal's level-walk mean) is given, the % change vs level walk
+% is printed above each bar.
+    if nargin < 10, levelVal = []; end
     fw = 'normal';  if ST.bold, fw = 'bold'; end
     hold(ax,'on');  box(ax,'on');
     M = [mL(:), mT(:)];  Sd = [sL(:), sT(:)];
@@ -603,15 +708,31 @@ function [hb, hebL, hebT] = drawGroupedBars(ax, cats, mL, sL, mT, sT, ylab, ttl,
     hb(1).FaceColor = ST.colLead;   hb(2).FaceColor = ST.colTrail;
     hb(1).EdgeColor = [0.20 0.20 0.20];  hb(2).EdgeColor = [0.20 0.20 0.20];
     hb(1).LineWidth = ST.barEdgeW;  hb(2).LineWidth = ST.barEdgeW;
-    hebL = errorbar(ax, hb(1).XEndPoints, M(:,1), Sd(:,1), 'linestyle','none', ...
+    xb = [hb(1).XEndPoints(:), hb(2).XEndPoints(:)];
+    hebL = errorbar(ax, xb(:,1), M(:,1), Sd(:,1), 'linestyle','none', ...
         'Color',[0.15 0.15 0.15], 'LineWidth',ST.errW, 'CapSize',4, 'HandleVisibility','off');
-    hebT = errorbar(ax, hb(2).XEndPoints, M(:,2), Sd(:,2), 'linestyle','none', ...
+    hebT = errorbar(ax, xb(:,2), M(:,2), Sd(:,2), 'linestyle','none', ...
         'Color',[0.15 0.15 0.15], 'LineWidth',ST.errW, 'CapSize',4, 'HandleVisibility','off');
     ax.XTick = 1:numel(cats);  ax.XTickLabel = cats;  ax.TickLabelInterpreter = 'tex';
     xtickangle(ax, 20);
     ax.FontName = ST.font;  ax.FontSize = ST.szTick;  ax.FontWeight = fw;
     ax.LineWidth = ST.boxWidth;  ax.XColor = [0.15 0.15 0.15];  ax.YColor = [0.15 0.15 0.15];
     if ST.gridOn, ax.YGrid = 'on';  ax.XGrid = 'off';  ax.GridAlpha = 0.15; else, grid(ax,'off'); end
+    % % change vs level walk, printed (vertical) above each bar (toggleable via pctH)
+    pctH = gobjects(0);
+    if ~isempty(levelVal) && isfinite(levelVal) && levelVal ~= 0
+        yl = ylim(ax);  off = diff(yl)*0.02;
+        for g = 1:2
+            for t = 1:numel(cats)
+                v = M(t,g);  if isnan(v), continue; end
+                yt = v;  if ~isnan(Sd(t,g)), yt = v + Sd(t,g); end
+                pctH(end+1) = text(ax, xb(t,g), yt+off, sprintf('%+.0f%%', (v-levelVal)/levelVal*100), ...
+                    'Rotation',90, 'FontName',ST.font, 'FontSize',ST.pctSz, 'FontWeight','bold', ...
+                    'Color',[0.25 0.25 0.25], 'HorizontalAlignment','left', 'VerticalAlignment','middle'); %#ok<AGROW>
+            end
+        end
+        yl = ylim(ax);  ylim(ax, [yl(1), yl(2) + diff(yl)*0.22]);   % headroom for the % labels
+    end
     ylabel(ax, ylab, 'FontName',ST.font, 'FontSize',ST.szLabel, 'FontWeight',fw);
     title(ax, ttl, 'FontName',ST.font, 'FontSize',ST.szTitle, 'FontWeight','bold', 'Interpreter','none');
 end
@@ -630,14 +751,16 @@ function f = drawPanelFigure(S, keys, nice, ylabs, condList, terrains, roles, xl
     w = min(1680, 540*cols);  h = 320 + 300*rows;
     [f, tl, ctrl] = makeToggleFigure(ttl, [50 50 w h], rows, cols);
     leadB = gobjects(0); trailB = gobjects(0); leadE = gobjects(0); trailE = gobjects(0);
-    lvl = gobjects(0);  hbRef = [];
+    lvl = gobjects(0);  pctAll = gobjects(0);  hbRef = [];
     for k = 1:numel(keys)
         [mL,sL,mT,sT] = seriesByTerrain(S.(keys{k}), condList, terrains, roles, 1);
+        lw = S.(keys{k}).mean(strcmp(condList,'Level_Walk'));
         ax = nexttile(tl);
-        [hb,heL,heT] = drawGroupedBars(ax, xlab, mL,sL,mT,sT, ylabs{k}, nice{k}, ST);
+        lvArg = []; if showLevel, lvArg = lw; end          % % change vs level printed on bars
+        [hb,heL,heT,pH] = drawGroupedBars(ax, xlab, mL,sL,mT,sT, ylabs{k}, nice{k}, ST, lvArg);
         leadB(end+1)=hb(1); trailB(end+1)=hb(2); leadE(end+1)=heL; trailE(end+1)=heT; %#ok<AGROW>
+        if ~isempty(pH), pctAll = [pctAll, pH(:)']; end     %#ok<AGROW>
         if showLevel
-            lw = S.(keys{k}).mean(strcmp(condList,'Level_Walk'));
             if ~isnan(lw)
                 yl = yline(ax, lw, '--', 'level walk', 'Color', ST.colLevel, 'LineWidth',ST.levelW, 'FontName',ST.font, ...
                       'FontSize',ST.levelLblSz, 'LabelHorizontalAlignment','left', 'LabelVerticalAlignment','bottom');
@@ -651,7 +774,8 @@ function f = drawPanelFigure(S, keys, nice, ylabs, condList, terrains, roles, xl
         'FontName',ST.font,'FontSize',ST.szLegend);
     lg.Layout.Tile = 'north';
     grp = {{'Leading limb',[leadB,leadE]}, {'Trailing limb',[trailB,trailE]}};
-    if ~isempty(lvl), grp{end+1} = {'Level walk', lvl}; end
+    if ~isempty(lvl),    grp{end+1} = {'Level walk', lvl}; end
+    if ~isempty(pctAll), grp{end+1} = {'% vs level', pctAll}; end
     addToggles(ctrl, grp);
     saveFig(tl, figDir, fname, ST);
 end

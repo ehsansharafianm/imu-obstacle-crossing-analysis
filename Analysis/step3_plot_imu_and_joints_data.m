@@ -9,11 +9,18 @@ addpath(fileparts(mfilename('fullpath')));
 subj_raw = input('  Input Test Number: ', 's');
 if isempty(subj_raw), subjectNumber = 2; else, subjectNumber = str2double(subj_raw); end
 
-% Optionally source the joint angles from the heading de-drifted IK results
-% (from dedrift_orientations_ik.m) so step4/5/9 run on the corrected joints.
-% Default = original IKResults, so existing behaviour is unchanged.
-ddRaw = input('  Use de-drifted IK joints? (y/n) [n]: ', 's');
-USE_DEDRIFT_IK = any(strcmpi(strtrim(ddRaw), {'y','yes'}));
+% IK joints source:
+%   [Enter] AUTO  - raw base; per JOINT, switch to the de-drift value only if the
+%                   de-drift LOWERED the orientation-tracking error of EVERY IMU that
+%                   joint depends on. A de-drift that backfires on one segment (e.g.
+%                   Test 107 left thigh) can never corrupt that joint. Safeguard.
+%   r = raw       - always the original IKResults.
+%   d = de-drift  - always IKResults_dedrift (the old 'y').
+ddRaw = lower(strtrim(input('  IK joints: [Enter]=auto  r=raw  d=de-drift: ', 's')));
+if     strcmp(ddRaw,'r'),                      IKMODE = 'raw';
+elseif any(strcmp(ddRaw, {'d','y','yes'})),    IKMODE = 'dedrift';
+else,                                          IKMODE = 'auto';
+end
 
 %% ========================================================================
 %% APPEARANCE SETTINGS — ADJUST HERE
@@ -296,26 +303,42 @@ end
 %% JOINT ANGLES (OpenSim IK, Awinda) -> apply Awinda delay + upsample to 60 Hz
 %% ========================================================================
 jLabels = {}; jU = [];
-ikSub = 'IKResults';
-if USE_DEDRIFT_IK
-    ddDir = fullfile('..','Results','OpenSim Outputs', subjFolder, 'IKResults_dedrift');
-    if isfolder(ddDir) && ~isempty(dir(fullfile(ddDir,'ik_*.mot')))
-        ikSub = 'IKResults_dedrift';
-        fprintf('Joint angles: using DE-DRIFTED IK results.\n');
-    else
-        warning('De-drifted IK requested but none in %s - using original IKResults.', ddDir);
-    end
-end
-ikDir = fullfile('..','Results','OpenSim Outputs', subjFolder, ikSub);
-mots  = dir(fullfile(ikDir, 'ik_*.mot'));
-if isempty(mots)
-    warning('No IK .mot in %s - joint angles skipped (run step 1 first).', ikDir);
+rawDir = fullfile('..','Results','OpenSim Outputs', subjFolder, 'IKResults');
+ddDir  = fullfile('..','Results','OpenSim Outputs', subjFolder, 'IKResults_dedrift');
+rawMot = latestFile(rawDir, 'ik_*.mot');   ddMot = latestFile(ddDir, 'ik_*.mot');
+if isempty(rawMot) && isempty(ddMot)
+    warning('No IK .mot found - joint angles skipped (run step 1 first).');
 elseif ~SYNC_ENABLE || ~exist('tg','var')
     warning('Sync grid not available - joint angles skipped.');
 else
-    [~,nw] = max([mots.datenum]);
-    motFile = fullfile(ikDir, mots(nw).name);
-    [jt, jData, jLabels] = readMot(motFile);          % jt in s, jData N x nJoint
+    if strcmp(IKMODE,'dedrift') && ~isempty(ddMot)
+        [jt, jData, jLabels] = readMot(ddMot);  fprintf('Joint angles: DE-DRIFTED IK.\n');
+    elseif strcmp(IKMODE,'raw') || isempty(ddMot)
+        [jt, jData, jLabels] = readMot(rawMot);  fprintf('Joint angles: RAW IK.\n');
+    else   % AUTO: raw base; take de-drift per joint only where it lowered every contributing IMU error
+        [jt, jData, jLabels] = readMot(rawMot);
+        [jtd, Jdd, lbld]     = readMot(ddMot);
+        if ~isequal(jtd, jt), Jdd = interp1(jtd, Jdd, jt, 'linear', 'extrap'); end
+        errRaw = readImuMeanErr(latestFile(rawDir, '*orientationErrors.sto'));
+        errDd  = readImuMeanErr(latestFile(ddDir,  '*orientationErrors.sto'));
+        IMPROVE = 1;   % deg: de-drift must beat raw by at least this on EVERY contributing IMU
+        nSwap = 0;  tookList = {};
+        for jj = 1:numel(jLabels)
+            imus = jointLimbIMUs(jLabels{jj});  if isempty(imus), continue; end
+            useDd = true;
+            for q = 1:numel(imus)
+                er = getfielddef(errRaw, imus{q}, inf);  ed = getfielddef(errDd, imus{q}, inf);
+                if ~(ed <= er - IMPROVE), useDd = false; break; end
+            end
+            if useDd
+                cd = find(strcmp(lbld, jLabels{jj}), 1);
+                if ~isempty(cd), jData(:,jj) = Jdd(:,cd);  nSwap = nSwap+1;  tookList{end+1} = jLabels{jj}; end %#ok<AGROW>
+            end
+        end
+        fprintf('Joint angles: AUTO (raw base; %d coord(s) used de-drift where it lowered IMU error', nSwap);
+        if nSwap > 0, fprintf(': %s', strjoin(tookList, ', ')); end
+        fprintf(').\n');
+    end
 
     % --- Targeted per-coordinate signal cleanup (ONLY the named joints; every
     %     other joint passes through untouched). Use for a single coordinate that
@@ -344,7 +367,7 @@ else
     jLabels = jLabels(keepJ);  jData = jData(:, keepJ);
     nBefore = numel(jt);
     fsJ = 1/median(diff(jt));
-    fprintf('\n--- Joint angles: %s ---\n', mots(nw).name);
+    fprintf('\n--- Joint angles (IK mode: %s) ---\n', IKMODE);
     fprintf('  Before upsample : %d samples @ %.0f Hz  (%.2f s)\n', nBefore, fsJ, jt(end)-jt(1));
     jt = jt + shiftAw;                                 % align to Dot (aligned frame)
     fprintf('  Delay applied   : %+.3f s  (shift to align with Dot)\n', shiftAw);
@@ -725,6 +748,49 @@ function [t, data, labels] = readMot(file)
     C = cell2mat(textscan(fid, repmat('%f',1,numel(labels)), 'Delimiter','\t', 'CollectOutput', true));
     fclose(fid);
     t = C(:,1); data = C(:,2:end); labels = labels(2:end);
+end
+
+function p = latestFile(d, pat)
+% Newest file matching pat in directory d (by mod time), or '' if none.
+    p = '';
+    if ~isfolder(d), return; end
+    f = dir(fullfile(d, pat));  if isempty(f), return; end
+    [~,i] = max([f.datenum]);   p = fullfile(f(i).folder, f(i).name);
+end
+
+function E = readImuMeanErr(f)
+% Mean orientation-tracking error (deg) per IMU from an *orientationErrors.sto.
+% Fields = the IMU base name (e.g. femur_l), with '_imu' stripped.
+    E = struct();
+    if isempty(f) || ~isfile(f), return; end
+    L = readlines(f);  hi = find(contains(L,'endheader'), 1);
+    if isempty(hi), return; end
+    hdr = split(strip(L(hi+1)), sprintf('\t'));
+    M = readmatrix(f, 'FileType','text', 'NumHeaderLines', hi+1);
+    for c = 2:min(numel(hdr), size(M,2))
+        nm = erase(char(hdr(c)), '_imu');
+        if isvarname(nm), E.(nm) = mean(M(:,c), 'omitnan')*180/pi; end
+    end
+end
+
+function imus = jointLimbIMUs(lbl)
+% Limb IMUs a joint coordinate depends on (pelvis/torso references excluded - the
+% de-drift leaves them unchanged). '' if not a recognised limb joint.
+    imus = {};
+    if     endsWith(lbl,'_l'), s = '_l';
+    elseif endsWith(lbl,'_r'), s = '_r';
+    else,  return; end
+    base = lbl(1:end-2);
+    if     startsWith(base,'hip'),      imus = {['femur' s]};
+    elseif strcmp(base,'knee_angle'),   imus = {['femur' s], ['tibia' s]};
+    elseif strcmp(base,'ankle_angle'),  imus = {['tibia' s], ['calcn' s]};
+    elseif startsWith(base,'arm'),      imus = {['humerus' s]};
+    elseif strcmp(base,'elbow_flex'),   imus = {['humerus' s], ['ulna' s]};
+    end
+end
+
+function v = getfielddef(s, f, d)
+    if isfield(s, f), v = s.(f); else, v = d; end
 end
 
 function y = cleanSignal(t, y, driftWinSec, lowpassHz, clampRange)

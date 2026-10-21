@@ -38,6 +38,14 @@ A mid-trial thigh-IMU artifact inflated 106's hip/knee/thigh ROM & peak timing. 
 - `GroupCrossing_<cohort>.mat` — the aggregated `G` struct (+ `G.perParticipant`) for re-plotting/stats.
 - `Figures/` — Tier1, Spatiotemporal, JointROM, SegmentROM, PeakTiming (Joints/FootHeight/Segments). **PNG only.**
 
+## % change vs level walk + manual overrides
+- Each bar on the ROM / spatiotemporal / peak-timing figures shows the **% change vs level
+  walk** above it (toggleable via a `% vs level` checkbox), and the `.md` cells carry `(+X%)`.
+  Not on Tier-1 (level walk isn't a meaningful baseline there).
+- **Manual overrides** (`OVERRIDE` table, one row = `{GROUP, SIGNAL, CONDITION, MEAN, SD}`): replace
+  any computed group mean/SD by hand (NaN = keep computed), in shown units; feeds figures + md + xlsx.
+- **Markdown results** (`GroupCrossing_<cohort>_Results.md`) = all tables as `mean ± SD (% vs level)`.
+
 ## Style + interaction
 All figures share the `ST` style block (Arial bold, thick box, grid off, template palette, sharp-red
 level-walk line) and a left **checkbox panel** to show/hide Leading / Trailing / Level-walk; the exported
