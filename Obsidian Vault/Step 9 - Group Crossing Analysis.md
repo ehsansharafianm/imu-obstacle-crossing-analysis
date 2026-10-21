@@ -36,7 +36,17 @@ A mid-trial thigh-IMU artifact inflated 106's hip/knee/thigh ROM & peak timing. 
 - `GroupCrossing_<cohort>_Results.md` — **human/LLM-readable** tables (mean ± SD per condition).
 - `GroupCrossing_<cohort>_Summary.xlsx` — sheets: Tier1_cm, Spatiotemporal, ROM_deg, SegmentROM_deg, PeakTiming_pctGC.
 - `GroupCrossing_<cohort>.mat` — the aggregated `G` struct (+ `G.perParticipant`) for re-plotting/stats.
-- `Figures/` — Tier1, Spatiotemporal, JointROM, SegmentROM, PeakTiming (Joints/FootHeight/Segments). **PNG only.**
+- `Figures/` — Tier1, **Peak angles (HipThigh / KneeShank / AnkleFoot)**, JointROM, SegmentROM,
+  Spatiotemporal, PeakTiming (Joints/FootHeight/Segments). **PNG only.**
+
+## Named peak angles (figures)
+Peaks are **whole-cycle extrema referenced to the begin-ZVP (stance) posture**, magnitude in the named
+direction (`PEAKDEF` sets the signal + extremum + P/S role). The figures are drawn **exactly like ROM**:
+bars = the peak **excursion value**, red dashed line = the **level-walk excursion**, so the gap to the red
+line *is* the change vs level walk (the `% vs level` labels say it numerically). They come **before ROM**
+and are grouped anatomically — joint + its IMU segment per figure: **hip+thigh**, **knee+shank**,
+**ankle+foot**; panel titles carry a `(P)`/`(S)` role tag. The **paired Δ vs level walk** (per-participant)
+is kept in the `.md` and `.xlsx` tables (`PeakExcursion_deg`, `PeakDelta_deg`), not as its own figure.
 
 ## % change vs level walk + manual overrides
 - Each bar on the ROM / spatiotemporal / peak-timing figures shows the **% change vs level

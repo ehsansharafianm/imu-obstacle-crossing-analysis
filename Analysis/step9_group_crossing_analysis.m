@@ -25,7 +25,7 @@ addpath(fileparts(mfilename('fullpath')));
 %   Figures/Group_Tier1.png, Group_ROM.png
 
 %% ===================== CONFIG =====================
-TESTS    = [101 102 103 104 105 106];  % participant test numbers (Subject ID = Test #)
+TESTS    = [101 102 103 104 105 106 107];  % participant test numbers (Subject ID = Test #)
 COHORT   = 'YoungAdults';
 TERRAINS = {'W1_H1','W1_H2','W1_H3','W2_H1','W2_H2','W2_H3'};
 ROLES    = {'Leading','Trailing'};
@@ -60,6 +60,26 @@ PKALL  = [PKT_JOINTS, {'FootHeight'}, PKT_SEGS];                 % all peak-timi
 % figure shows BOTH - flip any of these to 'min' once you see which is the real peak.
 PK_EXTREMUM = struct('hip_flexion','min', 'knee_angle','min', 'ankle_angle','max', ...
                      'FootHeight','max', 'Foot','min', 'Shank','min', 'Thigh','max');
+
+% -------- Named PEAK parameters (whole cycle, referenced to begin-ZVP) ----------
+% Reported as a magnitude in the NAMED direction (the sign flip is handled below).
+% ext = which extremum ('max'/'min') in THIS data's sign convention. role: P/S/C.
+% Flip an ext here if the definition figure shows the other extremum is the event.
+PEAKDEF = {
+%   key              display                       signal         ext    role
+   'hip_pk_flex',   'Hip peak flexion',           'hip_flexion', 'min', 'P';
+   'knee_pk_flex',  'Knee peak flexion',          'knee_angle',  'min', 'P';
+   'ank_dorsi',     'Ankle peak dorsiflexion',    'ankle_angle', 'max', 'P';
+   'ank_plant',     'Ankle peak plantarflexion',  'ankle_angle', 'min', 'P';
+   'hip_pk_ext',    'Hip peak extension',         'hip_flexion', 'max', 'S';
+   'thigh_fwd',     'Thigh peak forward tilt',    'Thigh',       'max', 'P';
+   'shank_back',    'Shank peak backward (heelup)','Shank',      'min', 'P';
+   'foot_toedown',  'Foot peak toe-down',         'Foot',        'min', 'P';
+   'thigh_back',    'Thigh peak backward tilt',   'Thigh',       'min', 'S';
+   'shank_fwd',     'Shank peak forward (reach)', 'Shank',       'max', 'S';
+   'foot_toeup',    'Foot peak toe-up',           'Foot',        'max', 'S';
+};
+PK_JOINT_SIGS = {'hip_flexion','knee_angle','ankle_angle'};   % joints vs IMU segments
 
 %% -------------------- MANUAL OVERRIDES (optional) --------------------
 % ONE ROW PER value you want to set by hand. Each row:
@@ -173,6 +193,7 @@ ROM = struct();  for j = JOINTS,    ROM.(j{1})  = nan(nT, nCR); end
 SROM = struct(); for g = SEGMENTS,  SROM.(g{1}) = nan(nT, nCR); end
 SPT = struct();  for p = STPARAMS,  SPT.(p{1})  = nan(nT, nCR); end
 PKT = struct();  for q = PKALL,     PKT.(q{1})  = nan(nT, nCR); end
+PEX = struct();  for q = 1:size(PEAKDEF,1), PEX.(PEAKDEF{q,1}) = nan(nT, nCR); end   % peak excursion, deg
 nCross = zeros(nT,1);  usedTests = false(nT,1);
 
 %% ===================== PER-PARTICIPANT AGGREGATION =====================
@@ -232,6 +253,16 @@ for ti = 1:nT
         PKT.(g{1})(ti,:) = peakTimeByCond(Sg, S5, @(s,sw) sprintf('IMU: %s %s (%s) X', sw, g{1}, SEG_SYS), condR, sp, PK_EXTREMUM.(g{1}));
     end
     PKT.FootHeight(ti,:) = footHeightPeakTimeByCond(Sg, S5, condR, PK_EXTREMUM.FootHeight);
+    % --- Named peak EXCURSIONS (whole cycle, referenced to begin-ZVP), deg ---
+    for q = 1:size(PEAKDEF,1)
+        sig = PEAKDEF{q,3};  ext = PEAKDEF{q,4};  sp = cleanSpecFor(CLEAN, tn, sig);
+        if any(strcmp(sig, PK_JOINT_SIGS))
+            lf = @(s,sw) sprintf('Joint: %s_%s', sig, lower(s));
+        else
+            lf = @(s,sw) sprintf('IMU: %s %s (%s) X', sw, sig, SEG_SYS);
+        end
+        PEX.(PEAKDEF{q,1})(ti,:) = peakExcByCond(Sg, S5, lf, ext, condR, sp);
+    end
     fprintf('Test %3d: %d crossings aggregated.\n', tn, nCross(ti));
 end
 
@@ -264,10 +295,18 @@ for q = PKALL
     M = PKT.(q{1})(usedTests,:);
     G.PKT.(q{1}).mean = mean(M,1,'omitnan');  G.PKT.(q{1}).sd = std(M,0,1,'omitnan');  G.PKT.(q{1}).n = sum(~isnan(M),1);
 end
+% Named peak excursions: group EXCURSION (mean+/-SD) and paired delta-vs-level.
+lvIx = find(strcmp(condR,'Level_Walk'),1);
+for q = 1:size(PEAKDEF,1)
+    key = PEAKDEF{q,1};  M = PEX.(key)(usedTests,:);
+    G.PEXc.(key).mean = mean(M,1,'omitnan');  G.PEXc.(key).sd = std(M,0,1,'omitnan');  G.PEXc.(key).n = sum(~isnan(M),1);
+    D = M - M(:,lvIx);                                   % paired: each participant minus their own level walk
+    G.PEXd.(key).mean = mean(D,1,'omitnan');  G.PEXd.(key).sd = std(D,0,1,'omitnan');  G.PEXd.(key).n = sum(~isnan(D),1);
+end
 G.condName = condName;  G.condR = condR;  G.terrains = TERRAINS;  G.roles = ROLES;
 G.joints = JOINTS;  G.segments = SEGMENTS;  G.t1params = T1PARAMS;  G.stparams = STPARAMS;  G.pkall = PKALL;
-G.pkExtremum = PK_EXTREMUM;  G.cohort = COHORT;  G.cleaning = CLEAN;
-G.perParticipant = struct('T1',P1,'ROM',ROM,'SROM',SROM,'SPT',SPT,'PKT',PKT,'tests',TESTS,'used',usedTests,'nCross',nCross);
+G.pkExtremum = PK_EXTREMUM;  G.peakdef = PEAKDEF;  G.cohort = COHORT;  G.cleaning = CLEAN;
+G.perParticipant = struct('T1',P1,'ROM',ROM,'SROM',SROM,'SPT',SPT,'PKT',PKT,'PEX',PEX,'tests',TESTS,'used',usedTests,'nCross',nCross);
 
 %% ===================== APPLY MANUAL OVERRIDES =====================
 % Each OVERRIDE row {GROUP, SIGNAL, CONDITION, MEAN, SD} replaces that one cell's
@@ -352,6 +391,9 @@ end
 writetable(cell2table(CS,'VariableNames',matlab.lang.makeValidName(vnamesS)), xlsFile, 'Sheet','SegmentROM_deg');
 writeGroupSheet(xlsFile, 'Spatiotemporal',   condR, STPARAMS, G.SPT);   % stride cm / cadence spm / speed m/s
 writeGroupSheet(xlsFile, 'PeakTiming_pctGC', condR, PKALL,    G.PKT);   % % gait cycle
+pkKeys = PEAKDEF(:,1)';
+writeGroupSheet(xlsFile, 'PeakExcursion_deg', condR, pkKeys, G.PEXc);   % offset-corrected excursion
+writeGroupSheet(xlsFile, 'PeakDelta_deg',     condR, pkKeys, G.PEXd);   % paired delta vs level
 fprintf('Saved summary -> %s\n', xlsFile);
 
 %% ===================== MARKDOWN SUMMARY (easy to read / share) =====================
@@ -377,6 +419,26 @@ mdTable(fid, 'Joint ROM (deg)', condR, JOINTS, JOINTS, G.ROM, 1, 1);
 mdTable(fid, 'Segment tilt ROM (deg, Dot)', condR, SEGMENTS, SEGMENTS, G.SROM, 1, 1);
 mdTable(fid, 'Peak timing (% gait cycle)', condR, PKALL, ...
     cellfun(@(k) sprintf('%s (%s)', k, PK_EXTREMUM.(k)), PKALL, 'uni',0), G.PKT, 1, 0);
+% Named peak angles: excursion (offset-corrected) + paired delta vs level, by role.
+pP = strcmp(PEAKDEF(:,5),'P');  pS = strcmp(PEAKDEF(:,5),'S');
+kP = PEAKDEF(pP,1)';  nP = PEAKDEF(pP,2)';   kS = PEAKDEF(pS,1)';  nS = PEAKDEF(pS,2)';
+% Anatomical peak-figure groups (joint + its IMU segment per figure). Panel titles
+% carry a (P)/(S) role tag so the headline-vs-exploratory split stays visible.
+pkDisp = containers.Map(PEAKDEF(:,1), PEAKDEF(:,2));   % key -> display name
+pkRole = containers.Map(PEAKDEF(:,1), PEAKDEF(:,5));   % key -> P/S
+pkTitle = @(k) sprintf('%s (%s)', pkDisp(k), pkRole(k));
+PKGRP = { ...
+   'Group_Peak_HipThigh',  {'hip_pk_flex','hip_pk_ext','thigh_fwd','thigh_back'}, 2, 2, ...
+       'Hip and thigh peak angles', 'Hip flexion/extension + thigh fore/aft tilt'; ...
+   'Group_Peak_KneeShank', {'knee_pk_flex','shank_back','shank_fwd'},             1, 3, ...
+       'Knee and shank peak angles', 'Knee flexion + shank fore/aft tilt'; ...
+   'Group_Peak_AnkleFoot', {'ank_dorsi','ank_plant','foot_toedown','foot_toeup'}, 2, 2, ...
+       'Ankle and foot peak angles', 'Ankle dorsi/plantarflexion + foot toe up/down' };
+fprintf(fid, '> Peaks are whole-cycle extrema referenced to the begin-ZVP (stance) posture, magnitude in the named direction. **Δ vs level walk is paired within participant.**\n\n');
+mdTable(fid, 'Peak angles — PRIMARY — excursion (deg, offset-corrected)', condR, kP, nP, G.PEXc, 1, 1, true);
+mdTable(fid, 'Peak angles — PRIMARY — Δ vs level walk (deg, paired)',     condR, kP, nP, G.PEXd, 1, 1, true);
+mdTable(fid, 'Peak angles — SECONDARY — excursion (deg)',                 condR, kS, nS, G.PEXc, 1, 1, true);
+mdTable(fid, 'Peak angles — SECONDARY — Δ vs level walk (deg, paired)',   condR, kS, nS, G.PEXd, 1, 1, true);
 fclose(fid);
 fprintf('Saved markdown -> %s\n', mdFile);
 
@@ -403,6 +465,18 @@ lg = legend(hbRef, {'Leading limb','Trailing limb'}, 'Orientation','horizontal',
 lg.Layout.Tile = 'north';
 addToggles(ctrl1, {{'Leading limb',[leadB,leadE]}, {'Trailing limb',[trailB,trailE]}});
 saveFig(tl1, figDir, 'Group_Tier1', ST);
+
+% ----- Peak angles (named extrema), excursion values with the red level-walk line -----
+% Plotted exactly like ROM: bars = peak excursion (begin-ZVP referenced), red line =
+% level-walk excursion; the gap to the red line IS the change vs level walk. Paired Δ
+% stays in the markdown/xlsx tables. Grouped anatomically: hip+thigh, knee+shank, ankle+foot.
+for gg = 1:size(PKGRP,1)
+    keys = PKGRP{gg,2};
+    nice = cellfun(pkTitle, keys, 'uni',0);
+    drawPanelFigure(G.PEXc, keys, nice, 'Peak excursion (deg)', condR, TERRAINS, ROLES, XLAB, ST, ...
+        figDir, PKGRP{gg,1}, sprintf('%s   (begin-ZVP referenced; n = %d)', PKGRP{gg,5}, G.n), ...
+        [PKGRP{gg,6} '   —   red line = level walk'], true, PKGRP{gg,3}, PKGRP{gg,4});
+end
 
 % ----- Joint ROM: 1x3 tiles (hip/knee/ankle), Level-walk dashed -----
 drawRomFigure(G.ROM, JOINTS, {'Hip flexion','Knee','Ankle'}, condR, TERRAINS, ROLES, XLAB, ST, ...
@@ -438,6 +512,9 @@ sgE = arrayfun(@(i) sprintf('%s (%s)', PKT_SEGS{i}, PK_EXTREMUM.(PKT_SEGS{i})), 
 drawPanelFigure(G.PKT, PKT_SEGS, sgE, 'Gait cycle (%)', condR, TERRAINS, ROLES, XLAB, ST, ...
     figDir, 'Group_PeakTiming_Segments', sprintf('Group segment peak timing   (%% gait cycle; n = %d)', G.n), ...
     'Foot / Shank / Thigh tilt peak   —   dashed = level walk', true, 1, 3);
+
+% (Peak-angle figures now drawn above, before ROM — excursion values with the red
+%  level-walk reference line. Paired Δ vs level walk remains in the md/xlsx tables.)
 
 fprintf('Saved figures -> %s\n', figDir);
 fprintf('\nDone. Group results for %d participant(s) in Results/Group Analysis/.\n', G.n);
@@ -571,6 +648,53 @@ function out = spatiotemporalByCond(Sg, S5, condR)
     out.speed   = cellfun(@(x) mean(x,'omitnan'), acV);
 end
 
+function v = peakExcByCond(Sg, S5, labelFun, ext, condR, sp)
+% Mean peak EXCURSION (deg, magnitude in the named direction) = |extremum over the
+% whole cycle - begin-ZVP reference|, per condition, pooled by role. Same per-
+% participant cleaning (sp) as romByCond.
+    if nargin < 6, sp = []; end
+    REFW = 4;                                        % samples for the begin-ZVP reference median
+    v = nan(1, numel(condR));  acc = repmat({[]},1,numel(condR));
+    sides = {'L','R'};  sideWord = {'Left','Right'};
+    camT = {S5.camera.terrainL, S5.camera.terrainR};
+    camR = {S5.camera.roleL,    S5.camera.roleR};
+    zvp  = {Sg.zvpL, Sg.zvpR};  labels = {Sg.signal.label};
+    for s = 1:2
+        li = find(strcmp(labels, labelFun(sides{s}, sideWord{s})), 1);  if isempty(li), continue; end
+        Y = Sg.signal(li).strides;                   % NSEG x nStr
+        ref = median(Y(1:min(REFW,size(Y,1)),:), 1, 'omitnan');
+        if strcmpi(ext,'min'), exc = ref - min(Y,[],1,'omitnan');   % dip below stance
+        else,                  exc = max(Y,[],1,'omitnan') - ref;   % rise above stance
+        end
+        exc(all(isnan(Y),1)) = NaN;
+        T = camT{s};  R = camR{s};  zv = zvp{s};  m = min(numel(exc), numel(T));
+        for k = 1:m
+            if isnan(exc(k)) || isempty(T{k}), continue; end
+            [ci,code] = condIdx(condR, T{k}, R{k});  if isempty(ci), continue; end
+            if ~isempty(sp)
+                if ~isempty(sp.excludeCodes) && any(strcmp(code, sp.excludeCodes)), continue; end
+                if ~isempty(sp.excludeWin) && k <= numel(zv)
+                    tk = (zv(k)-1)/Sg.fs;
+                    if any(tk >= sp.excludeWin(:,1) & tk <= sp.excludeWin(:,2)), continue; end
+                end
+            end
+            acc{ci}(end+1) = exc(k);
+        end
+    end
+    for ci = 1:numel(condR)
+        x = acc{ci}(~isnan(acc{ci}));
+        if isempty(sp)
+            v(ci) = mean(x, 'omitnan');
+        else
+            if numel(x) >= 4 && isfinite(sp.madK)
+                md = median(x);  ad = median(abs(x-md));
+                if ad > 0, x = x(abs(x-md) <= sp.madK*1.4826*ad); end
+            end
+            v(ci) = median(x, 'omitnan');
+        end
+    end
+end
+
 function v = peakTimeByCond(Sg, S5, labelFun, condR, sp, ext)
 % Mean peak timing (% gait cycle) of a signal per condition: arg-extremum (max or
 % min, per ext) of each normalized stride. Same per-participant cleaning (sp).
@@ -636,11 +760,13 @@ function v = footHeightPeakTimeByCond(Sg, S5, condR, ext)
     for ci = 1:numel(condR), v(ci) = mean(acc{ci}, 'omitnan'); end
 end
 
-function mdTable(fid, header, conds, keys, niceHdr, S, divisor, dec)
+function mdTable(fid, header, conds, keys, niceHdr, S, divisor, dec, pctOff)
 % Write one Markdown table: rows = condition, cols = each key's "mean ± SD", + n.
-% If the conditions include Level_Walk, each non-level cell also gets (% vs level).
+% If the conditions include Level_Walk (and pctOff not set), each non-level cell
+% also gets (% vs level).
+    if nargin < 9, pctOff = false; end
     if isscalar(dec), dec = repmat(dec,1,numel(keys)); end
-    lvi = find(strcmp(conds,'Level_Walk'),1);
+    lvi = find(strcmp(conds,'Level_Walk'),1);  if pctOff, lvi = []; end
     fprintf(fid, '## %s\n\n', header);
     fprintf(fid, '| Condition | %s | n |\n', strjoin(niceHdr, ' | '));
     fprintf(fid, '%s|\n', repmat('|---', 1, numel(keys)+2));
@@ -766,6 +892,8 @@ function f = drawPanelFigure(S, keys, nice, ylabs, condList, terrains, roles, xl
                       'FontSize',ST.levelLblSz, 'LabelHorizontalAlignment','left', 'LabelVerticalAlignment','bottom');
                 lvl(end+1) = yl; %#ok<AGROW>
             end
+        else
+            yline(ax, 0, '-', 'Color',[0.45 0.45 0.45], 'LineWidth',1.4, 'HandleVisibility','off');  % Δ zero reference
         end
         if k == 1, hbRef = hb; end
     end

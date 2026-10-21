@@ -18,10 +18,6 @@ DEF_TEST = 104;                 % participant to pull the clean example from
 ROM_JOINT = 'knee_angle';       % joint for the ROM definition
 ROM_SEG   = 'Thigh';            % IMU segment for the ROM definition (Dot)
 SEG_SYS   = 'Dot';
-% Reported extremum per signal in the GROUP bars (keep in sync with
-% group_crossing_analysis.m); each peak panel is tagged "(reported: ...)".
-PK_EXTREMUM = struct('hip_flexion','min','knee_angle','min','ankle_angle','max', ...
-                     'FootHeight','max','Foot','min','Shank','min','Thigh','max');
 % -------- style (presentation) --------
 FN='Arial'; SZ_T=18; SZ_L=16; SZ_TK=13; SZ_LG=13; SZ_ANN=14; BOXW=2.2; LW=3.2;
 C_TOE =[0.17 0.49 0.72]; C_HEEL=[0.89 0.52 0.20]; C_OBS=[0.80 0.80 0.80];
@@ -83,29 +79,31 @@ drawROMpanel(nexttile(tl), pct, yS, sprintf('%s segment (IMU)', ROM_SEG), FN,SZ_
 title(tl,'Range of motion  =  max − min  (over one crossing stride)','FontName',FN,'FontSize',SZ_T,'FontWeight','bold');
 savePNGdef(f2, outDir, 'def_ROM');
 
-%% ===================== FIG 3 - PEAK TIMING =====================
-% All peak-timing signals: name, kind, nice label, y-unit, TILE in a 3x3 grid
-% (joints row 1, segments row 2, foot height row 3 middle). Only the REPORTED
-% extremum is shown, in red.
-PK_SIGS = { 'hip_flexion','Joint','Hip flexion','angle (deg)',1;
-            'knee_angle', 'Joint','Knee',       'angle (deg)',2;
-            'ankle_angle','Joint','Ankle',      'angle (deg)',3;
-            'Thigh',      'Seg',  'Thigh',       'angle (deg)',4;
-            'Shank',      'Seg',  'Shank',       'angle (deg)',5;
-            'Foot',       'Seg',  'Foot',        'angle (deg)',6;
-            'FootHeight', 'Foot', 'Foot height', 'height (cm)', 8 };
-f3 = figure('Color','w','Position',[50 40 1500 1000]);
-tl3 = tiledlayout(f3,3,3,'TileSpacing','compact','Padding','compact');
-for i = 1:size(PK_SIGS,1)
-    nm = PK_SIGS{i,1};  y = smoothSig(repStride(Sg, S5, nm, PK_SIGS{i,2}, SEG_SYS));
-    ext = 'max';  if isfield(PK_EXTREMUM, nm), ext = PK_EXTREMUM.(nm); end
-    ttl = sprintf('%s  (%s)', PK_SIGS{i,3}, ext);
-    drawPeakPanel(nexttile(tl3, PK_SIGS{i,5}), pct, y, ttl, PK_SIGS{i,4}, ext, ...
-        FN,SZ_T,SZ_L,SZ_TK,SZ_ANN,BOXW,LW,C_SIG,C_MAX);
+%% ===================== FIG 3 - PEAK ANGLE VARIABLES =====================
+% Each named peak = an EXCURSION from the stance (begin-ZVP) reference. One panel
+% per signal, for the limb where it reads best; peaks coloured red (primary) /
+% green (secondary). {signal, kind, role(example limb), nice, {name, ext, PorS}...}
+C_LEAD = [0.17 0.49 0.72];  C_TRAIL = [0.89 0.52 0.20];  C_REF = [0.35 0.35 0.35];
+PANELS = {   % signal, kind, nice, {peak name, ext, P/S}
+ 'hip_flexion','Joint','Hip',   { 'Hip peak flexion','min','P';   'Hip peak extension','max','S' };
+ 'knee_angle', 'Joint','Knee',  { 'Knee peak flexion','min','P' };
+ 'ankle_angle','Joint','Ankle', { 'Ankle dorsiflexion','max','P'; 'Ankle plantarflexion','min','P' };
+ 'Thigh',      'Seg',  'Thigh', { 'Thigh forward tilt','max','P'; 'Thigh backward tilt','min','S' };
+ 'Shank',      'Seg',  'Shank', { 'Shank backward (heel up)','min','P'; 'Shank forward (reach)','max','S' };
+ 'Foot',       'Seg',  'Foot',  { 'Foot toe-down','min','P';     'Foot toe-up','max','S' };
+};
+f3 = figure('Color','w','Position',[30 40 1760 940]);
+tl3 = tiledlayout(f3,2,3,'TileSpacing','compact','Padding','compact');
+for i = 1:size(PANELS,1)
+    sig = PANELS{i,1};  kind = PANELS{i,2};
+    yL = smoothSig(meanCrossStrideRole(Sg, S5, sig, kind, 'Leading',  SEG_SYS));
+    yT = smoothSig(meanCrossStrideRole(Sg, S5, sig, kind, 'Trailing', SEG_SYS));
+    drawPeakDef(nexttile(tl3), pct, yL, yT, PANELS{i,3}, PANELS{i,4}, i==1, ...
+        FN,SZ_T,SZ_L,SZ_TK,SZ_ANN,BOXW,LW,C_LEAD,C_TRAIL,C_REF);
 end
-title(tl3,'Peak timing  =  where the reported max / min of the signal occurs in the crossing cycle (ZVP → ZVP)', ...
+title(tl3,'Peak angle variables  =  excursion from stance (begin-ZVP).   Leading (blue) vs Trailing (orange); values in degrees', ...
     'FontName',FN,'FontSize',SZ_T,'FontWeight','bold');
-savePNGdef(f3, outDir, 'def_PeakTiming');
+savePNGdef(f3, outDir, 'def_PeakAngles');
 
 fprintf('Definition figures saved -> %s\n', outDir);
 
@@ -123,20 +121,6 @@ function e = pickCrossing(CP)
     e = best;
 end
 
-function y = repStride(Sg, S5, name, kind, segSys)
-% Representative crossing-stride curve for a signal (joint / IMU segment / foot height).
-    switch kind
-        case 'Joint'
-            y = meanCrossStride(Sg, S5, sprintf('Joint: %s_r', name));
-            if all(isnan(y)), y = meanCrossStride(Sg, S5, sprintf('Joint: %s_l', name)); end
-        case 'Seg'
-            y = meanCrossStride(Sg, S5, sprintf('IMU: Right %s (%s) X', name, segSys));
-            if all(isnan(y)), y = meanCrossStride(Sg, S5, sprintf('IMU: Left %s (%s) X', name, segSys)); end
-        otherwise   % 'Foot' = foot height (cm)
-            y = footMeanCrossStride(Sg, S5);
-    end
-end
-
 function m = meanCrossStride(Sg, S5, label)
 % Mean normalized stride (NSEG x 1) over this signal's OBSTACLE-crossing strides.
     m = nan(Sg.nseg,1);
@@ -148,21 +132,6 @@ function m = meanCrossStride(Sg, S5, label)
         if ~isempty(T{j}) && ~strcmpi(T{j},'Level_Walk') && ~isempty(R{j}), sel(j) = true; end
     end
     if any(sel), m = mean(Y(:,sel), 2, 'omitnan'); end
-end
-
-function m = footMeanCrossStride(Sg, S5)
-% Mean foot height (ZHC Z, cm) over obstacle-crossing strides, pick the busier side.
-    m = nan(Sg.nseg,1);  bestN = 0;
-    for sd = {'R','L'}
-        s = sd{1};  if ~isfield(Sg.zhc,s), continue; end
-        Z = squeeze(Sg.zhc.(s).posGait(:,3,:));         % NSEG x nWin (m)
-        if s=='R', T=S5.camera.terrainR; R=S5.camera.roleR; else, T=S5.camera.terrainL; R=S5.camera.roleL; end
-        sel = false(1, size(Z,2));
-        for j = 1:min(size(Z,2), numel(T))
-            if ~isempty(T{j}) && ~strcmpi(T{j},'Level_Walk') && ~isempty(R{j}), sel(j) = true; end
-        end
-        if nnz(sel) > bestN, bestN = nnz(sel);  m = mean(Z(:,sel),2,'omitnan')*100; end   % m -> cm
-    end
 end
 
 function drawROMpanel(ax, pct, y, ttl, FN,SZ_T,SZ_L,SZ_TK,SZ_ANN,BOXW,LW,cSig,cDim)
@@ -182,22 +151,63 @@ function drawROMpanel(ax, pct, y, ttl, FN,SZ_T,SZ_L,SZ_TK,SZ_ANN,BOXW,LW,cSig,cD
     title(ax, ttl,'FontName',FN,'FontSize',SZ_T,'FontWeight','bold','Interpreter','none');
 end
 
-function drawPeakPanel(ax, pct, y, ttl, ylab, ext, FN,SZ_T,SZ_L,SZ_TK,SZ_ANN,BOXW,LW,cSig,cPk)
-% Mark ONLY the reported extremum (max or min, per ext), in red, with its % GC.
+function drawPeakDef(ax, pct, yL, yT, ttl, peaks, showLeg, FN,SZ_T,SZ_L,SZ_TK,SZ_ANN,BOXW,LW,cLead,cTrail,cRef)
+% Define named peaks on a signal, Leading (blue) vs Trailing (orange). Each curve
+% has its own stance (begin-ZVP) reference; every named peak is marked on BOTH
+% curves as an excursion, labelled with the value used (name once on Leading).
     hold(ax,'on'); box(ax,'on');
-    plot(ax, pct, y, '-', 'Color',cSig, 'LineWidth',LW);
+    hL = plot(ax, pct, yL, '-', 'Color',cLead,  'LineWidth',LW);
+    hT = plot(ax, pct, yT, '-', 'Color',cTrail, 'LineWidth',LW);
     styleAx(ax, FN, SZ_TK, BOXW);
-    if strcmpi(ext,'min'), [v,ix]=min(y); lbl='min'; va='top'; else, [v,ix]=max(y); lbl='max'; va='bottom'; end
-    xpk = pct(ix);  rng = max(max(y)-min(y),eps);
-    yb = min(y)-rng*0.24;  yt = max(y)+rng*0.24;  ylim(ax,[yb yt]);  xlim(ax,[-3 103]);
-    plot(ax, [xpk xpk], [yb v], '--', 'Color',cPk, 'LineWidth',2.4);
-    plot(ax, xpk, v, 'o','Color',cPk,'MarkerFaceColor',cPk,'MarkerSize',11);
-    if xpk > 60, ha='right'; else, ha='left'; end
-    text(ax, xpk, v, sprintf('  %s @ %.0f%% GC', lbl, xpk), 'HorizontalAlignment',ha, 'VerticalAlignment',va, ...
-        'FontName',FN,'FontSize',SZ_ANN,'FontWeight','bold','Color',cPk);
+    refL = median(yL(1:min(4,numel(yL))),'omitnan');  refT = median(yT(1:min(4,numel(yT))),'omitnan');
+    yline(ax, refL, ':', 'stance', 'Color',cRef, 'LineWidth',1.4, 'FontName',FN, 'FontSize',max(9,SZ_ANN-3), ...
+        'LabelHorizontalAlignment','right', 'LabelVerticalAlignment','bottom');
+    allY = [yL;yT];  rng = max(max(allY)-min(allY), eps);
+    ylim(ax,[min(allY)-rng*0.22, max(allY)+rng*0.30]);  xlim(ax,[-3 103]);
+    fs = max(10, SZ_ANN-3);
+    for p = 1:size(peaks,1)
+        nm = peaks{p,1};  ext = peaks{p,2};
+        if strcmpi(ext,'min'), [vL,iL]=min(yL); [vT,iT]=min(yT);  va='top'; else, [vL,iL]=max(yL); [vT,iT]=max(yT);  va='bottom'; end
+        % Leading
+        plot(ax, [pct(iL) pct(iL)], [refL vL], '-', 'Color',cLead, 'LineWidth',2.2);
+        plot(ax, pct(iL), vL, 'o','Color',cLead,'MarkerFaceColor',cLead,'MarkerSize',9);
+        haL = 'left'; if pct(iL) > 55, haL = 'right'; end
+        text(ax, pct(iL), vL, sprintf(' %s  L %.0f° ', nm, abs(vL-refL)), 'HorizontalAlignment',haL,'VerticalAlignment',va, ...
+            'FontName',FN,'FontSize',fs,'FontWeight','bold','Color',cLead);
+        % Trailing
+        plot(ax, [pct(iT) pct(iT)], [refT vT], '-', 'Color',cTrail, 'LineWidth',2.2);
+        plot(ax, pct(iT), vT, 'o','Color',cTrail,'MarkerFaceColor',cTrail,'MarkerSize',9);
+        haT = 'left'; if pct(iT) > 55, haT = 'right'; end
+        text(ax, pct(iT), vT, sprintf(' T %.0f° ', abs(vT-refT)), 'HorizontalAlignment',haT,'VerticalAlignment',va, ...
+            'FontName',FN,'FontSize',fs,'FontWeight','bold','Color',cTrail);
+    end
     xlabel(ax,'Gait cycle (%)','FontName',FN,'FontSize',SZ_L,'FontWeight','bold');
-    ylabel(ax,ylab,'FontName',FN,'FontSize',SZ_L,'FontWeight','bold');
+    ylabel(ax,'angle (deg)','FontName',FN,'FontSize',SZ_L,'FontWeight','bold');
     title(ax, ttl,'FontName',FN,'FontSize',SZ_T,'FontWeight','bold','Interpreter','none');
+    if showLeg, legend([hL hT], {'Leading','Trailing'}, 'Location','best', 'FontName',FN,'FontSize',SZ_L-2); end
+end
+
+function m = meanCrossStrideRole(Sg, S5, sig, kind, role, segSys)
+% Mean crossing-stride curve for a signal, pooled over BOTH limbs' strides that
+% had the given role (Leading/Trailing).
+    cols = [];
+    for sd = {'L','R'}
+        s = sd{1};
+        if strcmp(kind,'Joint'), lbl = sprintf('Joint: %s_%s', sig, lower(s));
+        else,                    lbl = sprintf('IMU: %s %s (%s) X', sideWord(s), sig, segSys);
+        end
+        k = find(strcmp({Sg.signal.label}, lbl), 1);  if isempty(k), continue; end
+        Y = Sg.signal(k).strides;
+        if s=='R', R = S5.camera.roleR; else, R = S5.camera.roleL; end
+        sel = false(1, size(Y,2));
+        for j = 1:min(size(Y,2), numel(R)), if strcmpi(R{j}, role), sel(j) = true; end, end
+        cols = [cols, Y(:,sel)]; %#ok<AGROW>
+    end
+    if isempty(cols), m = nan(Sg.nseg,1); else, m = mean(cols, 2, 'omitnan'); end
+end
+
+function w = sideWord(s)
+    if s=='R', w = 'Right'; else, w = 'Left'; end
 end
 
 function y = smoothSig(y)
