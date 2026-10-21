@@ -15,6 +15,7 @@ addpath(fileparts(mfilename('fullpath')));
 
 %% ===================== CONFIG =====================
 DEF_TEST = 104;                 % participant to pull the clean example from
+COHORT_TESTS = [101 102 103 104 105 106 107];   % cohort for the sign-normalization templates
 ROM_JOINT = 'knee_angle';       % joint for the ROM definition
 ROM_SEG   = 'Thigh';            % IMU segment for the ROM definition (Dot)
 SEG_SYS   = 'Dot';
@@ -31,6 +32,10 @@ CP = load(fullfile(base,sprintf('CrossingParams_Test%d.mat',DEF_TEST)));  CP = C
 Sg = load(fullfile(base,sprintf('SegmentedParams_Test%d.mat',DEF_TEST))); Sg = Sg.Seg;
 S5f = fullfile(base,sprintf('SegTrajectories_WithCamera_Test%d.mat',DEF_TEST));
 S5 = load(S5f); fn = fieldnames(S5); S5 = S5.(fn{1});
+% Normalize hip/segment sign conventions (same data-driven templates as step9) so
+% the example reads with a consistent flexion/tilt direction on both legs.
+SNT = signNormTools();
+Sg  = SNT.apply(Sg, S5, SNT.build(COHORT_TESTS, root, SEG_SYS), SEG_SYS);
 NSEG = Sg.nseg;  pct = linspace(0,100,NSEG)';
 
 %% ===================== FIG 1 - OBSTACLE CROSSING =====================
@@ -84,16 +89,17 @@ savePNGdef(f2, outDir, 'def_ROM');
 % per signal, for the limb where it reads best; peaks coloured red (primary) /
 % green (secondary). {signal, kind, role(example limb), nice, {name, ext, PorS}...}
 C_LEAD = [0.17 0.49 0.72];  C_TRAIL = [0.89 0.52 0.20];  C_REF = [0.35 0.35 0.35];
+% Only signals with VALID, sign-stable directional peaks: hip joint + Dot segments.
+% (Knee/ankle joints flip sign between walking and crossing, so they have no
+% directional peak - they are defined by ROM instead; see def_ROM / step9.)
 PANELS = {   % signal, kind, nice, {peak name, ext, P/S}
- 'hip_flexion','Joint','Hip',   { 'Hip peak flexion','min','P';   'Hip peak extension','max','S' };
- 'knee_angle', 'Joint','Knee',  { 'Knee peak flexion','min','P' };
- 'ankle_angle','Joint','Ankle', { 'Ankle dorsiflexion','max','P'; 'Ankle plantarflexion','min','P' };
- 'Thigh',      'Seg',  'Thigh', { 'Thigh forward tilt','max','P'; 'Thigh backward tilt','min','S' };
- 'Shank',      'Seg',  'Shank', { 'Shank backward (heel up)','min','P'; 'Shank forward (reach)','max','S' };
- 'Foot',       'Seg',  'Foot',  { 'Foot toe-down','min','P';     'Foot toe-up','max','S' };
+ 'hip_flexion','Joint','Hip flexion / extension',        { 'Hip peak flexion','min','P';   'Hip peak extension','max','S' };
+ 'Thigh',      'Seg',  'Thigh flexion / extension',      { 'Thigh flexion (forward tilt)','max','P'; 'Thigh extension (backward tilt)','min','S' };
+ 'Shank',      'Seg',  'Shank (knee segment)',           { 'Shank backward (heel up)','min','P'; 'Shank forward (reach)','max','S' };
+ 'Foot',       'Seg',  'Foot (ankle segment)',           { 'Foot toe-down','min','P';     'Foot toe-up','max','S' };
 };
-f3 = figure('Color','w','Position',[30 40 1760 940]);
-tl3 = tiledlayout(f3,2,3,'TileSpacing','compact','Padding','compact');
+f3 = figure('Color','w','Position',[30 60 1480 940]);
+tl3 = tiledlayout(f3,2,2,'TileSpacing','compact','Padding','compact');
 for i = 1:size(PANELS,1)
     sig = PANELS{i,1};  kind = PANELS{i,2};
     yL = smoothSig(meanCrossStrideRole(Sg, S5, sig, kind, 'Leading',  SEG_SYS));
@@ -197,7 +203,7 @@ function m = meanCrossStrideRole(Sg, S5, sig, kind, role, segSys)
         else,                    lbl = sprintf('IMU: %s %s (%s) X', sideWord(s), sig, segSys);
         end
         k = find(strcmp({Sg.signal.label}, lbl), 1);  if isempty(k), continue; end
-        Y = Sg.signal(k).strides;
+        Y = Sg.signal(k).strides;                            % sign-normalized at load
         if s=='R', R = S5.camera.roleR; else, R = S5.camera.roleL; end
         sel = false(1, size(Y,2));
         for j = 1:min(size(Y,2), numel(R)), if strcmpi(R{j}, role), sel(j) = true; end, end

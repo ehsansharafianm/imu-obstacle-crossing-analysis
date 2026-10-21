@@ -65,12 +65,14 @@ PK_EXTREMUM = struct('hip_flexion','min', 'knee_angle','min', 'ankle_angle','max
 % Reported as a magnitude in the NAMED direction (the sign flip is handled below).
 % ext = which extremum ('max'/'min') in THIS data's sign convention. role: P/S/C.
 % Flip an ext here if the definition figure shows the other extremum is the event.
+% NOTE: knee & ankle JOINT directional peaks are intentionally absent. Those IK
+% signals flip sign between walking and crossing (angle wrapping / drift), so a
+% directional flexion/extension peak cannot be made valid; knee/ankle are reported
+% as ROM + peak timing only, and their direction is carried by the shank/foot
+% segments below. Hip + the Dot segments ARE sign-stable (see signNormTools).
 PEAKDEF = {
 %   key              display                       signal         ext    role
    'hip_pk_flex',   'Hip peak flexion',           'hip_flexion', 'min', 'P';
-   'knee_pk_flex',  'Knee peak flexion',          'knee_angle',  'min', 'P';
-   'ank_dorsi',     'Ankle peak dorsiflexion',    'ankle_angle', 'max', 'P';
-   'ank_plant',     'Ankle peak plantarflexion',  'ankle_angle', 'min', 'P';
    'hip_pk_ext',    'Hip peak extension',         'hip_flexion', 'max', 'S';
    'thigh_fwd',     'Thigh peak forward tilt',    'Thigh',       'max', 'P';
    'shank_back',    'Shank peak backward (heelup)','Shank',      'min', 'P';
@@ -79,7 +81,7 @@ PEAKDEF = {
    'shank_fwd',     'Shank peak forward (reach)', 'Shank',       'max', 'S';
    'foot_toeup',    'Foot peak toe-up',           'Foot',        'max', 'S';
 };
-PK_JOINT_SIGS = {'hip_flexion','knee_angle','ankle_angle'};   % joints vs IMU segments
+PK_JOINT_SIGS = {'hip_flexion'};   % joint peaks (vs IMU segments); knee/ankle excluded
 
 %% -------------------- MANUAL OVERRIDES (optional) --------------------
 % ONE ROW PER value you want to set by hand. Each row:
@@ -196,6 +198,12 @@ PKT = struct();  for q = PKALL,     PKT.(q{1})  = nan(nT, nCR); end
 PEX = struct();  for q = 1:size(PEAKDEF,1), PEX.(PEAKDEF{q,1}) = nan(nT, nCR); end   % peak excursion, deg
 nCross = zeros(nT,1);  usedTests = false(nT,1);
 
+% Data-driven SIGN normalization templates (hip joint + Dot segments). Corrects the
+% inconsistent left/right & per-trial sign conventions before directional peaks are
+% taken; ROM/timing are sign-robust. Knee/ankle joints are deliberately not included.
+SNT = signNormTools();
+SIGN_TPL = SNT.build(TESTS, root, SEG_SYS);
+
 %% ===================== PER-PARTICIPANT AGGREGATION =====================
 for ti = 1:nT
     tn = TESTS(ti);
@@ -209,6 +217,7 @@ for ti = 1:nT
     CP = load(cpF);  CP = CP.CP;
     S5 = load(s5F);  fn = fieldnames(S5);  S5 = S5.(fn{1});
     Sg = load(sgF);  Sg = Sg.Seg;
+    Sg = SNT.apply(Sg, S5, SIGN_TPL, SEG_SYS);   % normalize hip/segment sign conventions
     usedTests(ti) = true;  nCross(ti) = numel(CP.crossing);
 
     % --- Tier 1: clearance + placement from CP (per crossing) ---
@@ -426,14 +435,19 @@ kP = PEAKDEF(pP,1)';  nP = PEAKDEF(pP,2)';   kS = PEAKDEF(pS,1)';  nS = PEAKDEF(
 % carry a (P)/(S) role tag so the headline-vs-exploratory split stays visible.
 pkDisp = containers.Map(PEAKDEF(:,1), PEAKDEF(:,2));   % key -> display name
 pkRole = containers.Map(PEAKDEF(:,1), PEAKDEF(:,5));   % key -> P/S
-pkTitle = @(k) sprintf('%s (%s)', pkDisp(k), pkRole(k));
+% Figure panel titles: flexion/extension framing with the tilt description in
+% parentheses for the thigh segment; a [P]/[S] role tag on every panel.
+pkFig = containers.Map('KeyType','char','ValueType','char');
+pkFig('thigh_fwd')  = 'Thigh flexion (forward tilt)';
+pkFig('thigh_back') = 'Thigh extension (backward tilt)';
+pkTitle = @(k) sprintf('%s [%s]', pkFigName(k, pkDisp, pkFig), pkRole(k));
 PKGRP = { ...
    'Group_Peak_HipThigh',  {'hip_pk_flex','hip_pk_ext','thigh_fwd','thigh_back'}, 2, 2, ...
        'Hip and thigh peak angles', 'Hip flexion/extension + thigh fore/aft tilt'; ...
-   'Group_Peak_KneeShank', {'knee_pk_flex','shank_back','shank_fwd'},             1, 3, ...
-       'Knee and shank peak angles', 'Knee flexion + shank fore/aft tilt'; ...
-   'Group_Peak_AnkleFoot', {'ank_dorsi','ank_plant','foot_toedown','foot_toeup'}, 2, 2, ...
-       'Ankle and foot peak angles', 'Ankle dorsi/plantarflexion + foot toe up/down' };
+   'Group_Peak_KneeShank', {'shank_back','shank_fwd'},                            1, 2, ...
+       'Knee and shank peak angles', 'Shank fore/aft tilt (knee joint reported as ROM)'; ...
+   'Group_Peak_AnkleFoot', {'foot_toedown','foot_toeup'},                         1, 2, ...
+       'Ankle and foot peak angles', 'Foot toe up/down (ankle joint reported as ROM)' };
 fprintf(fid, '> Peaks are whole-cycle extrema referenced to the begin-ZVP (stance) posture, magnitude in the named direction. **Δ vs level walk is paired within participant.**\n\n');
 mdTable(fid, 'Peak angles — PRIMARY — excursion (deg, offset-corrected)', condR, kP, nP, G.PEXc, 1, 1, true);
 mdTable(fid, 'Peak angles — PRIMARY — Δ vs level walk (deg, paired)',     condR, kP, nP, G.PEXd, 1, 1, true);
@@ -473,7 +487,7 @@ saveFig(tl1, figDir, 'Group_Tier1', ST);
 for gg = 1:size(PKGRP,1)
     keys = PKGRP{gg,2};
     nice = cellfun(pkTitle, keys, 'uni',0);
-    drawPanelFigure(G.PEXc, keys, nice, 'Peak excursion (deg)', condR, TERRAINS, ROLES, XLAB, ST, ...
+    drawPanelFigure(G.PEXc, keys, nice, 'Peak angle (deg)', condR, TERRAINS, ROLES, XLAB, ST, ...
         figDir, PKGRP{gg,1}, sprintf('%s   (begin-ZVP referenced; n = %d)', PKGRP{gg,5}, G.n), ...
         [PKGRP{gg,6} '   —   red line = level walk'], true, PKGRP{gg,3}, PKGRP{gg,4});
 end
@@ -651,7 +665,8 @@ end
 function v = peakExcByCond(Sg, S5, labelFun, ext, condR, sp)
 % Mean peak EXCURSION (deg, magnitude in the named direction) = |extremum over the
 % whole cycle - begin-ZVP reference|, per condition, pooled by role. Same per-
-% participant cleaning (sp) as romByCond.
+% participant cleaning (sp) as romByCond. Sg is already sign-normalized at load
+% (see signNormTools), so a single ext convention is valid across sides.
     if nargin < 6, sp = []; end
     REFW = 4;                                        % samples for the begin-ZVP reference median
     v = nan(1, numel(condR));  acc = repmat({[]},1,numel(condR));
@@ -661,7 +676,7 @@ function v = peakExcByCond(Sg, S5, labelFun, ext, condR, sp)
     zvp  = {Sg.zvpL, Sg.zvpR};  labels = {Sg.signal.label};
     for s = 1:2
         li = find(strcmp(labels, labelFun(sides{s}, sideWord{s})), 1);  if isempty(li), continue; end
-        Y = Sg.signal(li).strides;                   % NSEG x nStr
+        Y = Sg.signal(li).strides;                   % NSEG x nStr (sign-normalized at load)
         ref = median(Y(1:min(REFW,size(Y,1)),:), 1, 'omitnan');
         if strcmpi(ext,'min'), exc = ref - min(Y,[],1,'omitnan');   % dip below stance
         else,                  exc = max(Y,[],1,'omitnan') - ref;   % rise above stance
@@ -695,6 +710,12 @@ function v = peakExcByCond(Sg, S5, labelFun, ext, condR, sp)
     end
 end
 
+function nm = pkFigName(key, pkDisp, pkFig)
+% Figure panel name for a peak key: the flexion/extension override if one exists,
+% otherwise the formal PEAKDEF display name.
+    if isKey(pkFig, key), nm = pkFig(key); else, nm = pkDisp(key); end
+end
+
 function v = peakTimeByCond(Sg, S5, labelFun, condR, sp, ext)
 % Mean peak timing (% gait cycle) of a signal per condition: arg-extremum (max or
 % min, per ext) of each normalized stride. Same per-participant cleaning (sp).
@@ -707,7 +728,7 @@ function v = peakTimeByCond(Sg, S5, labelFun, condR, sp, ext)
     zvp  = {Sg.zvpL, Sg.zvpR};  labels = {Sg.signal.label};
     for s = 1:2
         li = find(strcmp(labels, labelFun(sides{s}, sideWord{s})), 1);  if isempty(li), continue; end
-        Y = Sg.signal(li).strides;                 % NSEG x nStr
+        Y = Sg.signal(li).strides;                 % NSEG x nStr (sign-normalized at load)
         if strcmpi(ext,'min'), [~, pk] = min(Y, [], 1); else, [~, pk] = max(Y, [], 1); end
         pkpct = (pk-1)/(NSEG-1)*100;
         pkpct(all(isnan(Y),1)) = NaN;

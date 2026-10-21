@@ -42,11 +42,26 @@ A mid-trial thigh-IMU artifact inflated 106's hip/knee/thigh ROM & peak timing. 
 ## Named peak angles (figures)
 Peaks are **whole-cycle extrema referenced to the begin-ZVP (stance) posture**, magnitude in the named
 direction (`PEAKDEF` sets the signal + extremum + P/S role). The figures are drawn **exactly like ROM**:
-bars = the peak **excursion value**, red dashed line = the **level-walk excursion**, so the gap to the red
-line *is* the change vs level walk (the `% vs level` labels say it numerically). They come **before ROM**
-and are grouped anatomically — joint + its IMU segment per figure: **hip+thigh**, **knee+shank**,
-**ankle+foot**; panel titles carry a `(P)`/`(S)` role tag. The **paired Δ vs level walk** (per-participant)
-is kept in the `.md` and `.xlsx` tables (`PeakExcursion_deg`, `PeakDelta_deg`), not as its own figure.
+bars = the peak **value** (y-axis `Peak angle (deg)`), red dashed line = the **level-walk** value, so the
+gap to the red line *is* the change vs level walk (the `% vs level` labels say it numerically). They come
+**before ROM** and are grouped anatomically — joint + its IMU segment per figure: **hip+thigh**,
+**knee+shank**, **ankle+foot**; panel titles use flexion/extension framing (e.g. `Thigh flexion (forward
+tilt) [P]`) with a `[P]`/`[S]` role tag. The **paired Δ vs level walk** stays in the `.md`/`.xlsx` tables
+(`PeakExcursion_deg`, `PeakDelta_deg`), not as its own figure.
+
+## Sign normalization + which peaks are valid ([[Heading Drift and De-drift]])
+The IK joint angles (and occasionally the Dot tilts) come out with **inconsistent signs between the two
+legs and between trials/participants** (a rotated sensor-to-body calibration flips a limb's angle), which
+would corrupt any *directional* flexion/extension peak. `Analysis/signNormTools.m` fixes this **data-
+driven**: for each sign-stable signal it builds a level-walk **reference template** (iterative correlation
+alignment + a physiological polarity anchor) across the cohort, then flips each participant×side whose
+level-walk curve correlates negatively with it. Applied to the loaded `Seg` **before** peaks/timing; **ROM
+is sign-invariant so it and all `OVERRIDE`s are untouched**.
+- **Valid directional peaks:** **hip** joint + the three **Dot segments** (thigh/shank/foot) — sign-stable.
+- **Knee & ankle JOINTS have NO directional peak:** those IK signals flip sign *between walking and
+  crossing* (angle wrapping/drift, e.g. knee_r +39° in level walk vs −120° crossing) — unfixable by any
+  sign rule. They are reported as **ROM + peak timing only**; their flexion/extension direction is carried
+  by the **shank / foot** segment peaks (hence those two figures show the segment, knee/ankle as ROM).
 
 ## % change vs level walk + manual overrides
 - Each bar on the ROM / spatiotemporal / peak-timing figures shows the **% change vs level
@@ -66,6 +81,8 @@ PNG renders only the chart (no checkboxes).
 participant (grid off, PNG → `Figures/Definitions/`):
 - `def_Crossing` — toe & heel sagittal trajectory over the obstacle with take-off / landing / toe clearance.
 - `def_ROM` — example stride (joint + segment) with max, min, ROM = max−min.
-- `def_PeakTiming` — 3 rows (joints / segments / foot-height-middle); only the **reported** extremum (red).
+- `def_PeakAngles` — 2×2 (hip / thigh / shank / foot), Leading (blue) vs Trailing (orange) with each named
+  peak marked as an excursion from stance. Only the **sign-stable** directional signals (knee/ankle joints
+  omitted — defined by ROM); sign-normalized via `signNormTools` so both legs read the same direction.
 
 Prev: [[Step 8 - Crossing Parameters]] · back to [[Home]]
