@@ -36,8 +36,9 @@ A mid-trial thigh-IMU artifact inflated 106's hip/knee/thigh ROM & peak timing. 
 - `GroupCrossing_<cohort>_Results.md` — **human/LLM-readable** tables (mean ± SD per condition).
 - `GroupCrossing_<cohort>_Summary.xlsx` — sheets: Tier1_cm, Spatiotemporal, ROM_deg, SegmentROM_deg, PeakTiming_pctGC.
 - `GroupCrossing_<cohort>.mat` — the aggregated `G` struct (+ `G.perParticipant`) for re-plotting/stats.
-- `Figures/` — Tier1, **Peak angles (HipThigh / KneeShank / AnkleFoot)**, JointROM, SegmentROM,
-  Spatiotemporal, PeakTiming (Joints/FootHeight/Segments). **PNG only.**
+- `Figures/` — Tier1, **Peak angles + ROM (HipThigh / KneeShank / AnkleFoot)**, Spatiotemporal,
+  PeakTiming (Joints/FootHeight/Segments). **PNG only.** (ROM now lives inside the combo peak
+  figures, so the standalone JointROM/SegmentROM figures were removed; ROM tables stay in md/xlsx.)
 
 ## Named peak angles (figures)
 Peaks are **whole-cycle extrema referenced to the begin-ZVP (stance) posture** (`PEAKDEF` sets the signal

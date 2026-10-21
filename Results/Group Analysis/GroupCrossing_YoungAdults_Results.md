@@ -1,6 +1,6 @@
 # Group obstacle-crossing results — YoungAdults (n = 7)
 
-_Generated 2026-10-21 18:18 from `step9_group_crossing_analysis.m`._
+_Generated 2026-10-21 18:21 from `step9_group_crossing_analysis.m`._
 
 - **Participants (tests):** 101, 102, 103, 104, 105, 106, 107
 - **Conditions:** terrain = Width×Height (W1 = 5 cm, W2 = 15 cm; H1/H2/H3), split **Leading** vs **Trailing** limb. `Level_Walk` = baseline.

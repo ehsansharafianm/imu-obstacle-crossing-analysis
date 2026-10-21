@@ -504,17 +504,8 @@ for gg = 1:size(PKFIGS,1)
         [PKFIGS{gg,5} '   —   red line = level walk']);
 end
 
-% ----- Joint ROM: 1x3 tiles (hip/knee/ankle), Level-walk dashed -----
-drawRomFigure(G.ROM, JOINTS, {'Hip flexion','Knee','Ankle'}, condR, TERRAINS, ROLES, XLAB, ST, ...
-    figDir, 'Group_JointROM', ...
-    sprintf('Group joint ROM   (max-min per stride, by limb role; n = %d)', G.n), ...
-    'Lower-limb joint excursion   —   dashed = level-walk baseline');
-
-% ----- IMU segment tilt ROM: 1x3 tiles (Foot/Shank/Thigh, Dot) -----
-drawRomFigure(G.SROM, SEGMENTS, SEGMENTS, condR, TERRAINS, ROLES, XLAB, ST, ...
-    figDir, 'Group_SegmentROM', ...
-    sprintf('Group IMU segment tilt ROM   (Dot reference, by limb role; n = %d)', G.n), ...
-    'Foot / Shank / Thigh orientation excursion   —   dashed = level-walk baseline');
+% (Joint & segment ROM are shown per panel inside the combo peak figures above, so
+%  the standalone ROM figures are omitted. The ROM tables remain in the md/xlsx.)
 
 % ----- Spatiotemporal: stride / cadence / speed (level-walk dashed) -----
 drawPanelFigure(G.SPT, STPARAMS, STNICE, STYLAB, condR, TERRAINS, ROLES, XLAB, ST, ...
@@ -898,12 +889,6 @@ function [hb, hebL, hebT, pctH] = drawGroupedBars(ax, cats, mL, sL, mT, sT, ylab
     end
     ylabel(ax, ylab, 'FontName',ST.font, 'FontSize',ST.szLabel, 'FontWeight',fw);
     title(ax, ttl, 'FontName',ST.font, 'FontSize',ST.szTitle, 'FontWeight','bold', 'Interpreter','none');
-end
-
-function f = drawRomFigure(S, keys, nice, condR, terrains, roles, xlab, ST, figDir, fname, ttl, subttl)
-% Thin wrapper: a 1 x nKeys ROM (deg) panel figure with the level-walk baseline.
-    f = drawPanelFigure(S, keys, nice, 'ROM (deg)', condR, terrains, roles, xlab, ST, ...
-        figDir, fname, ttl, subttl, true, 1, numel(keys));
 end
 
 function f = drawPanelFigure(S, keys, nice, ylabs, condList, terrains, roles, xlab, ST, figDir, fname, ttl, subttl, showLevel, rows, cols)
