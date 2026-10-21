@@ -36,6 +36,7 @@ function DEF = targetSignals()
 % {signal, kind, anchor-direction}. anchor = which extremum should dominate after
 % normalization, matching the primary peak in PEAKDEF / the def figures.
     DEF = { 'hip_flexion','Joint','min';   % flexion dominant, negative
+            'ankle_angle','Joint','min';   % plantarflexion (push-off) dominant, negative
             'Thigh','Seg','max';           % forward tilt dominant, positive
             'Shank','Seg','min';           % backward (heel-up) dominant, negative
             'Foot','Seg','min' };          % toe-down dominant, negative

@@ -65,15 +65,19 @@ PK_EXTREMUM = struct('hip_flexion','min', 'knee_angle','min', 'ankle_angle','max
 % Reported as a magnitude in the NAMED direction (the sign flip is handled below).
 % ext = which extremum ('max'/'min') in THIS data's sign convention. role: P/S/C.
 % Flip an ext here if the definition figure shows the other extremum is the event.
-% NOTE: knee & ankle JOINT directional peaks are intentionally absent. Those IK
-% signals flip sign between walking and crossing (angle wrapping / drift), so a
-% directional flexion/extension peak cannot be made valid; knee/ankle are reported
-% as ROM + peak timing only, and their direction is carried by the shank/foot
-% segments below. Hip + the Dot segments ARE sign-stable (see signNormTools).
+% ext: 'min'/'max' = directional extremum (needs a trustworthy sign -> the signal is
+% sign-normalized at load, see signNormTools); 'abs' = largest |excursion| from stance
+% (SIGN-INVARIANT, for a unidirectional joint). The knee only flexes (extension past
+% neutral is negligible), so knee flexion uses 'abs' and needs no sign normalization.
+% Ankle is bidirectional (dorsi/plantar) so it IS sign-normalized; its joint magnitudes
+% are drift-noisy, so clean/override as for hip. The hip + Dot segments are sign-stable.
 PEAKDEF = {
 %   key              display                       signal         ext    role
    'hip_pk_flex',   'Hip peak flexion',           'hip_flexion', 'min', 'P';
    'hip_pk_ext',    'Hip peak extension',         'hip_flexion', 'max', 'S';
+   'knee_pk_flex',  'Knee peak flexion',          'knee_angle',  'abs', 'P';
+   'ank_plant',     'Ankle peak plantarflexion',  'ankle_angle', 'min', 'P';
+   'ank_dorsi',     'Ankle peak dorsiflexion',    'ankle_angle', 'max', 'P';
    'thigh_fwd',     'Thigh peak forward tilt',    'Thigh',       'max', 'P';
    'shank_back',    'Shank peak backward (heelup)','Shank',      'min', 'P';
    'foot_toedown',  'Foot peak toe-down',         'Foot',        'min', 'P';
@@ -81,7 +85,7 @@ PEAKDEF = {
    'shank_fwd',     'Shank peak forward (reach)', 'Shank',       'max', 'S';
    'foot_toeup',    'Foot peak toe-up',           'Foot',        'max', 'S';
 };
-PK_JOINT_SIGS = {'hip_flexion'};   % joint peaks (vs IMU segments); knee/ankle excluded
+PK_JOINT_SIGS = {'hip_flexion','knee_angle','ankle_angle'};   % joint peaks (vs IMU segments)
 
 %% -------------------- MANUAL OVERRIDES (optional) --------------------
 % ONE ROW PER value you want to set by hand. Each row:
@@ -443,13 +447,21 @@ pkFig = containers.Map('KeyType','char','ValueType','char');
 pkFig('thigh_fwd')  = 'Thigh flexion (forward tilt)';
 pkFig('thigh_back') = 'Thigh extension (backward tilt)';
 pkTitle = @(k) sprintf('%s [%s]', pkFigName(k, pkDisp, pkFig), pkRole(k));
-PKGRP = { ...
-   'Group_Peak_HipThigh',  {'hip_pk_flex','hip_pk_ext','thigh_fwd','thigh_back'}, 2, 2, ...
-       'Hip and thigh peak angles', 'Hip flexion/extension + thigh fore/aft tilt'; ...
-   'Group_Peak_KneeShank', {'shank_back','shank_fwd'},                            1, 2, ...
-       'Knee and shank peak angles', 'Shank fore/aft tilt (knee joint reported as ROM)'; ...
-   'Group_Peak_AnkleFoot', {'foot_toedown','foot_toeup'},                         1, 2, ...
-       'Ankle and foot peak angles', 'Foot toe up/down (ankle joint reported as ROM)' };
+% Each figure = a joint ROW then its IMU-segment ROW; each row shows the directional
+% peak(s) + that structure's ROM. A panel spec = {sourceStruct, key, title, ylab};
+% [] leaves a tile empty. Peaks from G.PEXc; ROM from G.ROM (joints) / G.SROM (segs).
+PK = 'Peak angle (deg)';  RM = 'ROM (deg)';
+pk = @(k) {G.PEXc, k, pkTitle(k), PK};
+PKFIGS = { ...
+  'Group_Peak_HipThigh', 2, 3, 'Hip and thigh', 'Flexion / extension + ROM   (begin-ZVP referenced)', ...
+     { pk('hip_pk_flex'), pk('hip_pk_ext'), {G.ROM,'hip_flexion','Hip ROM',RM}, ...
+       pk('thigh_fwd'),   pk('thigh_back'), {G.SROM,'Thigh','Thigh ROM',RM} }; ...
+  'Group_Peak_KneeShank', 2, 3, 'Knee and shank', 'Knee flexion + shank fore/aft tilt + ROM', ...
+     { pk('knee_pk_flex'), {G.ROM,'knee_angle','Knee ROM',RM}, [], ...
+       pk('shank_back'),   pk('shank_fwd'),  {G.SROM,'Shank','Shank ROM',RM} }; ...
+  'Group_Peak_AnkleFoot', 2, 3, 'Ankle and foot', 'Ankle dorsi/plantarflexion + foot toe up/down + ROM', ...
+     { pk('ank_plant'),    pk('ank_dorsi'),  {G.ROM,'ankle_angle','Ankle ROM',RM}, ...
+       pk('foot_toedown'), pk('foot_toeup'), {G.SROM,'Foot','Foot ROM',RM} } };
 fprintf(fid, '> Peaks are whole-cycle extrema referenced to the begin-ZVP (stance) posture, magnitude in the named direction. **Δ vs level walk is paired within participant.**\n\n');
 mdTable(fid, 'Peak angles — PRIMARY — excursion (deg, offset-corrected)', condR, kP, nP, G.PEXc, 1, 1, true);
 mdTable(fid, 'Peak angles — PRIMARY — Δ vs level walk (deg, paired)',     condR, kP, nP, G.PEXd, 1, 1, true);
@@ -482,16 +494,14 @@ lg.Layout.Tile = 'north';
 addToggles(ctrl1, {{'Leading limb',[leadB,leadE]}, {'Trailing limb',[trailB,trailE]}});
 saveFig(tl1, figDir, 'Group_Tier1', ST);
 
-% ----- Peak angles (named extrema), excursion values with the red level-walk line -----
-% Plotted exactly like ROM: bars = peak excursion (begin-ZVP referenced), red line =
-% level-walk excursion; the gap to the red line IS the change vs level walk. Paired Δ
-% stays in the markdown/xlsx tables. Grouped anatomically: hip+thigh, knee+shank, ankle+foot.
-for gg = 1:size(PKGRP,1)
-    keys = PKGRP{gg,2};
-    nice = cellfun(pkTitle, keys, 'uni',0);
-    drawPanelFigure(G.PEXc, keys, nice, 'Peak angle (deg)', condR, TERRAINS, ROLES, XLAB, ST, ...
-        figDir, PKGRP{gg,1}, sprintf('%s   (begin-ZVP referenced; n = %d)', PKGRP{gg,5}, G.n), ...
-        [PKGRP{gg,6} '   —   red line = level walk'], true, PKGRP{gg,3}, PKGRP{gg,4});
+% ----- Peak angles + ROM, by joint+segment pair (bars = value, red line = level walk) -----
+% Each figure: joint row then its IMU-segment row; directional peak(s) + ROM per row.
+% Bars = the value, red dashed line = level walk (gap to red line = change vs level);
+% paired Δ stays in the md/xlsx tables. Drawn before ROM-only figures.
+for gg = 1:size(PKFIGS,1)
+    drawComboFigure(PKFIGS{gg,6}, PKFIGS{gg,2}, PKFIGS{gg,3}, condR, TERRAINS, ROLES, XLAB, ST, ...
+        figDir, PKFIGS{gg,1}, sprintf('%s peak angles and ROM   (n = %d)', PKFIGS{gg,4}, G.n), ...
+        [PKFIGS{gg,5} '   —   red line = level walk']);
 end
 
 % ----- Joint ROM: 1x3 tiles (hip/knee/ankle), Level-walk dashed -----
@@ -680,8 +690,12 @@ function v = peakExcByCond(Sg, S5, labelFun, ext, condR, sp)
         li = find(strcmp(labels, labelFun(sides{s}, sideWord{s})), 1);  if isempty(li), continue; end
         Y = Sg.signal(li).strides;                   % NSEG x nStr (sign-normalized at load)
         ref = median(Y(1:min(REFW,size(Y,1)),:), 1, 'omitnan');
-        if strcmpi(ext,'min'), exc = ref - min(Y,[],1,'omitnan');   % dip below stance
-        else,                  exc = max(Y,[],1,'omitnan') - ref;   % rise above stance
+        if strcmpi(ext,'min')
+            exc = ref - min(Y,[],1,'omitnan');                 % dip below stance
+        elseif strcmpi(ext,'abs')
+            exc = max(abs(Y - ref),[],1,'omitnan');            % largest deviation (sign-invariant)
+        else
+            exc = max(Y,[],1,'omitnan') - ref;                 % rise above stance
         end
         exc(all(isnan(Y),1)) = NaN;
         T = camT{s};  R = camR{s};  zv = zvp{s};  m = min(numel(exc), numel(T));
@@ -919,6 +933,43 @@ function f = drawPanelFigure(S, keys, nice, ylabs, condList, terrains, roles, xl
             yline(ax, 0, '-', 'Color',[0.45 0.45 0.45], 'LineWidth',1.4, 'HandleVisibility','off');  % Δ zero reference
         end
         if k == 1, hbRef = hb; end
+    end
+    styleLayoutTitle(tl, ttl, subttl, ST);
+    lg = legend(hbRef, {'Leading limb','Trailing limb'}, 'Orientation','horizontal', ...
+        'FontName',ST.font,'FontSize',ST.szLegend);
+    lg.Layout.Tile = 'north';
+    grp = {{'Leading limb',[leadB,leadE]}, {'Trailing limb',[trailB,trailE]}};
+    if ~isempty(lvl),    grp{end+1} = {'Level walk', lvl}; end
+    if ~isempty(pctAll), grp{end+1} = {'% vs level', pctAll}; end
+    addToggles(ctrl, grp);
+    saveFig(tl, figDir, fname, ST);
+end
+
+function f = drawComboFigure(specs, rows, cols, condList, terrains, roles, xlab, ST, figDir, fname, ttl, subttl)
+% Mixed-source grouped-bar figure: each panel spec = {S, key, title, ylab} (S is any
+% struct with .(key).mean/.sd over condList, e.g. G.PEXc / G.ROM / G.SROM), or [] for
+% an empty tile. Bars = value, red dashed line = that panel's level-walk value, with
+% the same Leading/Trailing/Level/% toggles and layout export as drawPanelFigure.
+    w = min(1740, 560*cols);  h = 320 + 300*rows;
+    [f, tl, ctrl] = makeToggleFigure(ttl, [50 50 w h], rows, cols);
+    leadB = gobjects(0); trailB = gobjects(0); leadE = gobjects(0); trailE = gobjects(0);
+    lvl = gobjects(0);  pctAll = gobjects(0);  hbRef = [];
+    for p = 1:numel(specs)
+        ax = nexttile(tl);
+        sp = specs{p};
+        if isempty(sp), axis(ax,'off'); continue; end
+        S = sp{1};  key = sp{2};  ttlP = sp{3};  ylab = sp{4};
+        [mL,sL,mT,sT] = seriesByTerrain(S.(key), condList, terrains, roles, 1);
+        lw = S.(key).mean(strcmp(condList,'Level_Walk'));
+        [hb,heL,heT,pH] = drawGroupedBars(ax, xlab, mL,sL,mT,sT, ylab, ttlP, ST, lw);
+        leadB(end+1)=hb(1); trailB(end+1)=hb(2); leadE(end+1)=heL; trailE(end+1)=heT; %#ok<AGROW>
+        if ~isempty(pH), pctAll = [pctAll, pH(:)']; end %#ok<AGROW>
+        if ~isnan(lw)
+            yl = yline(ax, lw, '--', 'level walk', 'Color', ST.colLevel, 'LineWidth',ST.levelW, 'FontName',ST.font, ...
+                  'FontSize',ST.levelLblSz, 'LabelHorizontalAlignment','left', 'LabelVerticalAlignment','bottom');
+            lvl(end+1) = yl; %#ok<AGROW>
+        end
+        if isempty(hbRef), hbRef = hb; end
     end
     styleLayoutTitle(tl, ttl, subttl, ST);
     lg = legend(hbRef, {'Leading limb','Trailing limb'}, 'Orientation','horizontal', ...

@@ -40,28 +40,32 @@ A mid-trial thigh-IMU artifact inflated 106's hip/knee/thigh ROM & peak timing. 
   Spatiotemporal, PeakTiming (Joints/FootHeight/Segments). **PNG only.**
 
 ## Named peak angles (figures)
-Peaks are **whole-cycle extrema referenced to the begin-ZVP (stance) posture**, magnitude in the named
-direction (`PEAKDEF` sets the signal + extremum + P/S role). The figures are drawn **exactly like ROM**:
-bars = the peak **value** (y-axis `Peak angle (deg)`), red dashed line = the **level-walk** value, so the
-gap to the red line *is* the change vs level walk (the `% vs level` labels say it numerically). They come
-**before ROM** and are grouped anatomically — joint + its IMU segment per figure: **hip+thigh**,
-**knee+shank**, **ankle+foot**; panel titles use flexion/extension framing (e.g. `Thigh flexion (forward
-tilt) [P]`) with a `[P]`/`[S]` role tag. The **paired Δ vs level walk** stays in the `.md`/`.xlsx` tables
-(`PeakExcursion_deg`, `PeakDelta_deg`), not as its own figure.
+Peaks are **whole-cycle extrema referenced to the begin-ZVP (stance) posture** (`PEAKDEF` sets the signal
++ extremum + P/S role). Bars = the peak **value** (`Peak angle (deg)`), red dashed line = the **level-walk**
+value, so the gap to the red line *is* the change vs level walk (`% vs level` labels say it numerically).
+Three figures, each a **joint ROW then its IMU-segment ROW**, with the directional peak(s) **plus that
+structure's ROM** on each row (via `drawComboFigure`), drawn **before** the ROM-only figures:
+- **Hip & thigh** (2×3): hip flexion / extension / ROM; thigh flexion (fwd tilt) / extension (back tilt) / ROM.
+- **Knee & shank** (2×3, top row 2): knee flexion / knee ROM; shank backward / forward / ROM.
+- **Ankle & foot** (2×3): ankle plantarflexion / dorsiflexion / ROM; foot toe-down / toe-up / ROM.
+Paired **Δ vs level walk** stays in the `.md`/`.xlsx` tables (`PeakExcursion_deg`, `PeakDelta_deg`).
 
-## Sign normalization + which peaks are valid ([[Heading Drift and De-drift]])
+## Sign handling + which peaks are valid ([[Heading Drift and De-drift]])
 The IK joint angles (and occasionally the Dot tilts) come out with **inconsistent signs between the two
 legs and between trials/participants** (a rotated sensor-to-body calibration flips a limb's angle), which
-would corrupt any *directional* flexion/extension peak. `Analysis/signNormTools.m` fixes this **data-
-driven**: for each sign-stable signal it builds a level-walk **reference template** (iterative correlation
-alignment + a physiological polarity anchor) across the cohort, then flips each participant×side whose
-level-walk curve correlates negatively with it. Applied to the loaded `Seg` **before** peaks/timing; **ROM
-is sign-invariant so it and all `OVERRIDE`s are untouched**.
-- **Valid directional peaks:** **hip** joint + the three **Dot segments** (thigh/shank/foot) — sign-stable.
-- **Knee & ankle JOINTS have NO directional peak:** those IK signals flip sign *between walking and
-  crossing* (angle wrapping/drift, e.g. knee_r +39° in level walk vs −120° crossing) — unfixable by any
-  sign rule. They are reported as **ROM + peak timing only**; their flexion/extension direction is carried
-  by the **shank / foot** segment peaks (hence those two figures show the segment, knee/ankle as ROM).
+corrupts any *directional* flexion/extension peak. There is **no angle wrapping** (max per-sample jump ≤12°),
+so the fix is a sign flip. Two mechanisms, by signal:
+- **Sign-normalized** (`Analysis/signNormTools.m`): **hip, ankle, thigh, shank, foot**. For each, a level-walk
+  **reference template** is built once (iterative correlation alignment + physiological polarity anchor) and
+  saved to `signTemplates.mat`; each participant×side whose level-walk curve correlates negatively with it is
+  flipped before peaks/timing. Lets `ext='min'/'max'` mean dorsi/plantar, fwd/back, etc. consistently.
+- **Sign-invariant** (`ext='abs'`): **knee flexion** = `max(|y − stance|)`. The knee only flexes (extension
+  past neutral is negligible), so the single dominant excursion = flexion, no sign needed; ≈ knee ROM.
+- **ROM** (max−min) is sign-invariant either way, so it and all `OVERRIDE`s are untouched.
+
+**Reliability:** hip/thigh/shank/foot + knee flexion + **ankle dorsiflexion** read physiological. **Ankle
+plantarflexion** (and ankle ROM) are directionally correct but **drift-inflated** on ~half the participants
+(60–160°) — treat as low-confidence; clean / `OVERRIDE` as for the other noisy joints.
 
 ## % change vs level walk + manual overrides
 - Each bar on the ROM / spatiotemporal / peak-timing figures shows the **% change vs level
