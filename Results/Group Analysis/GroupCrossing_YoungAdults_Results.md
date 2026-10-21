@@ -1,6 +1,6 @@
 # Group obstacle-crossing results — YoungAdults (n = 7)
 
-_Generated 2026-10-21 18:21 from `step9_group_crossing_analysis.m`._
+_Generated 2026-10-21 19:02 from `step9_group_crossing_analysis.m`._
 
 - **Participants (tests):** 101, 102, 103, 104, 105, 106, 107
 - **Conditions:** terrain = Width×Height (W1 = 5 cm, W2 = 15 cm; H1/H2/H3), split **Leading** vs **Trailing** limb. `Level_Walk` = baseline.
@@ -79,23 +79,43 @@ _Generated 2026-10-21 18:21 from `step9_group_crossing_analysis.m`._
 | W2_H3_Trailing | 126.9 ± 17.5 (+37%) | 132.4 ± 11.5 (+76%) | 67.9 ± 9.7 (+50%) | 7 |
 | Level_Walk | 92.4 ± 7.8 | 75.2 ± 5.5 | 45.2 ± 4.5 | 7 |
 
-## Peak timing (% gait cycle)
+> Peak timing is **relative to obstacle clearance** (foot-height apex = foot over the obstacle): signed % gait cycle, **negative = the peak occurs before the foot clears**. `FootHeight` is the clearance event's own absolute % GC (the reference).
 
-| Condition | hip_flexion (min) | knee_angle (min) | ankle_angle (max) | FootHeight (max) | Foot (min) | Shank (min) | Thigh (max) | n |
-|---|---|---|---|---|---|---|---|---|
-| W1_H1_Leading | 45 ± 12 (-25%) | 51 ± 12 (-4%) | 63 ± 15 (+6%) | 49 ± 4 (-12%) | 35 ± 5 (-10%) | 36 ± 3 (-9%) | 51 ± 5 (-24%) | 7 |
-| W1_H1_Trailing | 51 ± 13 (-15%) | 57 ± 5 (+7%) | 66 ± 13 (+11%) | 52 ± 6 (-7%) | 47 ± 6 (+21%) | 48 ± 5 (+22%) | 61 ± 6 (-10%) | 7 |
-| W1_H2_Leading | 53 ± 10 (-12%) | 50 ± 23 (-5%) | 68 ± 12 (+14%) | 50 ± 7 (-10%) | 33 ± 6 (-16%) | 36 ± 6 (-10%) | 51 ± 7 (-25%) | 7 |
-| W1_H2_Trailing | 57 ± 10 (-6%) | 58 ± 7 (+10%) | 64 ± 22 (+8%) | 55 ± 2 (-2%) | 51 ± 2 (+31%) | 52 ± 2 (+31%) | 64 ± 3 (-6%) | 7 |
-| W1_H3_Leading | 45 ± 11 (-25%) | 48 ± 13 (-9%) | 53 ± 22 (-11%) | 48 ± 5 (-15%) | 29 ± 4 (-26%) | 32 ± 6 (-19%) | 48 ± 6 (-30%) | 7 |
-| W1_H3_Trailing | 59 ± 15 (-2%) | 59 ± 8 (+12%) | 67 ± 16 (+12%) | 54 ± 3 (-3%) | 51 ± 3 (+32%) | 51 ± 3 (+30%) | 64 ± 3 (-6%) | 7 |
-| W2_H1_Leading | 52 ± 10 (-13%) | 42 ± 17 (-20%) | 60 ± 19 (+1%) | 48 ± 6 (-15%) | 34 ± 4 (-13%) | 36 ± 5 (-9%) | 52 ± 5 (-23%) | 7 |
-| W2_H1_Trailing | 57 ± 6 (-5%) | 58 ± 10 (+9%) | 65 ± 14 (+9%) | 54 ± 2 (-4%) | 48 ± 3 (+25%) | 51 ± 3 (+28%) | 63 ± 3 (-7%) | 7 |
-| W2_H2_Leading | 47 ± 14 (-21%) | 51 ± 22 (-4%) | 64 ± 15 (+8%) | 50 ± 4 (-10%) | 29 ± 4 (-24%) | 33 ± 4 (-17%) | 51 ± 4 (-24%) | 7 |
-| W2_H2_Trailing | 56 ± 15 (-6%) | 51 ± 9 (-3%) | 67 ± 14 (+12%) | 55 ± 2 (-2%) | 53 ± 6 (+36%) | 54 ± 6 (+36%) | 66 ± 6 (-4%) | 7 |
-| W2_H3_Leading | 56 ± 11 (-7%) | 47 ± 19 (-12%) | 53 ± 12 (-11%) | 51 ± 8 (-8%) | 33 ± 6 (-14%) | 37 ± 6 (-6%) | 55 ± 11 (-19%) | 7 |
-| W2_H3_Trailing | 53 ± 11 (-12%) | 61 ± 9 (+16%) | 70 ± 19 (+17%) | 55 ± 3 (-2%) | 51 ± 3 (+33%) | 52 ± 3 (+32%) | 65 ± 4 (-4%) | 7 |
-| Level_Walk | 60 ± 9 | 53 ± 10 | 60 ± 9 | 56 ± 10 | 39 ± 2 | 40 ± 3 | 68 ± 7 | 7 |
+## Peak timing vs obstacle clearance (% GC, signed)
+
+| Condition | hip_flexion (min) | knee_angle (min) | ankle_angle (max) | Foot (min) | Shank (min) | Thigh (max) | n |
+|---|---|---|---|---|---|---|---|
+| W1_H1_Leading | -4 ± 12 (-191%) | 2 ± 10 (-178%) | 14 ± 16 (+263%) | -15 ± 8 (-15%) | -13 ± 6 (-17%) | 2 ± 2 (-81%) | 7 |
+| W1_H1_Trailing | -1 ± 12 (-119%) | 5 ± 5 (-300%) | 14 ± 16 (+273%) | -5 ± 2 (-70%) | -3 ± 1 (-79%) | 9 ± 1 (-26%) | 7 |
+| W1_H2_Leading | 3 ± 11 (-27%) | 0 ± 25 (-119%) | 18 ± 15 (+365%) | -18 ± 9 (+2%) | -15 ± 10 (-11%) | 1 ± 1 (-90%) | 7 |
+| W1_H2_Trailing | 2 ± 9 (-59%) | 3 ± 7 (-220%) | 9 ± 23 (+145%) | -4 ± 1 (-74%) | -3 ± 1 (-82%) | 9 ± 2 (-28%) | 7 |
+| W1_H3_Leading | -2 ± 10 (-150%) | 1 ± 13 (-137%) | 6 ± 19 (+45%) | -19 ± 4 (+11%) | -15 ± 7 (-5%) | 1 ± 2 (-95%) | 7 |
+| W1_H3_Trailing | 5 ± 17 (+7%) | 5 ± 7 (-312%) | 12 ± 18 (+226%) | -3 ± 1 (-82%) | -3 ± 1 (-84%) | 10 ± 1 (-19%) | 7 |
+| W2_H1_Leading | 2 ± 10 (-45%) | 1 ± 12 (-155%) | 13 ± 16 (+231%) | -14 ± 9 (-18%) | -12 ± 9 (-28%) | 2 ± 7 (-81%) | 7 |
+| W2_H1_Trailing | 3 ± 7 (-34%) | 4 ± 10 (-256%) | 11 ± 16 (+189%) | -5 ± 2 (-69%) | -3 ± 1 (-80%) | 9 ± 1 (-24%) | 7 |
+| W2_H2_Leading | -3 ± 14 (-168%) | 1 ± 22 (-123%) | 14 ± 15 (+270%) | -21 ± 2 (+22%) | -17 ± 2 (+7%) | 1 ± 1 (-90%) | 7 |
+| W2_H2_Trailing | 1 ± 16 (-69%) | -4 ± 8 (+53%) | 12 ± 15 (+215%) | -2 ± 5 (-86%) | -1 ± 6 (-93%) | 11 ± 5 (-15%) | 7 |
+| W2_H3_Leading | 4 ± 12 (-2%) | -4 ± 27 (+78%) | 2 ± 13 (-54%) | -18 ± 9 (+5%) | -14 ± 9 (-13%) | 4 ± 8 (-70%) | 7 |
+| W2_H3_Trailing | -2 ± 13 (-146%) | 7 ± 8 (-367%) | 15 ± 22 (+294%) | -3 ± 1 (-81%) | -3 ± 1 (-84%) | 11 ± 3 (-15%) | 7 |
+| Level_Walk | 4 ± 7 | -3 ± 17 | 4 ± 15 | -17 ± 9 | -16 ± 9 | 12 ± 12 | 7 |
+
+## Foot-clearance timing (absolute % GC, reference event)
+
+| Condition | FootHeight (max) | n |
+|---|---|---|
+| W1_H1_Leading | 49 ± 4 (-12%) | 7 |
+| W1_H1_Trailing | 52 ± 6 (-7%) | 7 |
+| W1_H2_Leading | 50 ± 7 (-10%) | 7 |
+| W1_H2_Trailing | 55 ± 2 (-2%) | 7 |
+| W1_H3_Leading | 48 ± 5 (-15%) | 7 |
+| W1_H3_Trailing | 54 ± 3 (-3%) | 7 |
+| W2_H1_Leading | 48 ± 6 (-15%) | 7 |
+| W2_H1_Trailing | 54 ± 2 (-4%) | 7 |
+| W2_H2_Leading | 50 ± 4 (-10%) | 7 |
+| W2_H2_Trailing | 55 ± 2 (-2%) | 7 |
+| W2_H3_Leading | 51 ± 8 (-8%) | 7 |
+| W2_H3_Trailing | 55 ± 3 (-2%) | 7 |
+| Level_Walk | 56 ± 10 | 7 |
 
 > Peaks are whole-cycle extrema referenced to the begin-ZVP (stance) posture, magnitude in the named direction. **Δ vs level walk is paired within participant.**
 

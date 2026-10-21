@@ -110,6 +110,32 @@ title(tl3,'Peak angle variables  =  excursion from stance (begin-ZVP).   Leading
     'FontName',FN,'FontSize',SZ_T,'FontWeight','bold');
 savePNGdef(f3, outDir, 'def_PeakAngles');
 
+%% ===================== FIG 4 - PEAK TIMING vs OBSTACLE CLEARANCE =====================
+% New timing definition: each signal's peak is referenced to the OBSTACLE-CLEARANCE
+% instant = the foot-height apex (foot over the top of the obstacle). The reported
+% value is (peak %GC - apex %GC), signed: negative = peak BEFORE clearing. One
+% example role (Leading) so there is a single clearance line.
+ROLE_T = 'Leading';
+fhL = smoothSig(meanFootHeightRole(Sg, S5, ROLE_T));      % clearance reference curve
+[~, apk] = max(fhL);  apexPct = pct(apk);                 % foot-over-obstacle instant
+PANELS_T = {  % signal, kind, ext, nice
+ 'hip_flexion','Joint','min','Hip flexion';
+ 'knee_angle', 'Joint','min','Knee flexion';
+ 'ankle_angle','Joint','max','Ankle dorsiflexion';
+ 'Thigh','Seg','max','Thigh forward tilt';
+ 'Shank','Seg','min','Shank backward (heel up)';
+ 'Foot','Seg','min','Foot toe-down' };
+f4 = figure('Color','w','Position',[25 45 1760 940]);
+tl4 = tiledlayout(f4,2,3,'TileSpacing','compact','Padding','compact');
+for i = 1:size(PANELS_T,1)
+    y = smoothSig(meanCrossStrideRole(Sg, S5, PANELS_T{i,1}, PANELS_T{i,2}, ROLE_T, SEG_SYS));
+    drawTimingDef(nexttile(tl4), pct, y, fhL, apexPct, PANELS_T{i,4}, PANELS_T{i,3}, i==1, ...
+        FN,SZ_T,SZ_L,SZ_TK,SZ_ANN,BOXW,LW,C_LEAD,C_MAX);
+end
+title(tl4, 'Peak timing  =  (peak %GC) - (foot-clearance %GC).   Red line = foot over obstacle;   negative \Delta = peak BEFORE clearing', ...
+    'FontName',FN,'FontSize',SZ_T,'FontWeight','bold','Interpreter','tex');
+savePNGdef(f4, outDir, 'def_PeakTiming');
+
 fprintf('Definition figures saved -> %s\n', outDir);
 
 %% ============================ functions ============================
@@ -213,6 +239,64 @@ end
 
 function w = sideWord(s)
     if s=='R', w = 'Right'; else, w = 'Left'; end
+end
+
+function m = meanFootHeightRole(Sg, S5, role)
+% Mean foot-height (ZHC Z) crossing-stride curve, pooled over both limbs' strides of
+% the given role. Its apex = the foot-over-the-obstacle (clearance) instant.
+    cols = [];
+    for sd = {'L','R'}
+        s = sd{1};  if ~isfield(Sg.zhc, s), continue; end
+        Z = squeeze(Sg.zhc.(s).posGait(:,3,:));             % NSEG x nWin
+        if s=='R', R = S5.camera.roleR; else, R = S5.camera.roleL; end
+        sel = false(1, size(Z,2));
+        for j = 1:min(size(Z,2), numel(R)), if strcmpi(R{j}, role), sel(j) = true; end, end
+        cols = [cols, Z(:,sel)]; %#ok<AGROW>
+    end
+    if isempty(cols), m = nan(Sg.nseg,1); else, m = mean(cols, 2, 'omitnan'); end
+end
+
+function drawTimingDef(ax, pct, y, fh, apexPct, ttl, ext, showLeg, FN,SZ_T,SZ_L,SZ_TK,SZ_ANN,BOXW,LW,cSig,cRef)
+% One panel: signal curve (blue) with its peak, the clearance line (red = foot apex),
+% a faint foot-height curve (gray, lower band) showing where the apex comes from, and
+% the signed timing difference (peak - clearance) annotated.
+    hold(ax,'on'); box(ax,'on');
+    y = y(:);  pct = pct(:);
+    if strcmpi(ext,'min'), [pv,pk] = min(y); else, [pv,pk] = max(y); end
+    peakPct = pct(pk);
+    yl = [min(y) max(y)];  pad = 0.18*diff(yl) + eps;  ylo = yl(1)-pad; yhi = yl(2)+2.2*pad;
+    % faint foot-height curve in the lower band (just to show the apex origin)
+    band = 0.26*(yhi-ylo);  fh = fh(:);
+    fhs = ylo + (fh - min(fh)) / max(eps, (max(fh)-min(fh))) * band;
+    hFh = plot(ax, pct, fhs, '-', 'Color',[0.65 0.65 0.65], 'LineWidth',1.6);
+    [~,fap] = max(fhs);  plot(ax, pct(fap), fhs(fap), 'o', 'Color',[0.5 0.5 0.5], ...
+        'MarkerFaceColor',[0.8 0.8 0.8], 'MarkerSize',7, 'HandleVisibility','off');
+    % clearance reference line (foot apex)
+    hRef = plot(ax, [apexPct apexPct], [ylo yhi], '--', 'Color',cRef, 'LineWidth',2.4);
+    text(ax, apexPct, ylo, ' clearance', 'Color',cRef, 'FontName',FN,'FontSize',SZ_ANN-2, ...
+        'FontWeight','bold','VerticalAlignment','bottom','HorizontalAlignment','left');
+    % signal curve + peak
+    hSig = plot(ax, pct, y, '-', 'Color',cSig, 'LineWidth',LW);
+    plot(ax, peakPct, pv, 'o', 'Color',cSig, 'MarkerFaceColor',cSig, 'MarkerSize',9, 'HandleVisibility','off');
+    plot(ax, [peakPct peakPct], [ylo pv], ':', 'Color',cSig, 'LineWidth',1.4, 'HandleVisibility','off');
+    % timing bracket between peak and clearance, near the top
+    yb = yhi - 0.9*pad;
+    plot(ax, [peakPct apexPct], [yb yb], '-', 'Color',[0.15 0.15 0.15], 'LineWidth',1.8, 'HandleVisibility','off');
+    plot(ax, [peakPct apexPct], [yb yb], 'v', 'Color',[0.15 0.15 0.15], 'MarkerSize',5, ...
+        'MarkerFaceColor',[0.15 0.15 0.15], 'HandleVisibility','off');
+    dPct = peakPct - apexPct;  when = 'after';  if dPct < 0, when = 'before'; end
+    text(ax, (peakPct+apexPct)/2, yb+0.5*pad, sprintf('\\Delta = %+.0f%%  (%s)', dPct, when), ...
+        'Color',[0.10 0.10 0.10], 'FontName',FN,'FontSize',SZ_ANN-1,'FontWeight','bold', ...
+        'HorizontalAlignment','center','VerticalAlignment','bottom');
+    ylim(ax,[ylo yhi]);  xlim(ax,[0 100]);
+    styleAx(ax, FN, SZ_TK, BOXW);
+    xlabel(ax,'Gait cycle (%)','FontName',FN,'FontSize',SZ_L,'FontWeight','bold');
+    ylabel(ax,'angle (deg)','FontName',FN,'FontSize',SZ_L,'FontWeight','bold');
+    title(ax, ttl, 'FontName',FN,'FontSize',SZ_T,'FontWeight','bold','Interpreter','none');
+    if showLeg
+        legend([hSig hRef hFh], {'signal','clearance (foot apex)','foot height'}, ...
+            'Location','southoutside','Orientation','horizontal','FontName',FN,'FontSize',SZ_L-3);
+    end
 end
 
 function y = smoothSig(y)

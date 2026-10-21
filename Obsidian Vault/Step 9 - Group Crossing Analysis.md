@@ -23,9 +23,14 @@ Conditions = terrain `W{1,2}_H{1,2,3}` × role **Leading/Trailing**; `Level_Walk
   **speed (m/s)** — from ZHC net-XY + ZVP→ZVP stride time.
 - **ROM (deg):** joint (hip/knee/ankle) and **IMU segment** (foot/shank/thigh, Dot) = max−min per stride,
   pooled by limb role.
-- **Peak timing (% gait cycle):** when the reported extremum occurs in the ZVP→ZVP cycle. The extremum is
-  **per-signal** (`PK_EXTREMUM`): hip=min, knee=min, ankle=max, foot height=max, foot=min, shank=min,
-  thigh=max. Drift-robust (timing survives offsets).
+- **Peak timing — RELATIVE TO OBSTACLE CLEARANCE (% GC, signed):** `(signal peak %GC) − (foot-clearance
+  %GC)`, where the clearance instant = the **foot-height apex** (foot over the top of the obstacle),
+  computed per stride then averaged. **Negative = the peak occurs before the foot clears.** Task-referenced
+  (vs the old ZVP-referenced %GC, which was arbitrary w.r.t. the obstacle). Extremum per-signal
+  (`PK_EXTREMUM`): hip=min, knee=min, ankle=max, foot=min, shank=min, thigh=max. `FootHeight` is kept as the
+  reference event's own **absolute** %GC (in the tables). *(True toe y=0 can't be used — the crossing arc
+  lives in the raw camera clock, a different time base from the synced signals; the apex is the robust
+  equivalent of "foot over the obstacle".)*
 
 ## Test 106 cleaning (group-only; steps 1–8 untouched)
 A mid-trial thigh-IMU artifact inflated 106's hip/knee/thigh ROM & peak timing. The `CLEAN` config applies
@@ -34,10 +39,10 @@ A mid-trial thigh-IMU artifact inflated 106's hip/knee/thigh ROM & peak timing. 
 
 ## Outputs (`Results/Group Analysis/`)
 - `GroupCrossing_<cohort>_Results.md` — **human/LLM-readable** tables (mean ± SD per condition).
-- `GroupCrossing_<cohort>_Summary.xlsx` — sheets: Tier1_cm, Spatiotemporal, ROM_deg, SegmentROM_deg, PeakTiming_pctGC.
+- `GroupCrossing_<cohort>_Summary.xlsx` — sheets: Tier1_cm, Spatiotemporal, ROM_deg, SegmentROM_deg, PeakTiming_vsClearance, PeakExcursion_deg, PeakDelta_deg.
 - `GroupCrossing_<cohort>.mat` — the aggregated `G` struct (+ `G.perParticipant`) for re-plotting/stats.
 - `Figures/` — Tier1, **Peak angles + ROM (HipThigh / KneeShank / AnkleFoot)**, Spatiotemporal,
-  PeakTiming (Joints/FootHeight/Segments). **PNG only.** (ROM now lives inside the combo peak
+  **PeakTiming** (one combined 2×3, joints + segments, vs clearance). **PNG only.** (ROM now lives inside the combo peak
   figures, so the standalone JointROM/SegmentROM figures were removed; ROM tables stay in md/xlsx.)
 
 ## Named peak angles (figures)
@@ -89,5 +94,7 @@ participant (grid off, PNG → `Figures/Definitions/`):
 - `def_PeakAngles` — 2×2 (hip / thigh / shank / foot), Leading (blue) vs Trailing (orange) with each named
   peak marked as an excursion from stance. Only the **sign-stable** directional signals (knee/ankle joints
   omitted — defined by ROM); sign-normalized via `signNormTools` so both legs read the same direction.
+- `def_PeakTiming` — 2×3 (hip / knee / ankle / thigh / shank / foot), Leading example: each signal's peak
+  vs the **foot-clearance apex** (red line), faint foot-height curve shown, with the signed `Δ = peak − clearance`.
 
 Prev: [[Step 8 - Crossing Parameters]] · back to [[Home]]

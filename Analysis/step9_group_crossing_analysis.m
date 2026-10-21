@@ -258,14 +258,16 @@ for ti = 1:nT
     % --- Spatiotemporal (crossing stride): stride cm, cadence steps/min, speed m/s ---
     spt = spatiotemporalByCond(Sg, S5, condR);
     for p = STPARAMS, SPT.(p{1})(ti,:) = spt.(p{1}); end
-    % --- Peak timing (% gait cycle, ZVP->ZVP): joints, segments, foot height ---
+    % --- Peak timing RELATIVE TO OBSTACLE CLEARANCE (foot-height apex), % GC ---
+    %     signed: negative = signal peaks before the foot clears the obstacle.
+    %     Reference event (apex) timing itself is kept as FootHeight (absolute % GC).
     for j = PKT_JOINTS
         sp = cleanSpecFor(CLEAN, tn, j{1});
-        PKT.(j{1})(ti,:) = peakTimeByCond(Sg, S5, @(s,sw) sprintf('Joint: %s_%s', j{1}, lower(s)), condR, sp, PK_EXTREMUM.(j{1}));
+        PKT.(j{1})(ti,:) = peakTimeRelByCond(Sg, S5, @(s,sw) sprintf('Joint: %s_%s', j{1}, lower(s)), condR, sp, PK_EXTREMUM.(j{1}));
     end
     for g = PKT_SEGS
         sp = cleanSpecFor(CLEAN, tn, g{1});
-        PKT.(g{1})(ti,:) = peakTimeByCond(Sg, S5, @(s,sw) sprintf('IMU: %s %s (%s) X', sw, g{1}, SEG_SYS), condR, sp, PK_EXTREMUM.(g{1}));
+        PKT.(g{1})(ti,:) = peakTimeRelByCond(Sg, S5, @(s,sw) sprintf('IMU: %s %s (%s) X', sw, g{1}, SEG_SYS), condR, sp, PK_EXTREMUM.(g{1}));
     end
     PKT.FootHeight(ti,:) = footHeightPeakTimeByCond(Sg, S5, condR, PK_EXTREMUM.FootHeight);
     % --- Named peak EXCURSIONS (whole cycle, referenced to begin-ZVP), deg ---
@@ -405,7 +407,7 @@ for ci = 1:nCR
 end
 writetable(cell2table(CS,'VariableNames',matlab.lang.makeValidName(vnamesS)), xlsFile, 'Sheet','SegmentROM_deg');
 writeGroupSheet(xlsFile, 'Spatiotemporal',   condR, STPARAMS, G.SPT);   % stride cm / cadence spm / speed m/s
-writeGroupSheet(xlsFile, 'PeakTiming_pctGC', condR, PKALL,    G.PKT);   % % gait cycle
+writeGroupSheet(xlsFile, 'PeakTiming_vsClearance', condR, PKALL, G.PKT); % signed %GC rel. to foot apex (FootHeight = absolute ref)
 pkKeys = PEAKDEF(:,1)';
 writeGroupSheet(xlsFile, 'PeakExcursion_deg', condR, pkKeys, G.PEXc);   % offset-corrected excursion
 writeGroupSheet(xlsFile, 'PeakDelta_deg',     condR, pkKeys, G.PEXd);   % paired delta vs level
@@ -432,8 +434,14 @@ mdTable(fid, 'Spatiotemporal — crossing stride', condR, STPARAMS, ...
     {'Stride (cm)','Cadence (steps/min)','Speed (m/s)'}, G.SPT, 1, [0 0 2]);
 mdTable(fid, 'Joint ROM (deg)', condR, JOINTS, JOINTS, G.ROM, 1, 1);
 mdTable(fid, 'Segment tilt ROM (deg, Dot)', condR, SEGMENTS, SEGMENTS, G.SROM, 1, 1);
-mdTable(fid, 'Peak timing (% gait cycle)', condR, PKALL, ...
-    cellfun(@(k) sprintf('%s (%s)', k, PK_EXTREMUM.(k)), PKALL, 'uni',0), G.PKT, 1, 0);
+% Peak timing RELATIVE to obstacle clearance (foot apex), signed % GC (neg = before
+% clearing); FootHeight is the reference event's own ABSOLUTE timing (% GC).
+pktRel = [PKT_JOINTS, PKT_SEGS];
+fprintf(fid, '> Peak timing is **relative to obstacle clearance** (foot-height apex = foot over the obstacle): signed %% gait cycle, **negative = the peak occurs before the foot clears**. `FootHeight` is the clearance event''s own absolute %% GC (the reference).\n\n');
+mdTable(fid, 'Peak timing vs obstacle clearance (% GC, signed)', condR, pktRel, ...
+    cellfun(@(k) sprintf('%s (%s)', k, PK_EXTREMUM.(k)), pktRel, 'uni',0), G.PKT, 1, 0);
+mdTable(fid, 'Foot-clearance timing (absolute % GC, reference event)', condR, {'FootHeight'}, ...
+    {sprintf('FootHeight (%s)', PK_EXTREMUM.FootHeight)}, G.PKT, 1, 0);
 % Named peak angles: excursion (offset-corrected) + paired delta vs level, by role.
 pP = strcmp(PEAKDEF(:,5),'P');  pS = strcmp(PEAKDEF(:,5),'S');
 kP = PEAKDEF(pP,1)';  nP = PEAKDEF(pP,2)';   kS = PEAKDEF(pS,1)';  nS = PEAKDEF(pS,2)';
@@ -512,23 +520,15 @@ drawPanelFigure(G.SPT, STPARAMS, STNICE, STYLAB, condR, TERRAINS, ROLES, XLAB, S
     figDir, 'Group_Spatiotemporal', sprintf('Group spatiotemporal   (crossing stride, by limb role; n = %d)', G.n), ...
     'Stride length, cadence, speed   —   dashed = level walk', true, 1, 3);
 
-% ----- Peak timing (% gait cycle): joints (1x3) -----
-jn = {'Hip flexion','Knee','Ankle'};
-jnE = arrayfun(@(i) sprintf('%s (%s)', jn{i}, PK_EXTREMUM.(PKT_JOINTS{i})), 1:numel(PKT_JOINTS), 'uni',0);
-drawPanelFigure(G.PKT, PKT_JOINTS, jnE, 'Gait cycle (%)', condR, TERRAINS, ROLES, XLAB, ST, ...
-    figDir, 'Group_PeakTiming_Joints', sprintf('Group joint peak timing   (%% gait cycle, ZVP\\rightarrowZVP; n = %d)', G.n), ...
-    'When the joint max/min occurs in the crossing cycle   —   dashed = level walk', true, 1, 3);
-
-% ----- Peak timing (% gait cycle): foot height (own figure) -----
-drawPanelFigure(G.PKT, {'FootHeight'}, {sprintf('Foot height (%s)', PK_EXTREMUM.FootHeight)}, 'Gait cycle (%)', condR, TERRAINS, ROLES, XLAB, ST, ...
-    figDir, 'Group_PeakTiming_FootHeight', sprintf('Group foot-height peak timing   (%% gait cycle; n = %d)', G.n), ...
-    'When peak foot clearance occurs in the crossing cycle   —   dashed = level walk', true, 1, 1);
-
-% ----- Peak timing (% gait cycle): segments (1x3) -----
-sgE = arrayfun(@(i) sprintf('%s (%s)', PKT_SEGS{i}, PK_EXTREMUM.(PKT_SEGS{i})), 1:numel(PKT_SEGS), 'uni',0);
-drawPanelFigure(G.PKT, PKT_SEGS, sgE, 'Gait cycle (%)', condR, TERRAINS, ROLES, XLAB, ST, ...
-    figDir, 'Group_PeakTiming_Segments', sprintf('Group segment peak timing   (%% gait cycle; n = %d)', G.n), ...
-    'Foot / Shank / Thigh tilt peak   —   dashed = level walk', true, 1, 3);
+% ----- Peak timing vs obstacle clearance: joints + segments together (2x3) -----
+% Signed % GC relative to the foot-clearance apex (0 = foot over obstacle; negative =
+% peak before clearing). FootHeight (the reference event's own absolute timing) stays
+% in the md/xlsx tables, no longer its own figure.
+pktAll = [PKT_JOINTS, PKT_SEGS];
+pktNice = arrayfun(@(i) sprintf('%s (%s)', pktAll{i}, PK_EXTREMUM.(pktAll{i})), 1:numel(pktAll), 'uni',0);
+drawPanelFigure(G.PKT, pktAll, pktNice, 'Peak vs clearance (% GC)', condR, TERRAINS, ROLES, XLAB, ST, ...
+    figDir, 'Group_PeakTiming', sprintf('Group peak timing vs obstacle clearance   (joints + segments; n = %d)', G.n), ...
+    '0 = foot over obstacle (apex);  negative = peak BEFORE clearing', false, 2, 3);
 
 % (Peak-angle figures now drawn above, before ROM — excursion values with the red
 %  level-walk reference line. Paired Δ vs level walk remains in the md/xlsx tables.)
@@ -723,9 +723,12 @@ function nm = pkFigName(key, pkDisp, pkFig)
     if isKey(pkFig, key), nm = pkFig(key); else, nm = pkDisp(key); end
 end
 
-function v = peakTimeByCond(Sg, S5, labelFun, condR, sp, ext)
-% Mean peak timing (% gait cycle) of a signal per condition: arg-extremum (max or
-% min, per ext) of each normalized stride. Same per-participant cleaning (sp).
+function v = peakTimeRelByCond(Sg, S5, labelFun, condR, sp, ext)
+% Mean peak timing of a signal RELATIVE TO OBSTACLE CLEARANCE, per condition, in
+% % gait cycle. For each stride: signalPeak%GC - footApex%GC, where the foot apex
+% (max foot height, Sg.zhc.posGait Z) is the "foot over the top of the obstacle"
+% instant. Signed: negative = the signal peaks BEFORE clearance, positive = after.
+% Same per-stride pooling + cleaning (sp) as the ROM/peak helpers.
     if nargin < 5, sp = []; end
     if nargin < 6 || isempty(ext), ext = 'max'; end
     NSEG = Sg.nseg;  v = nan(1, numel(condR));  acc = repmat({[]},1,numel(condR));
@@ -735,13 +738,16 @@ function v = peakTimeByCond(Sg, S5, labelFun, condR, sp, ext)
     zvp  = {Sg.zvpL, Sg.zvpR};  labels = {Sg.signal.label};
     for s = 1:2
         li = find(strcmp(labels, labelFun(sides{s}, sideWord{s})), 1);  if isempty(li), continue; end
+        if ~isfield(Sg.zhc, sides{s}), continue; end
         Y = Sg.signal(li).strides;                 % NSEG x nStr (sign-normalized at load)
         if strcmpi(ext,'min'), [~, pk] = min(Y, [], 1); else, [~, pk] = max(Y, [], 1); end
-        pkpct = (pk-1)/(NSEG-1)*100;
-        pkpct(all(isnan(Y),1)) = NaN;
-        T = camT{s};  R = camR{s};  zv = zvp{s};  m = min(numel(pkpct), numel(T));
+        pkpct = (pk-1)/(NSEG-1)*100;  pkpct(all(isnan(Y),1)) = NaN;
+        pos = Sg.zhc.(sides{s}).posGait;  nWin = size(pos,3);
+        T = camT{s};  R = camR{s};  zv = zvp{s};  m = min([numel(pkpct), numel(T), nWin]);
         for k = 1:m
             if isnan(pkpct(k)) || isempty(T{k}), continue; end
+            Z = pos(:,3,k);  if all(isnan(Z)), continue; end
+            [~, ap] = max(Z);  apexpct = (ap-1)/(NSEG-1)*100;     % foot-over-obstacle instant
             [ci,code] = condIdx(condR, T{k}, R{k});  if isempty(ci), continue; end
             if ~isempty(sp)
                 if ~isempty(sp.excludeCodes) && any(strcmp(code, sp.excludeCodes)), continue; end
@@ -750,7 +756,7 @@ function v = peakTimeByCond(Sg, S5, labelFun, condR, sp, ext)
                     if any(tk >= sp.excludeWin(:,1) & tk <= sp.excludeWin(:,2)), continue; end
                 end
             end
-            acc{ci}(end+1) = pkpct(k);
+            acc{ci}(end+1) = pkpct(k) - apexpct;                 % relative to clearance
         end
     end
     for ci = 1:numel(condR)
