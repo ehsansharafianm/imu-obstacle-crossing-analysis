@@ -48,4 +48,14 @@ when the old serial is used. Mirrored in `step1` (`altIds`) and `diag_drift_chec
   `unwrapCounter(pkt, 65536)` in the Awinda branch. See [[Session Changelog]].
 - Right Thigh & Right Shank (Awinda) Euler angles are negated for sign consistency (arms are not).
 
+## Sign check (QC)
+After loading joints + IMUs, `signCheckStep3` compares **left vs right** dominant excursion direction
+for hip/knee/ankle (IK) and thigh/shank/foot (Dot). Both legs do the same motion, so their sign
+conventions should match; a mismatch means a limb's **sensor-to-body calibration is probably flipped**.
+Each signal is **detrended** (~2 s running median) first so drift doesn't skew the result. It **only
+prints warnings — it does not change the saved data**; the group step normalizes signs data-driven for
+the analysis (see [[Step 9 - Group Crossing Analysis]], `signNormTools`). In this cohort it consistently
+flags the **right ankle** as opposite the left on every participant (a systematic calibration quirk worth
+knowing), plus per-participant hip/knee flips. There is **no angle wrapping** — these are pure sign flips.
+
 Next: [[Step 4 - Segmentation (ZVP)]] · back to [[Pipeline Workflow]] · see [[Data and Sensors]]

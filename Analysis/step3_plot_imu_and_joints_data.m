@@ -377,6 +377,11 @@ else
     fprintf('  After upsample  : %d samples @ %g Hz\n', numel(tgAligned), TARGET_RATE);
 end
 
+% QC: flag left/right sign-convention mismatches (rotated sensor-to-body calibration
+% flips a limb's angle). Warning only - does NOT modify the saved data; step 9
+% normalizes signs for the group analysis. Catches a bad calibration here at step 3.
+signCheckStep3(jLabels, jU, labels, eCell, COL_X, 'Dot');
+
 % Unique colour per IMU trace (system distinguished by colour now that all
 % lines are solid).
 if exist('turbo','file'), colorMat = turbo(nItem); else, colorMat = hsv(nItem); end
@@ -791,6 +796,73 @@ end
 
 function v = getfielddef(s, f, d)
     if isfield(s, f), v = s.(f); else, v = d; end
+end
+
+function signCheckStep3(jLabels, jU, labels, eCell, colX, segSys)
+% QC ONLY: detect left/right sign-convention mismatches. Both legs perform the same
+% motion, so a joint/segment's dominant excursion direction should match between
+% sides; if it does not, one limb's sensor-to-body calibration is probably flipped
+% (the same inconsistency step 9 corrects data-driven). Prints warnings; changes
+% nothing. 'expect' is the dominant direction in the intended convention (per
+% signNormTools): hip flexion -, ankle plantar -, thigh +, shank -, foot -; knee is
+% direction-ambiguous (only L-vs-R agreement is checked).
+    fprintf('\n--- Sign check: left vs right (QC only; data NOT modified) ---\n');
+    JJ = { 'hip_flexion','-','Hip flexion'; 'knee_angle','','Knee flexion'; 'ankle_angle','-','Ankle' };
+    SS = { 'Thigh','+','Thigh tilt'; 'Shank','-','Shank tilt'; 'Foot','-','Foot tilt' };
+    anyFlag = false;
+    for i = 1:size(JJ,1)
+        dl = domDir(colSig(jLabels, jU, [JJ{i,1} '_l']));
+        dr = domDir(colSig(jLabels, jU, [JJ{i,1} '_r']));
+        anyFlag = reportSignPair(JJ{i,3}, dl, dr, JJ{i,2}) | anyFlag;
+    end
+    for i = 1:size(SS,1)
+        dl = domDir(segSig(labels, eCell, colX, sprintf('Left %s (%s)',  SS{i,1}, segSys)));
+        dr = domDir(segSig(labels, eCell, colX, sprintf('Right %s (%s)', SS{i,1}, segSys)));
+        anyFlag = reportSignPair(SS{i,3}, dl, dr, SS{i,2}) | anyFlag;
+    end
+    if ~anyFlag, fprintf('  OK - all available left/right signs are consistent.\n'); end
+end
+
+function y = colSig(jLabels, jU, name)
+    y = [];  if isempty(jLabels) || isempty(jU), return; end
+    k = find(strcmp(jLabels, name), 1);  if ~isempty(k), y = jU(:,k); end
+end
+
+function y = segSig(labels, eCell, colX, name)
+    y = [];  k = find(strcmp(labels, name), 1);
+    if ~isempty(k) && ~isempty(eCell{k}), y = eCell{k}(:,colX); end
+end
+
+function d = domDir(y)
+% Dominant excursion direction (which side of neutral the motion swings toward),
+% by robust tails. The signal is detrended first (subtract a ~2 s running median) so
+% accumulated baseline DRIFT does not skew the result - only the movement does. '' if
+% too little data.
+    d = '';  y = y(~isnan(y));  n = numel(y);  if n < 60, return; end
+    w = min(121, 2*floor(n/4)+1);            % odd ~2 s window at 60 Hz, capped
+    y = y - movmedian(y, w);                 % remove slow drift -> centred on motion
+    up = prctile(y,98);  dn = -prctile(y,2);
+    if up >= dn, d = '+'; else, d = '-'; end
+end
+
+function flag = reportSignPair(nice, dl, dr, expect)
+    flag = false;
+    if isempty(dl) || isempty(dr)
+        fprintf('  %-12s : n/a (a side is missing)\n', nice);  return;
+    end
+    if strcmp(dl, dr)
+        if ~isempty(expect) && ~strcmp(dl, expect)
+            fprintf('  %-12s : both sides dominant "%s", expected "%s" - whole convention differs (check model, not a L/R flip)\n', nice, dl, expect);
+        end
+        return;
+    end
+    flag = true;
+    if ~isempty(expect)
+        if strcmp(dl, expect), susp = 'RIGHT'; else, susp = 'LEFT'; end
+        fprintf('  [WARN] %-12s : LEFT "%s" vs RIGHT "%s"  ->  %s limb sign looks FLIPPED (check sensor-to-body calibration)\n', nice, dl, dr, susp);
+    else
+        fprintf('  [WARN] %-12s : LEFT "%s" vs RIGHT "%s"  ->  one limb sign looks FLIPPED (check calibration)\n', nice, dl, dr);
+    end
 end
 
 function y = cleanSignal(t, y, driftWinSec, lowpassHz, clampRange)
