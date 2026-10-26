@@ -910,65 +910,72 @@ function mdTable(fid, header, conds, keys, niceHdr, S, divisor, dec, pctOff)
 end
 
 function writeSpssWide(xlsFile, G)
-% ONE sheet, one row per participant, each KEPT parameter x condition as a column
-% (values to 3 decimals). Import directly into SPSS. Column = <group>_<key>_<cond>.
-% Edit EXCLUDE to tailor which variables are written. Prints a legend to the console.
-    EXCLUDE = { 'T1','clr_toe';  'T1','clr_heel';            % keep only min clearance
-                'ROM','hip_flexion';  'ROM','knee_angle';     % remove hip & knee joint ROM (keep ankle)
-                'SROM','Thigh';  'SROM','Shank';              % remove thigh & shank segment ROM (keep foot)
-                'PEX','hip_pk_ext';  'PEX','thigh_back' };     % remove hip extension & thigh backward tilt
+% ONE sheet, one row per participant, each variable x condition as a column (3
+% decimals). Import directly into SPSS. Column = <class>_<name>_<condition>, with 4
+% simple classes: clearance, joints, segments, timings. Edit the VARS table below to
+% add/remove variables. Prints a legend to the command window.
+%   {class, name, source-group, source-key, description}
+    VARS = {
+      % ----- clearance (foot clearance / placement + whole-task gait) -----
+      'clearance','min',        'T1','clr_min',    'minimum foot clearance over the obstacle (cm)';
+      'clearance','takeoff',    'T1','lift_dist',  'take-off distance, foot before obstacle (cm)';
+      'clearance','landing',    'T1','land_dist',  'landing distance, foot after obstacle (cm)';
+      'clearance','stride',     'SPT','stride',    'stride length (cm)';
+      'clearance','cadence',    'SPT','cadence',   'cadence (steps/min)';
+      'clearance','speed',      'SPT','speed',     'gait speed (m/s)';
+      % ----- joints (ROM + max/min + peak angles) -----
+      'joints','ankle_rom',     'ROM','ankle_angle','ankle range of motion = max-min (deg)';
+      'joints','hip_max',       'JMAX','hip_flexion','hip angle maximum (deg)';
+      'joints','knee_max',      'JMAX','knee_angle', 'knee angle maximum (deg)';
+      'joints','ankle_max',     'JMAX','ankle_angle','ankle angle maximum (deg)';
+      'joints','hip_min',       'JMIN','hip_flexion','hip angle minimum (deg)';
+      'joints','knee_min',      'JMIN','knee_angle', 'knee angle minimum (deg)';
+      'joints','ankle_min',     'JMIN','ankle_angle','ankle angle minimum (deg)';
+      'joints','hip_flexion',   'PEX','hip_pk_flex', 'hip peak flexion (deg)';
+      'joints','knee_flexion',  'PEX','knee_pk_flex','knee peak flexion (deg)';
+      'joints','ankle_plantar', 'PEX','ank_plant',   'ankle peak plantarflexion (deg)';
+      'joints','ankle_dorsi',   'PEX','ank_dorsi',   'ankle peak dorsiflexion (deg)';
+      % ----- segments (IMU segment-tilt ROM + peak tilts, Dot) -----
+      'segments','foot_rom',      'SROM','Foot',       'foot segment tilt ROM (deg)';
+      'segments','thigh_forward', 'PEX','thigh_fwd',   'thigh peak forward tilt (deg)';
+      'segments','shank_backward','PEX','shank_back',  'shank peak backward / heel-up tilt (deg)';
+      'segments','shank_forward', 'PEX','shank_fwd',   'shank peak forward / reach tilt (deg)';
+      'segments','foot_toedown',  'PEX','foot_toedown','foot peak toe-down tilt (deg)';
+      'segments','foot_toeup',    'PEX','foot_toeup',  'foot peak toe-up tilt (deg)';
+      % ----- timings (peak timing relative to obstacle clearance, % gait cycle) -----
+      'timings','hip',        'PKT','hip_flexion','hip peak timing vs clearance (%GC, - = before)';
+      'timings','knee',       'PKT','knee_angle', 'knee peak timing vs clearance (%GC)';
+      'timings','ankle',      'PKT','ankle_angle','ankle peak timing vs clearance (%GC)';
+      'timings','footheight', 'PKT','FootHeight', 'foot-clearance (apex) timing in the cycle (%GC)';
+      'timings','foot',       'PKT','Foot',       'foot-tilt peak timing vs clearance (%GC)';
+      'timings','shank',      'PKT','Shank',      'shank-tilt peak timing vs clearance (%GC)';
+      'timings','thigh',      'PKT','Thigh',      'thigh-tilt peak timing vs clearance (%GC)';
+    };
     pp = G.perParticipant;  tests = pp.tests(:);  condR = G.condR;
     T = table(tests, 'VariableNames', {'Test'});
-    GRP = { 'T1',G.t1params; 'SPT',G.stparams; 'ROM',G.joints; 'JMAX',G.joints; ...
-            'JMIN',G.joints; 'SROM',G.segments; 'PEX',G.peakdef(:,1)'; 'PKT',G.pkall };
-    for gi = 1:size(GRP,1)
-        grp = GRP{gi,1};  keys = GRP{gi,2};
-        for k = 1:numel(keys)
-            if any(strcmp(EXCLUDE(:,1),grp) & strcmp(EXCLUDE(:,2),keys{k})), continue; end   % tailored out
-            M = round(pp.(grp).(keys{k}), 3);  conds = condR(1:size(M,2));
-            for c = 1:numel(conds)
-                T.(matlab.lang.makeValidName(sprintf('%s_%s_%s', grp, keys{k}, conds{c}))) = M(:,c);
-            end
+    for v = 1:size(VARS,1)
+        M = round(pp.(VARS{v,3}).(VARS{v,4}), 3);  conds = condR(1:size(M,2));
+        for c = 1:numel(conds)
+            T.(matlab.lang.makeValidName(sprintf('%s_%s_%s', VARS{v,1}, VARS{v,2}, conds{c}))) = M(:,c);
         end
     end
     if isfile(xlsFile), delete(xlsFile); end
     writetable(T, xlsFile);
     fprintf('Saved SPSS sheet (one row/participant, %d variables, 3 decimals) -> %s\n', width(T)-1, xlsFile);
-    printSpssLegend(G, GRP, EXCLUDE);
+    printSpssLegend(VARS);
 end
 
-function printSpssLegend(G, GRP, EXCLUDE)
-% Explain the SPSS column naming <group>_<key>_<condition> in the command window.
-    grpDesc = {'T1','clearance / foot placement (cm)'; 'SPT','spatiotemporal';
-               'ROM','joint range of motion = max-min (deg)'; 'JMAX','joint angle maximum (deg)';
-               'JMIN','joint angle minimum (deg)'; 'SROM','segment tilt ROM (deg, Dot)';
-               'PEX','peak angle excursion from stance (deg)'; 'PKT','peak timing vs obstacle clearance (% gait cycle, signed: - = before clearing)'};
-    keyDesc = {'clr_min','minimum foot clearance over the obstacle'; 'lift_dist','take-off distance (foot before obstacle)';
-               'land_dist','landing distance (foot after obstacle)'; 'stride','stride length (cm)';
-               'cadence','cadence (steps/min)'; 'speed','gait speed (m/s)';
-               'hip_flexion','hip'; 'knee_angle','knee'; 'ankle_angle','ankle';
-               'Thigh','thigh segment'; 'Shank','shank segment'; 'Foot','foot segment';
-               'hip_pk_flex','hip peak flexion'; 'knee_pk_flex','knee peak flexion';
-               'ank_plant','ankle peak plantarflexion'; 'ank_dorsi','ankle peak dorsiflexion';
-               'thigh_fwd','thigh peak forward tilt'; 'shank_back','shank peak backward (heel-up)';
-               'shank_fwd','shank peak forward (reach)'; 'foot_toedown','foot peak toe-down';
-               'foot_toeup','foot peak toe-up'; 'FootHeight','peak foot-height (clearance) timing'};
-    fprintf('\n--- SPSS variable legend (column = GROUP_key_CONDITION) ---\n');
-    fprintf('GROUPS:\n');
-    for i = 1:size(grpDesc,1), fprintf('  %-5s = %s\n', grpDesc{i,1}, grpDesc{i,2}); end
-    fprintf('KEYS (kept):\n');
-    kept = {};
-    for gi = 1:size(GRP,1)
-        for k = 1:numel(GRP{gi,2})
-            if ~any(strcmp(EXCLUDE(:,1),GRP{gi,1}) & strcmp(EXCLUDE(:,2),GRP{gi,2}{k})), kept{end+1} = GRP{gi,2}{k}; end %#ok<AGROW>
-        end
-    end
-    for k = unique(kept,'stable')
-        d = keyDesc(strcmp(keyDesc(:,1),k{1}),2);  if isempty(d), d = {k{1}}; end
-        fprintf('  %-13s = %s\n', k{1}, d{1});
+function printSpssLegend(VARS)
+% Explain the SPSS columns (<class>_<name>_<condition>) in the command window.
+    fprintf('\n--- SPSS variable legend  (column = class_name_CONDITION) ---\n');
+    classes = unique(VARS(:,1), 'stable');
+    for ci = 1:numel(classes)
+        fprintf('[%s]\n', upper(classes{ci}));
+        rows = find(strcmp(VARS(:,1), classes{ci}));
+        for r = rows', fprintf('  %-16s = %s\n', VARS{r,2}, VARS{r,5}); end
     end
     fprintf('CONDITIONS:  W1/W2 = width (5 cm / 15 cm) ; H1/H2/H3 = height ; _Leading / _Trailing = limb role ; Level_Walk = baseline\n');
-    fprintf('  e.g. ROM_ankle_angle_W2_H3_Trailing = ankle ROM, 15cm-wide tallest obstacle, trailing limb\n\n');
+    fprintf('  e.g.  joints_hip_flexion_W2_H3_Trailing = hip peak flexion, 15cm-wide tallest obstacle, trailing limb\n\n');
 end
 
 function writeGroupSheet(xlsFile, sheet, conds, keys, S)
