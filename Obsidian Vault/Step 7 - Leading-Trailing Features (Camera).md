@@ -1,11 +1,11 @@
 ---
 tags: [step, camera, leading-trailing, features]
-aliases: [step7, step7_segment_features_with_camera]
+aliases: [step7, step07_segment_features_with_camera]
 ---
 
 # Step 7 — Leading/Trailing Features (with Camera)
 
-**File:** `Analysis/step7_segment_features_with_camera.m`
+**File:** `Analysis/step07_segment_features_with_camera.m`
 Everything [[Step 5 - Obstacle Features]] does (read the FeatureLogs + Logger, classify each obstacle
 cycle **Leading/Trailing** per terrain, plot every IMU / joint / ZHC signal by side and by role) —
 **plus** the camera foot-marker heights, in the same group viewers.

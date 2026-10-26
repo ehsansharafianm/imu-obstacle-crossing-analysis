@@ -35,7 +35,7 @@ Focus: making the group directional kinematics **correct and task-meaningful**. 
   Step 9 **% change vs level walk**, **manual `OVERRIDE`** table, and **named peak-angle** parameters.
 
 ## (2026-10-19) — Step 9: group analysis across participants
-- **[[Step 9 - Group Crossing Analysis]]** (`step9_group_crossing_analysis.m`): the capstone — aggregates
+- **[[Step 9 - Group Crossing Analysis]]** (`step09_group_crossing_analysis.m`): the capstone — aggregates
   steps 1–8 outputs across the cohort into group **mean ± SD** (two-level average, no normalization).
   Metrics: Tier-1 clearance/placement (incl. **min clearance ≤ toe**), **spatiotemporal** (stride, cadence
   steps/min, speed), joint & **IMU-segment ROM**, and **peak timing** (% GC) with a **per-signal extremum**
@@ -128,8 +128,8 @@ Study goal captured in [[Study Rationale and Goal]].
   single shift on the **first peak**; the **final peak** measures drift. On test102: shift +20.1 s →
   **−6.00 s**, drift −34.9 s → **−0.004 s (0.000 %)** — the clocks are essentially locked (no rate
   mismatch after all; it was the missed first peak). **test101 IMUs are corrupt — benchmark on test102.**
-- **CV matlab files renamed** to a numbered pipeline: `step1_plot_trajectory`, `step2_refine_trajectory`
-  (adds an obstacle >60 cm height cut), `step3_detect_crossings` (guided trial-by-trial obstacle
+- **CV matlab files renamed** to a numbered pipeline: `step01_plot_trajectory`, `step02_refine_trajectory`
+  (adds an obstacle >60 cm height cut), `step03_detect_crossings` (guided trial-by-trial obstacle
   labelling + total-time X/Y/Z overview with per-cycle #/lead→trail labels).
 
 ## ★ (2026-09) — IMU heading drift diagnosed & fixed

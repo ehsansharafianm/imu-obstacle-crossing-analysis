@@ -5,7 +5,7 @@ aliases: [step9, group analysis, group_crossing_analysis]
 
 # Step 9 — Group Crossing Analysis
 
-**File:** `Analysis/step9_group_crossing_analysis.m`
+**File:** `Analysis/step09_group_crossing_analysis.m`
 The pipeline **capstone**: run ONCE after steps 1–8 are complete for every participant. It reads
 **many tests** (not one) and aggregates them into **group** results (mean ± SD **across participants**).
 Set `TESTS` to the cohort; Subject ID = Test number.

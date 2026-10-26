@@ -1,11 +1,11 @@
 ---
 tags: [step, segmentation, gait-events]
-aliases: [step4, step4_segmentation]
+aliases: [step4, step04_segmentation]
 ---
 
 # Step 4 — Segmentation (ZVP)
 
-**File:** `Analysis/step4_segmentation.m`
+**File:** `Analysis/step04_segmentation.m`
 Detects gait events per side, cuts every signal into strides, and reconstructs the foot path.
 
 ## ZVP baseline detrend (optional, default ON)

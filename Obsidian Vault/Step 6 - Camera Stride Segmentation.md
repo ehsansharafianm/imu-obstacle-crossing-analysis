@@ -1,11 +1,11 @@
 ---
 tags: [step, camera, segmentation, stride]
-aliases: [step6, step6_segment_camera_trajectories]
+aliases: [step6, step06_segment_camera_trajectories]
 ---
 
 # Step 6 — Camera Stride Segmentation
 
-**File:** `Analysis/step6_segment_camera_trajectories.m`
+**File:** `Analysis/step06_segment_camera_trajectories.m`
 Cuts the four camera foot markers into strides, on the **same ZVP boundaries** as the IMU, so camera
 strides line up one-to-one with the IMU/joint strides.
 

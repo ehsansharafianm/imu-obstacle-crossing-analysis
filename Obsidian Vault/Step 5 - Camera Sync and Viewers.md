@@ -1,11 +1,11 @@
 ---
 tags: [step, camera, sync, viewer]
-aliases: [step5, step5_camera_sync_and_view]
+aliases: [step5, step05_camera_sync_and_view]
 ---
 
 # Step 5 — Camera Sync + Viewers
 
-**File:** `Analysis/step5_camera_sync_and_view.m`
+**File:** `Analysis/step05_camera_sync_and_view.m`
 Syncs the camera marker trajectory to the IMU/joint 60 Hz grid, then opens three interactive
 viewers. (Combines the earlier sync step and the "view all synced signals" step.)
 

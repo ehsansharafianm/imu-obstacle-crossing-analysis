@@ -1,11 +1,11 @@
 ---
 tags: [step, sync, export]
-aliases: [step3, step3_plot_imu_and_joints_data]
+aliases: [step3, step03_plot_imu_and_joints_data]
 ---
 
 # Step 3 — Dot vs Awinda Sync + Export
 
-**File:** `Analysis/step3_plot_imu_and_joints_data.m`
+**File:** `Analysis/step03_plot_imu_and_joints_data.m`
 Reads both IMU systems, converts to Euler, **syncs** them, **upsamples to 60 Hz**, pulls in the
 IK joint angles, and exports one combined dataset.
 

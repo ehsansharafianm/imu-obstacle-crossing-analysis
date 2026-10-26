@@ -1,11 +1,11 @@
 ---
 tags: [step, opensim]
-aliases: [step1, step1_open_sense_pipeline]
+aliases: [step1, step01_open_sense_pipeline]
 ---
 
 # Step 1 — OpenSense IK
 
-**File:** `Analysis/step1_open_sense_pipeline.m`
+**File:** `Analysis/step01_open_sense_pipeline.m`
 Raw Awinda → OpenSim orientations → calibrate model → IMU inverse kinematics.
 
 ## What it does

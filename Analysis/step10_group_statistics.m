@@ -369,55 +369,111 @@ function printSummary(R, fdr, ALPHA)
 end
 
 function makeFigures(figDir, R, Yall, Ylev, ~, Ht, Rl, ALPHA)
-    FN = 'Arial';
+    ST = plotStyle();  FN = ST.font;  fw = 'bold';
     % ---- p-value heatmap (parameter x effect) ----
     NP = numel(R);
     Pm = [[R.npH_p]', [R.npW_p]', [R.npR_p]', [R.vsLevel_p]'];
-    f1 = figure('Color','w','Position',[60 60 760 1000]);
-    imagesc(-log10(Pm), 'AlphaData', ~isnan(Pm));  colormap(flipud(hot));  cb = colorbar;
-    cb.Label.String = '-log_{10}(p)';
-    set(gca,'XTick',1:4,'XTickLabel',{'Height','Width','Role','vs Level'}, ...
+    f1 = figure('Color','w','Position',[60 60 820 1020]);
+    ax1 = axes(f1);  imagesc(ax1, -log10(Pm), 'AlphaData', ~isnan(Pm));
+    colormap(ax1, flipud(hot));  cb = colorbar(ax1);  cb.Label.String = '-log_{10}(p)';
+    cb.Label.FontName = FN;  cb.Label.FontSize = ST.szLabel;
+    set(ax1,'XTick',1:4,'XTickLabel',{'Height','Width','Role','vs Level'}, ...
         'YTick',1:NP,'YTickLabel',arrayfun(@(r) sprintf('%s (%s)',r.disp,r.unit),R,'uni',0), ...
-        'FontName',FN,'FontSize',9,'TickLabelInterpreter','none');
-    hold on;  clim([0 max(3,max(-log10(Pm(:)),[],'omitnan'))]);
-    for i=1:NP, for j=1:4, if ~isnan(Pm(i,j)) && Pm(i,j)<ALPHA, text(j,i,'*','HorizontalAlignment','center','Color','c','FontWeight','bold'); end, end, end
-    title(sprintf('Significance heatmap  (* p<%.2f uncorrected)', ALPHA),'FontName',FN);
-    exportgraphics(f1, fullfile(figDir,'pvalue_heatmap.png'), 'Resolution',150);   % kept open
-    % ---- distribution boxplots by HEIGHT, grouped by Role, for each parameter ----
+        'FontName',FN,'FontSize',10,'FontWeight',fw,'TickLabelInterpreter','none','LineWidth',ST.boxWidth);
+    hold(ax1,'on');  clim(ax1,[0 max(3,max(-log10(Pm(:)),[],'omitnan'))]);
+    for i=1:NP, for j=1:4, if ~isnan(Pm(i,j)) && Pm(i,j)<ALPHA, text(ax1,j,i,'*','HorizontalAlignment','center','Color',[0 0.6 1],'FontWeight','bold','FontSize',14); end, end, end
+    title(ax1, sprintf('Significance heatmap  (* p < %.2f uncorrected)', ALPHA),'FontName',FN,'FontSize',ST.szTitle,'FontWeight','bold');
+    exportgraphics(f1, fullfile(figDir,'pvalue_heatmap.png'), 'Resolution', ST.pngDPI);   % kept open
+    % ---- distribution figures per parameter group (Height x Role, with sig brackets) ----
     grps = unique({R.group},'stable');
     for gi = 1:numel(grps)
         idx = find(strcmp({R.group}, grps{gi}));
         nP = numel(idx);  nc = min(3,nP);  nr = ceil(nP/nc);
-        f = figure('Color','w','Position',[40 40 520*nc 360*nr]);
+        f = figure('Color','w','Position',[40 40 560*nc 400*nr]);
+        tl = tiledlayout(f, nr, nc, 'TileSpacing','compact','Padding','compact');
+        hbRef = [];
         for a = 1:nP
-            ri = idx(a);  Y = Yall{ri};  subplot(nr,nc,a); hold on; box on;
-            % group by Height x Role
-            labs = {}; data = {};
-            for H = {'H1','H2','H3'}
-                for Rr = {'Leading','Trailing'}
-                    sel = strcmp(Ht,H{1}) & strcmp(Rl,Rr{1});
-                    v = Y(:,sel);  v = v(~isnan(v));
-                    labs{end+1} = sprintf('%s %s',H{1},Rr{1}(1)); data{end+1} = v(:); %#ok<AGROW>
-                end
-            end
-            boxplotCells(gca, data, labs);
-            if any(~isnan(Ylev{ri})), yline(median(Ylev{ri},'omitnan'),'--r','level'); end
-            title(sprintf('%s (%s)',R(ri).disp,R(ri).unit),'FontName',FN,'Interpreter','none','FontSize',11);
-            set(gca,'FontName',FN,'FontSize',9);
+            ri = idx(a);  ax = nexttile(tl);
+            hb = drawDistPanel(ax, Yall{ri}, Ht, Rl, Ylev{ri}, ST, sprintf('%s (%s)',R(ri).disp,R(ri).unit));
+            if a == 1, hbRef = hb; end
         end
-        exportgraphics(f, fullfile(figDir, sprintf('dist_%s.png', grps{gi})), 'Resolution',150);   % kept open
+        if ~isempty(hbRef)
+            lg = legend(hbRef, {'Leading','Trailing','Level walk'}, 'Orientation','horizontal', ...
+                'FontName',FN,'FontSize',ST.szLegend);
+            lg.Layout.Tile = 'north';
+        end
+        exportgraphics(tl, fullfile(figDir, sprintf('dist_%s.png', grps{gi})), 'Resolution', ST.pngDPI);  % kept open
     end
 end
 
-function boxplotCells(ax, data, labs)
-    n = numel(data);
-    for i = 1:n
-        x = data{i};  if isempty(x), continue; end
-        q = quantile(x,[.25 .5 .75]);  w = 0.3;
-        fill(ax,[i-w i+w i+w i-w],[q(1) q(1) q(3) q(3)],[.8 .88 .98],'EdgeColor',[.2 .4 .7]);
-        plot(ax,[i-w i+w],[q(2) q(2)],'Color',[.2 .4 .7],'LineWidth',2);
-        plot(ax,i+(rand(numel(x),1)-.5)*.2, x, 'o','Color',[.3 .3 .3],'MarkerSize',3,'MarkerFaceColor',[.5 .5 .5]);
+function hb = drawDistPanel(ax, Y, Ht, Rl, YL, ST, ttl)
+% Height (H1/H2/H3) on x, Leading (blue) vs Trailing (orange) boxes side by side,
+% level-walk red line, and pairwise-Height significance brackets with stars.
+    hold(ax,'on'); box(ax,'on');
+    heights = {'H1','H2','H3'};  roles = {'Leading','Trailing'};  cols = {ST.colLead, ST.colTrail};
+    off = [-0.19 0.19];  hb = gobjects(1,3);
+    allv = [];
+    for hh = 1:3
+        for rr = 1:2
+            sel = strcmp(Ht,heights{hh}) & strcmp(Rl,roles{rr});
+            v = Y(:,sel);  v = v(~isnan(v(:)));  allv = [allv; v(:)]; %#ok<AGROW>
+            h = drawBox(ax, hh+off(rr), 0.16, v, cols{rr}, ST);
+            if hh==1, hb(rr) = h; end
+        end
     end
-    set(ax,'XTick',1:n,'XTickLabel',labs);  xtickangle(ax,35);  xlim(ax,[.5 n+.5]);
+    % level-walk reference
+    hb(3) = plot(ax, NaN, NaN, '--', 'Color', ST.colLevel, 'LineWidth', ST.levelW);
+    if any(~isnan(YL))
+        yline(ax, median(YL,'omitnan'), '--', 'Color', ST.colLevel, 'LineWidth', ST.levelW);
+    end
+    % ---- Height pairwise significance brackets (Wilcoxon, roles pooled) ----
+    hm = cellfun(@(h) mean(Y(:, strcmp(Ht,h)), 2, 'omitnan'), heights, 'uni', 0);
+    lo = min(allv);  hi = max(allv);  if ~isfinite(lo), lo=0; hi=1; end
+    rng = max(hi-lo, eps);  y0 = hi + 0.06*rng;  stepY = 0.11*rng;  k = 0;
+    pairs = {[1 3],[1 2],[2 3]};
+    for pr = pairs
+        p = pairedP(hm{pr{1}(1)}, hm{pr{1}(2)});
+        s = sigStar(p);
+        if ~strcmp(s,'ns')
+            yb = y0 + k*stepY;  x1 = pr{1}(1);  x2 = pr{1}(2);
+            plot(ax, [x1 x1 x2 x2], [yb-0.02*rng yb yb yb-0.02*rng], 'k', 'LineWidth',1.3);
+            text(ax, (x1+x2)/2, yb, s, 'HorizontalAlignment','center','VerticalAlignment','bottom', ...
+                'FontName',ST.font,'FontSize',ST.szTick,'FontWeight','bold');
+            k = k + 1;
+        end
+    end
+    set(ax, 'XTick', 1:3, 'XTickLabel', heights, 'FontName',ST.font, 'FontSize',ST.szTick, ...
+        'FontWeight','bold', 'LineWidth',ST.boxWidth, 'XColor',[.15 .15 .15], 'YColor',[.15 .15 .15]);
+    xlim(ax, [0.5 3.5]);  if k>0, ylim(ax, [lo-0.05*rng, y0+(k+0.4)*stepY]); end
+    title(ax, ttl, 'FontName',ST.font, 'FontSize',ST.szTitle, 'FontWeight','bold', 'Interpreter','none');
+    xlabel(ax, 'Obstacle height', 'FontName',ST.font, 'FontSize',ST.szLabel, 'FontWeight','bold');
+end
+
+function h = drawBox(ax, x, w, v, col, ST)
+    h = fill(ax, [x-w x+w x+w x-w], [0 0 0 0], col);  % placeholder for legend colour
+    if isempty(v), return; end
+    q = quantile(v, [.25 .5 .75]);  wl = min(v);  wu = max(v);
+    set(h, 'XData',[x-w x+w x+w x-w], 'YData',[q(1) q(1) q(3) q(3)], ...
+        'FaceColor', col, 'FaceAlpha',0.35, 'EdgeColor', col, 'LineWidth',1.4);
+    plot(ax, [x-w x+w], [q(2) q(2)], 'Color', col, 'LineWidth', 2.2);           % median
+    plot(ax, [x x], [wl q(1)], 'Color', col, 'LineWidth', ST.errW);             % whiskers
+    plot(ax, [x x], [q(3) wu], 'Color', col, 'LineWidth', ST.errW);
+    plot(ax, x+(rand(numel(v),1)-.5)*w*0.9, v, 'o', 'MarkerSize',3.5, ...
+        'MarkerFaceColor', col*0.7+0.3, 'MarkerEdgeColor', col*0.6, 'LineWidth',0.3);
+end
+
+function p = pairedP(a, b)
+    g = ~isnan(a) & ~isnan(b);  p = NaN;
+    if nnz(g) >= 4
+        try
+            p = signrank(a(g), b(g));
+        catch
+        end
+    end
+end
+
+function s = sigStar(p)
+    if isnan(p), s = 'ns'; elseif p < 0.001, s = '***'; elseif p < 0.01, s = '**'; ...
+    elseif p < 0.05, s = '*'; else, s = 'ns'; end
 end
 

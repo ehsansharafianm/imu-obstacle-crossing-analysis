@@ -1,11 +1,11 @@
 ---
 tags: [step, camera, clearance, parameters, obstacle]
-aliases: [step8, step8_crossing_parameters]
+aliases: [step8, step08_crossing_parameters]
 ---
 
 # Step 8 — Crossing Parameters (Placement & Clearance)
 
-**File:** `Analysis/step8_crossing_parameters.m`
+**File:** `Analysis/step08_crossing_parameters.m`
 The payoff step: per obstacle-crossing cycle, read the **camera** foot positions at the key **IMU**
 moments and report the crossing parameters. Obstacle heights default to **AUTO** (measured from the camera
 obstacle markers); leg length or explicit heights can be entered instead (see Obstacle heights below).

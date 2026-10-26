@@ -1,11 +1,11 @@
 ---
 tags: [step, viewer]
-aliases: [step2, step2_plot_joint_angles]
+aliases: [step2, step02_plot_joint_angles]
 ---
 
 # Step 2 — Joint Angle Viewer
 
-**File:** `Analysis/step2_plot_joint_angles.m`
+**File:** `Analysis/step02_plot_joint_angles.m`
 Interactive viewer of the IK joint angles from [[Step 1 - OpenSense IK]].
 
 ## What it does
