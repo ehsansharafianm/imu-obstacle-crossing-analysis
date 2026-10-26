@@ -41,12 +41,14 @@ SEG_SYS  = 'Dot';                                        % which IMU system for 
 %       median, then aggregate with the median (robust to the jump).
 %   (b) exclusion: drop whole condition codes and/or time windows (s) for that test.
 % Test 106: a mid-trial thigh-IMU disturbance inflated hip/thigh (and knee) ROM,
-% worst on obstacle codes 11 / 13 / 23 (W1_H1, W1_H3, W2_H3).
+% worst on obstacle codes 11 / 13 / 23 (W1_H1, W1_H3, W2_H3). We now KEEP all of 106's
+% conditions in the results and rely on the MAD gate alone to drop the inflated strides
+% (robust per-condition median), so W1_H1/W1_H3/W2_H3 are no longer blank for 106.
 CLEAN = struct('test',{},'signals',{},'madK',{},'excludeCodes',{},'excludeWin',{});
 CLEAN(1).test         = 106;
 CLEAN(1).signals      = {'hip_flexion','knee_angle','Thigh'};   % joints + segment affected by the thigh IMU
 CLEAN(1).madK         = 3;                                      % (a) drop > 3*MAD from the per-condition median
-CLEAN(1).excludeCodes = {'W1_H1','W1_H3','W2_H3'};              % (b) drop these conditions entirely for 106
+CLEAN(1).excludeCodes = {};                                     % (b) no whole-condition exclusion (MAD gate only)
 CLEAN(1).excludeWin   = [];                                     % (b) optional [t1 t2; ...] seconds to drop
 
 %% -------------------- SPATIOTEMPORAL + PEAK-TIMING --------------------
@@ -443,8 +445,13 @@ pf = fieldnames(PK_EXTREMUM);
 fprintf(fid, '- **Peak-timing extremum reported per signal:** %s.\n', ...
     strjoin(arrayfun(@(i) sprintf('%s = %s', pf{i}, PK_EXTREMUM.(pf{i})), 1:numel(pf),'uni',0), ', '));
 if ~isempty(CLEAN)
-    fprintf(fid, '- **Cleaning:** Test %d — %s ROM/peak cleaned (MAD-median; codes %s excluded) for a mid-trial thigh-IMU artifact.\n', ...
-        CLEAN(1).test, strjoin(CLEAN(1).signals,'/'), strjoin(CLEAN(1).excludeCodes,', '));
+    if isempty(CLEAN(1).excludeCodes)
+        fprintf(fid, '- **Cleaning:** Test %d — %s ROM/peak cleaned with a %g*MAD stride gate + robust median (all conditions kept) for a mid-trial thigh-IMU artifact.\n', ...
+            CLEAN(1).test, strjoin(CLEAN(1).signals,'/'), CLEAN(1).madK);
+    else
+        fprintf(fid, '- **Cleaning:** Test %d — %s ROM/peak cleaned (MAD-median; codes %s excluded) for a mid-trial thigh-IMU artifact.\n', ...
+            CLEAN(1).test, strjoin(CLEAN(1).signals,'/'), strjoin(CLEAN(1).excludeCodes,', '));
+    end
 end
 fprintf(fid, '\n');
 mdTable(fid, 'Tier 1 — clearance & foot placement (cm)', condName, T1PARAMS, T1LABEL, G.T1, 10, 1);
@@ -957,7 +964,8 @@ function writeSpssWide(xlsFile, G)
     ordAll = [find(contains(condR,'_Leading')), find(contains(condR,'_Trailing')), find(strcmp(condR,'Level_Walk'))];
     T = table(tests, 'VariableNames', {'Test'});
     for v = 1:size(VARS,1)
-        M = round(pp.(VARS{v,3}).(VARS{v,4}), 3);  ord = ordAll(ordAll <= size(M,2));
+        sc = 1;  if strcmp(VARS{v,3},'T1'), sc = 1/10; end   % T1 lengths are mm internally -> cm (match the figure/Summary)
+        M = round(pp.(VARS{v,3}).(VARS{v,4}) * sc, 3);  ord = ordAll(ordAll <= size(M,2));
         for ci = ord
             T.(matlab.lang.makeValidName(sprintf('%s_%s_%s', VARS{v,1}, VARS{v,2}, condR{ci}))) = M(:,ci);
         end
