@@ -428,6 +428,9 @@ writeGroupSheet(xlsFile, 'PeakExcursion_deg', condR, pkKeys, G.PEXc);   % offset
 writeGroupSheet(xlsFile, 'PeakDelta_deg',     condR, pkKeys, G.PEXd);   % paired delta vs level
 fprintf('Saved summary -> %s\n', xlsFile);
 
+% ----- SPSS-ready: ONE sheet, one row per participant, every variable as a column -----
+writeSpssWide(fullfile(outDir, sprintf('GroupCrossing_%s_SPSS.xlsx', COHORT)), G);
+
 %% ===================== MARKDOWN SUMMARY (easy to read / share) =====================
 mdFile = fullfile(outDir, sprintf('GroupCrossing_%s_Results.md', COHORT));
 fid = fopen(mdFile, 'w');
@@ -904,6 +907,27 @@ function mdTable(fid, header, conds, keys, niceHdr, S, divisor, dec, pctOff)
         fprintf(fid, '| %d |\n', nn);
     end
     fprintf(fid, '\n');
+end
+
+function writeSpssWide(xlsFile, G)
+% ONE sheet, one row per participant, every parameter x condition as its own column.
+% Import directly into SPSS (wide format). Columns: Test, then <group>_<key>_<cond>.
+    pp = G.perParticipant;  tests = pp.tests(:);  condR = G.condR;
+    T = table(tests, 'VariableNames', {'Test'});
+    GRP = { 'T1',G.t1params; 'SPT',G.stparams; 'ROM',G.joints; 'JMAX',G.joints; ...
+            'JMIN',G.joints; 'SROM',G.segments; 'PEX',G.peakdef(:,1)'; 'PKT',G.pkall };
+    for gi = 1:size(GRP,1)
+        grp = GRP{gi,1};  keys = GRP{gi,2};
+        for k = 1:numel(keys)
+            M = pp.(grp).(keys{k});  conds = condR(1:size(M,2));
+            for c = 1:numel(conds)
+                T.(matlab.lang.makeValidName(sprintf('%s_%s_%s', grp, keys{k}, conds{c}))) = M(:,c);
+            end
+        end
+    end
+    if isfile(xlsFile), delete(xlsFile); end
+    writetable(T, xlsFile);
+    fprintf('Saved SPSS sheet (one row/participant, %d variables) -> %s\n', width(T)-1, xlsFile);
 end
 
 function writeGroupSheet(xlsFile, sheet, conds, keys, S)

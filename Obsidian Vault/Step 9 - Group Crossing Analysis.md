@@ -39,7 +39,9 @@ A mid-trial thigh-IMU artifact inflated 106's hip/knee/thigh ROM & peak timing. 
 
 ## Outputs (`Results/Group Analysis/`)
 - `GroupCrossing_<cohort>_Results.md` — **human/LLM-readable** tables (mean ± SD per condition).
-- `GroupCrossing_<cohort>_Summary.xlsx` — sheets: Tier1_cm, Spatiotemporal, ROM_deg, SegmentROM_deg, PeakTiming_vsClearance, PeakExcursion_deg, PeakDelta_deg.
+- `GroupCrossing_<cohort>_Summary.xlsx` — sheets: Tier1_cm, Spatiotemporal, ROM_deg, SegmentROM_deg, PeakTiming_vsClearance, JointMax_deg, JointMin_deg, PeakExcursion_deg, PeakDelta_deg.
+- `GroupCrossing_<cohort>_SPSS.xlsx` — **one sheet, one row per participant, every variable as a column**
+  (`<group>_<key>_<condition>`). Wide format, import directly into SPSS.
 - `GroupCrossing_<cohort>.mat` — the aggregated `G` struct (+ `G.perParticipant`) for re-plotting/stats.
 - `Figures/` — Tier1, **Peak angles + ROM (HipThigh / KneeShank / AnkleFoot)**, Spatiotemporal,
   **PeakTiming** (one combined 2×3, joints + segments, vs clearance). **PNG only.** (ROM now lives inside the combo peak
