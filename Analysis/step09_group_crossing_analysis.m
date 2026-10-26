@@ -952,11 +952,14 @@ function writeSpssWide(xlsFile, G)
       'timings','thigh',      'PKT','Thigh',      'thigh-tilt peak timing vs clearance (%GC)';
     };
     pp = G.perParticipant;  tests = pp.tests(:);  condR = G.condR;
+    % Column order WITHIN each variable: all Leading obstacles, then all Trailing, then
+    % Level_Walk (so each limb's columns sit together for SPSS).
+    ordAll = [find(contains(condR,'_Leading')), find(contains(condR,'_Trailing')), find(strcmp(condR,'Level_Walk'))];
     T = table(tests, 'VariableNames', {'Test'});
     for v = 1:size(VARS,1)
-        M = round(pp.(VARS{v,3}).(VARS{v,4}), 3);  conds = condR(1:size(M,2));
-        for c = 1:numel(conds)
-            T.(matlab.lang.makeValidName(sprintf('%s_%s_%s', VARS{v,1}, VARS{v,2}, conds{c}))) = M(:,c);
+        M = round(pp.(VARS{v,3}).(VARS{v,4}), 3);  ord = ordAll(ordAll <= size(M,2));
+        for ci = ord
+            T.(matlab.lang.makeValidName(sprintf('%s_%s_%s', VARS{v,1}, VARS{v,2}, condR{ci}))) = M(:,ci);
         end
     end
     if isfile(xlsFile), delete(xlsFile); end
