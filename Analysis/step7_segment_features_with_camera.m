@@ -31,6 +31,11 @@ BARMM_IMU_SYSTEM = 'Dot';                                       % reference IMU 
 BARMM_IMU_SEGS   = {'Thigh','Shank','Foot'};                    % IMU segments (matched in the label)
 BARMM_JOINTS     = {'hip_flexion','knee_angle','ankle_angle'};  % joints for the bars
 
+% ---- Hand-calculated joint values (manual) -----------------------------------
+% Edit these in Analysis/manualJointValues.m (one SECTION PER PARTICIPANT). The same
+% file is read by step9, so your hand values affect both steps. {} there = none.
+MANUAL_JOINT = manualJointValues();
+
 %% ===================== INPUT =====================
 % Set TN before running (e.g. `TN = 22;`) to skip the prompt for batch runs.
 if exist('TN','var') && ~isempty(TN), tn = TN; else, tn = input('  Input Test Number: '); end
@@ -320,6 +325,8 @@ while true
     for cc = 1:nCj
         idx = find(startsWith(vL,'Joint:') & contains(vL, jCats{cc}));
         [mxL,mxT,mnL,mnT] = maxMinByTerrain(idx, vY, cycSideArr, terrL, terrR, roleL, roleR, terrains);
+        % Apply hand-calculated values where provided (replaces that single bar).
+        [mxL,mxT,mnL,mnT] = applyManualJoint(MANUAL_JOINT, tn, jCats{cc}, terrains, mxL,mxT,mnL,mnT);
         drawGrouped(subplot(nCj,2,2*cc-1), terrains, mxL, mxT, 'Max (deg)', sprintf('%s - MAX', jCats{cc}), FONT_NAME, {'Leading','Trailing'});
         drawGrouped(subplot(nCj,2,2*cc),   terrains, mnL, mnT, 'Min (deg)', sprintf('%s - MIN', jCats{cc}), FONT_NAME, {'Leading','Trailing'});
     end
@@ -868,6 +875,41 @@ end
 function v = safeIdx(a, i)
 % a(i) with bounds/NaN guard.
     if ~isnan(i) && i >= 1 && i <= numel(a), v = a(i); else, v = NaN; end
+end
+
+function [mxL,mxT,mnL,mnT] = applyManualJoint(MJ, tn, jointName, terrains, mxL,mxT,mnL,mnT)
+% Override a single (terrain, role, stat) bar with a hand-calculated value and/or SD.
+% For BOTH value and sd, [] means "keep the automatic (computed) one"; a number
+% overrides it. So value=12,sd=[] -> bar 12 with the auto SD; value=[],sd=5 -> auto
+% value with SD 5; value=-48,sd=10 -> both. (For no error bar, set sd = 0.)
+    if isempty(MJ), return; end
+    for r = 1:size(MJ,1)
+        if ~isequal(MJ{r,1}, tn) || ~strcmp(MJ{r,2}, jointName), continue; end
+        terr = MJ{r,3};  role = MJ{r,4};  stat = lower(MJ{r,5});  val = MJ{r,6};  sd = MJ{r,7};
+        ti = find(strcmp(terrains, terr), 1);  if isempty(ti), continue; end
+        isMax = strcmp(stat,'max');  isLead = strcmpi(role,'Leading');
+        if     isLead  && isMax,  cur = mxL{ti};
+        elseif ~isLead && isMax,  cur = mxT{ti};
+        elseif isLead  && ~isMax, cur = mnL{ti};
+        else,                     cur = mnT{ti};
+        end
+        autoM = mean(cur,'omitnan');  autoS = std(cur,'omitnan');   % computed from the strides
+        m = autoM;  if ~isempty(val), m = val; end                  % [] -> keep automatic value
+        s = autoS;  if ~isempty(sd),  s = sd;  end                  % [] -> keep automatic SD
+        if ~isfinite(m)
+            fprintf('  [hand-calc] skip %s %s %s %s: no automatic value to keep (no strides)\n', jointName, terr, role, stat);
+            continue;
+        end
+        if ~isfinite(s) || s <= 0, pts = m; else, pts = [m - s/sqrt(2), m + s/sqrt(2)]; end
+        if     isLead  && isMax,  mxL{ti} = pts;
+        elseif ~isLead && isMax,  mxT{ti} = pts;
+        elseif isLead  && ~isMax, mnL{ti} = pts;
+        else,                     mnT{ti} = pts;
+        end
+        vtxt = 'auto';  if ~isempty(val), vtxt = sprintf('%.1f',val); end
+        stxt = 'auto';  if ~isempty(sd),  stxt = sprintf('%.1f',sd);  end
+        fprintf('  [hand-calc] Test %d  %-12s %-6s %-9s %s = %s  (sd %s)\n', tn, jointName, terr, role, stat, vtxt, stxt);
+    end
 end
 
 function [mxL, mxT, mnL, mnT] = maxMinByTerrain(idxList, vY, cycSideArr, terrL, terrR, roleL, roleR, terrains)

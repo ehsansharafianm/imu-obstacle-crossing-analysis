@@ -25,7 +25,7 @@ addpath(fileparts(mfilename('fullpath')));
 %   Figures/Group_Tier1.png, Group_ROM.png
 
 %% ===================== CONFIG =====================
-TESTS    = [101 102 103 104 105 106 107];  % participant test numbers (Subject ID = Test #)
+TESTS    = [101 102 103 104 105 106 107 108 109];  % participant test numbers (Subject ID = Test #)
 COHORT   = 'YoungAdults';
 TERRAINS = {'W1_H1','W1_H2','W1_H3','W2_H1','W2_H2','W2_H3'};
 ROLES    = {'Leading','Trailing'};
@@ -196,6 +196,8 @@ nT = numel(TESTS);  nC = numel(condName);  nCR = numel(condR);
 % Per-participant condition means: [nTest x nCond]
 P1 = struct();   for p = T1PARAMS,  P1.(p{1})   = nan(nT, nC);  end
 ROM = struct();  for j = JOINTS,    ROM.(j{1})  = nan(nT, nCR); end
+JMAX = struct(); for j = JOINTS,    JMAX.(j{1}) = nan(nT, nCR); end   % joint angle max (deg)
+JMIN = struct(); for j = JOINTS,    JMIN.(j{1}) = nan(nT, nCR); end   % joint angle min (deg)
 SROM = struct(); for g = SEGMENTS,  SROM.(g{1}) = nan(nT, nCR); end
 SPT = struct();  for p = STPARAMS,  SPT.(p{1})  = nan(nT, nCR); end
 PKT = struct();  for q = PKALL,     PKT.(q{1})  = nan(nT, nCR); end
@@ -209,6 +211,9 @@ nCross = zeros(nT,1);  usedTests = false(nT,1);
 % the cohort changes).
 SNT = signNormTools();
 SIGN_TPL = SNT.load(root);
+% Hand-calculated joint max/min (Analysis/manualJointValues.m) - replaces the drift-
+% affected automatic value per participant, in step7's RAW convention. {} = none.
+MANUAL = manualJointValues();
 
 %% ===================== PER-PARTICIPANT AGGREGATION =====================
 for ti = 1:nT
@@ -223,7 +228,8 @@ for ti = 1:nT
     CP = load(cpF);  CP = CP.CP;
     S5 = load(s5F);  fn = fieldnames(S5);  S5 = S5.(fn{1});
     Sg = load(sgF);  Sg = Sg.Seg;
-    Sg = SNT.apply(Sg, S5, SIGN_TPL, SEG_SYS);   % normalize hip/segment sign conventions
+    SgRaw = Sg;                                  % raw convention (for joint max/min, matches step7)
+    Sg = SNT.apply(Sg, S5, SIGN_TPL, SEG_SYS);   % normalize hip/segment sign conventions (for peaks)
     usedTests(ti) = true;  nCross(ti) = numel(CP.crossing);
 
     % --- Tier 1: clearance + placement from CP (per crossing) ---
@@ -248,7 +254,11 @@ for ti = 1:nT
     % A per-participant clean spec (CLEAN) is applied ONLY to the matching test+signal.
     for j = JOINTS
         sp = cleanSpecFor(CLEAN, tn, j{1});
-        ROM.(j{1})(ti,:) = romByCond(Sg, S5, @(s,sw) sprintf('Joint: %s_%s', j{1}, lower(s)), condR, sp);
+        % Joint max/min from the RAW signal (step7 convention), then apply hand values;
+        % ROM = max - min (sign-invariant) now reflects the manual corrections.
+        [mxv, mnv] = jointMaxMinByCond(SgRaw, S5, @(s,sw) sprintf('Joint: %s_%s', j{1}, lower(s)), condR, sp);
+        [mxv, mnv] = applyManualStep9(MANUAL, tn, j{1}, condR, mxv, mnv);
+        JMAX.(j{1})(ti,:) = mxv;  JMIN.(j{1})(ti,:) = mnv;  ROM.(j{1})(ti,:) = mxv - mnv;
     end
     for g = SEGMENTS
         sp = cleanSpecFor(CLEAN, tn, g{1});
@@ -298,6 +308,9 @@ for j = JOINTS
     M = ROM.(j{1})(usedTests,:);
     G.ROM.(j{1}).mean = mean(M,1,'omitnan');  G.ROM.(j{1}).sd = std(M,0,1,'omitnan');
     G.ROM.(j{1}).n    = sum(~isnan(M),1);
+    MX = JMAX.(j{1})(usedTests,:);  MN = JMIN.(j{1})(usedTests,:);
+    G.JMAX.(j{1}).mean = mean(MX,1,'omitnan');  G.JMAX.(j{1}).sd = std(MX,0,1,'omitnan');  G.JMAX.(j{1}).n = sum(~isnan(MX),1);
+    G.JMIN.(j{1}).mean = mean(MN,1,'omitnan');  G.JMIN.(j{1}).sd = std(MN,0,1,'omitnan');  G.JMIN.(j{1}).n = sum(~isnan(MN),1);
 end
 for g = SEGMENTS
     M = SROM.(g{1})(usedTests,:);
@@ -323,7 +336,7 @@ end
 G.condName = condName;  G.condR = condR;  G.terrains = TERRAINS;  G.roles = ROLES;
 G.joints = JOINTS;  G.segments = SEGMENTS;  G.t1params = T1PARAMS;  G.stparams = STPARAMS;  G.pkall = PKALL;
 G.pkExtremum = PK_EXTREMUM;  G.peakdef = PEAKDEF;  G.cohort = COHORT;  G.cleaning = CLEAN;
-G.perParticipant = struct('T1',P1,'ROM',ROM,'SROM',SROM,'SPT',SPT,'PKT',PKT,'PEX',PEX,'tests',TESTS,'used',usedTests,'nCross',nCross);
+G.perParticipant = struct('T1',P1,'ROM',ROM,'JMAX',JMAX,'JMIN',JMIN,'SROM',SROM,'SPT',SPT,'PKT',PKT,'PEX',PEX,'tests',TESTS,'used',usedTests,'nCross',nCross);
 
 %% ===================== APPLY MANUAL OVERRIDES =====================
 % Each OVERRIDE row {GROUP, SIGNAL, CONDITION, MEAN, SD} replaces that one cell's
@@ -407,6 +420,8 @@ for ci = 1:nCR
 end
 writetable(cell2table(CS,'VariableNames',matlab.lang.makeValidName(vnamesS)), xlsFile, 'Sheet','SegmentROM_deg');
 writeGroupSheet(xlsFile, 'Spatiotemporal',   condR, STPARAMS, G.SPT);   % stride cm / cadence spm / speed m/s
+writeGroupSheet(xlsFile, 'JointMax_deg',     condR, JOINTS, G.JMAX);    % joint angle max (hand-corrected where set)
+writeGroupSheet(xlsFile, 'JointMin_deg',     condR, JOINTS, G.JMIN);    % joint angle min (hand-corrected where set)
 writeGroupSheet(xlsFile, 'PeakTiming_vsClearance', condR, PKALL, G.PKT); % signed %GC rel. to foot apex (FootHeight = absolute ref)
 pkKeys = PEAKDEF(:,1)';
 writeGroupSheet(xlsFile, 'PeakExcursion_deg', condR, pkKeys, G.PEXc);   % offset-corrected excursion
@@ -433,6 +448,8 @@ mdTable(fid, 'Tier 1 — clearance & foot placement (cm)', condName, T1PARAMS, T
 mdTable(fid, 'Spatiotemporal — crossing stride', condR, STPARAMS, ...
     {'Stride (cm)','Cadence (steps/min)','Speed (m/s)'}, G.SPT, 1, [0 0 2]);
 mdTable(fid, 'Joint ROM (deg)', condR, JOINTS, JOINTS, G.ROM, 1, 1);
+mdTable(fid, 'Joint angle MAX (deg)', condR, JOINTS, JOINTS, G.JMAX, 1, 1);
+mdTable(fid, 'Joint angle MIN (deg)', condR, JOINTS, JOINTS, G.JMIN, 1, 1);
 mdTable(fid, 'Segment tilt ROM (deg, Dot)', condR, SEGMENTS, SEGMENTS, G.SROM, 1, 1);
 % Peak timing RELATIVE to obstacle clearance (foot apex), signed % GC (neg = before
 % clearing); FootHeight is the reference event's own ABSOLUTE timing (% GC).
@@ -555,6 +572,70 @@ function v = minClearance(c)
     zs = [a.zToe(inT); a.zHeel(inH); c.z_toe_cross; c.z_heel_cross];
     zs = zs(~isnan(zs));
     if isempty(zs), v = NaN; else, v = min(zs) - h; end
+end
+
+function [mxv, mnv] = jointMaxMinByCond(Sg, S5, labelFun, condR, sp)
+% Per-condition aggregate of per-stride MAX and MIN of a joint signal (deg), pooled
+% by role like romByCond. Mean by default; robust median + MAD gate when sp is set.
+% Call on the RAW (non sign-normalized) Sg so it matches step7's figure convention.
+    if nargin < 5, sp = []; end
+    mxv = nan(1,numel(condR));  mnv = nan(1,numel(condR));
+    accX = repmat({[]},1,numel(condR));  accN = repmat({[]},1,numel(condR));
+    sides = {'L','R'};  sideWord = {'Left','Right'};
+    camT = {S5.camera.terrainL, S5.camera.terrainR};
+    camR = {S5.camera.roleL,    S5.camera.roleR};
+    zvp  = {Sg.zvpL, Sg.zvpR};  labels = {Sg.signal.label};
+    for s = 1:2
+        li = find(strcmp(labels, labelFun(sides{s}, sideWord{s})), 1);  if isempty(li), continue; end
+        Y = Sg.signal(li).strides;
+        mx = max(Y,[],1,'omitnan');  mn = min(Y,[],1,'omitnan');
+        bad = all(isnan(Y),1);  mx(bad) = NaN;  mn(bad) = NaN;
+        T = camT{s};  R = camR{s};  zv = zvp{s};  m = min(numel(mx), numel(T));
+        for k = 1:m
+            if isnan(mx(k)) || isempty(T{k}), continue; end
+            if strcmpi(T{k},'Level_Walk'), ci = find(strcmp(condR,'Level_Walk'),1);  code = T{k};
+            elseif ~isempty(R{k}),          ci = find(strcmp(condR, sprintf('%s_%s', T{k}, R{k})), 1);  code = T{k};
+            else,                           ci = [];  code = '';
+            end
+            if isempty(ci), continue; end
+            if ~isempty(sp)
+                if ~isempty(sp.excludeCodes) && any(strcmp(code, sp.excludeCodes)), continue; end
+                if ~isempty(sp.excludeWin) && k <= numel(zv)
+                    tk = (zv(k)-1)/Sg.fs;
+                    if any(tk >= sp.excludeWin(:,1) & tk <= sp.excludeWin(:,2)), continue; end
+                end
+            end
+            accX{ci}(end+1) = mx(k);  accN{ci}(end+1) = mn(k);
+        end
+    end
+    for ci = 1:numel(condR), mxv(ci) = aggStat(accX{ci}, sp);  mnv(ci) = aggStat(accN{ci}, sp); end
+end
+
+function v = aggStat(x, sp)
+    x = x(~isnan(x));  if isempty(x), v = NaN; return; end
+    if isempty(sp)
+        v = mean(x);
+    else
+        if numel(x) >= 4 && isfinite(sp.madK)
+            md = median(x);  ad = median(abs(x-md));
+            if ad > 0, x = x(abs(x-md) <= sp.madK*1.4826*ad); end
+        end
+        v = median(x);
+    end
+end
+
+function [mxv, mnv] = applyManualStep9(MJ, tn, joint, condR, mxv, mnv)
+% Override per-condition joint max/min with hand-calculated values (the 'value' field;
+% [] keeps the automatic one). Condition = <terrain>_<role>. The table's SD column is
+% for step7's error bar only and is not used here.
+    if isempty(MJ), return; end
+    for r = 1:size(MJ,1)
+        if ~isequal(MJ{r,1}, tn) || ~strcmp(MJ{r,2}, joint), continue; end
+        terr = MJ{r,3};  role = MJ{r,4};  stat = lower(MJ{r,5});  val = MJ{r,6};
+        if isempty(val), continue; end                      % [] = keep automatic
+        ci = find(strcmp(condR, sprintf('%s_%s', terr, role)), 1);  if isempty(ci), continue; end
+        if strcmp(stat,'max'), mxv(ci) = val; else, mnv(ci) = val; end
+    end
 end
 
 function v = romByCond(Sg, S5, labelFun, condR, sp)
