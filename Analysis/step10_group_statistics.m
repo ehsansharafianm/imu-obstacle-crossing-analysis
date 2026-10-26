@@ -382,7 +382,7 @@ function makeFigures(figDir, R, Yall, Ylev, ~, Ht, Rl, ALPHA)
     hold on;  clim([0 max(3,max(-log10(Pm(:)),[],'omitnan'))]);
     for i=1:NP, for j=1:4, if ~isnan(Pm(i,j)) && Pm(i,j)<ALPHA, text(j,i,'*','HorizontalAlignment','center','Color','c','FontWeight','bold'); end, end, end
     title(sprintf('Significance heatmap  (* p<%.2f uncorrected)', ALPHA),'FontName',FN);
-    exportgraphics(f1, fullfile(figDir,'pvalue_heatmap.png'), 'Resolution',150);  close(f1);
+    exportgraphics(f1, fullfile(figDir,'pvalue_heatmap.png'), 'Resolution',150);   % kept open
     % ---- distribution boxplots by HEIGHT, grouped by Role, for each parameter ----
     grps = unique({R.group},'stable');
     for gi = 1:numel(grps)
@@ -405,7 +405,7 @@ function makeFigures(figDir, R, Yall, Ylev, ~, Ht, Rl, ALPHA)
             title(sprintf('%s (%s)',R(ri).disp,R(ri).unit),'FontName',FN,'Interpreter','none','FontSize',11);
             set(gca,'FontName',FN,'FontSize',9);
         end
-        exportgraphics(f, fullfile(figDir, sprintf('dist_%s.png', grps{gi})), 'Resolution',150);  close(f);
+        exportgraphics(f, fullfile(figDir, sprintf('dist_%s.png', grps{gi})), 'Resolution',150);   % kept open
     end
 end
 
