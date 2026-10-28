@@ -25,7 +25,7 @@ addpath(fileparts(mfilename('fullpath')));
 %   Figures/Group_Tier1.png, Group_ROM.png
 
 %% ===================== CONFIG =====================
-TESTS    = [101 102 103 104 105 106 107 108 109];  % participant test numbers (Subject ID = Test #)
+TESTS    = [101 102 103 104 105 106 107 108 109 110];  % participant test numbers (Subject ID = Test #)
 COHORT   = 'YoungAdults';
 TERRAINS = {'W1_H1','W1_H2','W1_H3','W2_H1','W2_H2','W2_H3'};
 ROLES    = {'Leading','Trailing'};
@@ -923,40 +923,37 @@ function writeSpssWide(xlsFile, G)
 % add/remove variables. Prints a legend to the command window.
 %   {class, name, source-group, source-key, description}
     VARS = {
-      % ----- clearance (foot clearance / placement + whole-task gait) -----
+      % ----- clearance (foot clearance / placement, cm) -----
+      'clearance','toe',        'T1','clr_toe',    'toe clearance over the obstacle (cm)';
+      'clearance','heel',       'T1','clr_heel',   'heel clearance over the obstacle (cm)';
       'clearance','min',        'T1','clr_min',    'minimum foot clearance over the obstacle (cm)';
       'clearance','takeoff',    'T1','lift_dist',  'take-off distance, foot before obstacle (cm)';
       'clearance','landing',    'T1','land_dist',  'landing distance, foot after obstacle (cm)';
-      'clearance','stride',     'SPT','stride',    'stride length (cm)';
-      'clearance','cadence',    'SPT','cadence',   'cadence (steps/min)';
-      'clearance','speed',      'SPT','speed',     'gait speed (m/s)';
-      % ----- joints (ROM + max/min + peak angles) -----
-      'joints','ankle_rom',     'ROM','ankle_angle','ankle range of motion = max-min (deg)';
-      'joints','hip_max',       'JMAX','hip_flexion','hip angle maximum (deg)';
-      'joints','knee_max',      'JMAX','knee_angle', 'knee angle maximum (deg)';
-      'joints','ankle_max',     'JMAX','ankle_angle','ankle angle maximum (deg)';
-      'joints','hip_min',       'JMIN','hip_flexion','hip angle minimum (deg)';
-      'joints','knee_min',      'JMIN','knee_angle', 'knee angle minimum (deg)';
-      'joints','ankle_min',     'JMIN','ankle_angle','ankle angle minimum (deg)';
-      'joints','hip_flexion',   'PEX','hip_pk_flex', 'hip peak flexion (deg)';
-      'joints','knee_flexion',  'PEX','knee_pk_flex','knee peak flexion (deg)';
-      'joints','ankle_plantar', 'PEX','ank_plant',   'ankle peak plantarflexion (deg)';
-      'joints','ankle_dorsi',   'PEX','ank_dorsi',   'ankle peak dorsiflexion (deg)';
-      % ----- segments (IMU segment-tilt ROM + peak tilts, Dot) -----
-      'segments','foot_rom',      'SROM','Foot',       'foot segment tilt ROM (deg)';
-      'segments','thigh_forward', 'PEX','thigh_fwd',   'thigh peak forward tilt (deg)';
-      'segments','shank_backward','PEX','shank_back',  'shank peak backward / heel-up tilt (deg)';
-      'segments','shank_forward', 'PEX','shank_fwd',   'shank peak forward / reach tilt (deg)';
-      'segments','foot_toedown',  'PEX','foot_toedown','foot peak toe-down tilt (deg)';
-      'segments','foot_toeup',    'PEX','foot_toeup',  'foot peak toe-up tilt (deg)';
-      % ----- timings (peak timing relative to obstacle clearance, % gait cycle) -----
-      'timings','hip',        'PKT','hip_flexion','hip peak timing vs clearance (%GC, - = before)';
-      'timings','knee',       'PKT','knee_angle', 'knee peak timing vs clearance (%GC)';
-      'timings','ankle',      'PKT','ankle_angle','ankle peak timing vs clearance (%GC)';
-      'timings','footheight', 'PKT','FootHeight', 'foot-clearance (apex) timing in the cycle (%GC)';
-      'timings','foot',       'PKT','Foot',       'foot-tilt peak timing vs clearance (%GC)';
-      'timings','shank',      'PKT','Shank',      'shank-tilt peak timing vs clearance (%GC)';
-      'timings','thigh',      'PKT','Thigh',      'thigh-tilt peak timing vs clearance (%GC)';
+      % ----- joint (IK hip/knee/ankle: peak flexion + ROM, deg) -----
+      'joint','hip_flexion',    'PEX','hip_pk_flex', 'hip peak flexion (deg)';
+      'joint','hip_rom',        'ROM','hip_flexion', 'hip ROM = max-min (deg)';
+      'joint','knee_flexion',   'PEX','knee_pk_flex','knee peak flexion (deg)';
+      'joint','knee_rom',       'ROM','knee_angle',  'knee ROM = max-min (deg)';
+      'joint','ankle_rom',      'ROM','ankle_angle', 'ankle ROM = max-min (deg)';
+      % ----- segment (Dot thigh/shank/foot tilts: peak + ROM, deg) -----
+      'segment','thigh_flexion',  'PEX','thigh_fwd',  'thigh peak forward tilt / flexion (deg)';
+      'segment','thigh_rom',      'SROM','Thigh',     'thigh segment tilt ROM (deg)';
+      'segment','shank_backward', 'PEX','shank_back', 'shank peak backward tilt (deg)';
+      'segment','shank_forward',  'PEX','shank_fwd',  'shank peak forward tilt (deg)';
+      'segment','shank_rom',      'SROM','Shank',     'shank segment tilt ROM (deg)';
+      'segment','foot_rom',       'SROM','Foot',      'foot segment tilt ROM (deg)';
+      % ----- timing (peak timing relative to obstacle clearance, % gait cycle) -----
+      'timing','hip',         'PKT','hip_flexion','hip peak timing vs clearance (%GC, - = before)';
+      'timing','knee',        'PKT','knee_angle', 'knee peak timing vs clearance (%GC)';
+      'timing','ankle',       'PKT','ankle_angle','ankle peak timing vs clearance (%GC)';
+      'timing','footheight',  'PKT','FootHeight', 'foot-clearance (apex) timing in the cycle (%GC)';
+      'timing','foot',        'PKT','Foot',       'foot-tilt peak timing vs clearance (%GC)';
+      'timing','shank',       'PKT','Shank',      'shank-tilt peak timing vs clearance (%GC)';
+      'timing','thigh',       'PKT','Thigh',      'thigh-tilt peak timing vs clearance (%GC)';
+      % ----- spatiotemporal (crossing stride) -----
+      'spatiotemporal','stride', 'SPT','stride', 'stride length (cm)';
+      'spatiotemporal','cadence','SPT','cadence','cadence (steps/min)';
+      'spatiotemporal','speed',  'SPT','speed',  'gait speed (m/s)';
     };
     pp = G.perParticipant;  tests = pp.tests(:);  condR = G.condR;
     % Column order WITHIN each variable: all Leading obstacles, then all Trailing, then
