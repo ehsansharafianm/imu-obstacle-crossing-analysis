@@ -1,0 +1,1343 @@
+participant_id,crossing_id,variable,original_value,cleaned_value,action,reason
+106,106_11_r1,lead_thigh_max,61.3796,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 11 lead median (54.60) -> NaN
+106,106_11_r5,lead_thigh_max,22.9282,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 11 lead median (54.60) -> NaN
+106,106_11_r5,lead_thigh_min,-46.8309,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 11 lead median (13.59) -> NaN
+106,106_11_r5,lead_thigh_rom,69.7591,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 11 lead median (41.90) -> NaN
+106,106_11_r4,lead_thigh_min_corr,13.7041,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 11 lead median (1.11) -> NaN
+106,106_11_r5,lead_thigh_min_corr,-28.8753,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 11 lead median (1.11) -> NaN
+106,106_11_r5,trail_thigh_max,18.0599,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 11 trail median (36.16) -> NaN
+106,106_11_r5,trail_thigh_min,-76.1119,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 11 trail median (10.60) -> NaN
+106,106_11_r5,trail_thigh_rom,94.1718,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 11 trail median (29.24) -> NaN
+106,106_11_r5,trail_thigh_min_corr,-59.793,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 11 trail median (-0.75) -> NaN
+106,106_12_r3,lead_thigh_min,41.3537,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 12 lead median (27.19) -> NaN
+106,106_12_r3,lead_thigh_min_corr,48.9421,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 12 lead median (25.82) -> NaN
+106,106_12_r2,trail_thigh_min,23.1618,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 12 trail median (19.12) -> NaN
+106,106_12_r2,trail_thigh_max_corr,41.2719,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 12 trail median (45.12) -> NaN
+106,106_13_r1,trail_thigh_min,23.3687,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 13 trail median (26.02) -> NaN
+106,106_13_r5,trail_thigh_min,29.0205,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 13 trail median (26.02) -> NaN
+106,106_22_r5,lead_thigh_rom,57.1174,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 22 lead median (66.29) -> NaN
+106,106_22_r1,trail_thigh_max,43.7503,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 22 trail median (48.80) -> NaN
+106,106_22_r1,trail_thigh_rom,21.5199,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 22 trail median (28.58) -> NaN
+106,106_22_r3,trail_thigh_rom,30.4975,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 22 trail median (28.58) -> NaN
+106,106_22_r1,trail_thigh_max_corr,40.6326,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 22 trail median (46.89) -> NaN
+106,106_23_r4,lead_thigh_max,90.1551,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 23 lead median (85.84) -> NaN
+106,106_23_r5,lead_thigh_max,89.8638,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 23 lead median (85.84) -> NaN
+106,106_23_r5,lead_thigh_max_corr,79.1402,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 23 lead median (80.73) -> NaN
+106,106_23_r2,trail_thigh_max_corr,33.1876,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 23 trail median (31.44) -> NaN
+106,106_23_r5,trail_thigh_max_corr,23.5772,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 23 trail median (31.44) -> NaN
+103,103_level_p1,lead_thigh_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_thigh_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_thigh_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_thigh_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_thigh_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_thigh_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_thigh_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_thigh_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_thigh_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_thigh_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_thigh_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_thigh_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_thigh_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_thigh_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_thigh_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_thigh_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_thigh_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_thigh_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_thigh_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_thigh_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_thigh_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_thigh_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_thigh_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_thigh_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_thigh_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_thigh_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_thigh_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_thigh_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_thigh_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_thigh_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_thigh_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_thigh_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_thigh_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_thigh_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_thigh_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_thigh_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_thigh_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_thigh_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_thigh_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_thigh_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_thigh_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_thigh_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_thigh_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_thigh_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_thigh_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_thigh_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_thigh_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_thigh_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_thigh_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_thigh_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_thigh_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_thigh_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_thigh_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_thigh_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_thigh_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_thigh_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_thigh_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_thigh_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_thigh_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_thigh_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_thigh_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_thigh_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_thigh_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_thigh_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_thigh_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_thigh_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_thigh_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_thigh_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_thigh_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_thigh_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_thigh_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_thigh_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_thigh_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_thigh_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_thigh_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_thigh_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_thigh_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_thigh_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_thigh_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_thigh_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_thigh_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_thigh_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_thigh_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_thigh_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_thigh_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_thigh_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_thigh_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_thigh_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_thigh_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_thigh_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_thigh_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_shank_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_shank_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_shank_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_shank_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_shank_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_shank_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_shank_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_shank_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_shank_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_shank_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_shank_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_shank_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_shank_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_shank_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_shank_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_shank_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_shank_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_shank_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_shank_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_shank_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_shank_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_shank_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_shank_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_shank_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_shank_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_shank_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_shank_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_shank_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_shank_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_shank_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_shank_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_shank_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_shank_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_shank_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_shank_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_shank_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_shank_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_shank_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_shank_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_shank_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_shank_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_shank_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_shank_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_shank_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_shank_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_shank_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_shank_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_shank_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_shank_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_shank_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_shank_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_shank_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_shank_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_shank_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_shank_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_shank_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_shank_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_shank_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_shank_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_shank_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_shank_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_shank_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_shank_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_shank_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_shank_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_shank_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_shank_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_shank_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_shank_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_shank_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_shank_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_shank_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_shank_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_shank_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_shank_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_shank_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_shank_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_shank_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_shank_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_shank_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_shank_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_shank_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_shank_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_shank_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_shank_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_shank_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_shank_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_shank_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_shank_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_shank_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_shank_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_foot_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_foot_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_foot_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_foot_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_foot_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_foot_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_foot_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_foot_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_foot_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_foot_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_foot_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_foot_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_foot_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_foot_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_foot_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_foot_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_foot_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_foot_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_foot_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_foot_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_foot_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_foot_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_foot_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_foot_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_foot_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_foot_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_foot_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_foot_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_foot_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_foot_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_foot_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_foot_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_foot_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_foot_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_foot_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_foot_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_foot_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_foot_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_foot_rom,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_foot_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_foot_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_foot_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_foot_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_foot_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_foot_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_foot_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_foot_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_foot_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_foot_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_foot_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_foot_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_foot_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_foot_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_foot_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_foot_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_foot_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_foot_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_foot_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_foot_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_foot_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_foot_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_foot_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_foot_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_foot_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_foot_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_foot_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_foot_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_foot_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_foot_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_foot_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_foot_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_foot_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_foot_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_foot_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_foot_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_foot_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_foot_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_foot_max_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_foot_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_foot_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_foot_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_foot_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_foot_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_foot_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_foot_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_foot_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_foot_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_foot_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_foot_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_foot_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_foot_min_corr,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_thigh_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_thigh_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_thigh_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_thigh_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_thigh_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_thigh_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_thigh_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_thigh_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_thigh_rom,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_thigh_rom,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_thigh_rom,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_thigh_rom,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_thigh_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_thigh_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_thigh_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_thigh_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_thigh_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_thigh_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_thigh_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_thigh_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_thigh_max_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_thigh_max_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_thigh_max_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_thigh_max_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_thigh_min_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_thigh_min_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_thigh_min_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_thigh_min_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_shank_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_shank_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_shank_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_shank_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_shank_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_shank_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_shank_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_shank_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_shank_rom,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_shank_rom,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_shank_rom,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_shank_rom,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_shank_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_shank_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_shank_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_shank_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_shank_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_shank_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_shank_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_shank_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_shank_max_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_shank_max_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_shank_max_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_shank_max_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_shank_min_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_shank_min_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_shank_min_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_shank_min_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_foot_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_foot_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_foot_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_foot_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_foot_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_foot_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_foot_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_foot_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_foot_rom,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_foot_rom,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_foot_rom,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_foot_rom,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_foot_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_foot_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_foot_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_foot_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_foot_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_foot_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_foot_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_foot_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_foot_max_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_foot_max_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_foot_max_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_foot_max_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_foot_min_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_foot_min_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_foot_min_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_foot_min_corr,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_thigh_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_thigh_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_thigh_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_thigh_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_thigh_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_thigh_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_thigh_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_thigh_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_thigh_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_thigh_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_thigh_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_thigh_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_thigh_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_thigh_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_thigh_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_thigh_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_thigh_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_thigh_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_thigh_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_thigh_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_thigh_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_thigh_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_thigh_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_thigh_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_thigh_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_thigh_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_thigh_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_thigh_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_thigh_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_thigh_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_thigh_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_thigh_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_thigh_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_thigh_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_thigh_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_thigh_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_thigh_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_thigh_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_thigh_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_thigh_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_thigh_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_thigh_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_thigh_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_thigh_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_thigh_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_thigh_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_thigh_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_thigh_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_thigh_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_thigh_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_thigh_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_thigh_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_thigh_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_thigh_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_thigh_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_thigh_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_thigh_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_thigh_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_thigh_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_thigh_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_thigh_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_thigh_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_thigh_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_thigh_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_thigh_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_shank_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_shank_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_shank_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_shank_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_shank_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_shank_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_shank_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_shank_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_shank_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_shank_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_shank_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_shank_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_shank_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_shank_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_shank_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_shank_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_shank_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_shank_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_shank_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_shank_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_shank_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_shank_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_shank_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_shank_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_shank_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_shank_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_shank_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_shank_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_shank_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_shank_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_shank_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_shank_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_shank_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_shank_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_shank_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_shank_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_shank_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_shank_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_shank_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_shank_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_shank_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_shank_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_shank_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_shank_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_shank_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_shank_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_shank_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_shank_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_shank_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_shank_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_shank_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_shank_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_shank_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_shank_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_shank_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_shank_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_shank_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_shank_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_shank_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_shank_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_shank_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_shank_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_shank_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_shank_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_shank_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_foot_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_foot_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_foot_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_foot_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_foot_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_foot_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_foot_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_foot_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_foot_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_foot_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_foot_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_foot_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_foot_av_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_foot_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_foot_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_foot_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_foot_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_foot_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_foot_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_foot_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_foot_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_foot_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_foot_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_foot_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_foot_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_foot_av_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_foot_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_foot_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_foot_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_foot_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_foot_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_foot_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_foot_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_foot_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_foot_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_foot_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_foot_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_foot_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_foot_av_t_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_foot_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_foot_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_foot_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_foot_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_foot_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_foot_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_foot_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_foot_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_foot_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_foot_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_foot_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_foot_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_foot_av_t_min,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_foot_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_foot_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_foot_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_foot_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_foot_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_foot_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_foot_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_foot_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_foot_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_foot_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_foot_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_foot_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_foot_av_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_thigh_av_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_thigh_av_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_thigh_av_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_thigh_av_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_thigh_av_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_thigh_av_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_thigh_av_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_thigh_av_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_thigh_av_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_thigh_av_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_thigh_av_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_thigh_av_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_thigh_av_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_thigh_av_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_thigh_av_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_thigh_av_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_thigh_av_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_thigh_av_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_thigh_av_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_thigh_av_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_shank_av_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_shank_av_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_shank_av_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_shank_av_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_shank_av_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_shank_av_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_shank_av_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_shank_av_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_shank_av_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_shank_av_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_shank_av_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_shank_av_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_shank_av_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_shank_av_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_shank_av_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_shank_av_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_shank_av_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_shank_av_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_shank_av_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_shank_av_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_foot_av_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_foot_av_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_foot_av_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_foot_av_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_foot_av_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_foot_av_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_foot_av_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_foot_av_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_foot_av_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_foot_av_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_foot_av_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_foot_av_t_max,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_foot_av_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_foot_av_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_foot_av_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_foot_av_t_min,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_foot_av_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_foot_av_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_foot_av_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_foot_av_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_foot_acc_peak_start,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_foot_acc_peak_start,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_foot_acc_peak_start,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_foot_acc_peak_start,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_foot_acc_peak_start,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_foot_acc_peak_start,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_foot_acc_peak_start,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_foot_acc_peak_start,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_foot_acc_peak_start,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_foot_acc_peak_start,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_foot_acc_peak_start,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_foot_acc_peak_start,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_foot_acc_peak_start,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_foot_acc_peak_land,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_foot_acc_peak_land,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_foot_acc_peak_land,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_foot_acc_peak_land,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_foot_acc_peak_land,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_foot_acc_peak_land,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_foot_acc_peak_land,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_foot_acc_peak_land,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_foot_acc_peak_land,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_foot_acc_peak_land,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_foot_acc_peak_land,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_foot_acc_peak_land,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_foot_acc_peak_land,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_foot_acc_rms_swing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_foot_acc_rms_swing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_foot_acc_rms_swing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_foot_acc_rms_swing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_foot_acc_rms_swing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_foot_acc_rms_swing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_foot_acc_rms_swing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_foot_acc_rms_swing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_foot_acc_rms_swing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_foot_acc_rms_swing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_foot_acc_rms_swing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_foot_acc_rms_swing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_foot_acc_rms_swing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_foot_acc_peak_start,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_foot_acc_peak_start,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_foot_acc_peak_start,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_foot_acc_peak_start,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_foot_acc_peak_land,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_foot_acc_peak_land,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_foot_acc_peak_land,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_foot_acc_peak_land,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_foot_acc_rms_swing,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_foot_acc_rms_swing,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_foot_acc_rms_swing,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_foot_acc_rms_swing,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,stride_len_app1,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+101,101_level_p3,stride_len_app1,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+102,102_level_p1,stride_len_app1,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+103,103_level_p1,stride_len_app1,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,stride_len_app1,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_level_p2,stride_len_app1,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+109,109_12_r1,stride_len_app1,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+109,109_13_r4,stride_len_app1,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+109,109_13_r5,stride_len_app1,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+109,109_level_p1,stride_len_app1,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p4,stride_len_app1,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+110,110_level_p1,stride_len_app1,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_11_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+101,101_21_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+101,101_23_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+101,101_23_r6,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+101,101_12_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+101,101_12_r4,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+101,101_13_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+101,101_22_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+101,101_level_p1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+102,102_12_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+102,102_22_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+102,102_23_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+102,102_13_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+102,102_level_p1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+103,103_12_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+103,103_22_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+103,103_21_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+103,103_13_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+103,103_11_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+103,103_level_p1,stride_len_app2,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_11_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+107,107_12_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+107,107_21_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+107,107_13_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+107,107_23_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+109,109_12_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+109,109_13_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+109,109_13_r5,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+109,109_22_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+109,109_11_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+109,109_11_r2,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+109,109_23_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+109,109_21_r1,stride_len_app2,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+109,109_level_p1,stride_len_app2,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,stride_len_app2,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+ALL,ALL,lead_cross_step_len,,,not computed,"NOT COMPUTED: a step length needs the vector between the two feet. The per-stride ZHC has no common origin, and the continuous ZHC (Seg.zhc pZvp, both feet in the Dot global frame) drifts by metres over a trial: Dot vs camera step length r ~ 0 (build_report.md, task 10). Left empty."
+ALL,ALL,trail_cross_step_len,,,not computed,NOT COMPUTED (see lead_cross_step_len).
+101,101_level_p1,speed_approach,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+102,102_level_p1,speed_approach,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+103,103_level_p1,speed_approach,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_12_r1,speed_approach,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+109,109_13_r5,speed_approach,,,missing,"approach stride not a plausible walking stride (turn/pause, > 2 s or < 300 mm) or missing ZHC"
+109,109_level_p1,speed_approach,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,speed_approach,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,speed_cross,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,speed_cross,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,speed_cross,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,cadence,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,cadence,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,cadence,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_swing_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_swing_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_swing_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_swing_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_swing_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_swing_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_swing_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_swing_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_swing_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_swing_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_swing_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_swing_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_swing_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_swing_time,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_swing_time,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_swing_time,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_swing_time,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p3,lead_stance_time,,,missing,not computable for this row (see data_dictionary.md)
+102,102_level_p1,lead_stance_time,,,missing,Dot segment signal missing in the swing window
+103,103_level_p1,lead_stance_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_stance_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_stance_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_stance_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_stance_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_stance_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_stance_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_stance_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_stance_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_stance_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_stance_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_stance_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_stance_time,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_stance_time,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_stance_time,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p3,trail_stance_time,,,missing,not computable for this row (see data_dictionary.md)
+102,102_level_p1,trail_stance_time,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_stance_time,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,trail_stance_time,,,missing,Dot segment signal missing in the swing window
+101,101_22_r1,cross_duration,,,missing,Dot segment signal missing in the swing window
+101,101_level_p1,cross_duration,,,missing,Dot segment signal missing in the swing window
+102,102_level_p1,cross_duration,,,missing,Dot segment signal missing in the swing window
+103,103_level_p1,cross_duration,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,cross_duration,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,cross_duration,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,cross_duration,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,cross_duration,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,cross_duration,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,cross_duration,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,cross_duration,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,cross_duration,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,cross_duration,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,cross_duration,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,cross_duration,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,cross_duration,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p3,lead_zhc_peak_toe_h,,,missing,"ZHC trajectory missing/invalid for the stride, or camera crossing time outside the stride"
+102,102_level_p1,lead_zhc_peak_toe_h,,,missing,"ZHC trajectory missing/invalid for the stride, or camera crossing time outside the stride"
+103,103_level_p1,lead_zhc_peak_toe_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_zhc_peak_toe_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_zhc_peak_toe_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_zhc_peak_toe_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_zhc_peak_toe_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_zhc_peak_toe_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_zhc_peak_toe_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_zhc_peak_toe_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_zhc_peak_toe_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_level_p3,lead_zhc_peak_toe_h,,,missing,"ZHC trajectory missing/invalid for the stride, or camera crossing time outside the stride"
+108,108_12_r4,lead_zhc_peak_toe_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_12_r1,lead_zhc_peak_toe_h,,,missing,"ZHC trajectory missing/invalid for the stride, or camera crossing time outside the stride"
+109,109_22_r5,lead_zhc_peak_toe_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_zhc_peak_toe_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_zhc_peak_toe_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_zhc_peak_foot_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_zhc_peak_foot_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_zhc_peak_foot_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_zhc_peak_foot_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_zhc_peak_foot_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_zhc_peak_foot_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_zhc_peak_foot_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_zhc_peak_foot_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_zhc_peak_foot_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_zhc_peak_foot_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_zhc_peak_foot_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_zhc_peak_foot_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_zhc_peak_foot_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_zhc_peak_h_t,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_zhc_peak_h_t,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_zhc_peak_h_t,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_zhc_peak_h_t,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_zhc_peak_h_t,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_zhc_peak_h_t,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_zhc_peak_h_t,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_zhc_peak_h_t,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_zhc_peak_h_t,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_zhc_peak_h_t,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_zhc_peak_h_t,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_zhc_peak_h_t,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_zhc_peak_h_t,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_zhc_peak_h_x,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_zhc_peak_h_x,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_zhc_peak_h_x,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_zhc_peak_h_x,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_zhc_peak_h_x,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_zhc_peak_h_x,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_zhc_peak_h_x,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_zhc_peak_h_x,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_zhc_peak_h_x,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_zhc_peak_h_x,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_zhc_peak_h_x,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_zhc_peak_h_x,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_zhc_peak_h_x,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_zhc_h_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_zhc_h_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_zhc_h_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_zhc_h_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_zhc_h_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_zhc_h_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_zhc_h_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_zhc_h_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_zhc_h_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_zhc_h_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_zhc_h_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_zhc_h_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_zhc_h_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_zhc_h_25,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_zhc_h_25,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_zhc_h_25,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_zhc_h_25,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_zhc_h_25,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_zhc_h_25,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_zhc_h_25,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_zhc_h_25,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_zhc_h_25,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_zhc_h_25,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_zhc_h_25,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_zhc_h_25,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_zhc_h_25,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_zhc_h_50,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_zhc_h_50,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_zhc_h_50,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_zhc_h_50,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_zhc_h_50,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_zhc_h_50,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_zhc_h_50,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_zhc_h_50,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_zhc_h_50,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_zhc_h_50,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_zhc_h_50,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_zhc_h_50,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_zhc_h_50,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_zhc_h_75,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_zhc_h_75,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_zhc_h_75,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_zhc_h_75,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_zhc_h_75,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_zhc_h_75,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_zhc_h_75,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_zhc_h_75,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_zhc_h_75,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_zhc_h_75,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_zhc_h_75,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_zhc_h_75,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_zhc_h_75,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_zhc_h_cross,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_zhc_h_cross,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_zhc_h_cross,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_zhc_x_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_zhc_x_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_zhc_x_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_zhc_x_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_zhc_x_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_zhc_x_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_zhc_x_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_zhc_x_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_zhc_x_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_zhc_x_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_zhc_x_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_zhc_x_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_zhc_x_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_zhc_x_landing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_zhc_x_landing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_zhc_x_landing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_zhc_x_landing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_zhc_x_landing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_zhc_x_landing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_zhc_x_landing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_zhc_x_landing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_zhc_x_landing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_zhc_x_landing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_zhc_x_landing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_zhc_x_landing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_zhc_x_landing,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_zhc_vz_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_zhc_vz_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_zhc_vz_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_zhc_vz_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_zhc_vz_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_zhc_vz_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_zhc_vz_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_zhc_vz_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_zhc_vz_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_zhc_vz_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_zhc_vz_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_zhc_vz_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_zhc_vz_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_zhc_vx_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_zhc_vx_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_zhc_vx_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_zhc_vx_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_zhc_vx_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_zhc_vx_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_zhc_vx_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_zhc_vx_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_zhc_vx_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_zhc_vx_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_22_r5,lead_zhc_vx_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_zhc_vx_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_zhc_vx_peak,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,lead_zhc_v_cross,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_zhc_v_cross,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_zhc_v_cross,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_zhc_peak_toe_h,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_zhc_peak_toe_h,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p2,trail_zhc_peak_toe_h,,,missing,"ZHC trajectory missing/invalid for the stride, or camera crossing time outside the stride"
+102,102_level_p1,trail_zhc_peak_toe_h,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_zhc_peak_toe_h,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r3,trail_zhc_peak_toe_h,,,missing,"ZHC trajectory missing/invalid for the stride, or camera crossing time outside the stride"
+110,110_21_r3,trail_zhc_peak_toe_h,,,missing,"ZHC trajectory missing/invalid for the stride, or camera crossing time outside the stride"
+101,101_22_r1,trail_zhc_peak_foot_h,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_zhc_peak_foot_h,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_zhc_peak_foot_h,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_zhc_peak_foot_h,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_zhc_peak_h_t,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_zhc_peak_h_t,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_zhc_peak_h_t,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_zhc_peak_h_t,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_zhc_peak_h_x,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_zhc_peak_h_x,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_zhc_peak_h_x,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_zhc_peak_h_x,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_zhc_h_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_zhc_h_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_zhc_h_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_zhc_h_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_zhc_h_25,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_zhc_h_25,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_zhc_h_25,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_zhc_h_25,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_zhc_h_50,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_zhc_h_50,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_zhc_h_50,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_zhc_h_50,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_zhc_h_75,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_zhc_h_75,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_zhc_h_75,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_zhc_h_75,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_zhc_h_cross,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_zhc_h_cross,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_zhc_h_cross,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_zhc_x_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_zhc_x_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_zhc_x_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_zhc_x_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_zhc_x_landing,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_zhc_x_landing,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_zhc_x_landing,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_zhc_x_landing,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_zhc_vz_peak,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_zhc_vz_peak,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_zhc_vz_peak,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_zhc_vz_peak,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_zhc_vx_peak,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_zhc_vx_peak,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_zhc_vx_peak,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_zhc_vx_peak,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_zhc_v_cross,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_zhc_v_cross,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_zhc_v_cross,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_12_r1,lead_cam_takeoff_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+105,105_23_r3,trail_cam_takeoff_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+110,110_21_r3,trail_cam_takeoff_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+101,101_11_r4,lead_cam_landing_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+101,101_11_r5,lead_cam_landing_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+101,101_21_r3,lead_cam_landing_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+101,101_23_r1,lead_cam_landing_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+101,101_12_r1,lead_cam_landing_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+101,101_12_r3,lead_cam_landing_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+101,101_13_r1,lead_cam_landing_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+110,110_13_r2,lead_cam_landing_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+101,101_11_r2,trail_cam_landing_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+101,101_11_r3,trail_cam_landing_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+101,101_23_r3,trail_cam_landing_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+101,101_23_r6,trail_cam_landing_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+101,101_13_r1,trail_cam_landing_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+101,101_13_r5,trail_cam_landing_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+109,109_12_r1,trail_cam_landing_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+109,109_13_r6,trail_cam_landing_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+109,109_11_r1,trail_cam_landing_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+109,109_11_r2,trail_cam_landing_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+110,110_11_r4,trail_cam_landing_dist,,,missing,camera marker data missing at the needed frames (occlusion)
+103,103_level_p1,lead_cam_peak_foot_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_level_p1,lead_cam_peak_foot_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_cam_peak_foot_h,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_cam_peak_foot_h,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+102,102_level_p1,trail_cam_peak_foot_h,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_cam_peak_foot_h,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+104,104_13_r1,lead_cam_takeoff_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_13_r1,lead_cam_takeoff_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r2,lead_cam_takeoff_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r2,lead_cam_takeoff_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_12_r5,lead_cam_takeoff_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_13_r4,lead_cam_takeoff_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r2,lead_cam_takeoff_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_23_r5,lead_cam_takeoff_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+108,108_12_r4,lead_cam_takeoff_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_12_r1,lead_cam_takeoff_toeoff,,,missing,camera marker data missing at the needed frames (occlusion)
+109,109_22_r5,lead_cam_takeoff_toeoff,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_22_r1,trail_cam_takeoff_toeoff,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_11_r3,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+101,101_11_r4,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+101,101_11_r5,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+101,101_11_r6,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+101,101_21_r1,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+101,101_23_r1,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+101,101_23_r2,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+101,101_23_r3,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+101,101_23_r6,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+101,101_12_r1,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+101,101_12_r3,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+101,101_13_r1,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+101,101_13_r5,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+103,103_23_r4,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+104,104_23_r4,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+104,104_23_r5,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+105,105_11_r1,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+105,105_11_r3,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+105,105_12_r2,role_agree,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+106,106_11_r5,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+106,106_13_r4,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+106,106_21_r3,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+109,109_12_r1,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+109,109_22_r5,role_agree,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_11_r3,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+110,110_13_r2,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+110,110_21_r1,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+110,110_21_r3,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+110,110_11_r2,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+110,110_12_r2,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+110,110_12_r5,role_agree,,,missing,not computable for this row (see data_dictionary.md)
+101,101_11_r3,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+101,101_11_r4,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+101,101_11_r5,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+101,101_11_r6,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+101,101_21_r1,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+101,101_23_r1,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+101,101_23_r2,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+101,101_23_r3,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+101,101_23_r6,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+101,101_12_r1,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+101,101_12_r3,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+101,101_13_r1,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+101,101_13_r5,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+103,103_23_r4,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+104,104_23_r4,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+104,104_23_r5,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+105,105_11_r1,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+105,105_11_r3,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+105,105_12_r2,imu_cross_stride_match,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+106,106_11_r5,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+106,106_13_r4,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+106,106_21_r3,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+109,109_12_r1,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+109,109_22_r5,imu_cross_stride_match,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+109,109_11_r3,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+110,110_13_r2,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+110,110_21_r1,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+110,110_21_r3,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+110,110_11_r2,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+110,110_12_r2,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+110,110_12_r5,imu_cross_stride_match,,,missing,not computable for this row (see data_dictionary.md)
+101,101_11_r5,lead_thigh_max_corr,37.3321,,sensitivity only (not applied),Test 101 thigh MAD gate: > 3*MAD from the 11 lead median (50.42) -> NaN
+101,101_11_r2,trail_thigh_max,33.7298,,sensitivity only (not applied),Test 101 thigh MAD gate: > 3*MAD from the 11 trail median (38.53) -> NaN
+101,101_11_r2,trail_thigh_min_corr,-2.9838,,sensitivity only (not applied),Test 101 thigh MAD gate: > 3*MAD from the 11 trail median (14.27) -> NaN
+101,101_11_r5,trail_thigh_min_corr,-6.9056,,sensitivity only (not applied),Test 101 thigh MAD gate: > 3*MAD from the 11 trail median (14.27) -> NaN
+101,101_12_r5,lead_thigh_max,68.8577,,sensitivity only (not applied),Test 101 thigh MAD gate: > 3*MAD from the 12 lead median (72.16) -> NaN
+101,101_12_r3,lead_thigh_min_corr,-9.1878,,sensitivity only (not applied),Test 101 thigh MAD gate: > 3*MAD from the 12 lead median (3.12) -> NaN
+101,101_12_r4,lead_thigh_min_corr,14.9152,,sensitivity only (not applied),Test 101 thigh MAD gate: > 3*MAD from the 12 lead median (3.12) -> NaN
+101,101_13_r1,trail_thigh_max,47.5546,,sensitivity only (not applied),Test 101 thigh MAD gate: > 3*MAD from the 13 trail median (36.91) -> NaN
+101,101_13_r3,trail_thigh_max,52.018,,sensitivity only (not applied),Test 101 thigh MAD gate: > 3*MAD from the 13 trail median (36.91) -> NaN
+101,101_13_r3,trail_thigh_max_corr,43.6795,,sensitivity only (not applied),Test 101 thigh MAD gate: > 3*MAD from the 13 trail median (28.17) -> NaN
+101,101_21_r1,lead_thigh_max_corr,63.3403,,sensitivity only (not applied),Test 101 thigh MAD gate: > 3*MAD from the 21 lead median (52.71) -> NaN
+101,101_21_r4,lead_thigh_max_corr,62.6251,,sensitivity only (not applied),Test 101 thigh MAD gate: > 3*MAD from the 21 lead median (52.71) -> NaN
+101,101_21_r2,trail_thigh_max_corr,12.5676,,sensitivity only (not applied),Test 101 thigh MAD gate: > 3*MAD from the 21 trail median (28.19) -> NaN
+101,101_21_r2,trail_thigh_min_corr,-9.3794,,sensitivity only (not applied),Test 101 thigh MAD gate: > 3*MAD from the 21 trail median (3.43) -> NaN
+101,101_22_r3,lead_thigh_max,80.6758,,sensitivity only (not applied),Test 101 thigh MAD gate: > 3*MAD from the 22 lead median (75.58) -> NaN
+101,101_22_r5,lead_thigh_min_corr,-5.329,,sensitivity only (not applied),Test 101 thigh MAD gate: > 3*MAD from the 22 lead median (4.54) -> NaN
+101,101_22_r2,trail_thigh_min,3.6025,,sensitivity only (not applied),Test 101 thigh MAD gate: > 3*MAD from the 22 trail median (15.70) -> NaN
+101,101_22_r2,trail_thigh_min_corr,-6.36,,sensitivity only (not applied),Test 101 thigh MAD gate: > 3*MAD from the 22 trail median (5.08) -> NaN
+102,102_11_r2,lead_thigh_max,72.0557,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 11 lead median (89.79) -> NaN
+102,102_11_r4,lead_thigh_max,70.9814,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 11 lead median (89.79) -> NaN
+102,102_11_r2,lead_thigh_min,8.1024,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 11 lead median (17.59) -> NaN
+102,102_11_r4,lead_thigh_min,13.4709,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 11 lead median (17.59) -> NaN
+102,102_11_r2,lead_thigh_rom,63.9533,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 11 lead median (72.17) -> NaN
+102,102_11_r4,lead_thigh_rom,57.5105,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 11 lead median (72.17) -> NaN
+102,102_11_r2,lead_thigh_max_corr,60.0488,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 11 lead median (79.61) -> NaN
+102,102_11_r4,lead_thigh_max_corr,60.913,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 11 lead median (79.61) -> NaN
+102,102_11_r2,lead_thigh_min_corr,-3.9046,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 11 lead median (6.93) -> NaN
+102,102_11_r4,lead_thigh_min_corr,3.4025,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 11 lead median (6.93) -> NaN
+102,102_11_r4,trail_thigh_min,27.5425,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 11 trail median (22.03) -> NaN
+102,102_11_r2,trail_thigh_rom,30.3573,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 11 trail median (28.67) -> NaN
+102,102_11_r4,trail_thigh_rom,24.9153,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 11 trail median (28.67) -> NaN
+102,102_11_r2,trail_thigh_max_corr,36.6041,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 11 trail median (34.46) -> NaN
+102,102_11_r3,trail_thigh_max_corr,30.5683,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 11 trail median (34.46) -> NaN
+102,102_12_r1,trail_thigh_min_corr,21.2951,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 12 trail median (9.77) -> NaN
+102,102_13_r2,lead_thigh_max,100.1192,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 13 lead median (116.62) -> NaN
+102,102_13_r4,lead_thigh_max,93.4724,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 13 lead median (116.62) -> NaN
+102,102_13_r2,lead_thigh_min,7.537,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 13 lead median (21.90) -> NaN
+102,102_13_r4,lead_thigh_min,5.7785,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 13 lead median (21.90) -> NaN
+102,102_13_r1,trail_thigh_rom,25.5185,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 13 trail median (31.10) -> NaN
+102,102_21_r2,lead_thigh_max,72.7763,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 21 lead median (87.27) -> NaN
+102,102_21_r5,lead_thigh_max,70.1329,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 21 lead median (87.27) -> NaN
+102,102_21_r2,lead_thigh_max_corr,67.8942,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 21 lead median (78.60) -> NaN
+102,102_21_r5,lead_thigh_max_corr,62.6801,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 21 lead median (78.60) -> NaN
+102,102_21_r4,trail_thigh_min_corr,-0.3437,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 21 trail median (10.56) -> NaN
+102,102_22_r2,lead_thigh_max_corr,80.1892,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 22 lead median (95.00) -> NaN
+102,102_22_r4,lead_thigh_max_corr,73.3717,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 22 lead median (95.00) -> NaN
+102,102_22_r2,trail_thigh_max_corr,30.4229,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 22 trail median (38.06) -> NaN
+102,102_22_r5,trail_thigh_max_corr,46.4994,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 22 trail median (38.06) -> NaN
+102,102_23_r4,lead_thigh_max,95.8887,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 23 lead median (115.80) -> NaN
+102,102_23_r3,trail_thigh_min,21.4948,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 23 trail median (30.75) -> NaN
+102,102_23_r3,trail_thigh_max_corr,30.6986,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 23 trail median (47.61) -> NaN
+102,102_23_r3,trail_thigh_min_corr,-2.9271,,sensitivity only (not applied),Test 102 thigh MAD gate: > 3*MAD from the 23 trail median (16.53) -> NaN
+103,103_11_r4,trail_thigh_max,54.7339,,sensitivity only (not applied),Test 103 thigh MAD gate: > 3*MAD from the 11 trail median (54.24) -> NaN
+103,103_11_r5,trail_thigh_max,50.0681,,sensitivity only (not applied),Test 103 thigh MAD gate: > 3*MAD from the 11 trail median (54.24) -> NaN
+103,103_12_r1,lead_thigh_max_corr,83.5318,,sensitivity only (not applied),Test 103 thigh MAD gate: > 3*MAD from the 12 lead median (79.71) -> NaN
+103,103_12_r5,trail_thigh_max,49.5081,,sensitivity only (not applied),Test 103 thigh MAD gate: > 3*MAD from the 12 trail median (53.94) -> NaN
+103,103_12_r1,trail_thigh_max_corr,42.5259,,sensitivity only (not applied),Test 103 thigh MAD gate: > 3*MAD from the 12 trail median (40.05) -> NaN
+103,103_12_r2,trail_thigh_max_corr,35.1509,,sensitivity only (not applied),Test 103 thigh MAD gate: > 3*MAD from the 12 trail median (40.05) -> NaN
+103,103_12_r2,trail_thigh_min_corr,4.4916,,sensitivity only (not applied),Test 103 thigh MAD gate: > 3*MAD from the 12 trail median (11.55) -> NaN
+103,103_13_r3,lead_thigh_max,106.3993,,sensitivity only (not applied),Test 103 thigh MAD gate: > 3*MAD from the 13 lead median (98.49) -> NaN
+103,103_13_r5,lead_thigh_max,102.1232,,sensitivity only (not applied),Test 103 thigh MAD gate: > 3*MAD from the 13 lead median (98.49) -> NaN
+103,103_13_r4,trail_thigh_max_corr,36.7547,,sensitivity only (not applied),Test 103 thigh MAD gate: > 3*MAD from the 13 trail median (43.45) -> NaN
+103,103_21_r5,lead_thigh_min,15.2407,,sensitivity only (not applied),Test 103 thigh MAD gate: > 3*MAD from the 21 lead median (19.99) -> NaN
+103,103_21_r2,trail_thigh_max_corr,47.5669,,sensitivity only (not applied),Test 103 thigh MAD gate: > 3*MAD from the 21 trail median (42.58) -> NaN
+103,103_22_r4,lead_thigh_rom,86.0411,,sensitivity only (not applied),Test 103 thigh MAD gate: > 3*MAD from the 22 lead median (69.33) -> NaN
+103,103_22_r4,lead_thigh_min_corr,-0.7986,,sensitivity only (not applied),Test 103 thigh MAD gate: > 3*MAD from the 22 lead median (15.31) -> NaN
+103,103_22_r3,trail_thigh_min,11.5838,,sensitivity only (not applied),Test 103 thigh MAD gate: > 3*MAD from the 22 trail median (18.41) -> NaN
+103,103_23_r1,lead_thigh_rom,59.4321,,sensitivity only (not applied),Test 103 thigh MAD gate: > 3*MAD from the 23 lead median (96.73) -> NaN
+103,103_23_r1,lead_thigh_min_corr,27.259,,sensitivity only (not applied),Test 103 thigh MAD gate: > 3*MAD from the 23 lead median (-5.14) -> NaN
+103,103_23_r5,trail_thigh_min,10.699,,sensitivity only (not applied),Test 103 thigh MAD gate: > 3*MAD from the 23 trail median (17.73) -> NaN
+104,104_11_r1,lead_thigh_min_corr,0.8643,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 11 lead median (22.83) -> NaN
+104,104_11_r3,trail_thigh_rom,24.0788,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 11 trail median (28.73) -> NaN
+104,104_11_r2,trail_thigh_max_corr,46.1666,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 11 trail median (39.28) -> NaN
+104,104_11_r3,trail_thigh_max_corr,45.6987,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 11 trail median (39.28) -> NaN
+104,104_12_r1,lead_thigh_max,98.6692,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 12 lead median (91.62) -> NaN
+104,104_12_r1,lead_thigh_min,13.5905,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 12 lead median (26.18) -> NaN
+104,104_12_r3,trail_thigh_rom,24.309,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 12 trail median (29.27) -> NaN
+104,104_12_r5,trail_thigh_rom,33.8943,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 12 trail median (29.27) -> NaN
+104,104_13_r4,lead_thigh_max,103.9915,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 13 lead median (102.03) -> NaN
+104,104_13_r1,trail_thigh_min,21.6426,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 13 trail median (19.11) -> NaN
+104,104_13_r4,trail_thigh_min,14.6692,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 13 trail median (19.11) -> NaN
+104,104_13_r2,trail_thigh_min_corr,9.8091,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 13 trail median (12.78) -> NaN
+104,104_13_r4,trail_thigh_min_corr,6.1987,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 13 trail median (12.78) -> NaN
+104,104_21_r1,lead_thigh_max,88.4567,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 21 lead median (83.92) -> NaN
+104,104_21_r3,lead_thigh_max,81.373,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 21 lead median (83.92) -> NaN
+104,104_21_r1,lead_thigh_min,9.6187,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 21 lead median (26.19) -> NaN
+104,104_21_r1,lead_thigh_min_corr,2.3318,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 21 lead median (21.11) -> NaN
+104,104_21_r5,trail_thigh_rom,26.2744,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 21 trail median (36.42) -> NaN
+104,104_22_r1,trail_thigh_max_corr,42.9243,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 22 trail median (38.88) -> NaN
+104,104_22_r4,trail_thigh_max_corr,43.0877,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 22 trail median (38.88) -> NaN
+104,104_23_r3,lead_thigh_max,100.9182,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 23 lead median (104.67) -> NaN
+104,104_23_r3,lead_thigh_min,50.5058,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 23 lead median (23.27) -> NaN
+104,104_23_r3,lead_thigh_rom,50.4125,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 23 lead median (81.58) -> NaN
+104,104_23_r4,lead_thigh_max_corr,88.9001,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 23 lead median (97.57) -> NaN
+104,104_23_r3,lead_thigh_min_corr,48.3959,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 23 lead median (15.98) -> NaN
+104,104_23_r5,trail_thigh_min,-1.0178,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 23 trail median (6.15) -> NaN
+104,104_23_r4,trail_thigh_max_corr,47.4325,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 23 trail median (59.47) -> NaN
+104,104_23_r5,trail_thigh_min_corr,-11.1744,,sensitivity only (not applied),Test 104 thigh MAD gate: > 3*MAD from the 23 trail median (-1.75) -> NaN
+105,105_11_r2,lead_thigh_max,66.7204,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 11 lead median (63.47) -> NaN
+105,105_11_r4,lead_thigh_min,10.7829,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 11 lead median (16.23) -> NaN
+105,105_11_r4,lead_thigh_max_corr,38.6428,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 11 lead median (51.36) -> NaN
+105,105_11_r4,lead_thigh_min_corr,-12.4354,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 11 lead median (4.38) -> NaN
+105,105_11_r3,trail_thigh_min_corr,-10.7772,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 11 trail median (3.00) -> NaN
+105,105_12_r2,trail_thigh_max,49.6484,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 12 trail median (43.66) -> NaN
+105,105_12_r4,trail_thigh_max,49.3948,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 12 trail median (43.66) -> NaN
+105,105_12_r3,trail_thigh_min_corr,10.5642,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 12 trail median (5.33) -> NaN
+105,105_13_r2,trail_thigh_rom,21.1862,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 13 trail median (28.46) -> NaN
+105,105_21_r4,lead_thigh_max,68.5631,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 21 lead median (65.04) -> NaN
+105,105_21_r5,lead_thigh_max,68.0041,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 21 lead median (65.04) -> NaN
+105,105_21_r5,lead_thigh_min,27.085,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 21 lead median (14.93) -> NaN
+105,105_21_r5,lead_thigh_rom,40.919,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 21 lead median (50.19) -> NaN
+105,105_21_r4,lead_thigh_max_corr,63.1226,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 21 lead median (54.96) -> NaN
+105,105_22_r2,lead_thigh_max,79.693,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 22 lead median (82.70) -> NaN
+105,105_22_r4,lead_thigh_max,84.3899,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 22 lead median (82.70) -> NaN
+105,105_22_r4,lead_thigh_min_corr,-13.6753,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 22 lead median (8.59) -> NaN
+105,105_23_r5,lead_thigh_min,15.0007,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 23 lead median (26.38) -> NaN
+105,105_23_r5,lead_thigh_min_corr,3.4345,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 23 lead median (17.34) -> NaN
+105,105_23_r3,trail_thigh_max_corr,23.7358,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 23 trail median (38.25) -> NaN
+105,105_23_r5,trail_thigh_max_corr,49.1183,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 23 trail median (38.25) -> NaN
+105,105_23_r5,trail_thigh_min_corr,22.3302,,sensitivity only (not applied),Test 105 thigh MAD gate: > 3*MAD from the 23 trail median (-0.21) -> NaN
+107,107_11_r1,lead_thigh_max,62.2445,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 11 lead median (68.72) -> NaN
+107,107_11_r3,lead_thigh_max,62.7724,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 11 lead median (68.72) -> NaN
+107,107_11_r3,lead_thigh_rom,49.5424,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 11 lead median (65.20) -> NaN
+107,107_12_r1,lead_thigh_max,79.3699,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 12 lead median (82.25) -> NaN
+107,107_12_r3,lead_thigh_min,21.0475,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 12 lead median (9.34) -> NaN
+107,107_12_r3,lead_thigh_rom,61.1816,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 12 lead median (72.91) -> NaN
+107,107_13_r2,lead_thigh_max,91.3982,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 13 lead median (95.99) -> NaN
+107,107_13_r2,lead_thigh_rom,82.6294,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 13 lead median (87.87) -> NaN
+107,107_13_r1,lead_thigh_min_corr,-12.6901,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 13 lead median (-0.77) -> NaN
+107,107_13_r4,trail_thigh_max,57.8433,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 13 trail median (52.82) -> NaN
+107,107_13_r5,trail_thigh_max,49.3928,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 13 trail median (52.82) -> NaN
+107,107_21_r1,lead_thigh_max_corr,63.5692,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 21 lead median (65.90) -> NaN
+107,107_21_r1,trail_thigh_max,48.9458,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 21 trail median (45.25) -> NaN
+107,107_22_r1,lead_thigh_max,80.185,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 22 lead median (91.72) -> NaN
+107,107_22_r3,lead_thigh_min_corr,-4.9601,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 22 lead median (3.97) -> NaN
+107,107_22_r1,trail_thigh_max,50.8538,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 22 trail median (54.90) -> NaN
+107,107_22_r5,trail_thigh_max,52.3935,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 22 trail median (54.90) -> NaN
+107,107_22_r1,trail_thigh_min,29.1688,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 22 trail median (25.45) -> NaN
+107,107_22_r5,trail_thigh_min,30.5304,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 22 trail median (25.45) -> NaN
+107,107_22_r1,trail_thigh_rom,21.685,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 22 trail median (29.45) -> NaN
+107,107_22_r5,trail_thigh_rom,21.8631,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 22 trail median (29.45) -> NaN
+107,107_22_r1,trail_thigh_max_corr,40.2365,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 22 trail median (46.95) -> NaN
+107,107_22_r5,trail_thigh_min_corr,22.5344,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 22 trail median (17.59) -> NaN
+107,107_23_r1,trail_thigh_max,49.6778,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 23 trail median (53.44) -> NaN
+107,107_23_r5,trail_thigh_max,57.0471,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 23 trail median (53.44) -> NaN
+107,107_23_r5,trail_thigh_min,34.8027,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 23 trail median (22.20) -> NaN
+107,107_23_r5,trail_thigh_max_corr,49.1469,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 23 trail median (44.56) -> NaN
+107,107_23_r5,trail_thigh_min_corr,26.9025,,sensitivity only (not applied),Test 107 thigh MAD gate: > 3*MAD from the 23 trail median (12.28) -> NaN
+108,108_11_r4,lead_thigh_min,7.1395,,sensitivity only (not applied),Test 108 thigh MAD gate: > 3*MAD from the 11 lead median (19.79) -> NaN
+108,108_11_r4,lead_thigh_rom,59.7981,,sensitivity only (not applied),Test 108 thigh MAD gate: > 3*MAD from the 11 lead median (47.25) -> NaN
+108,108_11_r4,trail_thigh_max,41.369,,sensitivity only (not applied),Test 108 thigh MAD gate: > 3*MAD from the 11 trail median (46.58) -> NaN
+108,108_11_r4,trail_thigh_max_corr,34.3801,,sensitivity only (not applied),Test 108 thigh MAD gate: > 3*MAD from the 11 trail median (41.32) -> NaN
+108,108_12_r5,lead_thigh_min_corr,27.2836,,sensitivity only (not applied),Test 108 thigh MAD gate: > 3*MAD from the 12 lead median (31.92) -> NaN
+108,108_13_r1,lead_thigh_rom,33.9866,,sensitivity only (not applied),Test 108 thigh MAD gate: > 3*MAD from the 13 lead median (51.51) -> NaN
+108,108_13_r1,lead_thigh_max_corr,68.2167,,sensitivity only (not applied),Test 108 thigh MAD gate: > 3*MAD from the 13 lead median (76.61) -> NaN
+108,108_13_r5,trail_thigh_min,6.9634,,sensitivity only (not applied),Test 108 thigh MAD gate: > 3*MAD from the 13 trail median (17.28) -> NaN
+108,108_13_r3,trail_thigh_rom,24.3602,,sensitivity only (not applied),Test 108 thigh MAD gate: > 3*MAD from the 13 trail median (31.65) -> NaN
+108,108_21_r2,lead_thigh_max,65.7006,,sensitivity only (not applied),Test 108 thigh MAD gate: > 3*MAD from the 21 lead median (68.56) -> NaN
+108,108_21_r5,lead_thigh_max,74.2061,,sensitivity only (not applied),Test 108 thigh MAD gate: > 3*MAD from the 21 lead median (68.56) -> NaN
+108,108_22_r1,trail_thigh_max,48.9667,,sensitivity only (not applied),Test 108 thigh MAD gate: > 3*MAD from the 22 trail median (46.03) -> NaN
+108,108_22_r1,trail_thigh_max_corr,40.6123,,sensitivity only (not applied),Test 108 thigh MAD gate: > 3*MAD from the 22 trail median (35.72) -> NaN
+108,108_23_r1,lead_thigh_max_corr,79.7516,,sensitivity only (not applied),Test 108 thigh MAD gate: > 3*MAD from the 23 lead median (76.41) -> NaN
+108,108_23_r5,lead_thigh_max_corr,86.219,,sensitivity only (not applied),Test 108 thigh MAD gate: > 3*MAD from the 23 lead median (76.41) -> NaN
+108,108_23_r1,trail_thigh_max_corr,31.9456,,sensitivity only (not applied),Test 108 thigh MAD gate: > 3*MAD from the 23 trail median (40.47) -> NaN
+108,108_23_r4,trail_thigh_max_corr,49.7973,,sensitivity only (not applied),Test 108 thigh MAD gate: > 3*MAD from the 23 trail median (40.47) -> NaN
+109,109_11_r4,trail_thigh_min,0.0213,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 11 trail median (9.48) -> NaN
+109,109_11_r4,trail_thigh_rom,42.9343,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 11 trail median (34.63) -> NaN
+109,109_12_r1,lead_thigh_max,33.8197,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 12 lead median (74.55) -> NaN
+109,109_12_r1,lead_thigh_rom,29.046,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 12 lead median (64.44) -> NaN
+109,109_12_r1,lead_thigh_max_corr,27.6082,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 12 lead median (68.20) -> NaN
+109,109_12_r4,trail_thigh_max,49.7831,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 12 trail median (42.57) -> NaN
+109,109_12_r4,trail_thigh_max_corr,44.8781,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 12 trail median (35.86) -> NaN
+109,109_12_r5,trail_thigh_max_corr,41.3553,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 12 trail median (35.86) -> NaN
+109,109_13_r3,trail_thigh_min,-0.765,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 13 trail median (7.27) -> NaN
+109,109_21_r2,lead_thigh_max_corr,56.1023,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 21 lead median (61.52) -> NaN
+109,109_21_r1,lead_thigh_min_corr,4.4331,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 21 lead median (-1.16) -> NaN
+109,109_21_r5,lead_thigh_min_corr,4.1384,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 21 lead median (-1.16) -> NaN
+109,109_22_r2,lead_thigh_rom,75.4843,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 22 lead median (65.13) -> NaN
+109,109_22_r1,lead_thigh_max_corr,59.8351,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 22 lead median (75.42) -> NaN
+109,109_22_r4,trail_thigh_rom,35.7912,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 22 trail median (41.52) -> NaN
+109,109_22_r3,trail_thigh_max_corr,45.9828,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 22 trail median (37.70) -> NaN
+109,109_22_r4,trail_thigh_max_corr,32.8595,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 22 trail median (37.70) -> NaN
+109,109_22_r3,trail_thigh_min_corr,5.0726,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 22 trail median (-3.83) -> NaN
+109,109_22_r5,trail_thigh_min_corr,-9.3214,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 22 trail median (-3.83) -> NaN
+109,109_23_r3,lead_thigh_max_corr,93.6143,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 23 lead median (81.23) -> NaN
+109,109_23_r5,trail_thigh_min,7.3347,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 23 trail median (4.63) -> NaN
+109,109_23_r1,trail_thigh_max_corr,40.9213,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 23 trail median (36.83) -> NaN
+109,109_23_r5,trail_thigh_max_corr,42.8613,,sensitivity only (not applied),Test 109 thigh MAD gate: > 3*MAD from the 23 trail median (36.83) -> NaN
+110,110_11_r2,lead_thigh_rom,39.8219,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 11 lead median (53.87) -> NaN
+110,110_11_r5,lead_thigh_rom,61.5432,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 11 lead median (53.87) -> NaN
+110,110_11_r2,lead_thigh_min_corr,19.0389,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 11 lead median (7.83) -> NaN
+110,110_11_r5,lead_thigh_min_corr,-3.1563,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 11 lead median (7.83) -> NaN
+110,110_11_r2,trail_thigh_max,38.9718,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 11 trail median (42.28) -> NaN
+110,110_11_r1,trail_thigh_rom,19.0076,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 11 trail median (23.16) -> NaN
+110,110_11_r3,trail_thigh_rom,27.5415,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 11 trail median (23.16) -> NaN
+110,110_11_r3,trail_thigh_min_corr,-1.2832,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 11 trail median (17.20) -> NaN
+110,110_12_r2,trail_thigh_max,33.2743,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 12 trail median (47.19) -> NaN
+110,110_12_r2,trail_thigh_min,5.7816,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 12 trail median (22.15) -> NaN
+110,110_12_r1,trail_thigh_rom,16.83,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 12 trail median (26.87) -> NaN
+110,110_13_r5,lead_thigh_rom,61.8471,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 13 lead median (70.21) -> NaN
+110,110_13_r4,lead_thigh_min_corr,8.4365,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 13 lead median (2.31) -> NaN
+110,110_13_r5,lead_thigh_min_corr,11.9482,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 13 lead median (2.31) -> NaN
+110,110_13_r2,trail_thigh_rom,18.7452,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 13 trail median (25.97) -> NaN
+110,110_13_r4,trail_thigh_rom,29.2119,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 13 trail median (25.97) -> NaN
+110,110_21_r1,lead_thigh_max_corr,55.6145,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 21 lead median (61.78) -> NaN
+110,110_21_r2,lead_thigh_max_corr,70.838,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 21 lead median (61.78) -> NaN
+110,110_21_r1,lead_thigh_min_corr,2.6658,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 21 lead median (5.10) -> NaN
+110,110_21_r4,lead_thigh_min_corr,12.4303,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 21 lead median (5.10) -> NaN
+110,110_22_r1,lead_thigh_rom,49.4219,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 22 lead median (56.53) -> NaN
+110,110_22_r2,lead_thigh_max_corr,63.6479,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 22 lead median (74.35) -> NaN
+110,110_22_r5,trail_thigh_min_corr,2.7499,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 22 trail median (15.86) -> NaN
+110,110_23_r2,trail_thigh_min_corr,28.5612,,sensitivity only (not applied),Test 110 thigh MAD gate: > 3*MAD from the 23 trail median (17.69) -> NaN

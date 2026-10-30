@@ -1,0 +1,55 @@
+block,target,norm,model,limb,bal_acc,lo,hi,chance,perm_p
+A,height,level,logreg,lead,0.6208,0.5509,0.6972,0.3333,0.0033
+A,height,level,logreg,trail,0.4914,0.4044,0.5775,0.3333,
+A,height,level,logreg,fusion,0.5608,0.4575,0.6642,0.3333,0.0033
+A,height,level,forest,lead,0.6005,0.5087,0.6888,0.3333,
+A,height,level,forest,trail,0.6107,0.4866,0.7336,0.3333,
+A,height,level,forest,fusion,0.6009,0.4810,0.7279,0.3333,
+A,height,self,logreg,lead,0.7963,0.7264,0.8604,0.3333,0.0033
+A,height,self,logreg,trail,0.7804,0.6723,0.8667,0.3333,
+A,height,self,logreg,fusion,0.8080,0.7424,0.8719,0.3333,0.0033
+A,height,self,forest,lead,0.8650,0.8122,0.9151,0.3333,
+A,height,self,forest,trail,0.8578,0.7806,0.9150,0.3333,
+A,height,self,forest,fusion,0.9001,0.8516,0.9396,0.3333,
+A,width,level,logreg,lead,0.5406,0.4877,0.5954,0.5000,0.1063
+A,width,level,logreg,trail,0.5697,0.5110,0.6261,0.5000,
+A,width,level,logreg,fusion,0.5613,0.5221,0.6048,0.5000,0.0399
+A,width,level,forest,lead,0.6145,0.5539,0.6801,0.5000,
+A,width,level,forest,trail,0.5260,0.4803,0.5667,0.5000,
+A,width,level,forest,fusion,0.6028,0.5447,0.6723,0.5000,
+A,width,self,logreg,lead,0.6461,0.6264,0.6711,0.5000,0.0033
+A,width,self,logreg,trail,0.5849,0.5335,0.6446,0.5000,
+A,width,self,logreg,fusion,0.6463,0.5996,0.6955,0.5000,0.0033
+A,width,self,forest,lead,0.6039,0.5630,0.6472,0.5000,
+A,width,self,forest,trail,0.5846,0.5526,0.6207,0.5000,
+A,width,self,forest,fusion,0.5767,0.5221,0.6324,0.5000,
+A,6 obstacles,level,logreg,lead,0.2864,0.2180,0.3548,0.1667,0.0033
+A,6 obstacles,level,logreg,trail,0.2751,0.2377,0.3194,0.1667,
+A,6 obstacles,level,logreg,fusion,0.2910,0.2330,0.3514,0.1667,0.0033
+A,6 obstacles,level,forest,lead,0.3242,0.2475,0.4100,0.1667,
+A,6 obstacles,level,forest,trail,0.3134,0.2412,0.3941,0.1667,
+A,6 obstacles,level,forest,fusion,0.3146,0.2315,0.4104,0.1667,
+A,6 obstacles,self,logreg,lead,0.4543,0.4009,0.5156,0.1667,0.0033
+A,6 obstacles,self,logreg,trail,0.3799,0.2910,0.4615,0.1667,
+A,6 obstacles,self,logreg,fusion,0.4527,0.3953,0.5056,0.1667,0.0033
+A,6 obstacles,self,forest,lead,0.4798,0.4158,0.5529,0.1667,
+A,6 obstacles,self,forest,trail,0.5709,0.4910,0.6548,0.1667,
+A,6 obstacles,self,forest,fusion,0.5978,0.5305,0.6655,0.1667,
+B,lead vs trail,raw,logreg,one limb,1.0000,1.0000,1.0000,0.5000,
+B,lead vs trail,raw,forest,one limb,1.0000,1.0000,1.0000,0.5000,
+B,lead vs trail,level,logreg,one limb,1.0000,1.0000,1.0000,0.5000,
+B,lead vs trail,level,forest,one limb,1.0000,1.0000,1.0000,0.5000,
+B,lead vs trail,self,logreg,one limb,1.0000,1.0000,1.0000,0.5000,
+B,lead vs trail,self,forest,one limb,1.0000,1.0000,1.0000,0.5000,
+C,obstacle vs level,raw,logreg,lead,1.0000,1.0000,1.0000,0.5000,
+C,obstacle vs level,raw,logreg,trail,0.9705,0.9174,0.9981,0.5000,
+C,obstacle vs level,raw,logreg,fusion,1.0000,1.0000,1.0000,0.5000,
+C,obstacle vs level,raw,forest,lead,1.0000,1.0000,1.0000,0.5000,
+C,obstacle vs level,raw,forest,trail,0.9981,0.9941,1.0000,0.5000,
+C,obstacle vs level,raw,forest,fusion,1.0000,1.0000,1.0000,0.5000,
+C,obstacle vs level,self,logreg,lead,0.9487,0.8461,1.0000,0.5000,
+C,obstacle vs level,self,logreg,trail,1.0000,1.0000,1.0000,0.5000,
+C,obstacle vs level,self,logreg,fusion,1.0000,1.0000,1.0000,0.5000,
+C,obstacle vs level,self,forest,lead,1.0000,1.0000,1.0000,0.5000,
+C,obstacle vs level,self,forest,trail,1.0000,1.0000,1.0000,0.5000,
+C,obstacle vs level,self,forest,fusion,1.0000,1.0000,1.0000,0.5000,

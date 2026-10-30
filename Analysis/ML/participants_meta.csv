@@ -1,0 +1,11 @@
+participant_id,age_y,sex,dominant_leg,body_height_cm,leg_length_cm,mass_kg,order_randomized,dominant_hand,hip_to_knee_cm,knee_to_ankle_cm,foot_flat_cm,foot_elevated_cm,ankle_to_toe_cm,ankle_to_heel_cm
+101,22,Female,L,164,90,94.2,,R,50,40,28.5,17,NaN,NaN
+102,23,Male,R,189,99,75.8,,R,54,45,33.5,30.5,26,9.5
+103,25,Male,R,186,94,84.9,,R,47.5,46.5,30.5,27,27,11
+104,31,Female,R,162,86.5,65.9,,R,51,39.5,25.5,25.5,24,9.5
+105,20,Female,R,169,87.5,87.7,,R,56,37,28,26.5,20,9.5
+106,21,Male,L,194,106,83.3,,R,54.5,49.5,31.5,30.5,22.5,10
+107,24,Male,R,191,95.5,98.8,,R,55.5,44.5,26,23,21,9
+108,20,Female,R,174,91.5,61.7,,R,56,38,24,20.5,18,7.8
+109,23,Female,R,179.5,93.5,56.0,,R,51,42.5,24.5,21.5,20.5,8
+110,31,Female,R,168.5,83,101.5,,R,43.5,37,22,19,18,8.5
