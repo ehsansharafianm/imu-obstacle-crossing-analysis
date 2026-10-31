@@ -1,0 +1,16 @@
+\begin{adjustbox}{max width=\textwidth}
+{\footnotesize
+\begin{tabular}{llrrr}
+\toprule
+\textbf{inputs} & \textbf{model} & \textbf{MAE (cm)} & \textbf{r} & \textbf{class from cm (bal. acc)} \\
+\midrule
+lead, level & ridge & 5.19 & 0.69 & 63.5\% \\
+lead, level & forest & 4.19 & 0.72 & 61.7\% \\
+lead, self & ridge & 3.51 & 0.79 & 76.8\% \\
+lead, self & forest & 2.42 & 0.88 & 83.3\% \\
+lead + trail vote, self & ridge & 3.32 & 0.84 & 76.7\% \\
+lead + trail vote, self & forest & 2.39 & 0.91 & 84.8\% \\
+\bottomrule
+\end{tabular}
+}
+\end{adjustbox}

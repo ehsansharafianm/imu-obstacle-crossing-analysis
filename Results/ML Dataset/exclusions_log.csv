@@ -25,6 +25,19 @@ participant_id,crossing_id,variable,original_value,cleaned_value,action,reason
 106,106_23_r5,lead_thigh_max_corr,79.1402,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 23 lead median (80.73) -> NaN
 106,106_23_r2,trail_thigh_max_corr,33.1876,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 23 trail median (31.44) -> NaN
 106,106_23_r5,trail_thigh_max_corr,23.5772,,cleaned,Test 106 thigh MAD gate: > 3*MAD from the 23 trail median (31.44) -> NaN
+101,101_level_p3,lead_toeoff_t_cam,,,missing,not computable for this row (see data_dictionary.md)
+102,102_level_p1,lead_toeoff_t_cam,,,missing,Dot segment signal missing in the swing window
+103,103_level_p1,lead_toeoff_t_cam,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+107,107_level_p3,lead_toeoff_t_cam,,,missing,not computable for this row (see data_dictionary.md)
+109,109_12_r1,lead_toeoff_t_cam,,,missing,not computable for this row (see data_dictionary.md)
+109,109_level_p1,lead_toeoff_t_cam,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+110,110_level_p1,lead_toeoff_t_cam,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p1,trail_toeoff_t_cam,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+101,101_level_p2,trail_toeoff_t_cam,,,missing,not computable for this row (see data_dictionary.md)
+102,102_level_p1,trail_toeoff_t_cam,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+103,103_level_p1,trail_toeoff_t_cam,,,missing,trail limb: no ZVP cycle or no toe-off/heel-strike inside it
+105,105_23_r3,trail_toeoff_t_cam,,,missing,not computable for this row (see data_dictionary.md)
+110,110_21_r3,trail_toeoff_t_cam,,,missing,not computable for this row (see data_dictionary.md)
 103,103_level_p1,lead_thigh_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
 104,104_13_r1,lead_thigh_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it
 105,105_13_r1,lead_thigh_max,,,missing,lead limb: no ZVP cycle or no toe-off/heel-strike inside it

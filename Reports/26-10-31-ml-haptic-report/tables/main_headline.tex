@@ -1,0 +1,34 @@
+\begin{adjustbox}{max width=\textwidth}
+{\scriptsize
+\begin{tabular}{lllrrrrrrrr}
+\toprule
+\textbf{task} & \textbf{features} & \textbf{norm} & \textbf{model} & \textbf{n feat} & \textbf{n rows} & \textbf{bal. acc} & \textbf{macro F1} & \textbf{chance} & \textbf{perm p} & \textbf{null 95\%} \\
+\midrule
+height & all & calibrated & logreg & 110 & 260 & 53.7\% & 0.54 & 33\% & $<$ 0.001 & 37.8\% \\
+height & all & raw & logreg & 110 & 260 & 53.3\% & 0.53 & 33\% & - & - \\
+height & all & calibrated & forest & 110 & 260 & 58.9\% & 0.59 & 33\% & - & - \\
+height & all & raw & forest & 110 & 260 & 49.4\% & 0.48 & 33\% & - & - \\
+height & lead only & calibrated & logreg & 57 & 260 & 62.1\% & 0.62 & 33\% & $<$ 0.001 & 37.9\% \\
+height & lead only & raw & logreg & 57 & 260 & 56.4\% & 0.56 & 33\% & - & - \\
+height & lead only & calibrated & forest & 57 & 260 & 59.3\% & 0.59 & 33\% & - & - \\
+height & lead only & raw & forest & 57 & 260 & 51.6\% & 0.50 & 33\% & - & - \\
+height & trail only & calibrated & logreg & 52 & 260 & 49.1\% & 0.48 & 33\% & $<$ 0.001 & 38.0\% \\
+height & trail only & raw & logreg & 52 & 260 & 53.6\% & 0.52 & 33\% & - & - \\
+height & trail only & calibrated & forest & 52 & 260 & 59.2\% & 0.59 & 33\% & - & - \\
+height & trail only & raw & forest & 52 & 260 & 43.9\% & 0.43 & 33\% & - & - \\
+width & all & calibrated & logreg & 110 & 260 & 57.8\% & 0.58 & 50\% & 0.003 & 54.5\% \\
+width & all & raw & logreg & 110 & 260 & 56.5\% & 0.56 & 50\% & - & - \\
+width & all & calibrated & forest & 110 & 260 & 60.3\% & 0.60 & 50\% & - & - \\
+width & all & raw & forest & 110 & 260 & 54.2\% & 0.54 & 50\% & - & - \\
+width & lead only & calibrated & logreg & 57 & 260 & 54.1\% & 0.54 & 50\% & 0.099 & 55.0\% \\
+width & lead only & raw & logreg & 57 & 260 & 52.9\% & 0.53 & 50\% & - & - \\
+width & lead only & calibrated & forest & 57 & 260 & 61.0\% & 0.61 & 50\% & - & - \\
+width & lead only & raw & forest & 57 & 260 & 56.1\% & 0.56 & 50\% & - & - \\
+width & trail only & calibrated & logreg & 52 & 260 & 57.0\% & 0.57 & 50\% & 0.013 & 55.2\% \\
+width & trail only & raw & logreg & 52 & 260 & 55.6\% & 0.55 & 50\% & - & - \\
+width & trail only & calibrated & forest & 52 & 260 & 54.8\% & 0.55 & 50\% & - & - \\
+width & trail only & raw & forest & 52 & 260 & 51.1\% & 0.51 & 50\% & - & - \\
+\bottomrule
+\end{tabular}
+}
+\end{adjustbox}

@@ -1,0 +1,107 @@
+\subsection{Towards a wearable device (Q3)}
+\label{sec:res-device}
+
+\subsubsection{Which sensors}
+
+With person scaling and one forest per limb (Table~\ref{tab:sensors}), two foot IMUs are the best device: 92.3\,\% (87--96).
+Adding the thigh and shank IMUs does not help (all six: 91.2\,\%). Two thigh IMUs give 80.4\,\% and two shank IMUs 79.4\,\%,
+each mainly through one limb. A single foot IMU on one leg, which is sometimes the leading and sometimes the trailing foot,
+gives 83--91\,\% (Table~\ref{tab:onesensor}). Because the leading leg is not fixed (45\,\% dominant), a sensor on each foot is
+the safe design. Figure~\ref{fig:device} summarises this subsection.
+
+\begin{table}[htbp]
+\centering
+\caption{Height accuracy by sensor site (person scaling, random forest; leading limb, trailing limb, soft vote of both).}
+\label{tab:sensors}
+\input{tables/device_sensors}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{One sensor on one leg only (it is the leading leg in some crossings and the trailing leg in others).}
+\label{tab:onesensor}
+\input{tables/device_onesensor}
+\end{table}
+
+\subsubsection{How much calibration a new user needs}
+
+Table~\ref{tab:calibration} compares what the two-foot device needs from a new user. Without information on the person
+(population or level-walk offset) the accuracy is 56--58\,\%; the clearance-shape features alone give 72.8\,\%. The
+physics-informed offset model needs only \emph{one} labelled crossing of any height to reach 80.3\,\%, and one labelled crossing per
+height for 87.8\,\%. Without any label, person scaling from 10--15 random crossings gives 81--85\,\% and from a whole session
+92.3\,\%. The ``first $n$'' rows follow the study's blocked order, in which the first crossings cover only one or two obstacles,
+so they are pessimistic (Section~\ref{sec:res-realworld}).
+
+\begin{table}[htbp]
+\centering
+\caption{Calibration options for a new user with two foot IMUs.}
+\label{tab:calibration}
+\input{tables/device_calibration}
+\end{table}
+
+\subsubsection{Answering only when confident, and more training data}
+
+If the device answers only when its top-class probability exceeds a threshold, its accuracy on the answered crossings rises
+from 92.3\,\% to 96.6\,\% (threshold 0.6, 79\,\% answered) and 98.3\,\% (0.8, 46\,\% answered; Table~\ref{tab:confidence}). A
+model trained on only two or three participants already reaches 88--89\,\% (Table~\ref{tab:learning}): more participants add
+little; the remaining errors come from person-to-person differences, which calibration addresses.
+
+\begin{table}[htbp]
+\centering
+\begin{minipage}{0.46\textwidth}
+\centering
+\caption{Answering only above a probability threshold.}
+\label{tab:confidence}
+\input{tables/device_confidence}
+\end{minipage}\hfill
+\begin{minipage}{0.46\textwidth}
+\centering
+\caption{Learning curve: training participants vs accuracy (10 random draws).}
+\label{tab:learning}
+\input{tables/device_learning}
+\end{minipage}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{fig_device.png}
+\caption{Device questions. Top: sensor sites (95\,\% CI; green = the two foot IMUs), accuracy against the share of crossings
+answered when the device answers only above a probability threshold, and accuracy against the number of training participants
+(band = min--max over the draws). Bottom: calibration options (grey = nothing about the new user, teal = labelled crossings,
+purple = unlabelled crossings).}
+\label{fig:device}
+\end{figure}
+
+\subsubsection{No camera: the end-to-end pipeline}
+
+The pipeline that uses only the Dot (Table~\ref{tab:streamdetect}, Table~\ref{tab:streame2e}, Figure~\ref{fig:stream}) scans all
+7250 strides of the sessions. It finds the obstacle-crossing strides with 98.7\,\% recall and 97.2\,\% precision, pairs them
+into crossings with the right leading and trailing strides for 95.2\,\% of the crossings, and gives the right height for
+90.7\,\% of the found crossings: 86.3\,\% of the crossings are fully correct (83.5\,\% when the 10 crossings without a valid
+toe-off are counted as missed). Scaling the height features with the person's normal walking instead of their detected
+crossings gives only 52.9\,\%: the personal scaling must come from crossings.
+
+\begin{table}[htbp]
+\centering
+\caption{Finding the crossing strides among all strides of the session.}
+\label{tab:streamdetect}
+\input{tables/stream_detect}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{End to end: detect, pair (first foot = leading), classify the height.}
+\label{tab:streame2e}
+\input{tables/stream_e2e}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{fig_stream.png}
+\caption{Camera-free pipeline. Top left: share of the crossings found, also paired correctly (leading / trailing) and also
+classified correctly, with the features scaled to the person's own crossings (purple) or own walking (grey). Top right: learning
+during use (each crossing scaled with the earlier detected crossings only). Bottom: all-correct crossings per participant.}
+\label{fig:stream}
+\end{figure}
+
+\input{sections/04d2_realworld}

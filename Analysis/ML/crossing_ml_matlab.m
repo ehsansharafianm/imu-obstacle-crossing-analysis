@@ -145,7 +145,7 @@ L = addl(L, ['| features | ' strjoin(arrayfun(@num2str, P, 'UniformOutput', fals
 L = addl(L, ['|---|' repmat('---|', 1, numel(P))]);
 for nm = mainSets
     r = M(strcmp({M.task}, 'height') & strcmp({M.features}, nm{1}) & strcmp({M.normalization}, 'calibrated') & strcmp({M.model}, 'logreg') & strcmp({M.rows}, CFG.include));
-    L = addl(L, ['| %s | ' strjoin(arrayfun(@(a) sprintf('%.0f%%', 100*a), r.acc, 'UniformOutput', false), ' | ') ' |'], nm{1});
+    L = addl(L, '| %s | %s |', nm{1}, strjoin(arrayfun(@(a) sprintf('%.0f%%', 100*a), r.acc, 'UniformOutput', false), ' | '));
 end
 L = addl(L, '');
 L = addl(L, '## Confusion matrices (calibrated logistic regression; rows = true)');
@@ -159,9 +159,7 @@ for key = {'height|all', 'height|lead only', 'width|all'}
     for i = 1:numel(c.lab), L = addl(L, ['| %s | ' strjoin(arrayfun(@num2str, c.cm(i,:), 'UniformOutput', false), ' | ') ' |'], c.lab{i}); end
     L = addl(L, '');
 end
-figFeatureSets(D, M, CFG);
-figConfusion(D, conf);
-figParticipants(D, M, CFG);
+mlTools.figures(D.out, 'main', struct('M', M, 'conf', conf, 'include', CFG.include));
 end
 
 function [R, conf] = mainRun(D, CFG, R, conf, task, setName, norm, model, include, nPerm)
@@ -223,11 +221,15 @@ L = addl(L, '');
 L = addl(L, 'Same rows and rules as Part 1: %d obstacle crossings, logistic regression (C = 0.1), calibrated features, height (chance 33%%). 95%% CI = participant bootstrap (%d resamples).', nnz(obs), CFG.nBoot);
 L = addl(L, '');
 % ---- 1. cueing window ----
-W = {'lead toe-off -> trail toe-off', d.trail_toeoff_t - d.lead_toeoff_t;
-     'lead foot apex -> trail toe-off', d.trail_toeoff_t - d.lead_crossing_t_imu;
-     'lead landing -> trail toe-off', d.trail_toeoff_t - d.lead_landing_t;
-     'trail toe-off -> trail foot apex', d.trail_crossing_t_imu - d.trail_toeoff_t};
+W = {'lead toe-off -> trailing lift-off', d.trail_toeoff_t_cam - d.lead_toeoff_t;
+     'lead foot apex -> trailing lift-off', d.trail_toeoff_t_cam - d.lead_crossing_t_imu;
+     'lead landing -> trailing lift-off', d.trail_toeoff_t_cam - d.lead_landing_t;
+     'trailing lift-off -> trailing foot apex', d.trail_crossing_t_imu - d.trail_toeoff_t_cam;
+     'trailing lift-off -> step-4 trailing toe-off event (IMU)', d.trail_toeoff_t - d.trail_toeoff_t_cam};
 L = addl(L, '## 2.1 Cueing window (ms)');
+L = addl(L, '');
+L = addl(L, ['Deadline = the trailing toe lift-off seen by the camera (`trail_toeoff_t_cam`): the step-4 IMU toe-off comes late on the trailing limb of a ' ...
+    'crossing (last row; dataset build_report.md, task 15).']);
 L = addl(L, '');
 L = addl(L, '| interval | n | median | IQR | %% > 0 | H1 median | H2 median | H3 median |');
 L = addl(L, '|---|---|---|---|---|---|---|---|');
@@ -240,7 +242,7 @@ end
 P = unique(g)';
 v = W{3,2} * 1000;
 L = addl(L, '');
-L = addl(L, 'Per participant median, lead landing -> trail toe-off (ms): %s.', strjoin(arrayfun(@(p) sprintf('%d: %.0f', p, median(v(g == p), 'omitnan')), P, 'UniformOutput', false), ', '));
+L = addl(L, 'Per participant median, lead landing -> trailing lift-off (ms): %s.', strjoin(arrayfun(@(p) sprintf('%d: %.0f', p, median(v(g == p), 'omitnan')), P, 'UniformOutput', false), ', '));
 L = addl(L, '');
 % ---- 2. time-resolved ----
 Cv = mlTools.loadCurves(D.root, T.crossing_id);
@@ -256,7 +258,7 @@ L = addl(L, ['Features = the approach strides (%s) plus, for each lead swing cur
 L = addl(L, '');
 L = addl(L, 'Approach strides only (before the lead foot leaves the floor): %.1f%% (95%% CI %.0f-%.0f).', 100*mlTools.balAcc(y, pp), 100*pci(1), 100*pci(2));
 L = addl(L, '');
-L = addl(L, '| data up to (%% lead swing) | median time before trail toe-off (ms) | n features | bal. acc | 95%% CI |');
+L = addl(L, '| data up to (%% lead swing) | median time before the trailing lift-off (ms) | n features | bal. acc | 95%% CI |');
 L = addl(L, '|---|---|---|---|---|');
 for i = 1:height(TR)
     L = addl(L, '| %d%% | %.0f | %d | %.1f%% | %.0f-%.0f |', TR.cut(i), TR.ms(i), TR.nfeat(i), 100*TR.level_logreg(i), 100*TR.level_logreg_lo(i), 100*TR.level_logreg_hi(i));
@@ -345,8 +347,8 @@ for i = 1:size(confRows, 1)
     L = addl(L, '| %s | %s |', confRows{i,1}, strjoin(c, ' | '));
 end
 L = addl(L, '');
-figCueing(D, TR, d);
-figLearning(D, LC, lcNames);
+ev = -[median((d.trail_toeoff_t_cam - d.lead_crossing_t_imu) * 1000, 'omitnan'), median((d.trail_toeoff_t_cam - d.lead_landing_t) * 1000, 'omitnan')];   % lead apex, lead landing
+mlTools.figures(D.out, 'followup', struct('TR', TR, 'ev', ev, 'LC', LC, 'lcNames', {lcNames}));
 end
 
 function TR = timeResolved(D, CFG, Cv, obs, norms, mdls, nBoot)
@@ -357,7 +359,7 @@ for cut = CFG.cuts
     [Fc, names] = mlTools.cutFeatures(Cv, cut);
     Fc = [Fc, T{:, CFG.preSwing}];  names = [names, CFG.preSwing]; %#ok<AGROW>
     mm = startsWith(names, {'zhc_h', 'zhc_x'}) | ismember(names, {'stride_len_app1','stride_len_app2'});
-    row = table(cut, median((d.trail_toeoff_t - (d.lead_toeoff_t + cut/100 * d.lead_swing_time)) * 1000, 'omitnan'), numel(names), ...
+    row = table(cut, median((d.trail_toeoff_t_cam - (d.lead_toeoff_t + cut/100 * d.lead_swing_time)) * 1000, 'omitnan'), numel(names), ...
         'VariableNames', {'cut','ms','nfeat'});
     for n = 1:numel(norms)
         if strcmp(norms{n}, 'level'), X = mlTools.calibrate(T, Fc, mm); X = X(obs, :);
@@ -623,7 +625,7 @@ for t = 1:3
     end
 end
 L = addl(L, '');
-figLimbs(D, R);
+mlTools.figures(D.out, 'limbs', struct('A', R(strcmp({R.analysis}, 'limbs') & strcmp({R.model}, 'logreg'))));
 end
 
 function X = normX(D, cols, norm, rows)
@@ -768,7 +770,7 @@ Cv = mlTools.loadCurves(D.root, T.crossing_id);
 TR = timeResolved(D, CFG, Cv, obs, {'level', 'self'}, {'logreg', 'forest'}, 500);
 L = addl(L, '## 4.3 When is height known? (lead limb data up to x %% of its swing)');
 L = addl(L, '');
-L = addl(L, '| data up to | ms before trail toe-off | level, logistic | level, forest | self, logistic | self, forest |');
+L = addl(L, '| data up to | ms before the trailing lift-off | level, logistic | level, forest | self, logistic | self, forest |');
 L = addl(L, '|---|---|---|---|---|---|');
 for i = 1:height(TR)
     L = addl(L, '| %d%% | %.0f | %.1f%% | %.1f%% | %.1f%% | %.1f%% |', TR.cut(i), TR.ms(i), 100*TR.level_logreg(i), 100*TR.level_forest(i), 100*TR.self_logreg(i), 100*TR.self_forest(i));
@@ -806,7 +808,7 @@ for i = 1:size(sets5, 1)
         strjoin(arrayfun(@(v) sprintf('%.0f%%', 100*v), a(~isnan(a)), 'UniformOutput', false), ' | '), 100*mlTools.balAcc(y, pr));
 end
 L = addl(L, '');
-figSettings(D, SR, TR);
+mlTools.figures(D.out, 'settings', struct('SR', SR, 'TR', TR));
 end
 
 function s = causalCell(spec, Xself, Xr, js, y, g, ord, nmin)
@@ -886,216 +888,7 @@ L = addl(L, ['Logistic regression is deterministic and fits the same objective, 
     'Random-forest results differ by a few points because TreeBagger and scikit-learn grow different trees from different random streams; ' ...
     'bootstrap intervals, permutation p-values and random-draw analyses differ slightly for the same reason.']);
 L = addl(L, '');
-L = addl(L, 'Figures: fig_feature_sets, fig_confusion, fig_participants, fig_cueing_time, fig_learning_curve, fig_limbs, fig_settings (PNG).');
-end
-
-%% ========================================================================
-%  FIGURES
-%% ========================================================================
-function C = pal()
-C.blue = [42 120 214]/255;  C.orange = [235 104 52]/255;  C.aqua = [27 175 122]/255;  C.yellow = [237 161 0]/255;
-C.ink = [11 11 11]/255;  C.ink2 = [82 81 78]/255;  C.grid = [228 227 223]/255;  C.surf = [252 252 251]/255;  C.gray = [138 137 132]/255;
-end
-
-function f = newFig(w, h)
-C = pal();
-f = figure('Visible', 'off', 'Color', C.surf, 'Units', 'pixels', 'Position', [50 50 w h]);
-end
-
-function styleAx(ax)
-C = pal();
-set(ax, 'Color', C.surf, 'XColor', C.ink2, 'YColor', C.ink2, 'FontSize', 9, 'Box', 'off', 'TickDir', 'out', 'GridColor', C.grid, 'GridAlpha', 1, 'Layer', 'bottom');
-end
-
-function saveFig(f, D, name)
-exportgraphics(f, fullfile(D.out, name), 'Resolution', 200, 'BackgroundColor', pal().surf);
-close(f);
-end
-
-function figFeatureSets(D, M, CFG)
-C = pal();
-P = M(strcmp({M.normalization}, 'calibrated') & strcmp({M.model}, 'logreg') & strcmp({M.rows}, CFG.include));
-order = unique({P.features}, 'stable');  n = numel(order);
-f = newFig(1400, 26 * n + 140);
-tl = tiledlayout(f, 1, 2, 'TileSpacing', 'compact', 'Padding', 'compact');
-tasks = {'height', 'width'};
-for t = 1:2
-    ax = nexttile(tl);  hold(ax, 'on');  styleAx(ax);  ax.XGrid = 'on';
-    v = zeros(n, 1);  b95 = zeros(n, 1);  ch = 0;
-    for i = 1:n
-        r = P(strcmp({P.task}, tasks{t}) & strcmp({P.features}, order{i}));
-        v(i) = 100 * r.bal_acc;  b95(i) = 100 * r.null95;  ch = 100 * r.chance;
-    end
-    yy = (n:-1:1)';
-    barh(ax, yy, v, 0.62, 'FaceColor', C.blue, 'EdgeColor', C.surf, 'LineWidth', 1.5);
-    for i = 1:n
-        plot(ax, [b95(i) b95(i)], yy(i) + [-0.36 0.36], '-', 'Color', C.ink, 'LineWidth', 1.5);
-        text(ax, max(v(i), b95(i)) + 1.2, yy(i), sprintf('%.0f', v(i)), 'FontSize', 8, 'Color', C.ink2, 'VerticalAlignment', 'middle');
-    end
-    xline(ax, ch, '--', 'Color', C.ink2, 'LineWidth', 1);
-    xlim(ax, [0 100]);  ylim(ax, [0.4 n + 0.6]);
-    if t == 1, set(ax, 'YTick', 1:n, 'YTickLabel', flip(order)); else, set(ax, 'YTick', 1:n, 'YTickLabel', []); end
-    xlabel(ax, 'balanced accuracy, unseen participant (%)');
-    title(ax, sprintf('%s  (chance %.0f%% dashed; black tick = permutation 95th pct)', tasks{t}, ch), 'FontWeight', 'normal', 'FontSize', 9.5, 'Color', C.ink, 'HorizontalAlignment', 'left', 'Units', 'normalized', 'Position', [0 1.01 0]);
-end
-saveFig(f, D, 'fig_feature_sets.png');
-end
-
-function figConfusion(D, conf)
-C = pal();
-f = newFig(1400, 460);
-tl = tiledlayout(f, 1, 3, 'TileSpacing', 'compact', 'Padding', 'compact');
-cm = interp1([0 0.33 0.66 1], [240 245 252; 134 182 239; 42 120 214; 16 66 129] / 255, linspace(0, 1, 256));
-for key = {'height|all', 'height|lead only', 'width|all'}
-    c = conf(strcmp({conf.key}, key{1}));
-    ax = nexttile(tl);
-    pc = 100 * c.cm ./ sum(c.cm, 2);
-    imagesc(ax, pc, [0 100]);  colormap(ax, cm);  axis(ax, 'image');
-    for i = 1:numel(c.lab)
-        for j = 1:numel(c.lab)
-            col = ternary(pc(i,j) > 55, [1 1 1], C.ink);
-            text(ax, j, i, sprintf('%.0f%%\n(n=%d)', pc(i,j), c.cm(i,j)), 'HorizontalAlignment', 'center', 'FontSize', 8.5, 'Color', col);
-        end
-    end
-    set(ax, 'XTick', 1:numel(c.lab), 'XTickLabel', c.lab, 'YTick', 1:numel(c.lab), 'YTickLabel', c.lab, 'XColor', C.ink2, 'YColor', C.ink2, 'TickLength', [0 0]);
-    xlabel(ax, 'predicted');  ylabel(ax, 'true');
-    title(ax, strrep(key{1}, '|', ' - '), 'FontWeight', 'normal', 'FontSize', 10, 'Color', C.ink);
-end
-saveFig(f, D, 'fig_confusion.png');
-end
-
-function figParticipants(D, M, CFG)
-C = pal();
-f = newFig(1100, 480);  ax = axes(f);  hold(ax, 'on');  styleAx(ax);  ax.YGrid = 'on';
-P = 101:110;  cols = {C.blue, C.orange, C.aqua};  nm = {'all', 'lead only', 'trail only'};  dx = [-0.18 0 0.18];
-h = gobjects(3, 1);
-for k = 1:3
-    r = M(strcmp({M.task}, 'height') & strcmp({M.features}, nm{k}) & strcmp({M.normalization}, 'calibrated') & strcmp({M.model}, 'logreg') & strcmp({M.rows}, CFG.include));
-    h(k) = scatter(ax, (1:numel(P)) + dx(k), 100 * r.acc, 42, cols{k}, 'filled', 'MarkerEdgeColor', C.surf, 'LineWidth', 1.2);
-end
-yline(ax, 100/3, '--', 'Color', C.ink2, 'LineWidth', 1);
-set(ax, 'XTick', 1:numel(P), 'XTickLabel', arrayfun(@num2str, P, 'UniformOutput', false));
-ylim(ax, [0 105]);  xlim(ax, [0.4 numel(P) + 0.6]);
-xlabel(ax, 'participant');  ylabel(ax, 'accuracy when held out (%)');
-title(ax, 'Height class, each participant tested unseen (chance 33% dashed)', 'FontWeight', 'normal', 'FontSize', 10, 'Color', C.ink);
-legend(ax, h, nm, 'Location', 'southeast', 'Orientation', 'horizontal', 'Box', 'off', 'TextColor', C.ink2);
-saveFig(f, D, 'fig_participants.png');
-end
-
-function figCueing(D, TR, d)
-C = pal();
-f = newFig(1150, 560);  ax = axes(f);  hold(ax, 'on');  styleAx(ax);  ax.YGrid = 'on';
-x = -TR.ms;
-fill(ax, [x; flipud(x)], 100 * [TR.level_logreg_lo; flipud(TR.level_logreg_hi)], C.blue, 'FaceAlpha', 0.15, 'EdgeColor', 'none');
-plot(ax, x, 100 * TR.level_logreg, '-o', 'Color', C.blue, 'LineWidth', 2, 'MarkerSize', 5, 'MarkerFaceColor', C.blue, 'MarkerEdgeColor', C.surf);
-for i = [1 6 11]
-    text(ax, x(i), 100 * TR.level_logreg(i) + 3, sprintf('%d%% lead swing', TR.cut(i)), 'HorizontalAlignment', 'center', 'FontSize', 8, 'Color', C.ink2);
-end
-ev = {'lead foot apex', -median((d.trail_toeoff_t - d.lead_crossing_t_imu) * 1000, 'omitnan');
-      'lead landing', -median((d.trail_toeoff_t - d.lead_landing_t) * 1000, 'omitnan'); 'trail toe-off', 0};
-for i = 1:3
-    xline(ax, ev{i,2}, ':', 'Color', C.ink2, 'LineWidth', 1);
-    text(ax, ev{i,2}, 97, ev{i,1}, 'Rotation', 90, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'bottom', 'FontSize', 8, 'Color', C.ink2);
-end
-yline(ax, 100/3, '--', 'chance', 'Color', C.ink2, 'LineWidth', 1, 'FontSize', 8, 'LabelHorizontalAlignment', 'left');
-ylim(ax, [20 100]);
-xlabel(ax, 'time relative to the trailing foot''s toe-off (ms, median)');  ylabel(ax, 'balanced accuracy, unseen participant (%)');
-title(ax, 'Height from lead-limb data available so far (band = 95% participant bootstrap CI)', 'FontWeight', 'normal', 'FontSize', 10, 'Color', C.ink);
-saveFig(f, D, 'fig_cueing_time.png');
-end
-
-function figLearning(D, LC, names)
-C = pal();
-cols = {C.blue, C.orange, C.aqua, C.yellow};
-f = newFig(1100, 540);  ax = axes(f);  hold(ax, 'on');  styleAx(ax);  ax.YGrid = 'on';
-n = 2:9;  h = gobjects(numel(names), 1);
-[ev, o] = sort(100 * LC.mean(:, end));  yl = zeros(size(ev));  last = -inf;
-for i = 1:numel(ev), last = max(ev(i), last + 2.8); yl(o(i)) = last; end
-for m = 1:numel(names)
-    fill(ax, [n fliplr(n)], 100 * [LC.p10(m,:) fliplr(LC.p90(m,:))], cols{m}, 'FaceAlpha', 0.10, 'EdgeColor', 'none');
-    h(m) = plot(ax, n, 100 * LC.mean(m,:), '-o', 'Color', cols{m}, 'LineWidth', 2, 'MarkerSize', 5, 'MarkerFaceColor', cols{m}, 'MarkerEdgeColor', C.surf);
-    text(ax, 9.12, yl(m), names{m}, 'FontSize', 8, 'Color', C.ink2, 'VerticalAlignment', 'middle');
-end
-yline(ax, 100/3, '--', 'Color', C.ink2, 'LineWidth', 1);
-xlim(ax, [1.8 11.4]);  ylim(ax, [20 80]);  set(ax, 'XTick', n);
-xlabel(ax, 'number of training participants');  ylabel(ax, 'balanced accuracy, unseen participant (%)');
-title(ax, 'Learning curve, height (band = 10th-90th percentile over random training sets; chance dashed)', 'FontWeight', 'normal', 'FontSize', 9.5, 'Color', C.ink);
-legend(ax, h, names, 'Location', 'southwest', 'NumColumns', 2, 'Box', 'off', 'TextColor', C.ink2, 'FontSize', 8);
-saveFig(f, D, 'fig_learning_curve.png');
-end
-
-function figLimbs(D, R)
-C = pal();
-f = newFig(1900, 520);
-tl = tiledlayout(f, 1, 5, 'TileSpacing', 'compact', 'Padding', 'compact');
-cols = struct('raw', C.gray, 'level', C.blue, 'self', C.orange);
-panels = {'height', 'A'; 'width', 'A'; '6 obstacles', 'A'; 'obstacle vs level', 'C'};
-A = R(strcmp({R.analysis}, 'limbs') & strcmp({R.model}, 'logreg'));
-for p = 1:4
-    ax = nexttile(tl);  hold(ax, 'on');  styleAx(ax);  ax.YGrid = 'on';
-    d = A(strcmp({A.block}, panels{p,2}) & strcmp({A.task}, panels{p,1}));
-    norms = intersect({'raw', 'level', 'self'}, unique({d.normalization}), 'stable');
-    for i = 1:numel(norms)
-        x = (1:3) + (i - (numel(norms) + 1) / 2) * 0.28;
-        dd = arrayfun(@(l) d(strcmp({d.normalization}, norms{i}) & strcmp({d.limb}, l{1})), {'lead','trail','fusion'});
-        v = 100 * [dd.bal_acc];
-        bar(ax, x, v, 0.26, 'FaceColor', cols.(norms{i}), 'EdgeColor', C.surf, 'LineWidth', 1.2);
-        errorbar(ax, x, v, v - 100 * [dd.ci_lo], 100 * [dd.ci_hi] - v, 'LineStyle', 'none', 'Color', C.ink, 'LineWidth', 1, 'CapSize', 3);
-    end
-    yline(ax, 100 * d(1).chance, '--', 'Color', C.ink2, 'LineWidth', 1);
-    set(ax, 'XTick', 1:3, 'XTickLabel', {'lead','trail','fusion'});  ylim(ax, [0 105]);
-    if p == 1, ylabel(ax, 'balanced accuracy, unseen participant (%)'); end
-    title(ax, panels{p,1}, 'FontWeight', 'normal', 'FontSize', 10, 'Color', C.ink);
-end
-ax = nexttile(tl);  hold(ax, 'on');  styleAx(ax);  ax.YGrid = 'on';
-d = A(strcmp({A.block}, 'B'));  nn = {'raw', 'level', 'self'};
-for i = 1:3
-    r = d(strcmp({d.normalization}, nn{i}));
-    bar(ax, i, 100 * r.bal_acc, 0.55, 'FaceColor', cols.(nn{i}), 'EdgeColor', C.surf);
-    errorbar(ax, i, 100 * r.bal_acc, 100 * (r.bal_acc - r.ci_lo), 100 * (r.ci_hi - r.bal_acc), 'Color', C.ink, 'LineWidth', 1, 'CapSize', 3);
-end
-yline(ax, 50, '--', 'Color', C.ink2, 'LineWidth', 1);
-set(ax, 'XTick', 1:3, 'XTickLabel', nn);  ylim(ax, [0 105]);
-title(ax, 'lead or trail? (one limb)', 'FontWeight', 'normal', 'FontSize', 10, 'Color', C.ink);
-hl = arrayfun(@(i) patch(ax, NaN, NaN, cols.(nn{i}), 'EdgeColor', 'none'), 1:3);
-legend(ax, hl, nn, 'Location', 'southoutside', 'Orientation', 'horizontal', 'Box', 'off', 'TextColor', C.ink2);
-title(tl, 'Separate lead / trail models (logistic regression; bars = normalization, whiskers = 95% bootstrap CI, dashed = chance)', 'FontSize', 10, 'Color', C.ink);
-saveFig(f, D, 'fig_limbs.png');
-end
-
-function figSettings(D, SR, TR)
-C = pal();
-f = newFig(1650, 600);
-tl = tiledlayout(f, 1, 2, 'TileSpacing', 'loose', 'Padding', 'compact');
-ax = nexttile(tl);  hold(ax, 'on');  styleAx(ax);  ax.XGrid = 'on';
-d = SR(strcmp({SR.model}, 'forest'));  n = numel(d);  yy = (n:-1:1)';
-v = 100 * [d.bal]';  lo = 100 * [d.lo]';  hi = 100 * [d.hi]';
-barh(ax, yy, v, 0.62, 'FaceColor', C.orange, 'EdgeColor', C.surf, 'LineWidth', 1.5);
-errorbar(ax, v, yy, v - lo, hi - v, 'horizontal', 'LineStyle', 'none', 'Color', C.ink, 'LineWidth', 1, 'CapSize', 3);
-for i = 1:n, text(ax, hi(i) + 1.2, yy(i), sprintf('%.0f', v(i)), 'FontSize', 8, 'Color', C.ink2, 'VerticalAlignment', 'middle'); end
-xline(ax, 100/3, '--', 'Color', C.ink2, 'LineWidth', 1);
-set(ax, 'YTick', 1:n, 'YTickLabel', flip({d.features}));  xlim(ax, [0 105]);  ylim(ax, [0.4 n + 0.6]);
-xlabel(ax, 'balanced accuracy, unseen participant (%)');
-title(ax, 'Height by segment / limb (self normalization, random forest; 95% CI)', 'FontWeight', 'normal', 'FontSize', 10, 'Color', C.ink);
-ax = nexttile(tl);  hold(ax, 'on');  styleAx(ax);  ax.YGrid = 'on';
-x = -TR.ms;  h = gobjects(2, 1);  nm = {'level', 'self'};  cc = {C.blue, C.orange};
-for i = 1:2
-    k = [nm{i} '_forest'];
-    fill(ax, [x; flipud(x)], 100 * [TR.([k '_lo']); flipud(TR.([k '_hi']))], cc{i}, 'FaceAlpha', 0.12, 'EdgeColor', 'none');
-    h(i) = plot(ax, x, 100 * TR.(k), '-o', 'Color', cc{i}, 'LineWidth', 2, 'MarkerSize', 4.5, 'MarkerFaceColor', cc{i}, 'MarkerEdgeColor', C.surf);
-end
-yline(ax, 100/3, '--', 'Color', C.ink2, 'LineWidth', 1);
-lab = {'lead toe-off', 0; '~lead foot apex', 50; 'lead landing', 100};
-for i = 1:3
-    xv = -TR.ms(TR.cut == lab{i,2});
-    xline(ax, xv, ':', 'Color', C.ink2, 'LineWidth', 1);
-    text(ax, xv, 99, lab{i,1}, 'Rotation', 90, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'bottom', 'FontSize', 8, 'Color', C.ink2);
-end
-ylim(ax, [20 100]);
-xlabel(ax, 'time relative to the trailing foot''s toe-off (ms, median)');  ylabel(ax, 'balanced accuracy (%)');
-title(ax, 'When is height known? Lead-limb data so far (random forest)', 'FontWeight', 'normal', 'FontSize', 10, 'Color', C.ink);
-legend(ax, h, {'level normalization', 'self normalization'}, 'Location', 'south', 'Box', 'off', 'TextColor', C.ink2);
-saveFig(f, D, 'fig_settings.png');
+L = addl(L, 'Figures: fig_feature_sets, fig_confusion, fig_participants, fig_cueing_time, fig_learning_curve, fig_limbs, fig_settings (PNG, drawn by crossing_ml_figures.m).');
 end
 
 %% ========================================================================

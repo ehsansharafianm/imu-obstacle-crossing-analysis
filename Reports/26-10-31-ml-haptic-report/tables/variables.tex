@@ -1,0 +1,222 @@
+\begingroup\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}r p{3.6cm} p{1.55cm} p{1.15cm} p{8.6cm}@{}}
+\caption{All 193 columns of \texttt{Crossing\_Master\_YoungAdults.csv}, grouped. Role: ID = identifier; LABEL = what the obstacle is (the target; never an input); META = design, participant or event information; FEATURE = wearable (Dot) input of the models; REFERENCE / TARGET = camera value (never an input); FLAG = quality / inclusion. Unit ``\% swing'' = percentage of the limb's swing (0 = toe-off, 100 = heel-strike). Prefixes \texttt{lead\_} / \texttt{trail\_} = leading / trailing limb.}\label{tab:variables}\\
+\toprule \textbf{\#} & \textbf{Column} & \textbf{Role} & \textbf{Unit} & \textbf{Definition} \\ \midrule \endfirsthead
+\toprule \textbf{\#} & \textbf{Column} & \textbf{Role} & \textbf{Unit} & \textbf{Definition} \\ \midrule \endhead
+\bottomrule \endfoot
+\multicolumn{5}{@{}l}{\textbf{Identifiers and obstacle labels (9)}} \\*
+1 & \texttt{crossing\_\allowbreak{}id} & ID & - & $<$participant$>$\_$<$obstacle\_code$>$\_r$<$repeat$>$ (obstacle) or $<$participant$>$\_level\_p$<$pass$>$ (level walk). Unique. \\
+2 & \texttt{participant\_\allowbreak{}id} & ID & - & Participant = Test number (101--110). \\
+3 & \texttt{obstacle\_\allowbreak{}code} & LABEL & - & Two-digit obstacle code [width][height] from the camera crossings file (e.g. 22 = W2\_H2); ``level'' for level walks. \\
+4 & \texttt{is\_\allowbreak{}level} & LABEL & 0/1 & 1 = level walk (no obstacle), 0 = obstacle crossing. \\
+5 & \texttt{height\_\allowbreak{}class} & LABEL & - & H1/H2/H3 from obstacle\_code; ``level'' for level walks. \\
+6 & \texttt{height\_\allowbreak{}pct\_\allowbreak{}LL} & LABEL & \% leg length & Nominal design height: H1/H2/H3 = 10/20/30\% of leg length. Empty for level. \\
+7 & \texttt{height\_\allowbreak{}cm} & LABEL & cm & Obstacle height used by step 8 for clearance: AUTO = robust median of the obstacle markers per H-level - 2.0 cm marker radius (Tests 103--110); Tests 101--102 = 10/20/30\% of the leg length typed into step 8. \\
+8 & \texttt{width\_\allowbreak{}class} & LABEL & - & W1/W2 from obstacle\_code; empty for level. \\
+9 & \texttt{width\_\allowbreak{}cm} & LABEL & cm & W1 = 5 cm, W2 = 15 cm (fixed). Empty for level. \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textbf{Design and trial order (7)}} \\*
+10 & \texttt{repeat} & META & - & Repeat number of this obstacle within the participant (1..5; 6 where an extra pass was labelled), or level pass number. \\
+11 & \texttt{trial\_\allowbreak{}order} & META & - & Chronological rank of this row within the participant (level + obstacle), by the lead limb camera y=0 time. \\
+12 & \texttt{order\_\allowbreak{}randomized} & META & - & From participants\_meta.csv (hand-entered). The data show obstacles run in blocks of $\sim$5 repeats whose block order differs between participants. \\
+13 & \texttt{leading\_\allowbreak{}limb} & META & L/R & Physical side of the leading limb (first over the obstacle). Obstacle rows: lead\_leg from the camera crossings file (the Dot Logger has no leading-leg lines for Tests 101--110; step 7 uses the same camera source). Level rows: the foot whose toe crosses y=0 first. \\
+14 & \texttt{lead\_\allowbreak{}is\_\allowbreak{}dominant} & META & 0/1 & 1 if leading\_limb equals dominant\_leg (participants\_meta.csv); empty if dominance unknown. \\
+192 & \texttt{block\_\allowbreak{}id} & META & - & Block number within the participant: run of consecutive rows (by trial\_order) with the same obstacle\_code (level passes form their own block). Never a feature. \\
+193 & \texttt{block\_\allowbreak{}pos} & META & - & Position of the row inside its block (1..n). Never a feature (anticipation / learning). \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textbf{Participant (6)}} \\*
+15 & \texttt{age\_\allowbreak{}y} & META & years & Age (participants\_meta.csv; reporting only). \\
+16 & \texttt{sex} & META & - & Sex (participants\_meta.csv, from the lab measurement sheet). \\
+17 & \texttt{dominant\_\allowbreak{}leg} & META & L/R & Dominant leg (participants\_meta.csv). \\
+18 & \texttt{body\_\allowbreak{}height\_\allowbreak{}cm} & META & cm & Body height (participants\_meta.csv). \\
+19 & \texttt{leg\_\allowbreak{}length\_\allowbreak{}cm} & META & cm & Leg length (participants\_meta.csv; pre-filled only where step 8 stored one). \\
+20 & \texttt{mass\_\allowbreak{}kg} & META & kg & Body mass (participants\_meta.csv). \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textbf{Events, timing and durations (19)}} \\*
+21 & \texttt{lead\_\allowbreak{}toeoff\_\allowbreak{}t} & META & s & Toe-off of this limb inside its crossing stride (step 4: inverted minimum of the Dot foot roll angle, first one after the begin-ZVP). Seconds from trial start (Dot clock). \\
+22 & \texttt{lead\_\allowbreak{}landing\_\allowbreak{}t} & META & s & Heel-strike (landing) of this limb after its toe-off, before the end-ZVP (step 4: maximum of the foot roll angle between toe-offs). Seconds from trial start. \\
+23 & \texttt{trail\_\allowbreak{}toeoff\_\allowbreak{}t} & META & s & Toe-off of this limb inside its crossing stride (step 4: inverted minimum of the Dot foot roll angle, first one after the begin-ZVP). Seconds from trial start (Dot clock). \\
+24 & \texttt{trail\_\allowbreak{}landing\_\allowbreak{}t} & META & s & Heel-strike (landing) of this limb after its toe-off, before the end-ZVP (step 4: maximum of the foot roll angle between toe-offs). Seconds from trial start. \\
+25 & \texttt{lead\_\allowbreak{}crossing\_\allowbreak{}t\_\allowbreak{}imu} & META & s & Wearable crossing instant = time of the ZHC peak foot height in the swing (step 9 ``foot apex = clearing the obstacle''). \\
+26 & \texttt{trail\_\allowbreak{}crossing\_\allowbreak{}t\_\allowbreak{}imu} & META & s & Wearable crossing instant = time of the ZHC peak foot height in the swing (step 9 ``foot apex = clearing the obstacle''). \\
+31 & \texttt{dot\_\allowbreak{}cam\_\allowbreak{}sync\_\allowbreak{}offset\_\allowbreak{}s} & META & s & Camera$\rightarrow$Dot clock shift (t\_dot = t\_cam + offset). Step 5: 3x left-leg raise; camera L\_toe vertical-velocity peaks matched to the Left Foot (Dot) peaks; residual drift $\sim$1 ms. \\
+32 & \texttt{lead\_\allowbreak{}dur\_\allowbreak{}toeoff\_\allowbreak{}to\_\allowbreak{}cross\_\allowbreak{}s} & META & s & crossing\_t\_imu - toeoff\_t. \\
+33 & \texttt{lead\_\allowbreak{}dur\_\allowbreak{}cross\_\allowbreak{}to\_\allowbreak{}landing\_\allowbreak{}s} & META & s & landing\_t - crossing\_t\_imu. \\
+34 & \texttt{trail\_\allowbreak{}dur\_\allowbreak{}toeoff\_\allowbreak{}to\_\allowbreak{}cross\_\allowbreak{}s} & META & s & crossing\_t\_imu - toeoff\_t. \\
+35 & \texttt{trail\_\allowbreak{}dur\_\allowbreak{}cross\_\allowbreak{}to\_\allowbreak{}landing\_\allowbreak{}s} & META & s & landing\_t - crossing\_t\_imu. \\
+36 & \texttt{lead\_\allowbreak{}trail\_\allowbreak{}lag\_\allowbreak{}ms} & META & ms & (trail\_crossing\_t\_imu - lead\_crossing\_t\_imu) x 1000. \\
+117 & \texttt{lead\_\allowbreak{}cross\_\allowbreak{}step\_\allowbreak{}len} & FEATURE & mm & NOT COMPUTED: a step length needs the vector between the two feet. The per-stride ZHC has no common origin, and the continuous ZHC (Seg.zhc pZvp, both feet in the Dot global frame) drifts by metres over a trial: Dot vs camera step length r $\sim$ 0 (build\_report.md, task 10). Left empty. \\
+118 & \texttt{trail\_\allowbreak{}cross\_\allowbreak{}step\_\allowbreak{}len} & FEATURE & mm & NOT COMPUTED (see lead\_cross\_step\_len). \\
+122 & \texttt{lead\_\allowbreak{}swing\_\allowbreak{}time} & FEATURE & s & Lead heel-strike - toe-off. \\
+123 & \texttt{trail\_\allowbreak{}swing\_\allowbreak{}time} & FEATURE & s & Trail heel-strike - toe-off. \\
+124 & \texttt{lead\_\allowbreak{}stance\_\allowbreak{}time} & FEATURE & s & Lead stance before the crossing swing: toe-off - previous heel-strike of the same foot. \\
+125 & \texttt{trail\_\allowbreak{}stance\_\allowbreak{}time} & FEATURE & s & Trail stance before its crossing swing. \\
+126 & \texttt{cross\_\allowbreak{}duration} & FEATURE & s & Whole crossing: trail landing\_t - lead toeoff\_t. \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textbf{Segment tilt angles over the swing (Dot) (42)}} \\*
+37 & \texttt{lead\_\allowbreak{}thigh\_\allowbreak{}max} & FEATURE & deg & Max thigh sagittal tilt in the swing (toe-off $\rightarrow$ heel-strike). \\
+38 & \texttt{lead\_\allowbreak{}thigh\_\allowbreak{}min} & FEATURE & deg & Min thigh sagittal tilt in the swing. \\
+39 & \texttt{lead\_\allowbreak{}thigh\_\allowbreak{}rom} & FEATURE & deg & max - min in the swing (sign-invariant). NOTE: the SPSS/step 9 ROM is over the whole ZVP$\rightarrow$ZVP stride, so it is larger. \\
+40 & \texttt{lead\_\allowbreak{}thigh\_\allowbreak{}t\_\allowbreak{}max} & FEATURE & \% swing & Time of the max, \% of swing (0 = toe-off, 100 = heel-strike). \\
+41 & \texttt{lead\_\allowbreak{}thigh\_\allowbreak{}t\_\allowbreak{}min} & FEATURE & \% swing & Time of the min, \% of swing. \\
+42 & \texttt{lead\_\allowbreak{}thigh\_\allowbreak{}max\_\allowbreak{}corr} & FEATURE & deg & max - neutral; neutral = this stride's begin-ZVP angle (median of the first 4 of 200 normalized samples, as step 9 peak excursions). The raw \_max is NOT offset-corrected. \\
+43 & \texttt{lead\_\allowbreak{}thigh\_\allowbreak{}min\_\allowbreak{}corr} & FEATURE & deg & min - neutral (same neutral). \\
+44 & \texttt{lead\_\allowbreak{}shank\_\allowbreak{}max} & FEATURE & deg & Max shank sagittal tilt in the swing (toe-off $\rightarrow$ heel-strike). \\
+45 & \texttt{lead\_\allowbreak{}shank\_\allowbreak{}min} & FEATURE & deg & Min shank sagittal tilt in the swing. \\
+46 & \texttt{lead\_\allowbreak{}shank\_\allowbreak{}rom} & FEATURE & deg & max - min in the swing (sign-invariant). NOTE: the SPSS/step 9 ROM is over the whole ZVP$\rightarrow$ZVP stride, so it is larger. \\
+47 & \texttt{lead\_\allowbreak{}shank\_\allowbreak{}t\_\allowbreak{}max} & FEATURE & \% swing & Time of the max, \% of swing (0 = toe-off, 100 = heel-strike). \\
+48 & \texttt{lead\_\allowbreak{}shank\_\allowbreak{}t\_\allowbreak{}min} & FEATURE & \% swing & Time of the min, \% of swing. \\
+49 & \texttt{lead\_\allowbreak{}shank\_\allowbreak{}max\_\allowbreak{}corr} & FEATURE & deg & max - neutral; neutral = this stride's begin-ZVP angle (median of the first 4 of 200 normalized samples, as step 9 peak excursions). The raw \_max is NOT offset-corrected. \\
+50 & \texttt{lead\_\allowbreak{}shank\_\allowbreak{}min\_\allowbreak{}corr} & FEATURE & deg & min - neutral (same neutral). \\
+51 & \texttt{lead\_\allowbreak{}foot\_\allowbreak{}max} & FEATURE & deg & Max foot sagittal tilt in the swing (toe-off $\rightarrow$ heel-strike). \\
+52 & \texttt{lead\_\allowbreak{}foot\_\allowbreak{}min} & FEATURE & deg & Min foot sagittal tilt in the swing. \\
+53 & \texttt{lead\_\allowbreak{}foot\_\allowbreak{}rom} & FEATURE & deg & max - min in the swing (sign-invariant). NOTE: the SPSS/step 9 ROM is over the whole ZVP$\rightarrow$ZVP stride, so it is larger. \\
+54 & \texttt{lead\_\allowbreak{}foot\_\allowbreak{}t\_\allowbreak{}max} & FEATURE & \% swing & Time of the max, \% of swing (0 = toe-off, 100 = heel-strike). \\
+55 & \texttt{lead\_\allowbreak{}foot\_\allowbreak{}t\_\allowbreak{}min} & FEATURE & \% swing & Time of the min, \% of swing. \\
+56 & \texttt{lead\_\allowbreak{}foot\_\allowbreak{}max\_\allowbreak{}corr} & FEATURE & deg & max - neutral; neutral = this stride's begin-ZVP angle (median of the first 4 of 200 normalized samples, as step 9 peak excursions). The raw \_max is NOT offset-corrected. \\
+57 & \texttt{lead\_\allowbreak{}foot\_\allowbreak{}min\_\allowbreak{}corr} & FEATURE & deg & min - neutral (same neutral). \\
+58 & \texttt{trail\_\allowbreak{}thigh\_\allowbreak{}max} & FEATURE & deg & Max thigh sagittal tilt in the swing (toe-off $\rightarrow$ heel-strike). \\
+59 & \texttt{trail\_\allowbreak{}thigh\_\allowbreak{}min} & FEATURE & deg & Min thigh sagittal tilt in the swing. \\
+60 & \texttt{trail\_\allowbreak{}thigh\_\allowbreak{}rom} & FEATURE & deg & max - min in the swing (sign-invariant). NOTE: the SPSS/step 9 ROM is over the whole ZVP$\rightarrow$ZVP stride, so it is larger. \\
+61 & \texttt{trail\_\allowbreak{}thigh\_\allowbreak{}t\_\allowbreak{}max} & FEATURE & \% swing & Time of the max, \% of swing (0 = toe-off, 100 = heel-strike). \\
+62 & \texttt{trail\_\allowbreak{}thigh\_\allowbreak{}t\_\allowbreak{}min} & FEATURE & \% swing & Time of the min, \% of swing. \\
+63 & \texttt{trail\_\allowbreak{}thigh\_\allowbreak{}max\_\allowbreak{}corr} & FEATURE & deg & max - neutral; neutral = this stride's begin-ZVP angle (median of the first 4 of 200 normalized samples, as step 9 peak excursions). The raw \_max is NOT offset-corrected. \\
+64 & \texttt{trail\_\allowbreak{}thigh\_\allowbreak{}min\_\allowbreak{}corr} & FEATURE & deg & min - neutral (same neutral). \\
+65 & \texttt{trail\_\allowbreak{}shank\_\allowbreak{}max} & FEATURE & deg & Max shank sagittal tilt in the swing (toe-off $\rightarrow$ heel-strike). \\
+66 & \texttt{trail\_\allowbreak{}shank\_\allowbreak{}min} & FEATURE & deg & Min shank sagittal tilt in the swing. \\
+67 & \texttt{trail\_\allowbreak{}shank\_\allowbreak{}rom} & FEATURE & deg & max - min in the swing (sign-invariant). NOTE: the SPSS/step 9 ROM is over the whole ZVP$\rightarrow$ZVP stride, so it is larger. \\
+68 & \texttt{trail\_\allowbreak{}shank\_\allowbreak{}t\_\allowbreak{}max} & FEATURE & \% swing & Time of the max, \% of swing (0 = toe-off, 100 = heel-strike). \\
+69 & \texttt{trail\_\allowbreak{}shank\_\allowbreak{}t\_\allowbreak{}min} & FEATURE & \% swing & Time of the min, \% of swing. \\
+70 & \texttt{trail\_\allowbreak{}shank\_\allowbreak{}max\_\allowbreak{}corr} & FEATURE & deg & max - neutral; neutral = this stride's begin-ZVP angle (median of the first 4 of 200 normalized samples, as step 9 peak excursions). The raw \_max is NOT offset-corrected. \\
+71 & \texttt{trail\_\allowbreak{}shank\_\allowbreak{}min\_\allowbreak{}corr} & FEATURE & deg & min - neutral (same neutral). \\
+72 & \texttt{trail\_\allowbreak{}foot\_\allowbreak{}max} & FEATURE & deg & Max foot sagittal tilt in the swing (toe-off $\rightarrow$ heel-strike). \\
+73 & \texttt{trail\_\allowbreak{}foot\_\allowbreak{}min} & FEATURE & deg & Min foot sagittal tilt in the swing. \\
+74 & \texttt{trail\_\allowbreak{}foot\_\allowbreak{}rom} & FEATURE & deg & max - min in the swing (sign-invariant). NOTE: the SPSS/step 9 ROM is over the whole ZVP$\rightarrow$ZVP stride, so it is larger. \\
+75 & \texttt{trail\_\allowbreak{}foot\_\allowbreak{}t\_\allowbreak{}max} & FEATURE & \% swing & Time of the max, \% of swing (0 = toe-off, 100 = heel-strike). \\
+76 & \texttt{trail\_\allowbreak{}foot\_\allowbreak{}t\_\allowbreak{}min} & FEATURE & \% swing & Time of the min, \% of swing. \\
+77 & \texttt{trail\_\allowbreak{}foot\_\allowbreak{}max\_\allowbreak{}corr} & FEATURE & deg & max - neutral; neutral = this stride's begin-ZVP angle (median of the first 4 of 200 normalized samples, as step 9 peak excursions). The raw \_max is NOT offset-corrected. \\
+78 & \texttt{trail\_\allowbreak{}foot\_\allowbreak{}min\_\allowbreak{}corr} & FEATURE & deg & min - neutral (same neutral). \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textbf{Segment angular velocity over the swing (Dot) (30)}} \\*
+79 & \texttt{lead\_\allowbreak{}thigh\_\allowbreak{}av\_\allowbreak{}max} & FEATURE & deg/s & Max sagittal angular velocity of the thigh in the swing = d/dt of the sign-normalized tilt (central difference, 60 Hz). \\
+80 & \texttt{lead\_\allowbreak{}thigh\_\allowbreak{}av\_\allowbreak{}min} & FEATURE & deg/s & Min sagittal angular velocity in the swing. \\
+81 & \texttt{lead\_\allowbreak{}thigh\_\allowbreak{}av\_\allowbreak{}t\_\allowbreak{}max} & FEATURE & \% swing & Time of av max, \% swing. \\
+82 & \texttt{lead\_\allowbreak{}thigh\_\allowbreak{}av\_\allowbreak{}t\_\allowbreak{}min} & FEATURE & \% swing & Time of av min, \% swing. \\
+83 & \texttt{lead\_\allowbreak{}thigh\_\allowbreak{}av\_\allowbreak{}toeoff} & FEATURE & deg/s & Angular velocity at toe-off. \\
+84 & \texttt{lead\_\allowbreak{}shank\_\allowbreak{}av\_\allowbreak{}max} & FEATURE & deg/s & Max sagittal angular velocity of the shank in the swing = d/dt of the sign-normalized tilt (central difference, 60 Hz). \\
+85 & \texttt{lead\_\allowbreak{}shank\_\allowbreak{}av\_\allowbreak{}min} & FEATURE & deg/s & Min sagittal angular velocity in the swing. \\
+86 & \texttt{lead\_\allowbreak{}shank\_\allowbreak{}av\_\allowbreak{}t\_\allowbreak{}max} & FEATURE & \% swing & Time of av max, \% swing. \\
+87 & \texttt{lead\_\allowbreak{}shank\_\allowbreak{}av\_\allowbreak{}t\_\allowbreak{}min} & FEATURE & \% swing & Time of av min, \% swing. \\
+88 & \texttt{lead\_\allowbreak{}shank\_\allowbreak{}av\_\allowbreak{}toeoff} & FEATURE & deg/s & Angular velocity at toe-off. \\
+89 & \texttt{lead\_\allowbreak{}foot\_\allowbreak{}av\_\allowbreak{}max} & FEATURE & deg/s & Max sagittal angular velocity of the foot in the swing = d/dt of the sign-normalized tilt (central difference, 60 Hz). \\
+90 & \texttt{lead\_\allowbreak{}foot\_\allowbreak{}av\_\allowbreak{}min} & FEATURE & deg/s & Min sagittal angular velocity in the swing. \\
+91 & \texttt{lead\_\allowbreak{}foot\_\allowbreak{}av\_\allowbreak{}t\_\allowbreak{}max} & FEATURE & \% swing & Time of av max, \% swing. \\
+92 & \texttt{lead\_\allowbreak{}foot\_\allowbreak{}av\_\allowbreak{}t\_\allowbreak{}min} & FEATURE & \% swing & Time of av min, \% swing. \\
+93 & \texttt{lead\_\allowbreak{}foot\_\allowbreak{}av\_\allowbreak{}toeoff} & FEATURE & deg/s & Angular velocity at toe-off. \\
+94 & \texttt{trail\_\allowbreak{}thigh\_\allowbreak{}av\_\allowbreak{}max} & FEATURE & deg/s & Max sagittal angular velocity of the thigh in the swing = d/dt of the sign-normalized tilt (central difference, 60 Hz). \\
+95 & \texttt{trail\_\allowbreak{}thigh\_\allowbreak{}av\_\allowbreak{}min} & FEATURE & deg/s & Min sagittal angular velocity in the swing. \\
+96 & \texttt{trail\_\allowbreak{}thigh\_\allowbreak{}av\_\allowbreak{}t\_\allowbreak{}max} & FEATURE & \% swing & Time of av max, \% swing. \\
+97 & \texttt{trail\_\allowbreak{}thigh\_\allowbreak{}av\_\allowbreak{}t\_\allowbreak{}min} & FEATURE & \% swing & Time of av min, \% swing. \\
+98 & \texttt{trail\_\allowbreak{}thigh\_\allowbreak{}av\_\allowbreak{}toeoff} & FEATURE & deg/s & Angular velocity at toe-off. \\
+99 & \texttt{trail\_\allowbreak{}shank\_\allowbreak{}av\_\allowbreak{}max} & FEATURE & deg/s & Max sagittal angular velocity of the shank in the swing = d/dt of the sign-normalized tilt (central difference, 60 Hz). \\
+100 & \texttt{trail\_\allowbreak{}shank\_\allowbreak{}av\_\allowbreak{}min} & FEATURE & deg/s & Min sagittal angular velocity in the swing. \\
+101 & \texttt{trail\_\allowbreak{}shank\_\allowbreak{}av\_\allowbreak{}t\_\allowbreak{}max} & FEATURE & \% swing & Time of av max, \% swing. \\
+102 & \texttt{trail\_\allowbreak{}shank\_\allowbreak{}av\_\allowbreak{}t\_\allowbreak{}min} & FEATURE & \% swing & Time of av min, \% swing. \\
+103 & \texttt{trail\_\allowbreak{}shank\_\allowbreak{}av\_\allowbreak{}toeoff} & FEATURE & deg/s & Angular velocity at toe-off. \\
+104 & \texttt{trail\_\allowbreak{}foot\_\allowbreak{}av\_\allowbreak{}max} & FEATURE & deg/s & Max sagittal angular velocity of the foot in the swing = d/dt of the sign-normalized tilt (central difference, 60 Hz). \\
+105 & \texttt{trail\_\allowbreak{}foot\_\allowbreak{}av\_\allowbreak{}min} & FEATURE & deg/s & Min sagittal angular velocity in the swing. \\
+106 & \texttt{trail\_\allowbreak{}foot\_\allowbreak{}av\_\allowbreak{}t\_\allowbreak{}max} & FEATURE & \% swing & Time of av max, \% swing. \\
+107 & \texttt{trail\_\allowbreak{}foot\_\allowbreak{}av\_\allowbreak{}t\_\allowbreak{}min} & FEATURE & \% swing & Time of av min, \% swing. \\
+108 & \texttt{trail\_\allowbreak{}foot\_\allowbreak{}av\_\allowbreak{}toeoff} & FEATURE & deg/s & Angular velocity at toe-off. \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textbf{Foot acceleration (Dot) (6)}} \\*
+109 & \texttt{lead\_\allowbreak{}foot\_\allowbreak{}acc\_\allowbreak{}peak\_\allowbreak{}start} & FEATURE & m/s2 & Peak |foot acceleration| in the FIRST 25\% of the swing (near swing initiation). Global frame (step-4 ZHC rotation), gravity removed, resultant magnitude. \\
+110 & \texttt{lead\_\allowbreak{}foot\_\allowbreak{}acc\_\allowbreak{}peak\_\allowbreak{}land} & FEATURE & m/s2 & Peak |foot acceleration| in the LAST 25\% of the swing (near landing). \\
+111 & \texttt{lead\_\allowbreak{}foot\_\allowbreak{}acc\_\allowbreak{}rms\_\allowbreak{}swing} & FEATURE & m/s2 & RMS of |foot acceleration| over the swing. \\
+112 & \texttt{trail\_\allowbreak{}foot\_\allowbreak{}acc\_\allowbreak{}peak\_\allowbreak{}start} & FEATURE & m/s2 & Peak |foot acceleration| in the FIRST 25\% of the swing (near swing initiation). Global frame (step-4 ZHC rotation), gravity removed, resultant magnitude. \\
+113 & \texttt{trail\_\allowbreak{}foot\_\allowbreak{}acc\_\allowbreak{}peak\_\allowbreak{}land} & FEATURE & m/s2 & Peak |foot acceleration| in the LAST 25\% of the swing (near landing). \\
+114 & \texttt{trail\_\allowbreak{}foot\_\allowbreak{}acc\_\allowbreak{}rms\_\allowbreak{}swing} & FEATURE & m/s2 & RMS of |foot acceleration| over the swing. \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textbf{Foot trajectory (ZHC) and gait (Dot) (29)}} \\*
+115 & \texttt{stride\_\allowbreak{}len\_\allowbreak{}app1} & FEATURE & mm & Lead limb ZHC stride length (net horizontal displacement ZVP$\rightarrow$ZVP) of the stride just BEFORE the crossing stride. Empty if not a walking stride ($>$ 2 s or $<$ 300 mm). \\
+116 & \texttt{stride\_\allowbreak{}len\_\allowbreak{}app2} & FEATURE & mm & Same, two strides before the crossing stride. \\
+119 & \texttt{speed\_\allowbreak{}approach} & FEATURE & m/s & (stride\_len\_app1 + app2) / (their durations), lead limb. \\
+120 & \texttt{speed\_\allowbreak{}cross} & FEATURE & m/s & Lead crossing stride: ZHC stride length / ZVP$\rightarrow$ZVP duration (step 9 speed). \\
+121 & \texttt{cadence} & FEATURE & steps/min & 120 / lead crossing stride duration (step 9 cadence). \\
+127 & \texttt{lead\_\allowbreak{}zhc\_\allowbreak{}peak\_\allowbreak{}toe\_\allowbreak{}h} & FEATURE & mm & Peak toe height in the swing above its begin-ZVP height, from the foot sensor by a rigid-body transform (Sharafian Moghaddam \& Hejrati 2026): toe rise = sensor rise (ZHC z) + rx\emph{sin(theta) + rz}(cos(theta)-1), theta = Dot foot tilt - its begin-ZVP value (toe-up positive), [rx rz] = fixed sensor-to-toe-marker vector in the foot frame. The vector is NOT measured: it is fitted by least squares to the camera toe-marker rise of the OTHER participants (leave-one-participant-out), so no camera data of this participant are used. Per-participant fits in build\_report.md. \\
+128 & \texttt{lead\_\allowbreak{}zhc\_\allowbreak{}peak\_\allowbreak{}foot\_\allowbreak{}h} & FEATURE & mm & Peak foot-sensor height in the swing, above its begin-ZVP (stance) height. ZHC frame: Dot global frame (z up, gravity), origin = the foot sensor at the stride's begin-ZVP; x = progression along the stride's net horizontal displacement. \\
+129 & \texttt{lead\_\allowbreak{}zhc\_\allowbreak{}peak\_\allowbreak{}h\_\allowbreak{}t} & FEATURE & \% swing & Time of the peak height, \% swing. \\
+130 & \texttt{lead\_\allowbreak{}zhc\_\allowbreak{}peak\_\allowbreak{}h\_\allowbreak{}x} & FEATURE & mm & Progression x at the peak height (from begin-ZVP). \\
+131 & \texttt{lead\_\allowbreak{}zhc\_\allowbreak{}h\_\allowbreak{}toeoff} & FEATURE & mm & Height at toe-off. \\
+132 & \texttt{lead\_\allowbreak{}zhc\_\allowbreak{}h\_\allowbreak{}25} & FEATURE & mm & Height at 25\% swing. \\
+133 & \texttt{lead\_\allowbreak{}zhc\_\allowbreak{}h\_\allowbreak{}50} & FEATURE & mm & Height at 50\% swing. \\
+134 & \texttt{lead\_\allowbreak{}zhc\_\allowbreak{}h\_\allowbreak{}75} & FEATURE & mm & Height at 75\% swing. \\
+136 & \texttt{lead\_\allowbreak{}zhc\_\allowbreak{}x\_\allowbreak{}toeoff} & FEATURE & mm & Progression x at toe-off. \\
+137 & \texttt{lead\_\allowbreak{}zhc\_\allowbreak{}x\_\allowbreak{}landing} & FEATURE & mm & Progression x at heel-strike. \\
+138 & \texttt{lead\_\allowbreak{}zhc\_\allowbreak{}vz\_\allowbreak{}peak} & FEATURE & m/s & Peak vertical velocity in the swing (d/dt ZHC z). \\
+139 & \texttt{lead\_\allowbreak{}zhc\_\allowbreak{}vx\_\allowbreak{}peak} & FEATURE & m/s & Peak progression velocity in the swing. \\
+141 & \texttt{trail\_\allowbreak{}zhc\_\allowbreak{}peak\_\allowbreak{}toe\_\allowbreak{}h} & FEATURE & mm & Peak toe height in the swing above its begin-ZVP height, from the foot sensor by a rigid-body transform (Sharafian Moghaddam \& Hejrati 2026): toe rise = sensor rise (ZHC z) + rx\emph{sin(theta) + rz}(cos(theta)-1), theta = Dot foot tilt - its begin-ZVP value (toe-up positive), [rx rz] = fixed sensor-to-toe-marker vector in the foot frame. The vector is NOT measured: it is fitted by least squares to the camera toe-marker rise of the OTHER participants (leave-one-participant-out), so no camera data of this participant are used. Per-participant fits in build\_report.md. \\
+142 & \texttt{trail\_\allowbreak{}zhc\_\allowbreak{}peak\_\allowbreak{}foot\_\allowbreak{}h} & FEATURE & mm & Peak foot-sensor height in the swing, above its begin-ZVP (stance) height. ZHC frame: Dot global frame (z up, gravity), origin = the foot sensor at the stride's begin-ZVP; x = progression along the stride's net horizontal displacement. \\
+143 & \texttt{trail\_\allowbreak{}zhc\_\allowbreak{}peak\_\allowbreak{}h\_\allowbreak{}t} & FEATURE & \% swing & Time of the peak height, \% swing. \\
+144 & \texttt{trail\_\allowbreak{}zhc\_\allowbreak{}peak\_\allowbreak{}h\_\allowbreak{}x} & FEATURE & mm & Progression x at the peak height (from begin-ZVP). \\
+145 & \texttt{trail\_\allowbreak{}zhc\_\allowbreak{}h\_\allowbreak{}toeoff} & FEATURE & mm & Height at toe-off. \\
+146 & \texttt{trail\_\allowbreak{}zhc\_\allowbreak{}h\_\allowbreak{}25} & FEATURE & mm & Height at 25\% swing. \\
+147 & \texttt{trail\_\allowbreak{}zhc\_\allowbreak{}h\_\allowbreak{}50} & FEATURE & mm & Height at 50\% swing. \\
+148 & \texttt{trail\_\allowbreak{}zhc\_\allowbreak{}h\_\allowbreak{}75} & FEATURE & mm & Height at 75\% swing. \\
+150 & \texttt{trail\_\allowbreak{}zhc\_\allowbreak{}x\_\allowbreak{}toeoff} & FEATURE & mm & Progression x at toe-off. \\
+151 & \texttt{trail\_\allowbreak{}zhc\_\allowbreak{}x\_\allowbreak{}landing} & FEATURE & mm & Progression x at heel-strike. \\
+152 & \texttt{trail\_\allowbreak{}zhc\_\allowbreak{}vz\_\allowbreak{}peak} & FEATURE & m/s & Peak vertical velocity in the swing (d/dt ZHC z). \\
+153 & \texttt{trail\_\allowbreak{}zhc\_\allowbreak{}vx\_\allowbreak{}peak} & FEATURE & m/s & Peak progression velocity in the swing. \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textbf{Camera reference values (never model inputs) (20)}} \\*
+27 & \texttt{lead\_\allowbreak{}crossing\_\allowbreak{}t\_\allowbreak{}cam} & REFERENCE & s & Camera crossing instant: the toe passes y=0 (obstacle centre). Obstacle rows: lead/trail\_cross\_s from the crossings file + sync shift; level rows: detected y=0 crossing. Dot clock. \\
+28 & \texttt{trail\_\allowbreak{}crossing\_\allowbreak{}t\_\allowbreak{}cam} & REFERENCE & s & Camera crossing instant: the toe passes y=0 (obstacle centre). Obstacle rows: lead/trail\_cross\_s from the crossings file + sync shift; level rows: detected y=0 crossing. Dot clock. \\
+29 & \texttt{lead\_\allowbreak{}toeoff\_\allowbreak{}t\_\allowbreak{}cam} & REFERENCE & s & Camera toe lift-off: first sample of the stride at which the toe marker is $>$ 10 mm above its stance height (median of the stride's first 6 samples, begin-ZVP foot-flat) for 4 consecutive samples. Dot clock. The step-4 IMU toe-off (\texttt{\_\allowbreak{}toeoff\_\allowbreak{}t}, foot-angle minimum) comes late on the trailing limb of an obstacle crossing, which keeps pointing the toe down while it lifts (build\_report.md, task 15); use this column for timing (e.g. the deadline of a cue for the trailing limb). \\
+30 & \texttt{trail\_\allowbreak{}toeoff\_\allowbreak{}t\_\allowbreak{}cam} & REFERENCE & s & Camera toe lift-off: first sample of the stride at which the toe marker is $>$ 10 mm above its stance height (median of the stride's first 6 samples, begin-ZVP foot-flat) for 4 consecutive samples. Dot clock. The step-4 IMU toe-off (\texttt{\_\allowbreak{}toeoff\_\allowbreak{}t}, foot-angle minimum) comes late on the trailing limb of an obstacle crossing, which keeps pointing the toe down while it lifts (build\_report.md, task 15); use this column for timing (e.g. the deadline of a cue for the trailing limb). \\
+135 & \texttt{lead\_\allowbreak{}zhc\_\allowbreak{}h\_\allowbreak{}cross} & REFERENCE & mm & ZHC height at the CAMERA crossing instant (crossing\_t\_cam). Uses camera timing $\rightarrow$ REFERENCE, not a feature. \\
+140 & \texttt{lead\_\allowbreak{}zhc\_\allowbreak{}v\_\allowbreak{}cross} & REFERENCE & m/s & |ZHC velocity| at the CAMERA crossing instant $\rightarrow$ REFERENCE (camera timing). \\
+149 & \texttt{trail\_\allowbreak{}zhc\_\allowbreak{}h\_\allowbreak{}cross} & REFERENCE & mm & ZHC height at the CAMERA crossing instant (crossing\_t\_cam). Uses camera timing $\rightarrow$ REFERENCE, not a feature. \\
+154 & \texttt{trail\_\allowbreak{}zhc\_\allowbreak{}v\_\allowbreak{}cross} & REFERENCE & m/s & |ZHC velocity| at the CAMERA crossing instant $\rightarrow$ REFERENCE (camera timing). \\
+166 & \texttt{lead\_\allowbreak{}cam\_\allowbreak{}min\_\allowbreak{}clearance} & REFERENCE/TARGET & mm & Min foot clearance: lowest toe/heel marker z while over the obstacle footprint (|y| $\leq$ w/2), incl. the y=0 heights, minus obstacle top (step 9 minClearance). Marker centres; no sole offset applied. Negative = below the top (contact/occlusion). \\
+167 & \texttt{trail\_\allowbreak{}cam\_\allowbreak{}min\_\allowbreak{}clearance} & REFERENCE/TARGET & mm & Same, trailing limb. \\
+168 & \texttt{lead\_\allowbreak{}cam\_\allowbreak{}takeoff\_\allowbreak{}dist} & REFERENCE/TARGET & mm & Step 8 lift\_dist = near (approach) edge (-w/2) - this limb's TOE y at its begin-ZVP (foot flat before the obstacle). Own-foot definition: for the LEAD limb this is the stance before the trail foot's, a full step back ($\sim$65--110 cm), NOT the literature trail-toe distance. \\
+169 & \texttt{trail\_\allowbreak{}cam\_\allowbreak{}takeoff\_\allowbreak{}dist} & REFERENCE/TARGET & mm & Same, trailing limb (its toe before the near edge; $\sim$ the literature take-off distance). \\
+170 & \texttt{lead\_\allowbreak{}cam\_\allowbreak{}landing\_\allowbreak{}dist} & REFERENCE/TARGET & mm & Step 8 land\_dist = this limb's HEEL y at its end-ZVP - far edge (+w/2). Lead = literature landing distance. \\
+171 & \texttt{trail\_\allowbreak{}cam\_\allowbreak{}landing\_\allowbreak{}dist} & REFERENCE/TARGET & mm & Same, trailing limb (a full step past the obstacle). \\
+172 & \texttt{lead\_\allowbreak{}cam\_\allowbreak{}peak\_\allowbreak{}foot\_\allowbreak{}h} & REFERENCE/TARGET & mm & Peak camera toe-marker z over the stride (absolute height of the marker centre above the floor plane). \\
+173 & \texttt{trail\_\allowbreak{}cam\_\allowbreak{}peak\_\allowbreak{}foot\_\allowbreak{}h} & REFERENCE/TARGET & mm & Same, trailing limb. \\
+174 & \texttt{cam\_\allowbreak{}obstacle\_\allowbreak{}h} & REFERENCE/TARGET & mm & Measured obstacle top for THIS crossing: robust median of the obstacle-marker z over the lead stride - 20 mm marker radius (step 8 method, per crossing). Verifies height\_cm. \\
+175 & \texttt{cam\_\allowbreak{}obstacle\_\allowbreak{}x} & REFERENCE/TARGET & mm & Measured obstacle-marker y over the lead stride (the frame is obstacle-centred, so $\sim$0). \\
+186 & \texttt{lead\_\allowbreak{}cam\_\allowbreak{}takeoff\_\allowbreak{}toeoff} & REFERENCE/TARGET & mm & Literature-style take-off: near edge (-w/2) - this limb's camera TOE y at its OWN toe-off (step-4 IMU toe-off event). For the lead limb this is the toe position when it leaves the floor behind the trail foot; compare cam\_takeoff\_dist (toe at its begin-ZVP). \\
+187 & \texttt{trail\_\allowbreak{}cam\_\allowbreak{}takeoff\_\allowbreak{}toeoff} & REFERENCE/TARGET & mm & Literature-style take-off: near edge (-w/2) - this limb's camera TOE y at its OWN toe-off (step-4 IMU toe-off event). For the lead limb this is the toe position when it leaves the floor behind the trail foot; compare cam\_takeoff\_dist (toe at its begin-ZVP). \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textbf{Quality flags and inclusion (25)}} \\*
+155 & \texttt{lead\_\allowbreak{}zhc\_\allowbreak{}h\_\allowbreak{}landing} & FLAG & mm & ZHC foot-sensor height at heel-strike, above its begin-ZVP height. NOT a drift measure by itself: the heel is on the floor at the trailing heel-strike (camera), but the sensor sits on the dorsum and the foot is pitched toe-up, so $\sim$50--100 mm is normal. (At the end-ZVP the ZHC level-ground bias solve forces the height to exactly 0.) \\
+156 & \texttt{trail\_\allowbreak{}zhc\_\allowbreak{}h\_\allowbreak{}landing} & FLAG & mm & ZHC foot-sensor height at heel-strike, above its begin-ZVP height. NOT a drift measure by itself: the heel is on the floor at the trailing heel-strike (camera), but the sensor sits on the dorsum and the foot is pitched toe-up, so $\sim$50--100 mm is normal. (At the end-ZVP the ZHC level-ground bias solve forces the height to exactly 0.) \\
+157 & \texttt{lead\_\allowbreak{}zhc\_\allowbreak{}drift\_\allowbreak{}flag} & FLAG & 0/1 & Landing-height drift flag: 1 if |uncorrected ZHC landing height| (end-ZVP height from the step-4 first integration, before the level-ground bias solve removes it) $>$ cohort median + 3\emph{1.4826}MAD (threshold printed in build\_report.md). \\
+158 & \texttt{trail\_\allowbreak{}zhc\_\allowbreak{}drift\_\allowbreak{}flag} & FLAG & 0/1 & Landing-height drift flag: 1 if |uncorrected ZHC landing height| (end-ZVP height from the step-4 first integration, before the level-ground bias solve removes it) $>$ cohort median + 3\emph{1.4826}MAD (threshold printed in build\_report.md). \\
+159 & \texttt{lead\_\allowbreak{}stance\_\allowbreak{}conf} & FLAG & 0--1 & Fraction of the stance before the swing (previous heel-strike $\rightarrow$ toe-off) that meets the step-4 still-foot rule (|gyro| $<$ 24 and |acc| $<$ 21). \\
+160 & \texttt{trail\_\allowbreak{}stance\_\allowbreak{}conf} & FLAG & 0--1 & Fraction of the stance before the swing (previous heel-strike $\rightarrow$ toe-off) that meets the step-4 still-foot rule (|gyro| $<$ 24 and |acc| $<$ 21). \\
+161 & \texttt{trajectory\_\allowbreak{}invalid} & FLAG & 0/1 & 1 if either limb's ZHC stride is missing/non-finite, its stride length is outside 200--2500 mm, or its peak height outside 10--800 mm. \\
+162 & \texttt{lead\_\allowbreak{}dotcam\_\allowbreak{}peak\_\allowbreak{}h\_\allowbreak{}err} & FLAG & mm & zhc\_peak\_foot\_h - (camera peak toe z in the stride - camera toe z at begin-ZVP). Sensor (dorsum) vs toe marker, both as rise above stance. \\
+163 & \texttt{trail\_\allowbreak{}dotcam\_\allowbreak{}peak\_\allowbreak{}h\_\allowbreak{}err} & FLAG & mm & zhc\_peak\_foot\_h - (camera peak toe z in the stride - camera toe z at begin-ZVP). Sensor (dorsum) vs toe marker, both as rise above stance. \\
+164 & \texttt{lead\_\allowbreak{}dotcam\_\allowbreak{}place\_\allowbreak{}err} & FLAG & mm & ZHC stride length - camera toe stride (toe y at end-ZVP - toe y at begin-ZVP). \\
+165 & \texttt{trail\_\allowbreak{}dotcam\_\allowbreak{}place\_\allowbreak{}err} & FLAG & mm & ZHC stride length - camera toe stride (toe y at end-ZVP - toe y at begin-ZVP). \\
+176 & \texttt{contact\_\allowbreak{}flag} & FLAG & 0/1 & 1 if lead or trail min clearance $\leq$ 0 mm (possible contact, or marker occlusion). \\
+177 & \texttt{data\_\allowbreak{}quality\_\allowbreak{}flag} & FLAG & 0/1 & 1 if the crossings file flags the pass, a selected stride's toe did not span y=0, the step-7 role of a stride disagrees with the crossings file, or a lead/trail stride is longer than 2.5 s (not a walking stride, e.g. a pause). \\
+178 & \texttt{missing\_\allowbreak{}dot} & FLAG & 0/1 & 1 if any Dot segment angle is unavailable in either swing. \\
+179 & \texttt{missing\_\allowbreak{}camera} & FLAG & 0/1 & 1 if camera toe data are missing at either stride's ZVPs. \\
+180 & \texttt{missing\_\allowbreak{}event} & FLAG & 0/1 & 1 if either limb has no ZVP stride, or no toe-off/heel-strike inside it. \\
+181 & \texttt{cleaned\_\allowbreak{}variables} & FLAG & - & Semicolon list of columns cleaned in this row (Test 106 thigh MAD gate); originals in exclusions\_log.csv. \\
+182 & \texttt{include\_\allowbreak{}biomech} & FLAG & 0/1 & 1 = no missing event, no missing Dot, no data-quality flag. Contact rows are kept (see contact\_flag). \\
+183 & \texttt{include\_\allowbreak{}ml} & FLAG & 0/1 & include\_biomech AND not trajectory\_invalid AND no ZHC drift flag. \\
+184 & \texttt{lead\_\allowbreak{}dotcam\_\allowbreak{}toe\_\allowbreak{}peak\_\allowbreak{}err} & FLAG & mm & zhc\_peak\_toe\_h - camera toe rise (camera peak toe z in the stride - toe z at begin-ZVP), same camera term as dotcam\_peak\_h\_err. Uses camera data. \\
+185 & \texttt{trail\_\allowbreak{}dotcam\_\allowbreak{}toe\_\allowbreak{}peak\_\allowbreak{}err} & FLAG & mm & zhc\_peak\_toe\_h - camera toe rise (camera peak toe z in the stride - toe z at begin-ZVP), same camera term as dotcam\_peak\_h\_err. Uses camera data. \\
+188 & \texttt{role\_\allowbreak{}imu} & META & L/R & Leading side recovered from the Dot ALONE: the strides whose ZHC apex is $>$ 2 x the participant's median stride apex are crossing candidates; consecutive L/R candidates within 1.5 s form one crossing and the earlier one leads. Matched to this row as the IMU crossing nearest the camera crossing time (within 1.5 s; the matching is evaluation only). Empty for level rows or if no IMU crossing matched. \\
+189 & \texttt{role\_\allowbreak{}agree} & REFERENCE & 0/1 & 1 if role\_imu equals leading\_limb (camera). Uses camera roles. \\
+190 & \texttt{imu\_\allowbreak{}cross\_\allowbreak{}stride\_\allowbreak{}match} & REFERENCE & 0/1 & 1 if the IMU-detected lead AND trail crossing strides are the same ZVP strides as the camera-selected ones. \\
+191 & \texttt{include\_\allowbreak{}ml\_\allowbreak{}noflag} & FLAG & 0/1 & include\_biomech AND not trajectory\_invalid (the ZHC drift flag is ignored). For running the models both ways. \\
+\addlinespace
+\end{longtable}
+\endgroup

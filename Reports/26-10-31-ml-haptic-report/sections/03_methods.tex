@@ -1,0 +1,216 @@
+\section{Methods}
+\label{sec:methods}
+
+Notation: participant $p \in \{101,\dots,110\}$; crossing $i$ of participant $p(i)$ with feature vector
+$\mathbf{x}_i \in \mathbb{R}^d$ and label $y_i$ (height H1/H2/H3, width W1/W2, or one of the six obstacles);
+$O_p$ = obstacle crossings of $p$, $L_p$ = level walks of $p$; $\ell_p$ = leg length.
+
+\subsection{Evaluation protocol}
+\label{sec:eval}
+
+\paragraph{Leave-one-participant-out (LOPO).} For each participant $p$, every model is trained on the crossings of the nine
+other participants and predicts the crossings of $p$. All fitted steps (median imputation of missing values, standardisation,
+feature selection, the model itself, thresholds) use the training participants only, so the reported accuracy is that of
+a \emph{new person}. The ten sets of predictions are pooled before the metrics are computed
+(\vn{mlTools.lopo}).
+
+\paragraph{Balanced accuracy.} With $K$ classes and $n_k$ crossings of class $k$,
+\begin{equation}
+\mathrm{BA} = \frac{1}{K}\sum_{k=1}^{K} \frac{\#\{i : y_i = k,\ \hat y_i = k\}}{n_k},
+\end{equation}
+the mean per-class recall; chance is $1/K$ whatever the class balance.
+
+\paragraph{Confidence intervals.} Participant bootstrap: the ten participants are drawn with replacement 2000 times, the
+balanced accuracy of the pooled predictions of the drawn participants is recomputed, and the 2.5th and 97.5th percentiles
+form the 95\,\% CI. A difference between two models uses the same draws for both (paired difference)
+(\vn{mlTools.bootCI}).
+
+\paragraph{Permutation tests.} The labels are shuffled \emph{within each participant} (keeping each person's class counts),
+the complete LOPO pipeline is refitted, and this is repeated $n$ times; $p = (1 + \#\{\mathrm{BA}_{\text{null}} \geq
+\mathrm{BA}_{\text{obs}}\}) / (1 + n)$ (\vn{mlTools.permTest}).
+
+\paragraph{Nested (honest) selection.} When several settings are compared (feature set $\times$ normalisation $\times$
+model $\times$ limb fusion), picking the best on the test results is optimistic. In the nested version the setting is chosen
+inside each outer fold by an inner LOPO on the nine training participants, and only the chosen setting is applied to the
+left-out participant.
+
+\subsection{Normalisation}
+\label{sec:norm}
+
+\paragraph{Generic (level-walk) scaling.} Each feature is referenced to the person's normal walking, and lengths are
+divided by the leg length:
+\begin{equation}
+\tilde x_{ij} = \frac{x_{ij} - \operatorname{median}_{l \in L_p} x_{lj}}{s_j}, \qquad s_j = \begin{cases} \ell_p\ (\text{mm}) & \text{if feature } j \text{ is a length}\\ 1 & \text{otherwise.}\end{cases}
+\end{equation}
+A device would get this from a short normal walk (\vn{mlTools.calibrate}).
+
+\paragraph{Person scaling.} Each feature is scaled with the person's own obstacle crossings, without their labels:
+\begin{equation}
+z_{ij} = \frac{x_{ij} - \operatorname{median}_{k \in O_p} x_{kj}}{\operatorname{IQR}_{k \in O_p} x_{kj}},
+\end{equation}
+with the inter-quartile range from linear-interpolation quantiles (set to 1 if zero) (\vn{mlTools.selfnorm}). This removes
+the person's walking ``signature'' and personal obstacle margin. It assumes the person's crossings cover several heights.
+
+\paragraph{Causal person scaling (real time).} Crossing number $j$ of a session is scaled with the median and IQR of the
+crossings \emph{before} it; until $n_{\min}$ crossings have been seen (5 or 10), the generic model is used.
+
+\paragraph{Person-centring (haptic thresholds).} For single-signal rules, a value is expressed in physical units either
+relative to the person's normal walking ($x - \operatorname{median}_{L_p} x$) or relative to the person's typical crossing
+($x - \operatorname{median}_{O_p} x$), at the same moment of the swing or the same time before the trailing lift-off.
+
+\subsection{Feature construction}
+\label{sec:features}
+
+\paragraph{Clearance-shape features} (\vn{mlTools.shapeFeats}). From one limb's foot-height curve $h(t)$ and progression
+$x(t)$ over the swing (51 points): peak height $h^*$ and the progression to it; for $q \in \{0.5,0.7,0.8,0.9\}$ the horizontal
+distance and the \% of swing during which $h \geq q\,h^*$; the foot tilt at the apex; the progression after the apex; and the
+ratio of the steepest rise to the steepest fall of $h$. They describe how long and how far the foot stays high.
+
+\paragraph{Time-resolved features} (\vn{mlTools.cutFeatures}). For data up to $c\,\%$ of the leading swing: for each of the six
+signals, the value at $c$ and the maximum, minimum, mean and final slope from toe-off to $c$, plus the approach strides.
+
+\paragraph{Stride and online features} (\vn{mlTools.strideTable}). For every ZVP-to-ZVP stride of both feet: peak height and
+its timing, time and distance above 50/70/90\,\% of the peak, stride length, peak vertical speed, end height and duration;
+and six features known at the foot apex (peak height, time from the stride start, distance travelled, maximum and mean
+vertical speed before the apex, height 0.1\,s before the apex).
+
+\paragraph{Out-of-plane features} (\vn{crossing_ml_lateral.m}). Frontal tilt (Euler $Y$) and heading (unwrapped Euler $Z$) of
+each segment in the swing (range, largest deviation from toe-off, signed mean deviation, sign flipped for the right leg), and
+the foot's sideways path from the foot trajectory.
+
+\subsection{Models}
+\label{sec:models}
+
+\paragraph{L2 logistic regression} (\vn{mlTools.fitPipe}, kind \vn{logreg}). Inputs median-imputed and z-scored with the
+training statistics, optionally reduced to the $k$ features with the largest ANOVA $F$. Weights $W$, intercepts $b$:
+\begin{equation}
+\min_{W,b}\ C \sum_i w_i\, \mathcal{L}\big(y_i, \operatorname{softmax}(W^\top \mathbf{z}_i + b)\big) + \tfrac12 \lVert W\rVert^2,
+\qquad C = 0.1,
+\end{equation}
+with the cross-entropy loss $\mathcal{L}$ (sigmoid for two classes), solved with a quasi-Newton optimiser; intercepts are not
+penalised (the scikit-learn objective, so the MATLAB and Python versions agree).
+
+\paragraph{Random forest} (kind \vn{forest}). MATLAB \vn{TreeBagger}: 300--500 classification trees, minimum leaf size 2,
+$\lfloor\sqrt d\rfloor$ candidate features per split, uniform class prior (balanced classes), fixed seed. Class probability =
+share of trees voting for the class.
+
+\paragraph{Support vector machine and boosting} (kinds \vn{svm}, \vn{boost}). RBF-kernel SVM (one-versus-one ECOC, automatic
+kernel scale, box constraint 1) on z-scored inputs; AdaBoostM2 (three classes) or GentleBoost (two classes) with 200 trees
+of at most 8 splits and learning rate 0.1. Their scores are turned into class probabilities with a softmax.
+
+\paragraph{Separate limbs and soft vote.} The leading and trailing limbs are modelled separately (their mechanics differ);
+the crossing is classified from the average of the two models' class probabilities,
+$P(y \mid \text{crossing}) = \tfrac12\,[P_{\text{lead}}(y) + P_{\text{trail}}(y)]$. Ensembles average several models the same
+way.
+
+\paragraph{1D convolutional network} (\vn{crossing_ml_story.m}, part \vn{cnn}). Input: one limb's six swing curves
+($6 \times 51$), normalised per participant and channel. Architecture: conv1d($5 \times 16$) -- batch normalisation -- ReLU --
+conv1d($5 \times 32$) -- batch normalisation -- ReLU -- global average pooling -- dropout 0.3 -- fully connected (3) --
+softmax. Training: Adam, 60 epochs, mini-batch 32, learning rate $10^{-3}$, L2 $10^{-3}$, training set tripled with Gaussian
+noise ($\sigma = 0.1$); three seeds averaged; leading and trailing networks fused by soft vote.
+
+\paragraph{Regression of the height in centimetres.} Target = nominal height $h_i = (\text{level}\,\% / 100)\,\ell_p$.
+Ridge regression on z-scored features, $\hat\beta = (A^\top A + \lambda R)^{-1} A^\top h$ with $\lambda = 10$ (intercept not
+penalised), or a random-forest regression (300 trees, minimum leaf 3). The predicted centimetres are turned into a class by
+the nearest of the person's three nominal heights.
+
+\paragraph{Physics-informed offset model} (\vn{crossing_ml_device.m}, D2). Physics: the foot lift rises by about the obstacle
+height, but each person has a personal offset. A height score $s = \mathbf{w}^\top\mathbf{x}$ is learned by ridge regression
+($\lambda = 10$) of the person-centred height level $t$ (\% leg length) on person-centred features of the training
+participants, rescaled so that one score unit equals one \% of leg length. For a new person,
+\begin{equation}
+s_i = c + t_i + \varepsilon_i,\qquad \varepsilon_i \sim \mathcal{N}(0,\sigma^2),\qquad t_i \in \{10, 20, 30\},
+\end{equation}
+with one unknown offset $c$. The offset is set from a prior (population mean, or the level-walk score plus a learned shift,
+prior SD $\tau$), or from $n$ labelled crossings as the posterior mean
+\begin{equation}
+\hat c = \frac{\sum_{i=1}^{n} (s_i - t_i)/\sigma^2 + \mu/\tau^2}{n/\sigma^2 + 1/\tau^2},
+\end{equation}
+or from unlabelled crossings with a constrained Gaussian mixture (components at $c + 10$, $c + 20$, $c + 30$, common $\sigma$,
+free class shares, EM for 100 iterations). A crossing is classified by the nearest component, summing the log-likelihoods
+of the leading- and trailing-foot scores.
+
+\paragraph{Single-signal threshold rules (haptic).} Two ordered thresholds $t_1 \leq t_2$ on one signal $v$ at one moment
+(direction $s = \operatorname{sign}\operatorname{corr}(v, \text{level})$): H1 if $s v < t_1$, H2 if $t_1 \leq s v < t_2$, H3
+otherwise; $t_1, t_2$ maximise the training balanced accuracy over a grid of percentiles. For crossing detection, one
+threshold maximising the Youden index (sensitivity + specificity $- 1$). The moment is chosen inside the training
+participants (nested), optionally only among moments available before a deadline.
+
+\subsection{Statistics and descriptive measures}
+\label{sec:stats}
+
+\begin{itemize}
+  \item \textbf{Mixed-effects scaling.} $y = \beta_0 + \beta_1 h + u_{0p} + u_{1p} h + \varepsilon$ (MATLAB \vn{fitlme},
+  random intercept and slope per participant, Satterthwaite degrees of freedom); $\beta_1$ = change per cm of obstacle.
+  \item \textbf{Within-person effect size.} $\eta^2 = SS_{\text{between levels}} / SS_{\text{total}}$ after removing each
+  participant's mean, computed at every 2\,\% of the swing (map) or per feature.
+  \item \textbf{Separability.} $d' = \overline{\Delta\mu}/\sigma_w$: mean step between the mean foot lifts of neighbouring
+  heights divided by the pooled within-height SD, per participant.
+  \item \textbf{Map of all crossings.} t-SNE (perplexity 30) of the 110 features; silhouette score by participant and by
+  height.
+  \item \textbf{Calibration of probabilities.} Brier score $\frac1n\sum_i\sum_k (P_{ik} - [y_i = k])^2$ and expected calibration
+  error $\sum_b \frac{n_b}{n}\,\lvert \mathrm{acc}_b - \mathrm{conf}_b\rvert$ over ten bins of the top-class probability.
+  \item \textbf{Permutation importance.} In each left-out participant, one feature (or feature group) is shuffled across
+  that participant's crossings; the drop in balanced accuracy, averaged over 10 shuffles, measures how much the model
+  needs it.
+\end{itemize}
+
+\subsection{Analyses}
+\label{sec:analyses}
+
+Table~\ref{tab:analysis-map} maps the research questions to the nine MATLAB scripts in \vn{Analysis/ML/}; all share the
+building blocks of \vn{mlTools.m}. Their reports (\vn{ml_*_matlab.md}) and figures (\vn{fig_*.png}) are in
+\vn{Results/ML Models/MATLAB/}.
+
+\begin{table}[htbp]
+\centering
+\caption{Analyses, the questions they answer and how.}
+\label{tab:analysis-map}
+\footnotesize
+\begin{tabular}{@{}p{3.1cm} p{0.7cm} p{11.3cm}@{}}
+\toprule
+\textbf{Script} & \textbf{Q} & \textbf{What it does} \\
+\midrule
+\vn{crossing_ml_matlab.m} & Q2, Q3 & Height, width and the six obstacles from all / leading / trailing / segment features,
+raw vs level scaling, logistic vs forest, top-$k$ features, permutation tests; cueing window and time-resolved prediction;
+separate limb models and soft vote; personal calibration; nested selection; comparison with the earlier Python version. \\
+\vn{crossing_ml_explore.m} & Q2 & Clearance-shape features and full curves; SVM, boosting and ensembles; ranking within a
+person; self-training; personal calibration with 1--3 labelled crossings; width tricks; nested selection over all settings. \\
+\vn{crossing_ml_story.m} & Q1, Q2 & $\eta^2$ maps over the swing; the personal signature (person identification); dose-response
+and mixed-effects slopes; personal margin; height in cm; t-SNE; 1D CNN; width in the camera foot placement; clearance;
+lead-limb choice and limb coupling. \\
+\vn{crossing_ml_device.m} & Q3 & Which sensors; how much calibration (offset model, labelled and unlabelled crossings); answering only
+when confident; learning curve over the number of training participants. \\
+\vn{crossing_ml_stream.m} & Q3 & Camera-free pipeline on all strides: detect crossing strides, pair them into lead and trail,
+classify the height; scored against the camera. \\
+\vn{crossing_ml_realworld.m} & Q3, Q4 & Mixed obstacle order with causal person scaling (30 shuffles); a virtual real-time cue
+at the leading-foot apex or landing; why some participants are harder ($d'$). \\
+\vn{crossing_ml_lateral.m} & Q2 & Whether width shows in the side-to-side (out-of-plane) motion. \\
+\vn{crossing_ml_validate.m} & Q1--Q3 & Unseen heights and widths; what sets the clearance; permutation importance; paired
+statistics, confusion matrix and probability calibration; anticipation in the approach; IMU vs camera scaling. \\
+\vn{crossing_ml_haptic.m} & Q4 & Event timeline relative to the trailing toe lift-off; single-signal crossing detection and
+height thresholds over the swing and in real time; extra angle and lift per height. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Generalisation tests} (\vn{crossing_ml_validate.m}). \emph{Unseen height}: within LOPO, the regression is trained on
+the other participants' crossings of two height levels only and tested on the left-out participant's crossings of the third
+level (H2 left out = interpolation; H1 or H3 left out = extrapolation). \emph{Unseen width}: height recognition trained on the
+other participants' crossings of one width only and tested on the other width, compared with training on the same width
+(same amount of training data).
+
+\paragraph{Clearance mechanism} (\vn{crossing_ml_validate.m}, V3). Within each participant $\times$ obstacle cell (cell means
+removed), the share of the crossing-to-crossing clearance variance explained by the camera toe peak above the obstacle, by the
+camera take-off distance (toe before the obstacle at its toe-off), by the IMU foot lift and by the IMU toe estimate, and the
+absolute clearance of a new participant from ordinary least squares (LOPO).
+
+\paragraph{Real-time cue} (\vn{crossing_ml_realworld.m}, R2). Crossing strides are detected online at the leading-foot apex
+from the six apex features (all strides of the session); the height is predicted from the leading-limb data available at
+the leading-foot apex (50\,\% of its swing) or at its landing (100\,\%), with causal person scaling; the cue is given always or
+only if the top probability is at least 0.6. Outcome per crossing: correct cue, wrong cue or no cue.
+
+\paragraph{Haptic timing and thresholds} (\vn{crossing_ml_haptic.m}). Event times relative to the camera trailing toe lift-off;
+single-signal detection (crossing vs level stride) and three-level grading over the swing; the same grading on the
+time-aligned signals for cue deadlines of 500, 300, 200, 100 and 0\,ms before the lift-off; the mean extra angle or lift per
+height at the most informative moment, and its crossing-to-crossing SD.

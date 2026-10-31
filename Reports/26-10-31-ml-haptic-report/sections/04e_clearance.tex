@@ -1,0 +1,42 @@
+\subsection{Toe clearance}
+\label{sec:res-clearance}
+
+The camera minimum clearance (lowest toe or heel marker over the obstacle minus the obstacle top) is a safety outcome: a low
+trailing clearance is a near-trip. With person-scaled Dot features the clearance is not predictable (Table~\ref{tab:safety}:
+$r \approx 0$) and low-clearance crossings are only weakly detectable (AUC 0.63--0.73). The reason is that person scaling removes
+each person's own margin, which is most of the clearance. Two further questions were therefore asked (Tables~\ref{tab:clearcells}
+and \ref{tab:clearabs}): what sets the clearance from one crossing to the next, and how well the raw IMU foot lift predicts it.
+
+\begin{table}[htbp]
+\centering
+\caption{Clearance from person-scaled Dot features (random forest): regression and detection of low-clearance crossings.}
+\label{tab:safety}
+\input{tables/story_safety}
+\end{table}
+
+\paragraph{What sets the clearance.} Within one participant and one obstacle the clearance still varies from crossing to crossing
+(SD 37\,mm leading, 71\,mm trailing). About a third of this variation is explained by how high the toe goes (camera toe peak
+above the obstacle: 35\,\% and 34\,\%), and very little by where the foot leaves the floor (take-off distance: 4\,\% and 6\,\%).
+The IMU foot lift explains 20\,\% (leading) and 12\,\% (trailing): it follows the camera toe peak only partly ($r = 0.44$ and
+0.21), because the sensor sits on the top of the foot and the trailing foot crosses heel-up, so the toe is not where the sensor
+is. The provisional rigid-body toe estimate does no better.
+
+\begin{table}[htbp]
+\centering
+\caption{What sets the crossing-to-crossing clearance (within participant $\times$ obstacle cells): SDs, correlations with the
+clearance, and the share of the clearance variance explained.}
+\label{tab:clearcells}
+\input{tables/validate_clear_cells}
+\end{table}
+
+\paragraph{Absolute clearance for a new person.} Between people and obstacles the raw IMU foot lift (with the obstacle height) does
+predict part of the clearance: mean absolute error 39\,mm for the leading and 65\,mm for the trailing limb, against 49 and 88\,mm for
+the training mean (Table~\ref{tab:clearabs}). The camera's own toe peak would reach 34 and 55\,mm. Clearance is thus partly
+predictable from the IMU; a trip-risk monitor needs a better toe-height estimate (a measured sensor-to-toe geometry).
+
+\begin{table}[htbp]
+\centering
+\caption{Absolute clearance of a left-out participant (ordinary least squares): mean absolute error and correlation.}
+\label{tab:clearabs}
+\input{tables/validate_clear_abs}
+\end{table}

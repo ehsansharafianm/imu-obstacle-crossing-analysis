@@ -1,5 +1,16 @@
 # ML feasibility summary: can wearable (Dot IMU) features tell the obstacle?
 
+> **Latest (MATLAB):** see `MATLAB/STORY_SUMMARY.md`, which gives the full story and the numbers:
+> - **Two foot IMUs:** 92 % height accuracy on a new person.
+> - **Calibration:** 1 labelled crossing per height gives 88 %; with no calibration, 73 %.
+> - **Answering only when confident:** 97.7 % accuracy on 67 % of crossings.
+> - **Camera-free, end-to-end pipeline:** 86 % of crossings correct.
+> - **Height in cm:** MAE 2.4 cm.
+> - **Foot lift:** +10.1 mm per cm of obstacle (mixed-model 95 % CI 9.4–10.8), with a constant safety margin.
+> - **Personal signature:** one crossing identifies the walker with 99 % accuracy; the personal margin explains the generic ceiling.
+> - **Width:** behaviourally invisible, even to the camera.
+> - **Clearance:** not estimable from the IMU.
+
 Paste this into a new chat to get the results evaluated. Supporting files are in `Results/ML Models/`: `ml_report.md` (all tables), `ml_results.csv` (every run) and 3 figures. Code: `Analysis/ML/python/crossing_ml.py`. Generated 2026-10-30.
 
 ## Purpose

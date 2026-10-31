@@ -1,0 +1,56 @@
+\subsection{Recommendations for a real-time haptic cue}
+\label{sec:haptic-reco}
+
+Table~\ref{tab:design} answers the design questions with the evidence behind each answer.
+
+\begin{table}[htbp]
+\centering
+\caption{Design of a haptic cue for the trailing limb: answers and evidence (deadline = trailing toe lift-off).}
+\label{tab:design}
+\footnotesize
+\begin{tabular}{@{}p{2.6cm} p{7.4cm} p{5.6cm}@{}}
+\toprule
+\textbf{Question} & \textbf{Answer} & \textbf{Evidence} \\
+\midrule
+When to cue? & At the latest at the leading-foot apex, about 0.45\,s before the trailing toe leaves the floor. Detect the crossing earlier
+(10--30\,\% of the leading swing, 0.57--0.71\,s before) and decide the height by the apex. Do not wait for the leading landing
+(0.2\,s left; in 22\,\% of crossings the trailing toe has already lifted). &
+Table~\ref{tab:timeline}, \ref{tab:cueing}, \ref{tab:detect}; height about 80\,\% known at the apex (Table~\ref{tab:timing}). \\
+\addlinespace
+Which limb? & The \textbf{leading} limb gives the cue information. The trailing limb shows no height information before it leaves the
+floor; its strong signals (heel-up shank, foot lift) come 0.25--0.3\,s after lift-off and can only confirm the crossing or give feedback
+afterwards. & Table~\ref{tab:realtime} (trailing 41--51\,\% before lift-off), Table~\ref{tab:grade}. \\
+\addlinespace
+Which segment? & A \textbf{foot} IMU on each foot (foot height and trajectory; the leading leg varies). If only angle sensors are used:
+the \textbf{leading thigh}. The leading shank carries no height information. & Tables~\ref{tab:sensors}, \ref{tab:segments},
+\ref{tab:grade}, \ref{tab:map}. \\
+\addlinespace
+Detection threshold? & Leading thigh flexion more than about 6\textdegree{} above the person's normal walking, or leading foot more than
+about 19\,mm above it, early in the leading swing. & Table~\ref{tab:detect}: 97--99\,\% sensitivity, 98\,\% specificity. \\
+\addlinespace
+Height thresholds? & \textbf{Personal}: two boundaries around the person's typical crossing, e.g.\ leading-foot apex height $-36$ and
+$+39$\,mm, or leading thigh at 72\,\% of its swing $-3$\textdegree{} and $+5$\textdegree{}. Population thresholds referenced only to
+normal walking work poorly. & Table~\ref{tab:grade} (73\,\% / 64\,\% personal vs 45\,\% / 52\,\% population), Table~\ref{tab:margin}. \\
+\addlinespace
+Calibration? & A short normal walk plus the person's own crossings (no labels): 10--15 crossings give 81--85\,\%, a session 92\,\%;
+or one labelled crossing (80\,\%). Keep updating the scaling during use. & Tables~\ref{tab:calibration}, \ref{tab:mixed}. \\
+\addlinespace
+Reliability? & Cue only when the model is confident (probability at least 0.6): 79--82\,\% of the given cues are right; the stated
+probabilities understate the model's real accuracy. & Tables~\ref{tab:cue}, \ref{tab:confidence}, \ref{tab:reliability}. \\
+\addlinespace
+How much lift? & Per height H1/H2/H3, relative to normal walking: trailing foot +237/+352/+436\,mm (10.9\,mm per cm), trailing shank
+heel-up $-31$/$-46$/$-55$\textdegree{} ($-1.3$\textdegree{} per cm); crossing-to-crossing SD 36\,mm and 5.6\textdegree{}. &
+Table~\ref{tab:dose}. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Reaction time.} The time available after a cue at the leading-foot apex is about 0.45\,s (median; 0.35\,s for a quarter of
+the crossings). A simple reaction to a vibration typically takes in the order of 0.2\,s in young adults and longer in older adults;
+this was not measured here, and must be measured in the target users before the cue moment is fixed. If it is too long, the earlier
+crossing detection (0.57--0.71\,s before the deadline) can trigger a generic ``obstacle'' warning, followed by the height-specific
+cue at the apex.
+
+\paragraph{A ``lift more'' feedback.} If the cue should also tell the trailing limb how much to lift, a natural target is the
+person's own mean lift for the predicted height, and an alarm threshold about one to two crossing-to-crossing SDs below it
+(Table~\ref{tab:dose}). This is a design proposal that has not been tested.

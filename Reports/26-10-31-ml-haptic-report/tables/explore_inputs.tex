@@ -1,0 +1,24 @@
+\begin{adjustbox}{max width=\textwidth}
+{\footnotesize
+\begin{tabular}{lrllrrr}
+\toprule
+\textbf{features} & \textbf{n feat (lead)} & \textbf{norm} & \textbf{model} & \textbf{lead} & \textbf{trail} & \textbf{fusion} \\
+\midrule
+summary & 57 & level & logreg & 62.1\% (55--70; worst 42\%) & 49.1\% (40--58; worst 27\%) & 56.1\% (46--66; worst 33\%) \\
+summary & 57 & level & forest & 60.5\% (51--70; worst 31\%) & 58.8\% (47--71; worst 27\%) & 60.4\% (49--74; worst 27\%) \\
+summary & 57 & self & logreg & 79.6\% (73--86; worst 57\%) & 78.0\% (67--87; worst 42\%) & 80.8\% (74--87; worst 65\%) \\
+summary & 57 & self & forest & 88.4\% (83--93; worst 70\%) & 86.5\% (79--92; worst 62\%) & 90.4\% (85--95; worst 73\%) \\
+shape & 13 & level & logreg & 72.8\% (65--80; worst 50\%) & 56.0\% (43--69; worst 27\%) & 63.7\% (51--77; worst 27\%) \\
+shape & 13 & level & forest & 61.7\% (52--73; worst 38\%) & 53.6\% (42--66; worst 27\%) & 56.3\% (46--67; worst 27\%) \\
+shape & 13 & self & logreg & 84.2\% (79--89; worst 72\%) & 75.1\% (68--81; worst 54\%) & 85.8\% (80--92; worst 65\%) \\
+shape & 13 & self & forest & 86.1\% (82--91; worst 77\%) & 84.2\% (76--90; worst 58\%) & 89.7\% (86--93; worst 77\%) \\
+curves & 66 & level & logreg & 60.6\% (52--68; worst 33\%) & 56.8\% (46--67; worst 27\%) & 57.9\% (47--70; worst 33\%) \\
+curves & 66 & self & logreg & 75.0\% (68--81; worst 50\%) & 80.1\% (71--88; worst 50\%) & 82.3\% (75--90; worst 62\%) \\
+summary + shape & 70 & level & logreg & 64.5\% (57--73; worst 42\%) & 50.6\% (41--60; worst 27\%) & 56.2\% (46--66; worst 33\%) \\
+summary + shape & 70 & self & logreg & 83.4\% (77--89; worst 67\%) & 77.3\% (67--86; worst 42\%) & 83.0\% (77--89; worst 65\%) \\
+summary + curves & 123 & level & logreg & 62.9\% (54--72; worst 37\%) & 53.1\% (42--64; worst 27\%) & 56.0\% (45--68; worst 33\%) \\
+summary + curves & 123 & self & logreg & 80.8\% (77--85; worst 69\%) & 78.5\% (68--87; worst 42\%) & 82.3\% (75--89; worst 64\%) \\
+\bottomrule
+\end{tabular}
+}
+\end{adjustbox}

@@ -1,0 +1,19 @@
+\begin{adjustbox}{max width=\textwidth}
+{\footnotesize
+\begin{tabular}{p{5.2cm}rrp{6.2cm}}
+\toprule
+\textbf{idea} & \textbf{before} & \textbf{after} & \textbf{comment} \\
+\midrule
+clearance-shape features, generic model (lead, level, logistic) & 62.1\% & \textbf{72.8\%} (p 0.003) & 13 features beat the 57 summary features without any person calibration \\
+honest nested selection, generic settings only & 62.1\% & \textbf{69.4\%} (58--80) & best generic setting chosen fairly \\
++ ranking each person's crossings into thirds & 62.1\% & \textbf{87.0\%} & shape, fusion; assumes a mix of heights \\
+1 labelled crossing per height from the new person & 71.8\% (summary) & \textbf{80.6\%} (shape) & 3 crossings of calibration \\
+best single setting with self normalization & - & 90.4\% & summary, fusion, forest \\
+best model / ensemble with self normalization & - & 91.5\% & ensemble (8 models), fusion, soft vote \\
+honest nested selection, all settings & 89.3\% (Part 4.1) & \textbf{91.5\%} (86--97) & worst participant 73\% \\
+self-training on the new person & 72.8\% (shape) & 54.0--67.1\% & did not help (the model reinforces its own errors) \\
+width, best new idea & 64.3\% & 66.2\% & ratio + summary, fusion, logreg - width stays weak \\
+\bottomrule
+\end{tabular}
+}
+\end{adjustbox}

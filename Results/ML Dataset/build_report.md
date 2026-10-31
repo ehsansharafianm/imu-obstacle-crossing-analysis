@@ -1,6 +1,6 @@
 # Build report — Crossing_Master_YoungAdults
 
-_Generated 2026-10-30 16:50._
+_Generated 2026-10-31 00:51._
 
 ## 1. Row counts (expected 30 crossings + 5 level walks per participant)
 
@@ -36,6 +36,8 @@ Level strides chosen at y = 0 that the Dot app FeatureLog also tagged Level_Walk
 
 | column | role | n missing | of |
 |---|---|---|---|
+| `lead_toeoff_t_cam` | REFERENCE | 7 | 349 |
+| `trail_toeoff_t_cam` | REFERENCE | 6 | 349 |
 | `lead_thigh_max` | FEATURE | 17 | 349 |
 | `lead_thigh_min` | FEATURE | 15 | 349 |
 | `lead_thigh_rom` | FEATURE | 15 | 349 |
@@ -248,6 +250,8 @@ Foot sign check (median per participant of corr(Dot foot tilt, camera foot pitch
 |---|---|---|---|
 | `lead_crossing_t_cam` | REFERENCE | 349 | 299 |
 | `trail_crossing_t_cam` | REFERENCE | 349 | 299 |
+| `lead_toeoff_t_cam` | REFERENCE | 342 | 298 |
+| `trail_toeoff_t_cam` | REFERENCE | 343 | 298 |
 | `lead_thigh_max` | FEATURE | 332 | 295 |
 | `lead_thigh_min` | FEATURE | 334 | 297 |
 | `lead_thigh_rom` | FEATURE | 334 | 297 |
@@ -756,6 +760,38 @@ Added to `data_dictionary.md` (section "Study-design notes"): camera-derived rol
 | **all** | H1 | 88 | 61.8 | 56.0 | -79.5 | 106.4 | 269.4 | 318.9 | 172.8 | 169.7 | 1.2 |
 | **all** | H2 | 90 | 76.4 | 66.0 | -94.7 | 118.1 | 383.8 | 427.2 | 182.5 | 140.3 | 1.0 |
 | **all** | H3 | 82 | 82.8 | 71.9 | -104.2 | 126.7 | 452.4 | 518.2 | 144.9 | 121.3 | 1.0 |
+
+## Task 14. Sampling and signal completeness (Dot)
+
+Time base of the Dot recording (AllData), packet-counter steps other than 1 (dropped packets) and NaN samples of the Dot sensors, and Dot angle gaps inside the obstacle crossings (leading toe-off -> trailing landing).
+
+| participant | fs (Hz) | samples | sampling interval min-max (ms) | time gaps | Dot sensors | dropped / missing packets | NaN angle samples (worst sensor) | NaN acc samples (worst sensor) | crossings with a NaN Dot angle |
+|---|---|---|---|---|---|---|---|---|---|
+| 101 | 60 | 39114 | 16.67-16.67 | 0 | 6 | 0 | 0.000% | 0.000% | 0 |
+| 102 | 60 | 37805 | 16.67-16.67 | 0 | 6 | 0 | 0.000% | 0.000% | 0 |
+| 103 | 60 | 37572 | 16.67-16.67 | 0 | 6 | 0 | 0.000% | 0.000% | 0 |
+| 104 | 60 | 47715 | 16.67-16.67 | 0 | 6 | 0 | 0.000% | 0.000% | 0 |
+| 105 | 60 | 58252 | 16.67-16.67 | 0 | 6 | 0 | 0.000% | 0.000% | 0 |
+| 106 | 60 | 44381 | 16.67-16.67 | 0 | 6 | 0 | 0.000% | 0.000% | 0 |
+| 107 | 60 | 41291 | 16.67-16.67 | 0 | 6 | 0 | 0.000% | 0.000% | 0 |
+| 108 | 60 | 39019 | 16.67-16.67 | 0 | 6 | 0 | 0.000% | 0.000% | 0 |
+| 109 | 60 | 38737 | 16.67-16.67 | 0 | 6 | 0 | 0.000% | 0.000% | 0 |
+| 110 | 60 | 44144 | 16.67-16.67 | 0 | 6 | 0 | 0.000% | 0.000% | 0 |
+
+The Test 106 thigh gate is also applied to the swing curves and the time-aligned file: the thigh curve of a gated limb is left empty (the dataset gates individual values; a curve that contains a gated value is not used).
+
+## Task 15. Toe-off timing: step-4 IMU event vs the camera toe lift-off
+
+Step 4 places the toe-off at the foot-angle minimum. `*_toeoff_t_cam` = first sample at which the camera toe marker is > 10 mm above its stance height for 4 consecutive samples. IMU minus camera (ms; + = the IMU event is later), and the foot-sensor height above its stance at the IMU event (`*_zhc_h_toeoff`). All rows with both times.
+
+| rows | limb | n | IMU - camera, median (ms) | IQR (ms) | sensor height at the IMU toe-off, median (mm) |
+|---|---|---|---|---|---|
+| obstacle | lead | 292 | +67 | +17 to +167 | 62 |
+| obstacle | trail | 300 | +233 | +150 to +350 | 356 |
+| level | lead | 40 | -67 | -150 to -25 | 35 |
+| level | trail | 42 | -25 | -133 to +17 | 31 |
+
+On the TRAILING limb of an obstacle crossing the foot keeps pointing the toe down while it lifts, so the foot-angle minimum (step-4 toe-off) comes well after the toe leaves the floor. The IMU events stay in the dataset (they define every swing feature, consistently with steps 4-9), but timing questions (when must a cue for the trailing limb arrive?) should use `trail_toeoff_t_cam`; the time-aligned file is anchored on it.
 
 ## Questions for you
 

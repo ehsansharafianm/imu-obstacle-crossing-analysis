@@ -29,6 +29,9 @@ function build_crossing_master(tests)
 %   Crossing_Master_YoungAdults.csv      the dataset (Test 106 thigh MAD gate applied)
 %   Crossing_Curves_YoungAdults.csv      per row: lead and trail swing curves (thigh/shank/foot tilt,
 %                                        foot acc, ZHC height and progression), 0-100% swing, for the ML
+%   Crossing_Aligned_YoungAdults.csv     per row: both limbs' Dot signals at fixed samples around the
+%                                        TRAILING toe lift-off (camera; -1.5 s .. +0.6 s, 60 Hz), for
+%                                        real-time analyses
 %   exclusions_log.csv                   every cleaned / missing value with reason; the original of
 %                                        every cleaned value (so the raw data are recoverable), and
 %                                        the values an all-participant gate WOULD remove (not applied)
@@ -69,6 +72,8 @@ CFG.width_cm     = [5 15];
 CFG.decimals     = 4;
 CFG.curveN       = 51;       % swing curves exported at 0:2:100 % swing
 CFG.curveSig     = {'thigh','shank','foot','footacc','zhc_h','zhc_x'};
+CFG.alignK       = -90:36;   % time-aligned export: Dot samples (60 Hz) relative to the TRAILING toe-off
+CFG.alignSig     = {'thigh','shank','foot','footacc','zhc_h'};
 CFG.imuApexK     = 2.0;      % IMU-only crossing stride: ZHC stride apex > 2 x participant median apex
 CFG.imuPairTol_s = 1.5;      % lead and trail apexes of one crossing within this
 CFG.imuMatchTol_s = 1.5;     % IMU crossing matched to the camera crossing within this (evaluation only)
@@ -80,7 +85,7 @@ SPEC  = columnSpec();
 names = SPEC(:,1)';
 textCols = {'crossing_id','obstacle_code','height_class','width_class','order_randomized', ...
             'leading_limb','sex','dominant_leg','cleaned_variables','role_imu'};
-assert(numel(names) == 191, 'column spec has %d columns, expected 191', numel(names));
+assert(numel(names) == 193, 'column spec has %d columns, expected 193', numel(names));
 
 meta = loadMeta(fullfile(here,'participants_meta.csv'), tests, root);
 SNT  = signNormTools();
@@ -114,7 +119,8 @@ xlog = [xlog; sens];
 base = sprintf('Crossing_Master_%s', CFG.cohort);
 writeCsv(fullfile(outDir,[base '.csv']), Tcl, textCols, CFG.decimals);
 writeLog(fullfile(outDir,'exclusions_log.csv'), xlog);
-writeCurves(fullfile(outDir, sprintf('Crossing_Curves_%s.csv', CFG.cohort)), D, CFG);
+writeCurves(fullfile(outDir, sprintf('Crossing_Curves_%s.csv', CFG.cohort)), D, CFG, Tcl.cleaned_variables);
+writeAligned(fullfile(outDir, sprintf('Crossing_Aligned_%s.csv', CFG.cohort)), D, CFG, Tcl.cleaned_variables);
 writeDictionary(fullfile(outDir,'data_dictionary.md'), SPEC, CFG);
 writeReport(fullfile(outDir,'build_report.md'), Tcl, Traw, SIDE, QC, SPEC, CFG, root, xlog);
 writeReview(fullfile(outDir,'build_report.md'), Tcl, D, QC, TOE, xall, meta, CFG);
@@ -143,6 +149,7 @@ if ~isfile(xf), qc.notes{end+1} = 'missing camera crossings file - skipped'; ret
 C = readtable(xf,'Sheet','crossings','VariableNamingRule','preserve');
 
 fs = Seg.fs;  t = Data.time(:);
+qc.samp = samplingQC(Data, t, fs);
 if numel(Cam.time) ~= numel(t) || max(abs(Cam.time(:) - t)) > 1e-6     % put camera on the IMU grid
     mk = fieldnames(Cam.markers);
     for k = 1:numel(mk), Cam.markers.(mk{k}) = interp1(Cam.time(:), Cam.markers.(mk{k}), t, 'linear', NaN); end
@@ -190,6 +197,7 @@ r0.lead_zhc_raw_drift = NaN;  r0.trail_zhc_raw_drift = NaN;   % internal (drift 
 r0.lead_toefit = [];  r0.trail_toefit = [];                   % internal (toe geometry fit)
 r0.lead_cam_heel_peak = NaN;  r0.trail_cam_heel_peak = NaN;      % internal (task 4 diagnosis)
 r0.lead_curve = nan(1, CFG.curveN * numel(CFG.curveSig));  r0.trail_curve = r0.lead_curve;   % curves file
+r0.lead_aligned = nan(1, numel(CFG.alignK) * numel(CFG.alignSig));  r0.trail_aligned = r0.lead_aligned;   % aligned file
 r0.lead_cyc = NaN;  r0.trail_cyc = NaN;  r0.stepchk = [NaN NaN]; % internal (IMU role, step-length check)
 r0.participant_id = tn;  r0.dot_cam_sync_offset_s = shift;
 if ~isempty(M)
@@ -250,6 +258,14 @@ for p = 1:numel(P)
 end
 if ~isempty(agree), qc.lvFeatLogAgree = mean(agree); end
 
+% ---- Dot angle gaps inside the obstacle crossings (leading toe-off -> trailing landing), task 14 ----
+dotI = find(contains(ilab, '(Dot)'));  qc.samp.winNaN = 0;
+for k = 1:numel(rows)
+    a = rows(k).lead_toeoff_t;  b = rows(k).trail_landing_t;
+    if rows(k).is_level == 1 || ~isfinite(a) || ~isfinite(b), continue; end
+    w = t >= a & t <= b;
+    qc.samp.winNaN = qc.samp.winNaN + any(arrayfun(@(i) any(any(isnan(Data.imu(i).euler_ZXY_deg(w, :)))), dotI));
+end
 % ---- chronological trial order (level + obstacle, by the lead camera y=0 time) ----
 tc = [rows.lead_crossing_t_cam];  [~, ord] = sort(tc);
 for k = 1:numel(ord), rows(ord(k)).trial_order = k; end
@@ -274,6 +290,9 @@ s.L = limbFeat(getSide(X,ll), s.cL, tLc, t, fs, CFG, cpEntry(CP,cpKey,ll,s.cL), 
 s.T = limbFeat(getSide(X,tl), s.cT, tTc, t, fs, CFG, cpEntry(CP,cpKey,tl,s.cT), isObs, 'Trailing');
 row = putLimb(row, 'lead_',  s.L);
 row = putLimb(row, 'trail_', s.T);
+iRef = NaN;  if isfinite(s.T.toeoff_t_cam), [~, iRef] = min(abs(t - s.T.toeoff_t_cam)); end   % camera trailing lift-off
+row.lead_aligned  = alignedSignals(getSide(X, ll), iRef, CFG);
+row.trail_aligned = alignedSignals(getSide(X, tl), iRef, CFG);
 row.leading_limb = strtrim(ll);
 if ll ~= ' ' && ~isempty(row.dominant_leg)
     row.lead_is_dominant = double(upper(row.dominant_leg(1)) == ll);
@@ -375,6 +394,7 @@ if any(isfinite(zz)), F.cam_peak_foot_h = max(zz, [], 'omitnan'); end
 if any(isfinite(Xs.heelM(i0:i1,3))), F.cam_heel_peak = max(Xs.heelM(i0:i1,3), [], 'omitnan'); end
 if isfinite(yb) && isfinite(yl), F.direction = dirStr(yl - yb); end
 F.spans0 = spans0(Xs.toeM(i0:i1,2));
+F.toeoff_t_cam = camLiftOff(Xs.toeM(i0:i1,3), t(i0:i1));
 if isObs && ~isempty(cpE)
     F.cam_min_clearance = minClearance(cpE);
     F.cam_takeoff_dist  = cpE.lift_dist;
@@ -475,7 +495,7 @@ end
 
 function keys = limbKeys(CFG)
 % Column suffixes that exist once per limb (prefix lead_ / trail_).
-keys = {'toeoff_t','landing_t','crossing_t_imu','crossing_t_cam','dur_toeoff_to_cross_s','dur_cross_to_landing_s'};
+keys = {'toeoff_t','landing_t','crossing_t_imu','crossing_t_cam','toeoff_t_cam','dur_toeoff_to_cross_s','dur_cross_to_landing_s'};
 for q = 1:size(CFG.segs,1)
     k = CFG.segs{q,1};
     keys = [keys, strcat(k, {'_max','_min','_rom','_t_max','_t_min','_max_corr','_min_corr'})]; %#ok<AGROW>
@@ -686,6 +706,15 @@ if isempty(c)
     if T == tb(end), c = numel(tb) - 1; else, return; end
 end
 ok = true;
+end
+
+function tl = camLiftOff(z, tt)
+% Camera toe lift-off: first sample at which the toe marker is > 10 mm above its stance height
+% (median of the stride's first 6 samples, the begin-ZVP foot-flat) for 4 consecutive samples.
+tl = NaN;  st = median(z(1:min(6, end)), 'omitnan');
+if ~isfinite(st) || numel(z) < 5, return; end
+up = z > st + 10;  j = find(up(1:end-3) & up(2:end-2) & up(3:end-1) & up(4:end), 1);
+if ~isempty(j), tl = tt(j); end
 end
 
 function v = sampleNear(M, idx, col, W)
@@ -901,6 +930,12 @@ for L = {'lead','trail'}
     l = L{1};
     S = add(S,[l '_crossing_t_cam'],'REFERENCE','s','Camera crossing instant: the toe passes y=0 (obstacle centre). Obstacle rows: lead/trail_cross_s from the crossings file + sync shift; level rows: detected y=0 crossing. Dot clock.','-','testN_crossings.xlsx + CameraSynced');
 end
+for L = {'lead','trail'}
+    l = L{1};
+    S = add(S,[l '_toeoff_t_cam'],'REFERENCE','s',['Camera toe lift-off: first sample of the stride at which the toe marker is > 10 mm above its stance height (median of the stride''s first 6 samples, ' ...
+        'begin-ZVP foot-flat) for 4 consecutive samples. Dot clock. The step-4 IMU toe-off (`_toeoff_t`, foot-angle minimum) comes late on the trailing limb of an obstacle crossing, ' ...
+        'which keeps pointing the toe down while it lifts (build_report.md, task 15); use this column for timing (e.g. the deadline of a cue for the trailing limb).'],'-','CameraSynced_TestN.mat');
+end
 S = add(S,'dot_cam_sync_offset_s','META','s','Camera->Dot clock shift (t_dot = t_cam + offset). Step 5: 3x left-leg raise; camera L_toe vertical-velocity peaks matched to the Left Foot (Dot) peaks; residual drift ~1 ms.','-','CameraSynced_TestN.mat (Cam.sync.shift_s)');
 for L = {'lead','trail'}
     l = L{1};
@@ -1066,7 +1101,14 @@ fprintf(fid, ['- **ZHC frame**: Dot global frame (gravity z-up, heading from the
 fprintf(fid, '- **Acceleration windows**: first / last %d%% of the swing.\n', round(100*CFG.accWinFrac));
 fprintf(fid, ['- **Level walks**: per level pass, the stride in which each toe crosses camera y = 0 (the obstacle location) moving +y, before the first labelled obstacle pass and outside every labelled one (the crossings file lists the level passes as unlabelled rows); both feet must be seen at y = 0; ' ...
     'lead = the foot that crosses first; same swing window and features.\n']);
-fprintf(fid, '- **Sync**: Dot clock = camera clock + `dot_cam_sync_offset_s` (step 5, 3x left-leg raise).\n\n');
+fprintf(fid, '- **Sync**: Dot clock = camera clock + `dot_cam_sync_offset_s` (step 5, 3x left-leg raise).\n');
+fprintf(fid, ['- **Curves file** (`Crossing_Curves_%s.csv`): per row, each limb''s swing curves at 0:2:100 %% of its swing (thigh / shank / foot tilt, foot |acc|, ZHC height and progression). ' ...
+    'The Test 106 thigh gate also applies there: the thigh curve of a limb with a gated thigh value is empty.\n'], CFG.cohort);
+fprintf(fid, ['- **Time-aligned file** (`Crossing_Aligned_%s.csv`): per row, both limbs'' Dot signals at fixed samples around the TRAILING toe lift-off seen by the camera ' ...
+    '(`trail_toeoff_t_cam`; k = %d..%d samples at 60 Hz = %.1f s to +%.1f s): thigh / shank / foot tilt (deg, same sign normalization), foot |acc| (m/s2, global frame, gravity removed) and foot height ' ...
+    'above the begin-ZVP of the stride that contains the sample (ZHC, mm; resets to 0 at every foot-flat). Columns `<role>_<signal>_s<m|p><k>`. ' ...
+    'Every sample with k < 0 is known before the trailing foot leaves the floor (real-time / cueing analyses). Same thigh gate; empty = outside the recording or no camera lift-off.\n\n'], ...
+    CFG.cohort, CFG.alignK(1), CFG.alignK(end), CFG.alignK(1) / 60, CFG.alignK(end) / 60);
 fprintf(fid, '## Study-design notes (v2)\n\n');
 fprintf(fid, ['- **Roles and crossing strides are camera-derived.** `leading_limb`, every lead_/trail_ assignment and the stride chosen for each limb come from the camera crossings file ' ...
     '(which foot passes y = 0 first, and the ZVP stride containing that instant). `role_imu` recovers the leading side from the Dot alone and `role_agree` / `imu_cross_stride_match` ' ...
@@ -1656,6 +1698,36 @@ for p = [P NaN]
     end
 end
 
+% ---------- 14. sampling and completeness ----------
+fprintf(fid, ['\n## Task 14. Sampling and signal completeness (Dot)\n\nTime base of the Dot recording (AllData), packet-counter steps other than 1 (dropped packets) ' ...
+    'and NaN samples of the Dot sensors, and Dot angle gaps inside the obstacle crossings (leading toe-off -> trailing landing).\n\n']);
+fprintf(fid, ['| participant | fs (Hz) | samples | sampling interval min-max (ms) | time gaps | Dot sensors | dropped / missing packets | ' ...
+    'NaN angle samples (worst sensor) | NaN acc samples (worst sensor) | crossings with a NaN Dot angle |\n|---|---|---|---|---|---|---|---|---|---|\n']);
+for k = 1:numel(QC)
+    q = QC{k};  if ~isfield(q, 'samp'), continue; end
+    s = q.samp;
+    fprintf(fid, '| %d | %g | %d | %.2f-%.2f | %d | %d | %d | %.3f%% | %.3f%% | %d |\n', q.tn, s.fs, s.n, 1000 * s.dtMin, 1000 * s.dtMax, ...
+        s.nGap, s.nDot, s.pktJump, 100 * s.nanAng, 100 * s.nanAcc, s.winNaN);
+end
+fprintf(fid, ['\nThe Test 106 thigh gate is also applied to the swing curves and the time-aligned file: the thigh curve of a gated limb is left empty ' ...
+    '(the dataset gates individual values; a curve that contains a gated value is not used).\n']);
+
+% ---------- 15. toe-off timing vs the camera ----------
+fprintf(fid, ['\n## Task 15. Toe-off timing: step-4 IMU event vs the camera toe lift-off\n\nStep 4 places the toe-off at the foot-angle minimum. ' ...
+    '`*_toeoff_t_cam` = first sample at which the camera toe marker is > 10 mm above its stance height for 4 consecutive samples. ' ...
+    'IMU minus camera (ms; + = the IMU event is later), and the foot-sensor height above its stance at the IMU event (`*_zhc_h_toeoff`). All rows with both times.\n\n']);
+fprintf(fid, '| rows | limb | n | IMU - camera, median (ms) | IQR (ms) | sensor height at the IMU toe-off, median (mm) |\n|---|---|---|---|---|---|\n');
+for lv = [0 1]
+    for pre = {'lead', 'trail'}
+        e = (T.([pre{1} '_toeoff_t']) - T.([pre{1} '_toeoff_t_cam'])) * 1000;  m = T.is_level == lv & isfinite(e);
+        fprintf(fid, '| %s | %s | %d | %+.0f | %+.0f to %+.0f | %.0f |\n', ternaryStr(lv == 1, 'level', 'obstacle'), pre{1}, nnz(m), median(e(m)), ...
+            prctile(e(m), 25), prctile(e(m), 75), median(T.([pre{1} '_zhc_h_toeoff'])(m), 'omitnan'));
+    end
+end
+fprintf(fid, ['\nOn the TRAILING limb of an obstacle crossing the foot keeps pointing the toe down while it lifts, so the foot-angle minimum (step-4 toe-off) comes ' ...
+    'well after the toe leaves the floor. The IMU events stay in the dataset (they define every swing feature, consistently with steps 4-9), but timing ' ...
+    'questions (when must a cue for the trailing limb arrive?) should use `trail_toeoff_t_cam`; the time-aligned file is anchored on it.\n']);
+
 % ---------- questions ----------
 fprintf(fid, ['\n## Questions for you\n\n1. Obstacle heights: what were the real bar heights before and after Test 105 (task 1)? Was the obstacle or its marker mount changed between 104 and 105? ' ...
     'Is the 20 mm marker-to-top offset right for both set-ups?\n' ...
@@ -1663,6 +1735,10 @@ fprintf(fid, ['\n## Questions for you\n\n1. Obstacle heights: what were the real
     '3. The Dot foot-sensor position on the shoe (distance from the toe tip, height above the sole): with the measured ankle-to-toe length it would let the toe vector be measured instead of fitted (task 3).\n' ...
     '4. Should the drift flag stay in `include_ml`, or should `include_ml_noflag` be the default?\n' ...
     '5. Level rows: add FeatureLog Level_Walk strides as extra level rows (different location definition), or keep the current ones?\n']);
+end
+
+function s = ternaryStr(c, a, b)
+if c, s = a; else, s = b; end
 end
 
 function r = rr(a, b)
@@ -1687,10 +1763,11 @@ function s = sgn0(x)
 if isfinite(x), s = sprintf('%+.0f', x); else, s = '-'; end
 end
 
-function writeCurves(f, D, CFG)
+function writeCurves(f, D, CFG, cleaned)
 % Lead and trail swing curves per row (same crossing_id as the dataset), 0:2:100 % swing.
 % Tilt in deg (sign-normalized as the _max/_min columns), foot acc |a| in m/s2, ZHC height
 % and progression in mm from the begin-ZVP. Empty = not available. FEATURE-type signals (Dot).
+% The thigh curve of a limb with a gated thigh value (Test 106 gate) is left empty.
 pq = round(linspace(0, 100, CFG.curveN));
 nm = {};
 for L = {'lead','trail'}
@@ -1698,6 +1775,76 @@ for L = {'lead','trail'}
         nm = [nm, arrayfun(@(v) sprintf('%s_%s_p%03d', L{1}, CFG.curveSig{k}, v), pq, 'UniformOutput', false)]; %#ok<AGROW>
     end
 end
-T = [D(:, {'crossing_id'}), array2table(round([D.lead_curve, D.trail_curve], 3), 'VariableNames', nm)];
+A = gateThigh([D.lead_curve, D.trail_curve], cleaned, CFG.curveN, CFG.curveN * numel(CFG.curveSig));
+T = [D(:, {'crossing_id'}), array2table(round(A, 3), 'VariableNames', nm)];
 writetable(T, f);
+end
+
+function writeAligned(f, D, CFG, cleaned)
+% Both limbs' Dot signals at fixed samples around the trailing toe lift-off (camera; CFG.alignK,
+% 60 Hz): columns <role>_<signal>_s<m|p><k>, k = samples (1/60 s) from that lift-off. Thigh gate
+% as in writeCurves.
+nK = numel(CFG.alignK);
+ks = arrayfun(@(k) sprintf('s%s%03d', signTag(k), abs(k)), CFG.alignK, 'UniformOutput', false);
+nm = {};
+for L = {'lead','trail'}
+    for k = 1:numel(CFG.alignSig), nm = [nm, strcat(L{1}, '_', CFG.alignSig{k}, '_', ks)]; end %#ok<AGROW>
+end
+A = gateThigh([D.lead_aligned, D.trail_aligned], cleaned, nK, nK * numel(CFG.alignSig));
+T = [D(:, {'crossing_id'}), array2table(round(A, 3), 'VariableNames', nm)];
+writetable(T, f);
+end
+
+function s = signTag(k)
+if k < 0, s = 'm'; else, s = 'p'; end
+end
+
+function A = gateThigh(A, cleaned, nThigh, nLimb)
+% Empty the thigh block (first nThigh values of each limb block of nLimb) where a thigh value of
+% that limb was gated in the dataset (cleaned_variables).
+for i = 1:size(A, 1)
+    for k = 1:2
+        pre = {'lead_thigh_', 'trail_thigh_'};
+        if contains(cleaned{i}, pre{k}), A(i, (k-1)*nLimb + (1:nThigh)) = NaN; end
+    end
+end
+end
+
+function A = alignedSignals(Xs, iRef, CFG)
+% One foot side's signals at samples iRef + CFG.alignK: thigh / shank / foot tilt (sign-normalized,
+% deg), foot |acc| (global, gravity removed, m/s2), and the foot height above the begin-ZVP of the
+% stride containing each sample (ZHC, mm). NaN outside the recording or where not available.
+K = CFG.alignK(:);  A = nan(numel(K), numel(CFG.alignSig));
+if ~isempty(Xs) && isfinite(iRef)
+    idx = iRef + K;  in = idx >= 1 & idx <= numel(Xs.accW);
+    for q = 1:size(CFG.segs,1)
+        S = Xs.(CFG.segs{q,1});
+        if ~isempty(S), A(in, q) = S.ang(idx(in)); end
+    end
+    A(in, 4) = Xs.accW(idx(in));
+    z = Xs.zvp;  Z = Xs.zhc;
+    if ~isempty(Z)
+        for j = find(in)'
+            c = find(z(1:end-1) <= idx(j) & idx(j) < z(2:end), 1);
+            if isempty(c) || c > size(Z,3), continue; end
+            r = idx(j) - z(c) + 1;
+            if r <= size(Z,1) && isfinite(Z(r,3,c)) && isfinite(Z(1,3,c)), A(j, 5) = (Z(r,3,c) - Z(1,3,c)) * 1000; end
+        end
+    end
+end
+A = A(:)';
+end
+
+function s = samplingQC(Data, t, fs)
+% Dot time base and completeness (task 14): sampling interval, time gaps, packet-counter steps
+% other than 1 (dropped packets) and NaN samples of the Dot sensors.
+dt = diff(t);  dotI = find(contains({Data.imu.label}, '(Dot)'));
+s = struct('fs', fs, 'n', numel(t), 'dtMin', min(dt), 'dtMax', max(dt), 'nGap', sum(dt > 1.5 / fs | dt <= 0), ...
+    'nDot', numel(dotI), 'pktJump', 0, 'nanAng', 0, 'nanAcc', 0, 'winNaN', NaN);
+for i = dotI
+    p = double(Data.imu(i).packet(:));  dp = diff(p);
+    s.pktJump = s.pktJump + sum(isfinite(dp) & abs(dp - 1) > 0.5) + sum(~isfinite(p));   % counters are stored as doubles
+    s.nanAng = max(s.nanAng, mean(any(isnan(Data.imu(i).euler_ZXY_deg), 2)));
+    s.nanAcc = max(s.nanAcc, mean(any(isnan(Data.imu(i).acc), 2)));
+end
 end

@@ -1,0 +1,40 @@
+\subsubsection{Does the camera confirm the scaling?}
+
+The foot lift above is measured by the Dot foot sensor (on the top of the foot). The camera toe marker confirms the scaling but with a
+smaller slope (Table~\ref{tab:validityslopes}): +8.8\,mm (leading) and +7.5\,mm (trailing) per cm of obstacle, against +10.1 and
++11.1\,mm for the sensor. The sensor rises more than the toe, especially on the trailing foot, which crosses heel-up. Crossing by
+crossing (Table~\ref{tab:validityagree}), the sensor rise agrees well with the camera toe rise for the leading foot (bias +8\,mm,
+$r = 0.82$, within person 0.90) and less for the trailing foot (bias +48\,mm, $r = 0.62$); the provisional rigid-body toe estimate
+removes the trailing bias but not the scatter. Together with the flat clearance slope (Table~\ref{tab:lme}), people raise the toe by
+slightly less than the obstacle height and accept a marginally smaller clearance for higher obstacles (not significant).
+
+\begin{table}[htbp]
+\centering
+\caption{Foot lift per cm of obstacle measured by the camera toe marker and by the Dot (mixed model, 95\,\% CI).}
+\label{tab:validityslopes}
+\input{tables/validate_validity_slopes}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Agreement of the Dot foot lift with the camera toe rise, per crossing (Bland--Altman bias, SD and 95\,\% limits; correlation
+overall and within participant).}
+\label{tab:validityagree}
+\input{tables/validate_validity_agree}
+\end{table}
+
+\subsubsection{No anticipation in the approach}
+
+None of the variables available before the leading foot leaves the floor changes with obstacle height (Table~\ref{tab:anticipation}):
+the two approach strides, the approach speed and the leading-foot stance all have slopes indistinguishable from zero and explain at
+most 1\,\% of the within-person variance; the camera trailing-foot placement before the obstacle explains 4\,\%. The four IMU
+approach variables classify the height at chance level (forest 41.6\,\%, logistic regression 30.8\,\%, permutation $p = 0.75$).
+The adaptation to the obstacle height happens inside the crossing step itself, starting at the leading toe-off.
+
+\begin{table}[htbp]
+\centering
+\caption{Anticipation: change per cm of obstacle of the variables before the crossing step (mixed model) and their within-person
+$\eta^2$.}
+\label{tab:anticipation}
+\input{tables/validate_anticipation}
+\end{table}

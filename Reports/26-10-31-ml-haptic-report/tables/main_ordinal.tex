@@ -1,0 +1,16 @@
+\begin{adjustbox}{max width=\textwidth}
+{\scriptsize
+\begin{tabular}{llrrrrr}
+\toprule
+\textbf{model} & \textbf{features} & \textbf{bal. acc} & \textbf{95\% CI} & \textbf{H1$<$$\rightarrow$H3 errors} & \textbf{MAE of class (\% LL)} & \textbf{MAE of expected height (\% LL)} \\
+\midrule
+nominal & lead only & 62.1\% & 55--70 & 2 & 3.9 & 4.2 \\
+ordinal & lead only & 63.3\% & 55--71 & 4 & 3.8 & 4.1 \\
+nominal & all & 53.7\% & 45--63 & 4 & 4.8 & 4.9 \\
+ordinal & all & 54.1\% & 45--64 & 3 & 4.7 & 4.7 \\
+nominal & lead foot peak height (1 feature) & 63.6\% & 52--76 & 3 & 3.8 & 4.6 \\
+ordinal & lead foot peak height (1 feature) & 63.1\% & 52--75 & 2 & 3.8 & 4.7 \\
+\bottomrule
+\end{tabular}
+}
+\end{adjustbox}

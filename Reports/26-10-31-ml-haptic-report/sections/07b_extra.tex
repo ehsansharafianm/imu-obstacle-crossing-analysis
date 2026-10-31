@@ -1,0 +1,119 @@
+\section{Additional result tables}
+\label{app:extra}
+
+These tables complete Section~\ref{sec:results}; they are copied from the same analysis reports.
+
+\begin{table}[H]
+\centering
+\caption{Headline runs of the main analysis: all features or one limb, raw or level-calibrated, logistic regression or forest,
+with macro-F1, permutation $p$ and the 95th percentile of the permutation null.}
+\label{tab:headline}
+\input{tables/main_headline}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Height and width per segment and limb with the generic (level-calibrated) logistic regression.}
+\label{tab:segmentslevel}
+\input{tables/main_segments_level}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Permutation tests of the separate-limb models (labels shuffled within participant).}
+\label{tab:limbsperm}
+\input{tables/main_limbs_perm}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Ordinal model and confidence of the generic logistic regression (height).}
+\label{tab:ordinal}
+\input{tables/main_ordinal}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Personal calibration with $k$ labelled crossings per height from the new person (logistic regression; $w$ = weight of the
+person's crossings).}
+\label{tab:personalcal}
+\input{tables/main_personalcal}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Person scaling learned during use (causal): accuracy of the crossings after the first 5, 10, 15 or 20.}
+\label{tab:causal}
+\input{tables/main_causal}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Nested selection, per left-out participant: setting chosen on the training participants and its accuracy.}
+\label{tab:nestedpp}
+\input{tables/main_nested}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Within-person ranking: a generic model's height score ranks one person's crossings, which are split into thirds (no labels;
+assumes the person crossed a mix of heights).}
+\label{tab:ranking}
+\input{tables/explore_ranking}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Self-training on the new person (pseudo-labels from confident predictions).}
+\label{tab:selftrain}
+\input{tables/explore_selftrain}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Personal calibration with the clearance-shape features ($k$ labelled crossings per height).}
+\label{tab:fewshot}
+\input{tables/explore_fewshot}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Dose-response per participant: change per cm of obstacle (median and range over participants).}
+\label{tab:dose}
+\input{tables/story_dose}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Adaptation over the five repeats of an obstacle (deviation from the participant $\times$ obstacle mean, 95\,\% CI).}
+\label{tab:adapt}
+\input{tables/story_adapt}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Features most driven by the obstacle height within person, and how much the person explains for them.}
+\label{tab:persontop}
+\input{tables/story_person_top}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Which leg leads: per participant, dominant leg, side that led, share led with the dominant leg, by height.}
+\label{tab:leads}
+\input{tables/story_leads}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Camera-free pipeline: all-correct crossings per participant.}
+\label{tab:streampp}
+\input{tables/stream_e2e_pp}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Camera-free pipeline, learning during use: each crossing scaled with the earlier detected crossings only.}
+\label{tab:streamcausal}
+\input{tables/stream_causal}
+\end{table}

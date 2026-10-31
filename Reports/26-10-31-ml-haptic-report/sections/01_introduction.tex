@@ -1,0 +1,75 @@
+\section{Goals of the work and how to read this report}
+\label{sec:intro}
+
+This report documents, step by step, how the obstacle-crossing data of Tests 101--110 were turned into a machine-learning
+dataset, which models were trained on it, how they were tested, what they showed, and what the results mean for a
+wearable device that warns the user about an obstacle through a vibration (haptic) cue. It is written so that every number
+can be traced back: each method is given with its formula and its MATLAB implementation, and every table of results is
+generated directly from the analysis reports in \vn{Results/ML Models/MATLAB/}.
+
+\subsection{Research questions}
+\label{sec:questions}
+
+\begin{enumerate}[label=\textbf{Q\arabic*}]
+  \item \textbf{How do people cross?} How do young adults adapt the movement of the leading and trailing limb to the height
+  and width of an obstacle, where in the swing does this adaptation appear, and how much does it differ between people?
+  \item \textbf{Can wearables recognise the obstacle?} Can obstacle height (three levels) and width (two levels) be
+  recognised from the Movella Dot IMUs alone, for a person the model has never seen?
+  \item \textbf{What would a device need?} Which sensors, how much information about the new user (calibration), how it
+  behaves in a realistic session, without any camera, and in real time.
+  \item \textbf{When and how should a haptic cue be given?} From which limb and body segment, at which moment, and with
+  which threshold, so that a cue for the trailing limb arrives before that limb leaves the floor.
+\end{enumerate}
+
+\subsection{Main findings}
+
+\begin{keybox}[Answers in one page]
+\begin{description}[leftmargin=0.3cm,style=nextline,itemsep=3pt]
+  \item[Q1 How people cross] Each foot is lifted by about the obstacle height (leading foot +10.1\,mm per cm, trailing +11.1\,mm per cm,
+  measured by the foot sensor), through leading-thigh flexion and trailing heel-up, while the clearance stays constant. Height shows
+  most in the trailing foot early in its swing and in the leading foot around its apex. Each person has a strong walking signature
+  (one crossing identifies the person in 99\,\% of cases) and a personal obstacle margin. Nothing in the approach steps anticipates
+  the height.
+  \item[Q2 Recognition] Height (3 levels): generic models 56--73\,\%; with person scaling (no labels) 90--92\,\% for a new person;
+  2.4\,cm error as a number; an unseen middle height is interpolated with 3.1\,cm error. Width: 54--66\,\% (chance 50\,\%),
+  because people barely change how they cross a deeper obstacle.
+  \item[Q3 Device] Two foot IMUs are enough (92.3\,\%); one labelled crossing gives 80\,\%, 10--15 unlabelled crossings 81--85\,\%;
+  in a realistic mixed session the device reaches 90\,\% from crossing 16 on; without any camera 86\,\% of the crossings are found,
+  paired and classified correctly.
+  \item[Q4 Haptic cue] Cue the trailing limb from the leading limb, at the latest at the leading-foot apex (about 0.45\,s before the
+  trailing toe leaves the floor); the leading landing is too late (0.2\,s). Detect the crossing from the leading thigh or foot
+  (97--99\,\%); grade the height with personal thresholds (64--73\,\% with one signal, 71--76\,\% with the multi-feature real-time
+  model); the trailing limb's own signals come too late for a cue.
+\end{description}
+\end{keybox}
+
+\subsection{Overall approach}
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Dataset} (Section~\ref{sec:data}). One row per obstacle crossing (or level walk) with both limbs, built by
+  \vn{Analysis/ML/build_crossing_master.m} from the outputs of the processing pipeline (steps 1--9). Wearable (Dot) values
+  are the only model inputs; camera values are kept as reference.
+  \item \textbf{Evaluation rule} (Section~\ref{sec:eval}). Every accuracy is measured on a participant left out of training
+  (leave-one-participant-out). Every fitted step (imputation, scaling, feature selection, model) uses the training
+  participants only.
+  \item \textbf{Models} (Section~\ref{sec:models}). Logistic regression, random forests, support vector machines, boosted
+  trees, ensembles, a 1D convolutional network, regression models and a physics-informed offset model.
+  \item \textbf{Analyses} (Section~\ref{sec:analyses}). Nine MATLAB scripts, each answering part of Q1--Q4
+  (Table~\ref{tab:analysis-map}).
+  \item \textbf{Haptic design} (Sections~\ref{sec:res-haptic} and \ref{sec:discussion}). Timing of the crossing events
+  and single-signal thresholds that a simple cueing rule could use.
+\end{enumerate}
+
+\subsection{How to read the numbers}
+
+\begin{itemize}
+  \item \textbf{Balanced accuracy} is the mean of the per-class recalls; it is the main metric. Chance is
+  33.3\,\% for height (three classes), 50\,\% for width and 16.7\,\% for the six obstacles.
+  \item \textbf{95\,\% CI} = participant bootstrap: the ten participants are resampled with replacement 2000 times.
+  \item \textbf{H1 / H2 / H3} = obstacle heights of 10 / 20 / 30\,\% of the participant's leg length;
+  \textbf{W1 / W2} = obstacle widths (depth along the walkway) of 5 / 15\,cm.
+  \item \textbf{Leading / trailing limb} = the first / second limb to cross the obstacle.
+  \item \textbf{Generic model} = the features are only referenced to the person's normal (level) walking;
+  \textbf{person scaling} = each feature is additionally scaled with the person's own crossings (median and
+  inter-quartile range), without using any obstacle label (Section~\ref{sec:norm}).
+\end{itemize}

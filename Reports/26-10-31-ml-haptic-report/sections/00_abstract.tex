@@ -1,0 +1,11 @@
+Ten young adults crossed obstacles of three heights (10, 20 and 30\,\% of leg length) and two widths (5 and 15\,cm) while wearing
+six Movella Dot IMUs (thigh, shank and foot of both legs), with camera motion capture as reference. From the processed recordings
+a crossing-level dataset was built (349 rows: 303 obstacle crossings, 46 level walks; 260 crossings used for machine learning), and
+nine MATLAB analyses were run, every accuracy being measured on a participant left out of training. People lift each foot by about
+the obstacle height (10.1\,mm per cm for the leading foot, 95\,\% CI 9.4--10.8) and keep a constant safety margin, but each person
+has a strong walking signature and a personal obstacle margin. Generic models therefore recognise the obstacle height of a new
+person in only 56--73\,\% of crossings (chance 33\,\%), whereas scaling the features with the person's own crossings, without any
+label, gives 90--92\,\%; two foot IMUs are enough (92.3\,\%, 95\,\% CI 87--96), the height can be estimated in centimetres with a
+2.4\,cm error, and a camera-free pipeline that finds the crossings, pairs the two limbs and classifies the height is fully correct
+for 86\,\% of the crossings. Obstacle width is not recognisable (54--66\,\%, chance 50\,\%) because people barely change how they
+cross a deeper obstacle. \input{sections/00b_abstract_haptic}

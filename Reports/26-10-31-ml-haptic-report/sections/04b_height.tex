@@ -1,0 +1,233 @@
+\subsection{Recognising obstacle height (Q2)}
+\label{sec:res-height}
+
+\subsubsection{Generic models versus person scaling}
+
+Table~\ref{tab:limbs} is the central result. A \emph{generic} model (features referenced only to the person's level walk)
+recognises the height of an unseen person's obstacle in 56--62\,\% of cases (chance 33\,\%). Scaling the features with the
+person's own crossings (no labels) raises this to 80--90\,\%, the best being separate random forests for the leading and
+trailing limb combined by soft vote: 90.0\,\% (85--95). The same holds for the six obstacles (29--30\,\% generic, 61\,\% with
+person scaling; chance 17\,\%). Width stays close to chance with every setting (Section~\ref{sec:res-width}).
+
+\begin{table}[htbp]
+\centering
+\caption{Height, width and the six obstacles from all Dot features of the leading limb, the trailing limb, or both (soft vote);
+level-walk (generic) vs person (self) scaling; logistic regression vs random forest. Balanced accuracy (95\,\% CI).}
+\label{tab:limbs}
+\input{tables/main_limbs}
+\end{table}
+
+Figure~\ref{fig:limbs} shows the same comparison for logistic regression, with two tasks the Dot solves almost perfectly: which
+limb a swing belongs to, and whether a stride crosses an obstacle (Tables~\ref{tab:leadtrail} and \ref{tab:obslevel}). The generic
+model's errors are almost all between neighbouring heights (Figure~\ref{fig:confusion}): H1 and H3 are confused in only 4 of 170
+crossings, but the middle height H2 is recognised in only 39\,\% of cases (50\,\% with the leading limb alone). More training
+participants would not close the gap (Figure~\ref{fig:learning}): with all features the generic model stays at 54--57\,\% from 2 to
+9 training participants, and the leading-limb models gain at most 2 points from 6 to 9 participants. The limit of the generic
+model is the difference between people, not the amount of data.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{fig_limbs.png}
+\caption{Separate models for the leading and the trailing limb and their soft-vote fusion (logistic regression): obstacle height, width
+and the six obstacles, obstacle crossing versus level-walk stride, and which limb a swing belongs to. Bar colour = scaling: raw
+features (light grey), generic level-walk calibration (grey), person scaling (purple). Whiskers = 95\,\% participant-bootstrap
+CI; dashed = chance. Source: \vn{crossing_ml_matlab.m}, part 3.}
+\label{fig:limbs}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{fig_confusion.png}
+\caption{Confusion matrices of the generic model (logistic regression on level-walk-calibrated features): height from all features,
+height from the leading limb only, and width. Cell = share of the true class (row) and number of crossings.}
+\label{fig:confusion}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{fig_learning_curve.png}
+\caption{Learning curve of the generic model (height, logistic regression): each participant is predicted by a model trained on $n$
+randomly chosen other participants (40 draws per $n$). Band = 10th--90th percentile over the draws; dashed = chance.}
+\label{fig:learning}
+\end{figure}
+
+\subsubsection{Better inputs and models}
+
+\paragraph{Clearance-shape features.} Thirteen numbers describing how long and how far the foot stays high
+(Section~\ref{sec:features}) beat the 57 summary features in a generic model: 72.8\,\% vs 62.1\,\% with the leading limb and
+logistic regression (permutation $p = 0.003$; Table~\ref{tab:inputs}). With person scaling they match the summary features
+(89.7\,\% vs 90.4\,\% with the forest vote). The full swing curves do not add to the summary features.
+
+\begin{table}[htbp]
+\centering
+\caption{Inputs compared: 57 summary features, 13 clearance-shape features, the swing curves and their combinations
+(height; balanced accuracy, 95\,\% CI and the worst participant).}
+\label{tab:inputs}
+\input{tables/explore_inputs}
+\end{table}
+
+\paragraph{Models.} Random forests and boosted trees are the best single models with person scaling (88--90\,\%, soft vote);
+the SVM and logistic regression are a few points lower (Table~\ref{tab:models}). A soft-vote ensemble of eight models reaches
+91.5\,\%. The 1D convolutional network on the raw swing curves reaches 88.0\,\% with person scaling (Table~\ref{tab:cnn}) without
+any hand-made feature, but no better than the forest on engineered features at this sample size.
+
+\begin{table}[htbp]
+\centering
+\caption{Models compared with person scaling (height; balanced accuracy, 95\,\% CI, worst participant).}
+\label{tab:models}
+\input{tables/explore_models}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{1D convolutional network on the six swing curves of each limb (balanced accuracy).}
+\label{tab:cnn}
+\input{tables/story_cnn}
+\end{table}
+
+\paragraph{Honest selection.} Choosing the best setting by its test result is optimistic, so the choice was repeated inside each
+training set (nested LOPO, Table~\ref{tab:nested}). Among generic settings the fair estimate is 69.4\,\% (58--80); among all 36
+settings 91.5\,\% (86--97), with the person-scaled forest vote chosen in every fold (with summary + shape features in 9 of
+10). Figure~\ref{fig:explore} summarises what each idea adds.
+
+\begin{table}[htbp]
+\centering
+\caption{Nested selection of the setting (chosen inside each training set).}
+\label{tab:nested}
+\input{tables/explore_nested}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{fig_explore.png}
+\caption{Left: obstacle-height accuracy of the main ideas (bar = all participants with 95\,\% CI, diamond = worst participant;
+grey = generic, light purple = ranks the person's own crossings, purple = person scaling). Right: generic model of the leading limb
+plus a short personal calibration with $k$ labelled crossings per height.}
+\label{fig:explore}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{What worked: summary of the model-improvement ideas (from \vn{ml_explore_matlab.md}).}
+\label{tab:worked}
+\input{tables/explore_summary}
+\end{table}
+
+\subsubsection{Which segment and limb carries the information}
+
+With person scaling (Table~\ref{tab:segments}), the foot is the best site: the foot angles alone give 88.1\,\% and the foot
+trajectory 89.2\,\%. The thigh carries the leading limb's information (77.4\,\% leading, 44.2\,\% trailing) and the shank the
+trailing limb's (78.2\,\% trailing, 49.8\,\% leading), matching where height appears in the signals (Figure~\ref{fig:map}). The
+foot acceleration alone is weak.
+
+Without person scaling (Figure~\ref{fig:featuresets}) every feature set predicts the height above its permutation null
+($p \leq 0.037$), but the best set, the leading foot angles, reaches only 66.5\,\%. The limb pattern is the same as with person
+scaling: the thigh and the foot angles carry more in the leading limb, the shank in the trailing limb. Width stays at 46--59\,\%,
+around its null.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{fig_feature_sets.png}
+\caption{Generic model (logistic regression, level-walk calibration) for each Dot feature set: balanced accuracy for an unseen
+participant, height (left) and width (right). Bar colour = limb of the set (blue = leading, orange = trailing, green = both);
+black tick = 95th percentile of the permutation null (labels shuffled within participant); dashed = chance.}
+\label{fig:featuresets}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{Height accuracy per segment and limb with person scaling (logistic regression and random forest).}
+\label{tab:segments}
+\input{tables/main_segments_self}
+\end{table}
+
+\subsubsection{When the height is known}
+
+Using only the leading limb's data available up to a given moment of its swing (Table~\ref{tab:timing},
+Figure~\ref{fig:settings}), the person-scaled forest already reaches 52\,\% at the leading toe-off, about 80\,\% by its apex
+(50\,\% of the swing, a median 458\,ms before the trailing toe leaves the floor) and 88.5\,\% at 70\,\% of the swing (355\,ms
+before). The generic model stays at 41--65\,\%. With logistic regression (Figure~\ref{fig:cueing}) the generic model rises
+from 42\,\% at the leading toe-off to about 60\,\% by the leading foot apex and stays there.
+
+\begin{table}[htbp]
+\centering
+\caption{Height from the leading limb's data up to $x$\,\% of its swing, with the median time left before the trailing toe
+lift-off (camera).}
+\label{tab:timing}
+\input{tables/main_timing}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{fig_settings.png}
+\caption{Left: height accuracy by segment and limb with person scaling (random forest; blue = leading, orange = trailing,
+green = both limbs; 95\,\% CI). Right: height from the leading-limb data available so far, generic (grey) vs person scaling (purple),
+against the median time relative to the trailing toe lift-off (band = 95\,\% CI).}
+\label{fig:settings}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{fig_cueing_time.png}
+\caption{Generic model (logistic regression) using the leading-limb data available up to each moment of its swing (labels = \% of the
+swing), against the median time relative to the trailing toe lift-off. Band = 95\,\% participant-bootstrap CI; vertical lines =
+median leading foot apex, leading landing and trailing toe lift-off; dashed = chance.}
+\label{fig:cueing}
+\end{figure}
+
+\subsubsection{Height as a number}
+
+Regressing the obstacle height in centimetres (Table~\ref{tab:cm}), the person-scaled forest vote has a mean absolute error of
+2.39\,cm ($r = 0.91$); rounding to the nearest of the person's three nominal heights gives 84.8\,\%. Neighbouring heights are
+8.3--10.6\,cm apart, so the typical error is about a quarter of a step.
+
+\begin{table}[htbp]
+\centering
+\caption{Obstacle height in centimetres (regression), and the class nearest to the estimate.}
+\label{tab:cm}
+\input{tables/story_cm}
+\end{table}
+
+\subsubsection{Per participant, and two easier tasks}
+
+With person scaling the accuracy is 83--100\,\% for nine participants and 73\,\% for participant 108
+(Table~\ref{tab:perparticipant}; the reason is shown in Section~\ref{sec:res-device}). Two related tasks are solved almost
+perfectly by the Dot: telling the leading from the trailing limb's swing (100\,\%, Table~\ref{tab:leadtrail}) and telling an
+obstacle crossing from a level-walk stride (100\,\%, Table~\ref{tab:obslevel}).
+
+The generic model varies much more between people (Figure~\ref{fig:participants}): 31--74\,\% with all features and 42--85\,\% with
+the leading limb only. Participant 108 reaches 85\,\% from the leading limb alone but only 38\,\% with all features and 31\,\% with
+the trailing limb, whose lift is the least consistent in the group (Section~\ref{sec:res-device}).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{fig_participants.png}
+\caption{Generic model (logistic regression) for each participant when left out of training: all features (green), the leading limb
+only (blue) and the trailing limb only (orange). Dashed = chance.}
+\label{fig:participants}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{Height accuracy for each left-out participant.}
+\label{tab:perparticipant}
+\input{tables/main_perparticipant}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\caption{Leading or trailing limb, from one swing.}
+\label{tab:leadtrail}
+\input{tables/main_leadtrail}
+\end{minipage}\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\caption{Obstacle crossing or level-walk stride.}
+\label{tab:obslevel}
+\input{tables/main_obslevel}
+\end{minipage}
+\end{table}
+
+\input{sections/04b2_generalisation}

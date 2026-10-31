@@ -1,0 +1,62 @@
+\documentclass[11pt,a4paper]{article}
+
+% ---------------------------------------------------------------------------
+% Machine learning and haptic-cue report, obstacle crossing with wearable IMUs
+% Compile with pdfLaTeX (Overleaf default). Run twice for references.
+% ---------------------------------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,longtable,array,multirow}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{tcolorbox}
+\usepackage[section]{placeins}   % floats stay within their section
+\extrafloats{120}                 % many tables and figures
+\usepackage[colorlinks=true,linkcolor=blue!45!black,citecolor=blue!45!black,urlcolor=blue!45!black]{hyperref}
+
+\definecolor{hl}{RGB}{253,236,224}
+\captionsetup{font=small,labelfont=bf}
+\setlist{itemsep=2pt,topsep=4pt}
+\setlength{\parskip}{4pt}
+\renewcommand{\arraystretch}{1.12}
+\graphicspath{{figures/}}
+
+% variable / column names (underscores allowed)
+\newcommand{\vn}[1]{\texttt{\detokenize{#1}}}
+% key-finding box
+\newtcolorbox{keybox}[1][]{colback=blue!3!white,colframe=blue!45!black,fonttitle=\bfseries,title={#1},boxrule=0.6pt,arc=2pt}
+
+\title{\textbf{Recognising obstacle height with wearable IMUs and timing a haptic cue}\\[4pt]
+\large Dataset, methods, results and interpretation of the machine-learning and haptic analyses\\ (10 young adults, Tests 101--110)}
+\author{Ehsan Sharafian}
+\date{31 October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\input{sections/00_abstract}
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\input{sections/01_introduction}
+\input{sections/02_dataset}
+\input{sections/03_methods}
+\input{sections/04_results}
+\input{sections/05_discussion}
+\input{sections/06_reproducibility}
+
+\appendix
+\input{sections/07_appendix}
+
+\end{document}

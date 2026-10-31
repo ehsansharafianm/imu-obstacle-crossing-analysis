@@ -1,0 +1,37 @@
+\subsection{Obstacle width}
+\label{sec:res-width}
+
+Width (5 vs 15\,cm, chance 50\,\%) is recognised only slightly above chance with any input or model: 54--65\,\% with the Dot
+summary features (Table~\ref{tab:limbs}) and at most 66\,\% with new width-specific features (Table~\ref{tab:explorewidth}).
+The generic model recognises the 5\,cm obstacle in 62\,\% and the 15\,cm one in 53\,\% of crossings (Figure~\ref{fig:confusion}, right).
+For all six obstacles, person scaling reaches 61\,\% (chance 17\,\%); the errors are almost all between the two widths of the
+same height (Table~\ref{tab:sixconf}).
+
+\begin{table}[htbp]
+\centering
+\caption{Width with new features (person scaling): clearance-shape features, step-relative ratios and their combination.}
+\label{tab:explorewidth}
+\input{tables/explore_width}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Six-obstacle confusion matrix (person scaling, forest, soft vote; rows = true obstacle W[width]H[height]).}
+\label{tab:sixconf}
+\input{tables/main_six_confusion}
+\end{table}
+
+\paragraph{Is the limit the sensor or the behaviour?} The camera sees where the feet are placed relative to the obstacle, which
+the IMUs cannot. Even so, the 10\,cm wider obstacle changes the foot placement by only a few centimetres (crossing step
++37\,mm, Table~\ref{tab:storywidth}), and width classified from the camera foot placement reaches only 57.6\,\%. The side-to-side
+(out-of-plane) motion of the thigh, shank and foot does not help either (Table~\ref{tab:lateral}, Figure~\ref{fig:lateral}).
+The width limit is therefore behavioural: people cross a 5 and a 15\,cm deep obstacle in almost the same way.
+
+\begin{table}[htbp]
+\centering
+\caption{Effect of width on the foot placement seen by the camera and on the Dot trajectory (W2 $-$ W1, median over participants).}
+\label{tab:storywidth}
+\input{tables/story_width}
+\end{table}
+
+\input{sections/04c2_lateral}

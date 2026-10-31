@@ -1,0 +1,79 @@
+\subsubsection{What the device model relies on}
+
+For the final two-foot model (person scaling, forest vote, 92.3\,\%), shuffling all features of one foot within each left-out
+participant costs 33.4 points (trailing foot) and 24.5 points (leading foot): the model uses both feet
+(Table~\ref{tab:importance}). Within a foot, the foot-trajectory summaries matter most (about 6 points each), followed by the
+clearance-shape features (about 3) and the foot tilt and angular velocity (about 2); the foot acceleration hardly matters. No single
+feature costs more than 2.5 points (Table~\ref{tab:importancetop}): the information is spread over redundant features, the most
+useful being how high each foot rises (peak foot height, height at 25\,\% of the trailing swing) and the trailing stance time.
+
+\begin{table}[htbp]
+\centering
+\begin{minipage}{0.52\textwidth}
+\centering
+\caption{Permutation importance of feature groups (accuracy drop, mean $\pm$ SD over 10 shuffles).}
+\label{tab:importance}
+\input{tables/validate_importance_groups}
+\end{minipage}\hfill
+\begin{minipage}{0.44\textwidth}
+\centering
+\caption{The 12 most important single features.}
+\label{tab:importancetop}
+\input{tables/validate_importance_top}
+\end{minipage}
+\end{table}
+
+\subsubsection{Statistics for the main comparisons}
+
+\paragraph{Paired differences.} On the same crossings (Table~\ref{tab:paired}), person scaling adds 34.8 points to the two-foot
+model (95\,\% CI +22.3 to +46.2), and the 13 clearance-shape features add 10.7 points to a generic model (+4.9 to +16.9). Six IMUs
+are not better than two foot IMUs (+1.1, CI $-0.5$ to +3.0), and the trailing foot adds 3.5 points to the leading foot alone (CI
+$-1.0$ to +7.2, not significant with ten participants).
+
+\begin{table}[htbp]
+\centering
+\caption{Paired comparisons on the same crossings (participant bootstrap of the difference).}
+\label{tab:paired}
+\input{tables/validate_paired}
+\end{table}
+
+\paragraph{Errors.} The final model recognises 95\,\% of H1, 90\,\% of H2 and 91\,\% of H3 crossings; its errors are almost all
+between neighbouring heights (one H3 crossing was called H1; Table~\ref{tab:confusion}).
+
+\paragraph{Can the probabilities be trusted?} The person-scaled forest is \emph{under}-confident (Table~\ref{tab:reliability},
+Figure~\ref{fig:validate}): crossings for which it states 55\,\% are right 80\,\% of the time, and from 0.7 upward it is right
+96--100\,\% of the time. Its Brier score is 0.18, against 0.51 for the generic model (Table~\ref{tab:brier}). A confidence
+threshold is therefore safe for this model: the stated probability understates its reliability.
+
+\begin{table}[htbp]
+\centering
+\begin{minipage}{0.4\textwidth}
+\centering
+\caption{Confusion matrix of the final model.}
+\label{tab:confusion}
+\input{tables/validate_confusion}
+\end{minipage}\hfill
+\begin{minipage}{0.56\textwidth}
+\centering
+\caption{Brier score and expected calibration error (ECE).}
+\label{tab:brier}
+\input{tables/validate_brier}
+\end{minipage}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Reliability: crossings grouped by the stated top-class probability; number, mean stated probability and observed accuracy.}
+\label{tab:reliability}
+\input{tables/validate_reliability}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{fig_validate.png}
+\caption{Validation. V1: height error when a height level is missing from training (grey = trained on all heights, green = this
+height left out; light = ridge, dark = forest). V3: what explains the crossing-to-crossing clearance (blue = leading, orange =
+trailing limb). V4: accuracy lost when a feature group of the final model is shuffled (permutation importance). V5: reliability of
+the stated probabilities (grey = generic, purple = person scaling, dashed = perfect calibration).}
+\label{fig:validate}
+\end{figure}

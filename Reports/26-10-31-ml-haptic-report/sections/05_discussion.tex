@@ -1,0 +1,57 @@
+\section{Interpretation and recommendations}
+\label{sec:discussion}
+
+\subsection{What the results mean}
+
+\paragraph{A simple physical rule, a strong personal component.} Young adults clear an obstacle by lifting each foot by about the
+obstacle height (about 10\,mm per cm) while keeping their safety margin, mainly through leading-thigh flexion and trailing heel-up.
+On top of this rule every person has a large personal component: a walking signature that identifies them from a single crossing,
+and a personal obstacle margin that varies between people by two thirds of the step between two heights. This explains the
+central result of the machine learning: a model that has never seen the person confuses neighbouring heights (generic models
+56--73\,\%), while scaling the features with the person's own crossings, without any label, removes the personal component and
+gives 90--92\,\% for a new person.
+
+\paragraph{What the wearables can and cannot recognise.} Obstacle \emph{height} is recognisable, as a class and as a number
+(about 2.4\,cm error), with two foot IMUs, from the leading limb early enough to cue the trailing limb, and without any camera.
+Obstacle \emph{width} (5 vs 15\,cm) is not, and the reason is behavioural: people barely change how they cross, so neither the
+camera foot placement nor the side-to-side motion separates the widths. The \emph{toe clearance} of a crossing depends mostly on
+how high the toe itself goes; the foot sensor tracks this only partly, so clearance estimation needs a better toe-height estimate
+(Section~\ref{sec:res-clearance}).
+
+\paragraph{Robustness of the evaluation.} Every accuracy is for an unseen participant, every fitted step stays inside the training
+participants, the main settings were also chosen by nested selection, permutation tests reject chance ($p \leq 0.003$), and an
+independent Python implementation of the main models agrees with MATLAB (logistic regression: mean absolute difference 0.0 points
+over 76 results, maximum 0.4; random forest: 0.9 points over 39 results, maximum 2.2, because the two libraries grow different
+trees). The person scaling uses each person's own crossings
+without their labels, which is exactly the information a device collects while it is worn.
+
+\input{sections/05b_haptic_recommendations}
+
+\subsection{Limitations}
+\label{sec:limitations}
+
+\begin{itemize}
+  \item \textbf{Ten young adults.} All results are feasibility results; they need confirmation on new participants and on the
+  target users (older adults), whose crossing strategies and reaction times differ.
+  \item \textbf{Blocked obstacle order.} Real sessions mix obstacles; the mixed order was simulated by shuffling the recorded
+  crossings, which assumes that a crossing does not depend on the previous obstacle.
+  \item \textbf{Camera-defined roles and strides.} Most analyses take the leading/trailing roles and crossing strides from the camera;
+  the IMU recovers them (100\,\% role agreement on the detected crossings, 95\,\% fully paired in the camera-free pipeline), and the
+  camera-free pipeline gives the end-to-end figure.
+  \item \textbf{Feature design after the first results.} The clearance-shape features were designed after the first models, guided
+  by biomechanics; a small optimism may remain in their generic-model gain.
+  \item \textbf{Trailing toe-off event.} The step-4 toe-off of the trailing limb comes about 0.23\,s after the toe leaves the floor; the
+  trailing swing features are consistently defined by that event, and all timing statements use the camera lift-off instead.
+  \item \textbf{Offline simulation of real time.} The real-time cue is simulated on recorded data; the reaction time to a vibration and
+  the effect of the cue on the crossing were not measured.
+\end{itemize}
+
+\subsection{Next steps}
+
+\begin{enumerate}
+  \item Record more participants, including older adults, and run the obstacles in a mixed order.
+  \item Implement the cue on the device (two foot IMUs, leading-limb trigger) and measure the reaction time and the effect of the cue
+  on the trailing-foot clearance.
+  \item Measure the foot-sensor position on the shoe so the toe height can be computed instead of fitted, to estimate clearance.
+  \item Test obstacles of other heights and depths (e.g.\ kerbs and steps) to confirm the generalisation to unseen heights.
+\end{enumerate}

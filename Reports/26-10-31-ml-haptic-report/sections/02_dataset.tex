@@ -1,0 +1,177 @@
+\section{The dataset}
+\label{sec:data}
+
+\subsection{Participants, protocol and sensors}
+
+Ten young adults (6 women, 4 men, 20--31 years) walked along a walkway and crossed six obstacles: three heights
+(H1, H2, H3 = 10, 20 and 30\,\% of their own leg length) $\times$ two widths (W1 = 5\,cm, W2 = 15\,cm deep along the
+walkway), about five times each, plus level walks with no obstacle. The obstacles were run in blocks (about five
+consecutive repeats of the same obstacle, block order different between participants). Table~\ref{tab:participants}
+gives the participants, their nominal obstacle heights in centimetres and the number of rows used.
+
+\begin{itemize}
+  \item \textbf{Wearables:} six Movella Dot IMUs (thigh, shank and foot of both legs), sampled at 60\,Hz. They provide the
+  segment orientation (Euler angles), acceleration, angular velocity and quaternion.
+  \item \textbf{Reference:} a camera motion-capture system (toe and heel markers of both feet, obstacle markers),
+  synchronised to the Dot clock with three left-leg raises at the start of the session (step~5 of the pipeline).
+  \item \textbf{Leg length} (participant sheet) defines the obstacle heights and normalises lengths.
+\end{itemize}
+
+\begin{table}[htbp]
+\centering
+\caption{Participants and rows of the dataset. H1/H2/H3 = nominal obstacle heights (10/20/30\,\% of the leg length).
+``Used (ML)'' = rows with \vn{include_ml} = 1 (Section~\ref{sec:quality}).}
+\label{tab:participants}
+\begin{adjustbox}{max width=\textwidth}
+\small
+\input{tables/participants}
+\end{adjustbox}
+\end{table}
+
+\subsection{From recordings to one row per crossing}
+\label{sec:rows}
+
+The dataset is built by \vn{Analysis/ML/build_crossing_master.m}. It only reads the outputs of the processing pipeline
+(steps 1--9) and writes \vn{Results/ML Dataset/}. One row is one obstacle crossing (participant $\times$ obstacle $\times$
+repeat) or one level walk; both limbs are in the same row, named by their role (\vn{lead_}, \vn{trail_}).
+
+\begin{description}[leftmargin=0.4cm,style=nextline]
+  \item[Stride] Zero-velocity point (ZVP) to the next ZVP of the same foot (mid-stance to mid-stance), from the Dot foot
+  sensor (step 4).
+  \item[Swing] The step-4 toe-off (minimum of the foot sagittal angle after the stride's first ZVP) to the step-4
+  heel-strike (maximum of the foot angle) inside that stride. All ``\% swing'' values use this window
+  (0 = toe-off, 100 = heel-strike).
+  \item[Crossing stride and roles] From the camera crossings file: the leading limb is the foot that passes the obstacle
+  centre ($y = 0$) first; for each limb, the crossing stride is the ZVP stride that contains the moment its toe passes
+  $y = 0$. The Dot alone recovers the same leading side and strides (\vn{role_imu}, Section~\ref{sec:res-device}).
+  \item[Level walks] The strides in which each toe crosses the obstacle line ($y = 0$) during the level passes before the
+  first obstacle; the foot that crosses first is called ``lead''.
+  \item[Segment angles] Sagittal tilt of the thigh, shank and foot (Dot Euler angle about the medio-lateral axis),
+  sign-normalised per participant and side with the step-9 templates: maximum = thigh flexion / shank forward /
+  toe-up; minimum = thigh backward / shank backward (heel-up) / toe-down.
+  \item[Foot trajectory (ZHC)] The foot sensor's 3-D position, integrated from the acceleration over each stride with a
+  zero-velocity update and a level-ground correction (step 4). Height is relative to the stride's first ZVP
+  (foot flat), progression along the stride direction.
+  \item[Foot acceleration] Magnitude of the foot acceleration in the global frame, gravity removed.
+\end{description}
+
+\subsection{Variables}
+\label{sec:variables}
+
+The master file has 193 columns (Table~\ref{tab:vargroups}); every column is defined in Appendix~\ref{app:variables}
+(Table~\ref{tab:variables}). Naming rules of the wearable features (per limb, prefix \vn{lead_} or \vn{trail_}):
+
+\begin{itemize}
+  \item \vn{<segment>_max}, \vn{_min}, \vn{_rom}: largest and smallest tilt in the swing and their difference (deg);
+  \vn{_t_max}, \vn{_t_min}: when they occur (\% swing); \vn{_max_corr}, \vn{_min_corr}: the same extremes minus the
+  stride's own starting angle (removes the sensor mounting offset).
+  \item \vn{<segment>_av_max}, \vn{_av_min}, \vn{_av_t_max}, \vn{_av_t_min}, \vn{_av_toeoff}: angular velocity (deg/s, time
+  derivative of the tilt) extremes, their timing and the value at toe-off.
+  \item \vn{foot_acc_peak_start}, \vn{foot_acc_peak_land}, \vn{foot_acc_rms_swing}: foot acceleration in the first and last
+  25\,\% of the swing and over the whole swing (m/s$^2$).
+  \item \vn{zhc_peak_foot_h}: highest foot-sensor height in the swing (mm), with its time \vn{zhc_peak_h_t} and progression
+  \vn{zhc_peak_h_x}; \vn{zhc_h_25}, \vn{_50}, \vn{_75}: height at 25/50/75\,\% of the swing; \vn{zhc_h_toeoff},
+  \vn{zhc_h_landing}; peak vertical and forward speeds.
+  \item Gait: \vn{swing_time}, \vn{stance_time}, \vn{stride_len_app1/2} (the two strides before the crossing),
+  \vn{speed_approach}, \vn{speed_cross}, \vn{cadence}.
+  \item Camera reference (never an input): minimum clearance, take-off and landing distances, toe-marker peak, obstacle
+  height, and the camera toe lift-off time \vn{toeoff_t_cam} (Section~\ref{sec:toeoff}).
+\end{itemize}
+
+\begin{table}[htbp]
+\centering
+\caption{Column groups of \vn{Crossing_Master_YoungAdults.csv} and their roles.}
+\label{tab:vargroups}
+\small
+\input{tables/variable_groups}
+\end{table}
+
+\paragraph{Model inputs.} Only FEATURE columns (wearable) are model inputs: 114 in the dictionary, of which 110 are used
+(the two step lengths were never computable, and the two toe-height columns are excluded because their sensor-to-toe vector
+was fitted with the camera). They split into 57 leading-limb features (including the approach strides), 52 trailing-limb
+features and the crossing duration. Additional inputs are derived from the curve files:
+
+\begin{table}[htbp]
+\centering
+\caption{Feature sets used by the models.}
+\label{tab:featuresets}
+\small
+\begin{tabular}{@{}p{4.4cm} r p{9.4cm}@{}}
+\toprule
+\textbf{Set} & \textbf{Size} & \textbf{Content} \\
+\midrule
+Summary features & 110 & All FEATURE columns (57 leading, 52 trailing, 1 shared). \\
+Foot-IMU device set & 46 / 41 & Leading / trailing foot: foot tilt and angular velocity, foot acceleration, foot trajectory,
+swing and stance time (+ approach strides for the leading foot) and the 13 clearance-shape features. \\
+Thigh or shank set & 12 per limb & Tilt and angular-velocity features of that segment. \\
+Clearance-shape features & 13 per limb & From the swing curves of foot height and progression: peak height, progression to
+the peak, horizontal distance and \% of swing spent above 50/70/80/90\,\% of the peak, foot tilt at the apex, progression
+after the apex, rise/fall steepness ratio. \\
+Swing curves & $6 \times 51$ per limb & Thigh, shank and foot tilt, foot acceleration, foot height and progression at
+0, 2, \ldots, 100\,\% of the swing (\vn{Crossing_Curves_YoungAdults.csv}). \\
+Time-aligned signals & $5 \times 127$ per limb & Thigh, shank and foot tilt, foot acceleration and foot height at fixed
+samples from $-1.5$\,s to $+0.6$\,s around the trailing toe lift-off (\vn{Crossing_Aligned_YoungAdults.csv}). \\
+Stride features & 12 + 6 & For every stride of the session (camera-free pipeline): 12 features of the foot trajectory, and
+6 ``online'' features known at the foot apex. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Quality control and inclusion}
+\label{sec:quality}
+
+\paragraph{Inclusion flags.} \vn{include_biomech} = gait events present, Dot data present and no data-quality flag.
+\vn{include_ml} additionally requires a plausible foot trajectory (stride length 200--2500\,mm, peak height 10--800\,mm) and no
+integration-drift flag. Of 303 obstacle rows, 260 are used (Table~\ref{tab:exclusions}); of 46 level walks, 39.
+The 260 crossings are balanced across heights (H1 88, H2 90, H3 82) and widths (W1 127, W2 133).
+
+\begin{table}[htbp]
+\centering
+\caption{Obstacle rows not used by the ML analyses (first reason that applies).}
+\label{tab:exclusions}
+\small
+\input{tables/exclusions}
+\end{table}
+
+\paragraph{Sampling and completeness.} The Dot recordings were audited for this report (Table~\ref{tab:sampling}): the
+time base is exactly 60\,Hz in every test, with no gaps or repeated samples, no dropped packets and no missing Dot samples
+inside any crossing.
+
+\begin{table}[htbp]
+\centering
+\caption{Dot sampling audit (build report, task 14).}
+\label{tab:sampling}
+\input{tables/sampling}
+\end{table}
+
+\paragraph{Test 106 thigh values.} In Test 106 a few thigh values were outliers (more than $3 \times 1.4826$ median
+absolute deviations from the participant $\times$ obstacle $\times$ role median, the step-9 rule). They are set to empty in the
+dataset (26 values in 13 crossings, all logged with the original value in \vn{exclusions_log.csv}), and the thigh curve of
+the same limb is left empty in the curve files.
+
+\paragraph{Toe-off timing.}
+\label{sec:toeoff}
+The step-4 toe-off is the minimum of the foot angle. On the trailing limb of an obstacle crossing the foot keeps pointing
+its toe down while it lifts, so this minimum comes well after the toe has left the floor (Table~\ref{tab:toeoff}): the
+camera toe marker leaves the floor a median 233\,ms earlier, when the foot sensor is already 356\,mm up at the IMU event.
+The IMU events are kept (they define all swing features consistently with steps 4--9), and a camera toe lift-off
+(\vn{lead_toeoff_t_cam}, \vn{trail_toeoff_t_cam}: first sample at which the toe marker is more than 10\,mm above its stance
+height for four consecutive samples) was added for timing questions. In this report the deadline of a cue for the
+trailing limb is always the camera toe lift-off.
+
+\begin{table}[htbp]
+\centering
+\caption{Step-4 IMU toe-off minus camera toe lift-off (build report, task 15).}
+\label{tab:toeoff}
+\input{tables/toeoff}
+\end{table}
+
+\subsection{Files}
+
+\begin{description}[leftmargin=0.4cm,style=nextline]
+  \item[\vn{Crossing_Master_YoungAdults.csv}] 349 rows $\times$ 193 columns (303 obstacle crossings, 46 level walks).
+  \item[\vn{Crossing_Curves_YoungAdults.csv}] Swing curves of both limbs, 51 points per signal.
+  \item[\vn{Crossing_Aligned_YoungAdults.csv}] Both limbs' signals at 127 fixed samples around the trailing toe lift-off.
+  \item[\vn{data_dictionary.md}, \vn{build_report.md}, \vn{exclusions_log.csv}] Definitions, checks and every cleaned or
+  missing value with its reason.
+\end{description}

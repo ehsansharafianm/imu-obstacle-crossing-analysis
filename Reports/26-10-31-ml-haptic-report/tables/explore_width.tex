@@ -1,0 +1,15 @@
+\begin{adjustbox}{max width=\textwidth}
+{\footnotesize
+\begin{tabular}{lllrrr}
+\toprule
+\textbf{features} & \textbf{norm} & \textbf{model} & \textbf{lead} & \textbf{trail} & \textbf{fusion} \\
+\midrule
+summary & self & logreg & 64.6\% (63--67; worst 60\%) & 58.5\% (53--65; worst 46\%) & 64.3\% (59--69; worst 50\%) \\
+summary & self & boost & 60.9\% (56--66; worst 48\%) & 60.4\% (56--65; worst 46\%) & 61.2\% (56--67; worst 46\%) \\
+shape & self & logreg & 56.8\% (51--61; worst 41\%) & 64.6\% (59--71; worst 52\%) & 64.6\% (58--71; worst 44\%) \\
+ratio & self & logreg & 59.5\% (52--65; worst 37\%) & 60.2\% (55--66; worst 45\%) & 62.6\% (56--68; worst 42\%) \\
+ratio + summary & self & logreg & 62.7\% (59--66; worst 54\%) & 62.7\% (57--69; worst 50\%) & 66.2\% (61--72; worst 57\%) \\
+\bottomrule
+\end{tabular}
+}
+\end{adjustbox}

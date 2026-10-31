@@ -1,0 +1,26 @@
+\begin{adjustbox}{max width=\textwidth}
+{\footnotesize
+\begin{tabular}{p{7.6cm}p{4.4cm}r}
+\toprule
+\textbf{approach} & \textbf{what the device needs from the new user} & \textbf{accuracy} \\
+\midrule
+generic model (logistic), level-walk scaling & a short normal walk & 56.4\% \\
+generic model (forest), level-walk scaling & a short normal walk & 57.5\% \\
+generic model (logistic), lead-foot clearance-shape features only, level-walk scaling & a short normal walk & 72.8\% \\
+offset model, population offset & nothing & 56.3\% \\
+offset model, offset from the level walk & a short normal walk & 56.9\% \\
+offset model, 1 labelled crossing of ANY height & 1 crossing with known height & 80.3\% \\
+offset model, 1 labelled crossing per height & 3 crossings with known heights & 87.8\% \\
+offset model, unlabelled crossings (mixture, spacing fixed by physics) & the session's crossings, no labels & 77.0\% \\
+weighted logistic, 1 labelled crossing per height & 3 crossings with known heights & 74.6\% \\
+person scaling from the first 5 crossings (forest) & 5 unlabelled crossings & 60.4\% \\
+person scaling from the first 10 crossings (forest) & 10 unlabelled crossings & 66.5\% \\
+person scaling from the first 15 crossings (forest) & 15 unlabelled crossings & 67.9\% \\
+person scaling from the random 5 crossings (forest) & 5 unlabelled crossings & 71.4\% \\
+person scaling from the random 10 crossings (forest) & 10 unlabelled crossings & 81.2\% \\
+person scaling from the random 15 crossings (forest) & 15 unlabelled crossings & 85.1\% \\
+person scaling from all crossings (forest) & all the session's crossings, no labels & 92.3\% \\
+\bottomrule
+\end{tabular}
+}
+\end{adjustbox}

@@ -1,0 +1,119 @@
+\subsection{How people cross an obstacle (Q1)}
+\label{sec:res-biomech}
+
+\subsubsection{Foot lift scales one-to-one with obstacle height}
+
+Each participant lifts both feet almost exactly by the obstacle height (Figure~\ref{fig:strategy}). In the mixed model with a
+random intercept and slope per participant (Table~\ref{tab:lme}), the leading foot rises by 10.1\,mm and the trailing foot by
+11.1\,mm per cm of obstacle. The lift comes from 1.2\textdegree{} more leading-thigh flexion per cm and 1.2\textdegree{} more
+backward tilt (heel-up) of the trailing shank per cm. The camera clearance margin does not change significantly with height:
+people keep a nearly constant safety margin and simply raise the foot by the obstacle height.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{fig_story_strategy.png}
+\caption{Crossing strategy. Top: foot lift measured by the Dot (foot-sensor rise above its stance height) against the nominal
+obstacle height, leading (left) and trailing (right) foot; dots = crossings, one line per participant. Bottom left: the slope of each
+participant (black bar = median; dashed = one-to-one, 10\,mm per cm). Bottom right: deviation of the foot lift from the participant
+$\times$ obstacle mean over the five repeats of an obstacle (95\,\% CI). Source: \vn{crossing_ml_story.m}.}
+\label{fig:strategy}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{Mixed-effects scaling with obstacle height: $y = \beta_0 + \beta_1 h + u_{0p} + u_{1p} h + \varepsilon$, slope $\beta_1$
+per cm of obstacle (Satterthwaite CI and $p$).}
+\label{tab:lme}
+\input{tables/story_lme}
+\end{table}
+
+\paragraph{Adaptation over repeats.} The first crossing of a new obstacle has the highest leading-foot lift (+11.7\,mm above the
+participant $\times$ obstacle mean, 95\,\% CI +4.7 to +19.9); later repeats scatter around the mean without a steady trend
+(Figure~\ref{fig:strategy}, bottom right; Table~\ref{tab:adapt} in Appendix~\ref{app:extra}).
+
+\subsubsection{Where and when the obstacle shows in the signals}
+
+Figure~\ref{fig:map} shows, for every signal and every 2\,\% of the swing, the share of within-person variance explained by
+height and by width ($\eta^2$). Table~\ref{tab:map} lists the peaks. Height is written most clearly in the trailing foot height
+early in its swing ($\eta^2 = 0.76$ at 20\,\%), the trailing shank tilt at push-off (0.66 at 4\,\%), the leading foot height
+around the apex (0.62 at 48\,\%) and the leading thigh tilt (0.47 at 60\,\%). The leading shank and leading foot tilt carry
+little height information. Width never explains more than 8\,\% of any signal at any moment.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{fig_story_map.png}
+\caption{Within-person effect size $\eta^2$ of obstacle height (left) and width (right) at each moment of the swing, for the six
+Dot swing signals of the leading (top, blue) and trailing (bottom, orange) limb, on the same scale. Dashed line = median foot apex.}
+\label{fig:map}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{Peak $\eta^2$ of height and width per signal, and the share of variance explained by the participant (raw signals).}
+\label{tab:map}
+\input{tables/story_map}
+\end{table}
+
+\subsubsection{Every walker has a strong signature}
+
+The participant explains far more variance than the obstacle: the median $\eta^2$ of the person over the 110 features is
+0.42, that of height 0.02 (0.05 within person), and the person dominates in 99 of 110 features (Table~\ref{tab:person},
+Figure~\ref{fig:person}). A logistic model identifies the participant from the features of a single crossing with 99.2\,\%
+balanced accuracy (5-fold, chance 10\,\%). In a 2-D map of all crossings (t-SNE, Figure~\ref{fig:embed}) the raw features
+cluster by participant (silhouette 0.48, by height $-0.04$); after person scaling they order by height (silhouette by height
+0.26). This is the main reason why a model that has never seen the person is limited (Section~\ref{sec:res-height}).
+
+\begin{table}[htbp]
+\centering
+\caption{Variance explained by the participant vs by the obstacle height (median over the 110 features).}
+\label{tab:person}
+\input{tables/story_person}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{fig_story_person.png}
+\caption{Variance explained per feature by the participant (purple), by the obstacle height (grey), and by the height within each
+participant (green); box = median and quartiles over the Dot features.}
+\label{fig:person}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{fig_story_embed.png}
+\caption{t-SNE map of all crossings. Left: raw features coloured by participant. Right: person-scaled features coloured by
+obstacle height (light to dark = H1 to H3). Silhouette (separation of the groups, $-1$ to 1) in the panel titles.}
+\label{fig:embed}
+\end{figure}
+
+\subsubsection{The personal obstacle margin}
+
+Per participant, the foot lift predicted by their own dose-response line at the cohort's mean obstacle height is their
+``personal margin''. It differs between people by about two thirds of the step between neighbouring heights
+(Table~\ref{tab:margin}: SD 64\,mm vs a 98\,mm step for the leading foot) and is barely predictable from the person's normal
+walking ($r = 0.43$) or leg length ($r = 0.20$). An unseen person's margin therefore shifts every crossing toward a
+neighbouring height, which caps generic models (Section~\ref{sec:res-height}).
+
+\begin{table}[htbp]
+\centering
+\caption{Personal obstacle margin: spread across participants vs the step between heights.}
+\label{tab:margin}
+\input{tables/story_margin}
+\end{table}
+
+\subsubsection{The two legs}
+
+The leading leg is not chosen by dominance: 45\,\% of the crossings were led with the dominant leg, and most participants
+alternate (Table~\ref{tab:leads} in Appendix~\ref{app:extra}); the Dot recovers which leg leads in 100\,\% of the crossings
+(Table~\ref{tab:leadtrail}). Within a crossing, once the shared obstacle effect is removed, the two legs vary independently
+($\lvert r\rvert \leq 0.12$, Table~\ref{tab:coupling}): the leading leg tells how high the obstacle is, not whether the trailing
+foot will under-lift on this crossing.
+
+\begin{table}[htbp]
+\centering
+\caption{Coupling of the two legs: correlation of the crossing-to-crossing deviations from each participant $\times$ obstacle mean.}
+\label{tab:coupling}
+\input{tables/story_coupling}
+\end{table}
+
+\input{sections/04a2_validity}

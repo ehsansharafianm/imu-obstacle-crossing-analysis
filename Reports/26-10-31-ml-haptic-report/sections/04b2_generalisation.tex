@@ -1,0 +1,33 @@
+\subsubsection{Generalisation to obstacles not seen in training}
+\label{sec:res-general}
+
+\paragraph{Unseen heights.} Real obstacles have arbitrary heights, so the regression was also trained with one height level removed
+from the training data (Table~\ref{tab:unseenheight}). Interpolation works: a ridge model that never saw the middle height (H2)
+estimates it with a 3.1\,cm mean absolute error and puts 79\,\% of those crossings at the right level (88\,\% when trained on all
+heights). Extrapolation is biased toward the trained range: an unseen lowest or highest height is over- or under-estimated by about
+half a step (+4.0 and $-5.7$\,cm). The random forest cannot extrapolate at all (an unseen H1 or H3 is off by a full step), and the
+generic models are worse throughout. A device for obstacles of any height should therefore be trained on obstacles that span the
+heights it will meet, with a model that scales linearly with height.
+
+\begin{table}[htbp]
+\centering
+\caption{Height in cm when a height level is missing from training (person scaling). Cells: mean absolute error in cm (mean signed
+error, + = too high); ``right level'' = the estimate is closest to the person's true nominal height.}
+\label{tab:unseenheight}
+\input{tables/validate_unseen_height}
+\end{table}
+
+\paragraph{Unseen width.} Height recognition trained on crossings of one width only and tested on the other width loses about
+6.5 points compared with training on the same width with the same amount of data (86.2\,\% vs 92.7\,\%, Table~\ref{tab:unseenwidth}):
+although width itself is barely recognisable, the obstacle depth slightly changes how the height shows in the foot motion, so
+training data should include obstacles of different depths.
+
+\begin{table}[htbp]
+\centering
+\caption{Height recognition tested on one width, trained on the same width, the other width only, or both (two foot IMUs, person
+scaling, forest vote).}
+\label{tab:unseenwidth}
+\input{tables/validate_unseen_width}
+\end{table}
+
+\input{sections/04b3_whatmodel}

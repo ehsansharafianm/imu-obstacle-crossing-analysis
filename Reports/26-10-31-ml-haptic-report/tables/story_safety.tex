@@ -1,0 +1,16 @@
+\begin{adjustbox}{max width=\textwidth}
+{\footnotesize
+\begin{tabular}{p{4.6cm}p{4cm}p{6.2cm}}
+\toprule
+\textbf{task} & \textbf{inputs} & \textbf{result} \\
+\midrule
+regression of trail clearance (mm) & trail Dot features, self, forest & MAE 85 mm (predicting the mean: 84); r 0.04; within-person r median 0.28 \\
+regression of lead clearance (mm) & lead Dot features, self, forest & MAE 49 mm (predicting the mean: 46); r $-$0.06; within-person r median 0.18 \\
+regression of trail clearance (mm) & LEAD Dot features (cueing), self, forest & MAE 90 mm (predicting the mean: 84); r $-$0.14; within-person r median 0.08 \\
+detect trailing clearance $\leq$ 0 mm (15 events) & trail Dot features, self, forest & AUC 0.73 \\
+detect trailing clearance $\leq$ 30 mm (24 events) & trail Dot features, self, forest & AUC 0.70 \\
+detect trailing clearance $\leq$ 50 mm (30 events) & trail Dot features, self, forest & AUC 0.63 \\
+\bottomrule
+\end{tabular}
+}
+\end{adjustbox}

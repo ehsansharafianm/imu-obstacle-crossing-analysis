@@ -1,0 +1,46 @@
+\section{Reproducing the results}
+\label{sec:repro}
+
+Everything runs in MATLAB R2023b (Statistics and Machine Learning, Deep Learning and Parallel Computing toolboxes) from
+\vn{Analysis/ML/}. The dataset is built first; each analysis script then writes its report to \vn{Results/ML Models/MATLAB/},
+saves the numbers behind its figures in \vn{figdata/} there, and draws them with \vn{crossing_ml_figures.m}. That script holds all
+figure code in the plot template of the step 9 group figures (Arial; bold 16-pt axis labels and panel titles, 13-pt tick labels;
+2-pt axes box without grid; blue = leading, orange = trailing limb; 300-dpi PNG) and can be run alone to redraw every figure in
+seconds. Every analysis script accepts a quick-test flag (fewer permutations and bootstrap draws).
+
+\begin{table}[htbp]
+\centering
+\caption{Scripts, outputs and run times of the full rerun used in this report (8 parallel workers).}
+\label{tab:repro}
+\footnotesize
+\begin{tabular}{@{}p{4.3cm} p{6.3cm} p{4.6cm}@{}}
+\toprule
+\textbf{Call} & \textbf{Outputs} & \textbf{Notes} \\
+\midrule
+\vn{build_crossing_master} & \vn{Results/ML Dataset/}: master, curves and time-aligned CSV files, dictionary, build report,
+exclusions log & About 4 minutes. \\
+\vn{crossing_ml_matlab()} & \vn{ml_report_matlab.md}, \vn{ml_results_matlab.csv}, \vn{fig_feature_sets}, \vn{fig_confusion},
+\vn{fig_participants}, \vn{fig_cueing_time}, \vn{fig_learning_curve}, \vn{fig_limbs}, \vn{fig_settings} & Includes the permutation
+tests. \\
+\vn{crossing_ml_explore(false)} & \vn{ml_explore_matlab.md}, \vn{ml_explore_results.csv}, \vn{fig_explore.png} & \\
+\vn{crossing_ml_story([], false)} & \vn{ml_story_matlab.md}, \vn{fig_story_*.png} & The CNN takes most of the time. \\
+\vn{crossing_ml_stream()} & \vn{ml_stream_matlab.md}, \vn{fig_stream.png} & \\
+\vn{crossing_ml_device(false)} & \vn{ml_device_matlab.md}, \vn{fig_device.png} & \\
+\vn{crossing_ml_realworld(false)} & \vn{ml_realworld_matlab.md}, \vn{fig_realworld.png} & 30 shuffled session orders. \\
+\vn{crossing_ml_lateral()} & \vn{ml_lateral_matlab.md}, \vn{fig_lateral.png} & \\
+\vn{crossing_ml_validate(false)} & \vn{ml_validate_matlab.md}, \vn{fig_validate.png} & \\
+\vn{crossing_ml_haptic(false)} & \vn{ml_haptic_matlab.md}, \vn{fig_haptic.png}, \vn{fig_haptic_curves.png} & Needs the time-aligned
+file. \\
+\vn{crossing_ml_figures} & all 19 \vn{fig_*.png} from \vn{figdata/*.mat} & Seconds; no analysis rerun. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Shared building blocks} (\vn{mlTools.m}): data loading from the dictionary (\vn{load}), level-walk and person scaling
+(\vn{calibrate}, \vn{selfnorm}), the model pipelines (\vn{fitPipe}, \vn{predictPipe}), LOPO (\vn{lopo}), balanced accuracy,
+bootstrap CIs and permutation tests (\vn{balAcc}, \vn{bootCI}, \vn{permTest}), curve and stride features (\vn{shapeFeats},
+\vn{cutFeatures}, \vn{strideTable}), the curve readers (\vn{loadCurvesBoth}, \vn{loadAligned}) and \vn{figures} (saves the
+numbers behind a figure group and draws it with \vn{crossing_ml_figures}).
+
+\paragraph{Determinism.} Random forests, shuffles and bootstrap draws use fixed seeds, so a rerun gives the same numbers
+(to the last digit for the deterministic parts; the CNN can vary by a fraction of a point with the parallel scheduling).

@@ -11,6 +11,9 @@ classdef mlTools
 %              >= 3 classes, sigmoid for 2 - the scikit-learn lbfgs objective)
 %     forest : median imputation -> TreeBagger (MinLeafSize 2, sqrt(p) predictors per split,
 %              uniform class prior ~ class_weight 'balanced')
+%     svm    : median imputation -> z-score -> RBF SVM (ECOC one-vs-one, kernel scale 'auto')
+%     boost  : median imputation -> boosted shallow trees (AdaBoostM2; GentleBoost for 2 classes)
+%     (svm / boost scores are turned into class probabilities with a softmax)
 
     methods (Static)
 
@@ -98,7 +101,7 @@ classdef mlTools
 
         %% ---------------- models ----------------
         function s = spec(kind, varargin)
-            % spec('logreg', 'C', 0.1, 'k', 0) | spec('forest', 'nTrees', 500)
+            % spec('logreg', 'C', 0.1, 'k', 0) | spec('forest', 'nTrees', 500) | spec('svm') | spec('boost')
             s = struct('kind', kind, 'C', 0.1, 'k', 0, 'nTrees', 500, 'seed', 0);
             for i = 1:2:numel(varargin), s.(varargin{i}) = varargin{i+1}; end
         end
@@ -124,6 +127,16 @@ classdef mlTools
                     P.tb = TreeBagger(s.nTrees, X, y, 'Method', 'classification', 'MinLeafSize', 2, ...
                         'NumPredictorsToSample', max(1, floor(sqrt(size(X,2)))), 'Prior', 'Uniform', ...
                         'Options', statset('UseParallel', false));
+                case 'svm'
+                    P.mu = mean(X, 1);  sd = std(X, 0, 1);  sd(sd == 0) = 1;  P.sd = sd;
+                    rng(s.seed, 'twister');
+                    P.tb = fitcecoc((X - P.mu) ./ sd, y, 'Learners', templateSVM('KernelFunction', 'gaussian', ...
+                        'KernelScale', 'auto', 'BoxConstraint', 1));
+                case 'boost'
+                    rng(s.seed, 'twister');
+                    meth = 'AdaBoostM2';  if numel(P.classes) == 2, meth = 'GentleBoost'; end
+                    P.tb = fitcensemble(X, y, 'Method', meth, 'NumLearningCycles', 200, ...
+                        'Learners', templateTree('MaxNumSplits', 8), 'LearnRate', 0.1);
             end
         end
 
@@ -142,6 +155,12 @@ classdef mlTools
                     [~, sc] = predict(P.tb, X);
                     [~, j] = ismember(P.classes, P.tb.ClassNames);
                     Pr = sc(:, j);
+                case {'svm', 'boost'}
+                    if strcmp(P.s.kind, 'svm'), X = (X - P.mu) ./ P.sd; end
+                    [~, sc] = predict(P.tb, X);
+                    [~, j] = ismember(P.classes, P.tb.ClassNames);
+                    sc = sc(:, j);  sc = exp(sc - max(sc, [], 2));
+                    Pr = sc ./ sum(sc, 2);
             end
         end
 
@@ -300,6 +319,137 @@ classdef mlTools
             end
         end
 
+        function C = loadCurvesBoth(root, ids)
+            % C.(lead|trail).(signal) = n x 51 swing curves (0:2:100 % swing), rows matched to ids.
+            f = fullfile(root, 'Results', 'ML Dataset', 'Crossing_Curves_YoungAdults.csv');
+            o = detectImportOptions(f);  o = setvartype(o, 'crossing_id', 'char');
+            A = readtable(f, o);  [~, j] = ismember(ids, A.crossing_id);
+            for limb = {'lead', 'trail'}
+                for sg = {'thigh','shank','foot','footacc','zhc_h','zhc_x'}
+                    cols = A.Properties.VariableNames(startsWith(A.Properties.VariableNames, [limb{1} '_' sg{1} '_p']));
+                    M = nan(numel(ids), numel(cols));  M(j > 0, :) = A{j(j > 0), cols};
+                    C.(limb{1}).(sg{1}) = M;
+                end
+            end
+        end
+
+        function [P, names] = shapeFeats(Cl)
+            % Clearance-shape features of one limb from its ZHC height / progression curves and
+            % foot tilt (0:2:100 % swing): peak height, progression to the peak, horizontal
+            % distance and % of swing spent above 50/70/80/90 % of the peak, foot tilt at the
+            % apex, progression after the apex, rise / fall steepness ratio. NaN if the curve is
+            % incomplete or the peak is not above the stance level.
+            H = Cl.zhc_h;  X = Cl.zhc_x;  A = Cl.foot;  n = size(H, 1);
+            th = [0.5 0.7 0.8 0.9];  nt = numel(th);
+            P = nan(n, 2 + 2 * nt + 3);
+            for i = 1:n
+                h = H(i,:);  x = X(i,:);
+                if any(~isfinite(h)) || any(~isfinite(x)), continue; end
+                [pk, ip] = max(h);
+                if pk <= 0, continue; end
+                P(i, 1) = pk;  P(i, 2) = x(ip) - x(1);
+                for k = 1:nt
+                    a = find(h >= th(k) * pk);
+                    P(i, 2 + k) = x(a(end)) - x(a(1));
+                    P(i, 2 + nt + k) = (a(end) - a(1)) * 2;
+                end
+                P(i, end-2) = A(i, ip);
+                P(i, end-1) = x(end) - x(ip);
+                P(i, end) = max(diff(h)) / max(-diff(h));
+            end
+            names = [{'h_peak', 'x_to_peak'}, arrayfun(@(t) sprintf('x_above_%02d', round(100*t)), th, 'UniformOutput', false), ...
+                arrayfun(@(t) sprintf('t_above_%02d', round(100*t)), th, 'UniformOutput', false), {'foot_at_apex', 'x_after_peak', 'rise_fall'}];
+        end
+
+        function S = strideTable(root, T)
+            % Every ZVP->ZVP stride of both feet in the sessions of the dataset's participants.
+            % Columns: tn, side, cyc, t0 (stride start, Dot clock), cls (lead / trail / level /
+            % other, from the dataset rows), cid (crossing_id), hcls (height class),
+            % 12 full-stride features (strideFeat) and 6 online features available at the foot
+            % apex (apexFeat, prefixed a_).
+            rows = {};
+            for tn = unique(T.participant_id)'
+                d = load(fullfile(root, 'Results', 'Parameters Output', sprintf('Test %d', tn), sprintf('SegmentedParams_Test%d.mat', tn)), 'Seg');
+                Sg = d.Seg;  Tp = T(T.participant_id == tn, :);
+                for sd = 'LR'
+                    z = Sg.(['zvp' sd]);  tz = Sg.zhc.(sd).tZvp;  PT = Sg.zhc.(sd).posTime;
+                    n = min(numel(z) - 1, size(PT, 3));
+                    cls = repmat("other", n, 1);  cid = repmat("", n, 1);  hc = repmat("", n, 1);
+                    for r = 1:height(Tp)
+                        ll = Tp.leading_limb{r};  if isempty(ll), continue; end
+                        tl = 'R';  if ll == 'R', tl = 'L'; end
+                        lab = ["lead" "trail"];  if Tp.is_level(r) == 1, lab = ["level" "level"]; end
+                        for k = 1:2
+                            if k == 1, side = ll; tt = Tp.lead_toeoff_t(r); else, side = tl; tt = Tp.trail_toeoff_t(r); end
+                            if side ~= sd || ~isfinite(tt), continue; end
+                            c = find(tz(1:end-1) <= tt & tt < tz(2:end), 1);
+                            if ~isempty(c) && c <= n, cls(c) = lab(k); cid(c) = string(Tp.crossing_id{r}); hc(c) = string(Tp.height_class{r}); end
+                        end
+                    end
+                    for c = 1:n
+                        Lc = z(c+1) - z(c) + 1;  P = PT(1:min(Lc, size(PT,1)), :, c);
+                        rows(end+1, :) = [{tn, sd, c, tz(c), cls(c), cid(c), hc(c)}, ...
+                            num2cell(mlTools.strideFeat(P, tz(c+1) - tz(c))), num2cell(mlTools.apexFeat(P))]; %#ok<AGROW>
+                    end
+                end
+            end
+            S = cell2table(rows, 'VariableNames', [{'tn','side','cyc','t0','cls','cid','hcls'}, mlTools.strideFeatNames(), ...
+                {'a_h_peak','a_t_peak','a_dist_peak','a_vz_max','a_vz_mean','a_h_pre'}]);
+            S.cls = string(S.cls);  S.side = string(S.side);  S.cid = string(S.cid);  S.hcls = string(S.hcls);
+        end
+
+        function n = strideFeatNames()
+            n = {'h_peak','t_peak','t_above50','t_above70','t_above90','x_above50','x_above70','x_above90','stride_len','vz_max','h_end','dur'};
+        end
+
+        function f = strideFeat(P, dur)
+            % 12 features of one ZVP->ZVP stride from its ZHC position (m): height relative to the
+            % start, progression along the net horizontal displacement.
+            f = nan(1, 12);
+            if size(P, 1) < 10 || any(~isfinite(P(:))), return; end
+            u = P(end,1:2) - P(1,1:2);  sl = norm(u);  if sl > 0, u = u / sl; end
+            h = (P(:,3) - P(1,3)) * 1000;  x = (P(:,1:2) - P(1,1:2)) * u' * 1000;
+            n = numel(h);  [pk, ip] = max(h);
+            f(1) = pk;  f(2) = (ip - 1) / (n - 1);
+            th = [0.5 0.7 0.9];
+            for k = 1:3
+                if pk <= 0, break; end
+                a = find(h >= th(k) * pk);
+                f(2 + k) = (a(end) - a(1)) / (n - 1);  f(5 + k) = x(a(end)) - x(a(1));
+            end
+            f(9) = sl * 1000;  f(10) = max(diff(h)) * 60;  f(11) = h(end);  f(12) = dur;
+        end
+
+        function f = apexFeat(P)
+            % Online features known when the foot reaches its highest point (no data after the
+            % apex): peak height (mm), time from the stride start (s), horizontal distance
+            % travelled (mm), max and mean vertical speed before the apex (mm/s), height 0.1 s
+            % before the apex (mm). 60 Hz ZHC samples.
+            f = nan(1, 6);
+            if size(P, 1) < 10 || any(~isfinite(P(:))), return; end
+            h = (P(:,3) - P(1,3)) * 1000;  [pk, ip] = max(h);
+            if ip < 4, return; end
+            vz = diff(h(1:ip)) * 60;
+            f = [pk, (ip - 1) / 60, norm(P(ip,1:2) - P(1,1:2)) * 1000, max(vz), mean(vz), h(max(1, ip - 6))];
+        end
+
+        function [A, k] = loadAligned(root, ids)
+            % A.(lead|trail).(signal) = n x nK Dot signals at samples k (60 Hz) around the trailing toe
+            % lift-off seen by the camera (Crossing_Aligned_YoungAdults.csv), rows matched to ids.
+            f = fullfile(root, 'Results', 'ML Dataset', 'Crossing_Aligned_YoungAdults.csv');
+            o = detectImportOptions(f);  o = setvartype(o, 'crossing_id', 'char');
+            B = readtable(f, o);  [~, j] = ismember(ids, B.crossing_id);  v = B.Properties.VariableNames;
+            for limb = {'lead', 'trail'}
+                for sg = {'thigh','shank','foot','footacc','zhc_h'}
+                    cols = v(startsWith(v, [limb{1} '_' sg{1} '_s']));
+                    M = nan(numel(ids), numel(cols));  M(j > 0, :) = B{j(j > 0), cols};
+                    A.(limb{1}).(sg{1}) = M;
+                end
+            end
+            c = v(startsWith(v, 'lead_thigh_s'));
+            k = cellfun(@(s) (1 - 2 * (s(end-3) == 'm')) * str2double(s(end-2:end)), c);
+        end
+
         function Cv = loadCurves(root, ids)
             f = fullfile(root, 'Results', 'ML Dataset', 'Crossing_Curves_YoungAdults.csv');
             o = detectImportOptions(f);  o = setvartype(o, 'crossing_id', 'char');
@@ -311,6 +461,21 @@ classdef mlTools
                 A = C{:, cols};
                 M = nan(numel(ids), numel(cols));  M(j > 0, :) = A(j(j > 0), :);
                 Cv.(sigs{i}) = M;
+            end
+        end
+
+        %% ---------------- figures ----------------
+        function figures(out, name, S)
+            % Saves the numbers behind figure group NAME (fields of S) to <out>/figdata/NAME.mat and
+            % draws them with crossing_ml_figures (step 9 plot template). A plotting error is reported
+            % but never stops an analysis; crossing_ml_figures redraws from the saved file.
+            d = fullfile(out, 'figdata');
+            if ~isfolder(d), mkdir(d); end
+            save(fullfile(d, [name '.mat']), '-struct', 'S');
+            try
+                crossing_ml_figures(name);
+            catch err
+                warning('mlTools:figures', 'figure group %s not drawn: %s', name, err.message);
             end
         end
     end
