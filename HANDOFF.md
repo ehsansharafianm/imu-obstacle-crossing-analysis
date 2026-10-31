@@ -1,6 +1,6 @@
 # Project Handoff — IMU Obstacle-Crossing Analysis
 
-Paste this into a new Claude Code chat to bring it up to speed. Last updated 2026-10-30.
+Paste this into a new Claude Code chat to bring it up to speed. Last updated 2026-10-31.
 
 ## What this is
 A **MATLAB biomechanics pipeline** analyzing **obstacle-crossing gait**. Hardware: **Xsens Awinda**
@@ -87,13 +87,46 @@ ankle_angle) and `SROM` (Thigh/Shank/Foot); clearance → `T1`; timing → `PKT`
 of the SPSS input sheet. **NOTE:** that copy can lag behind the latest step9 run — after re-running step9, the
 fresh sheet is `Results/Group Analysis/GroupCrossing_YoungAdults_SPSS.xlsx`; re-import it into SPSS.
 
+## Machine learning and haptic-cue analyses (`Analysis/ML/`, all MATLAB)
+Question: can the Dot IMUs alone recognise the obstacle (height, width) for a participant never seen in training, and
+when, from which limb and with which threshold should a haptic cue be given? Results in one page:
+`Results/ML Models/MATLAB/STORY_SUMMARY.md`. Full write-up (dataset, methods, results, recommendations):
+`Reports/26-10-31-ml-haptic-report/` (LaTeX; the `.zip` next to it uploads to Overleaf). Slides:
+`Presentations/26-10-31-ml-haptic-results-101-110.pptx`.
+
+Run from `Analysis/ML`, in this order (headless: `matlab -batch "name"`; a full rerun takes ~65 min on 8 workers):
+1. `build_crossing_master` — one row per crossing from the step 1–9 outputs → `Results/ML Dataset/`: master CSV
+   (349 rows × 193 columns), swing-curve CSV, time-aligned CSV (60 Hz, −1.5 to +0.6 s around the camera trailing toe
+   lift-off), data dictionary, build report, exclusions log. **Close Excel first.**
+2. The nine analyses; each writes `Results/ML Models/MATLAB/ml_*_matlab.md` and saves the numbers behind its figures
+   in `figdata/`: `crossing_ml_matlab` (~26 min, permutation tests), `crossing_ml_explore`, `crossing_ml_story` (CNN),
+   `crossing_ml_stream`, `crossing_ml_device`, `crossing_ml_realworld`, `crossing_ml_lateral`, `crossing_ml_validate`,
+   `crossing_ml_haptic` (no arguments = full run). A quick test (`true` as the first argument, or the second for
+   `crossing_ml_matlab` and `crossing_ml_story`) overwrites the reports with QUICK versions.
+3. `crossing_ml_figures` — redraws all 19 `fig_*.png` from `figdata/` in seconds. **All figure code lives here**, in
+   the step 9 plot template (Arial, bold 16-pt labels, 13-pt ticks, 2-pt box, blue leading / orange trailing, 300-dpi
+   PNG; green = both limbs, grey = generic model, purple = person scaling). Restyle here, never in the analyses.
+
+Rules used everywhere: leave-one-participant-out (every fitted step on the 9 training people), balanced accuracy,
+participant-bootstrap 95 % CIs, permutation tests with labels shuffled within participant; only Dot values are model
+inputs (camera = reference); crossing order is never a feature. `mlTools.m` holds the shared blocks (loading,
+level-walk calibration and person scaling, model pipelines, LOPO, bootstrap, permutation, curve readers, `figures`).
+
+Notes:
+- Reruns reproduce every number (fixed seeds) except the CNN table and a few random-draw cells (< 1 point).
+- Timing is relative to the **camera** trailing toe lift-off (`trail_toeoff_t_cam`); the IMU step-4 trailing toe-off
+  comes ~0.23 s later.
+- MATLAB figures taller than ~1040 px are shrunk by the 1920×1080 screen; keep figure canvases within that.
+
 ## Conventions / constraints
-- **Commit directly to main.** End commit messages with: `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`.
+- **Commit directly to main.** End commit messages with the Co-Authored-By line of the Claude model in use (latest:
+  `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`).
 - **Keep `checkcode` CLEAN** on edited files. (One pre-existing STRCMP/UPPER lint in step9 ~L647 is NOT ours — ignore.)
 - **GitHub rejects files >100 MB.** Before committing data, scan for oversize files. Currently **excluded** (synced
   separately, too big): `Data/Pkmas/test101/test101-E.txt` (111 MB) and `Data/Pkmas/test102/…9-59-35 AM - E.txt`
   (129 MB). Other large Pkmas `-E.txt` / `.mat` / `.wmv` (50–100 MB) are committed (GitHub warns but accepts).
-- **Figures: PNG only** (no PDF). Outputs under `Results/Group Analysis/`.
+- **Figures: PNG only** (no PDF), all in the step 9 plot template. Outputs under `Results/Group Analysis/` (steps)
+  and `Results/ML Models/MATLAB/` (ML).
 - **Close Excel/SPSS before re-running step9** — it overwrites `SPSS.xlsx`/`Summary.xlsx`; an open file makes the
   run crash at `writeSpssWide` with "file might be open by another application."
 - **Obsidian Vault/** holds step notes + `Session Changelog.md` (read for history).
@@ -101,10 +134,14 @@ fresh sheet is `Results/Group Analysis/GroupCrossing_YoungAdults_SPSS.xlsx`; re-
 
 ## Current state
 Steps 01–09 working for **n=10 (Tests 101–110)**. `GroupCrossing_YoungAdults_SPSS.xlsx` is the tailored wide sheet
-described above. Last commits on main: tailored SPSS variable set + Test 110; regenerated n=10 results.
+described above. The ML and haptic-cue analyses, their report (Overleaf zip) and the 31 Oct deck are committed
+(bf64ad7); all ML figures are in the step 9 template.
 
 ## Likely next steps
 - Add participants: run pipeline → `diag_participant(NNN)` (QC) → hand-calc flagged joints in `manualJointValues.m`
   (add a new section) → add NNN to `TESTS` in step9 → close Excel → re-run step9 → re-import sheet into SPSS.
 - Keep the SPSS sheet and the `Statistical Analysis/` copy in sync after each step9 run.
 - Rebuild in-MATLAB group statistics only if asked (user prefers small, incremental steps).
+- ML after new participants: rerun `build_crossing_master`, the nine analyses and `crossing_ml_figures`, then
+  regenerate the report tables. Open research steps: older adults, mixed obstacle order, a real-time haptic prototype
+  with a reaction-time test, and a measured sensor-to-toe geometry for clearance.

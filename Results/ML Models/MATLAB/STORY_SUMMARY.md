@@ -1,12 +1,14 @@
 # What wearable IMUs reveal about obstacle crossing — summary of the MATLAB analyses
 
+*Updated 31 October 2026: full rerun of the nine analyses on the rebuilt dataset; figures redrawn in the step 9 template. Full write-up: `Reports/26-10-31-ml-haptic-report/`; slides: `Presentations/26-10-31-ml-haptic-results-101-110.pptx`.*
+
 **Study:** 10 young adults, with Movella Dot IMUs on the thigh, shank and foot of both legs. They crossed 6 obstacles: 3 heights (10 / 20 / 30 % of leg length) × 2 widths (5 / 15 cm), about 5 repeats each.
 
 **How the results were tested:** every accuracy below is on a participant the model never saw (leave-one-participant-out). Chance is 33 % for height and 50 % for width. CI = 95 % participant-bootstrap interval.
 
 ## The story in one paragraph
 
-People clear an obstacle by lifting the foot by about the obstacle height: **+10 mm per cm of obstacle, 95 % CI 9.4–10.8**, for the leading foot. This lift comes from thigh flexion on the leading leg and heel-up on the trailing leg. Meanwhile they keep a nearly constant safety margin. How much extra each person lifts for *any* obstacle is very personal: it varies across people by two-thirds of the step between two heights. Every person also has a strong walking "signature": one crossing identifies the walker with 99 % accuracy. This is why a generic model reaches only about 62–73 %, but **one foot IMU per leg recognises obstacle height on a new person with about 92 % accuracy once the device has seen some of that person's crossings.** The information is available about 0.7 s before the trailing foot leaves the ground, so there is time to cue it. In real time, using only the leading leg, about 3 in 4 cues are correct (about 80 % of the cues given when the device answers only when confident). The whole pipeline (finding the crossing, telling which leg led, classifying the height) runs without any camera. Width is not detectable, and that limit is behavioural: people barely change how they cross for a 5 vs 15 cm obstacle.
+People clear an obstacle by lifting the foot by about the obstacle height: **+10 mm per cm of obstacle, 95 % CI 9.4–10.8**, for the leading foot. This lift comes from thigh flexion on the leading leg and heel-up on the trailing leg. Meanwhile they keep a nearly constant safety margin. How much extra each person lifts for *any* obstacle is very personal: it varies across people by two-thirds of the step between two heights. Every person also has a strong walking "signature": one crossing identifies the walker with 99 % accuracy. This is why a generic model reaches only about 62–73 %, but **one foot IMU per leg recognises obstacle height on a new person with about 92 % accuracy once the device has seen some of that person's crossings.** The height is about 80 % known at the leading-foot apex, a median **0.45 s** before the trailing toe leaves the floor (camera), so a cue for the trailing leg must come from the leading leg, by its apex; the leading landing leaves only 0.2 s, and the trailing leg's own signals show nothing before it lifts. In real time, using only the leading leg, about 3 in 4 cues are correct (79–82 % of the cues given when the device answers only when confident). The whole pipeline (finding the crossing, telling which leg led, classifying the height) runs without any camera. Width is not detectable, and that limit is behavioural: people barely change how they cross for a 5 vs 15 cm obstacle. The toe clearance depends mainly on how high the toe goes and is only partly predictable from the foot IMU.
 
 ## Contributions and key numbers
 
@@ -35,7 +37,7 @@ People lift by about the obstacle height and keep their margin.
 | limb | where the height information is | eta² | when |
 |---|---|---|---|
 | leading | foot height | 0.62 | mid-swing (48 %), around the apex |
-| leading | thigh flexion | 0.45 | 62 % of swing |
+| leading | thigh flexion | 0.47 | 60 % of swing |
 | trailing | foot height | 0.76 | 20 % of swing |
 | trailing | shank tilt | 0.66 | at push-off (4 %) |
 
@@ -95,7 +97,7 @@ The foot is the best site. The thigh carries the leading leg's information and t
 
 **Training-set size:** a model trained on only 2–3 people already reaches about 88–89 %. More participants won't fix the remaining errors; personal calibration does.
 
-**Timing:** height is about 80 % known by the lead foot apex, about 0.7 s before trailing toe-off (`ml_report_matlab.md` §2.2, §4.3).
+**Timing:** height is about 80 % known by the lead foot apex (50 % of the lead swing), a median 0.46 s before the trailing toe lift-off seen by the camera; 88.5 % at 70 % of the lead swing (0.36 s before) and 52 % at the lead toe-off (`ml_report_matlab.md` §2.2, §4.3).
 
 **In a real session with mixed obstacles** (`ml_realworld_matlab.md` R1, `fig_realworld.png`): each participant's crossings were shuffled 30 times. The device starts with the generic model and switches to person scaling learned from the crossings it has already seen (no labels).
 
@@ -129,18 +131,42 @@ The pipeline uses all 7,250 strides of the sessions.
 
 | cue moment | time left before the trailing foot leaves the ground | correct cue | correct cue after 15 crossings | with a 0.6 confidence threshold |
 |---|---|---|---|---|
-| lead foot apex | ~0.7 s | **70 %** | 75 % | 79 % of the given cues are right; 30 % withheld |
-| lead landing | ~0.4 s | **76 %** | 84 % | 82 % of the given cues are right; 25 % withheld |
+| lead foot apex | ~0.45 s | **71 %** | 76 % | 79 % of the given cues are right; 30 % withheld |
+| lead landing | ~0.2 s | **76 %** | 83 % | 82 % of the given cues are right; 25 % withheld |
 
 - **The real-time cue is less accurate than the after-the-fact recognition** (~92 %), because only the leading leg's data exist when the cue must be sent. This is the honest number for a cueing device. A product would also confirm the crossing when the trailing foot starts its swing.
 
-### 7. Limits (reported as findings)
+### 7. Validation and generalisation (`ml_validate_matlab.md`, `fig_validate.png`)
+
+- **Unseen height:** a ridge model that never saw the middle height estimates it with a **3.1 cm** error (79 % at the right level). An unseen lowest or highest height is biased by about half a step (+4.0 / −5.7 cm); the forest cannot extrapolate.
+- **Unseen width:** height trained on one width and tested on the other loses **6.5 points** (86.2 vs 92.7 %).
+- **What the device model uses:** shuffling the trailing-foot features costs 33.4 points, the leading-foot features 24.5; no single feature matters on its own (≤ 2.5 points).
+- **Effect sizes (participant bootstrap):** person scaling +34.8 points (CI +22.3 to +46.2); 2 vs 6 IMUs +1.1 (−0.5 to +3.0); clearance-shape vs summary features +10.7 (+4.9 to +16.9). The stated probabilities are conservative (Brier 0.18 person-scaled vs 0.51 generic).
+- **No anticipation:** the steps before the obstacle do not change with its height (all p > 0.3).
+- **Camera check:** the camera toe marker shows the same scaling with a slightly smaller slope (+8.8 / +7.5 mm per cm) than the foot sensor (+10.1 / +11.1); agreement r = 0.82 (lead), 0.62 (trail).
+
+### 8. Haptic cue design (`ml_haptic_matlab.md`, `fig_haptic.png`, `fig_haptic_curves.png`)
+
+**Timeline** (median, relative to the trailing toe lift-off seen by the camera): lead toe-off −733 ms, lead foot apex −450 ms, lead landing −200 ms (in 22 % of crossings the trailing toe lifts before the lead foot lands), trailing toe over the obstacle +184 ms, trailing landing +633 ms.
+
+| question | answer |
+|---|---|
+| when to cue | at the latest at the lead-foot apex (~0.45 s left); detect the crossing earlier (0.57–0.71 s before) |
+| which leg | the **leading** leg; the trailing leg's own signals are at chance before it lifts (41–51 %) |
+| which segment | a foot IMU on each foot; with angle sensors only, the leading thigh (the leading shank carries nothing) |
+| detection threshold | lead thigh ≥ +5.6° above normal walking (97 % sensitivity, 98 % specificity) or lead foot ≥ +18.6 mm (99 / 98 %) |
+| height thresholds | **personal**, e.g. lead-foot apex height −36 / +39 mm around the person's typical crossing (73 %); population thresholds referenced to normal walking reach only 45–52 % |
+| reliability | cue only when p ≥ 0.6: 79–82 % of the given cues are right |
+
+**How much the limbs move per height** (H1 / H2 / H3, relative to normal walking): lead thigh +35 / +46 / +53°, lead foot +204 / +298 / +361 mm, trailing shank heel-up −31 / −46 / −55°, trailing foot +237 / +352 / +436 mm.
+
+### 9. Limits (reported as findings)
 
 - **Width is behaviourally invisible.**
   - For a 10 cm wider obstacle the crossing step grows by only about 4 cm.
   - Even the camera's foot placement classifies width at only 57 %. The IMU models reach 55–66 %.
   - **Side-to-side motion doesn't help** (`ml_lateral_matlab.md`, `fig_lateral.png`). I checked the sideways tilt and twist of the thigh, shank and foot, and the foot's outward path: they alone give 53 %, and the largest width effect is 6 % of the variance. People simply don't cross a 5 vs 15 cm obstacle differently in any direction.
-- **The clearance margin cannot be estimated from the IMU** (r ≈ 0). Near-contact detection is weak (AUC 0.63–0.73), because the margin is nearly constant and its variation is not visible in the foot motion.
+- **The toe clearance is only partly predictable from the IMU** (`ml_validate_matlab.md` V3). Within a person and obstacle it varies (SD 37 mm lead, 71 mm trail) mainly with how high the toe goes: the camera toe peak explains 35 / 34 % of it, the IMU foot lift 20 / 12 %. The absolute clearance error from the IMU is 39 / 65 mm (a constant: 49 / 88 mm; the camera toe peak: 34 / 55 mm). Near-contact detection is weak (AUC 0.63–0.73). A measured toe height (sensor position on the shoe) is needed.
 - **Self-training** (the model labelling the new user's crossings itself) **makes things worse** (54–67 %).
 - **Comparing each crossing to the previous normal stride** doesn't help either (about 60 %). The personal margin is not visible in ordinary walking.
 
@@ -163,6 +189,9 @@ Code (MATLAB), in `Analysis/ML/`:
 | `crossing_ml_stream.m` | the camera-free pipeline |
 | `crossing_ml_realworld.m` | mixed-order sessions, real-time cueing, harder participants |
 | `crossing_ml_lateral.m` | width from side-to-side motion |
+| `crossing_ml_validate.m` | generalisation, clearance mechanism, importance, statistics, validity (V1–V7) |
+| `crossing_ml_haptic.m` | haptic-cue timing, detection and height thresholds |
+| `crossing_ml_figures.m` | draws all 19 figures (step 9 template) from the numbers saved in `figdata/` |
 | `mlTools.m` | shared building blocks |
 
-Reports and figures are in this folder.
+Reports (`ml_*_matlab.md`), figures (`fig_*.png`) and figure data (`figdata/`) are in this folder.
