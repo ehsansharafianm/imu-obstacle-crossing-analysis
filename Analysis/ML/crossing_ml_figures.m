@@ -4,7 +4,7 @@ function crossing_ml_figures(want)
 %   crossing_ml_figures              % redraw all ML figures from the saved results (seconds)
 %   crossing_ml_figures('haptic')    % one group: main, followup, limbs, settings, explore, device,
 %                                    % stream, realworld, lateral, validate, haptic, story_map,
-%                                    % story_person, story_strategy, story_embed
+%                                    % story_person, story_strategy, story_embed, stats, robust, params
 %
 % The analyses (crossing_ml_*.m) save the numbers behind their figures in
 % Results/ML Models/MATLAB/figdata/<group>.mat (mlTools.figures) and call this function for their
@@ -21,7 +21,7 @@ function crossing_ml_figures(want)
 here = fileparts(mfilename('fullpath'));
 out = fullfile(fileparts(fileparts(here)), 'Results', 'ML Models', 'MATLAB');
 groups = {'main', 'followup', 'limbs', 'settings', 'explore', 'device', 'stream', 'realworld', 'lateral', ...
-          'validate', 'haptic', 'story_map', 'story_person', 'story_strategy', 'story_embed'};
+          'validate', 'haptic', 'story_map', 'story_person', 'story_strategy', 'story_embed', 'stats', 'robust', 'params'};
 if nargin < 1 || isempty(want), want = groups; end
 want = cellstr(want);
 for k = 1:numel(want)
@@ -47,6 +47,9 @@ for k = 1:numel(want)
         case 'story_person',   figStoryPerson(out, S);
         case 'story_strategy', figStoryStrategy(out, S);
         case 'story_embed',    figStoryEmbed(out, S);
+        case 'stats',          figStats(out, S);
+        case 'robust',         figRobust(out, S);
+        case 'params',         figParams(out, S);  figParamsClear(out, S);
         otherwise, error('crossing_ml_figures:group', 'unknown figure group %s', want{k});
     end
     fprintf('Figures drawn: %s\n', want{k});
@@ -703,6 +706,231 @@ leg(ax, h3, hl, 'Location', 'eastoutside');
 layoutTitle(tl, 'A map of all crossings (t-SNE of the Dot features)', ...
     'raw features cluster by person; after person scaling the crossings order by obstacle height');
 saveFig(tl, out, 'fig_story_embed.png');
+end
+
+%% ========================================================================
+%  crossing_ml_stats, crossing_ml_robust
+%% ========================================================================
+function figStats(out, S)
+ST = tmpl();  A = S.S1;  nV = numel(A);
+[~, tl] = newFig(1600, 1040, 2, 2);
+% partial eta^2 of the repeated-measures ANOVA
+ax = tile(tl);
+E = reshape([A.eta], 3, [])';  Pv = reshape([A.p], 3, [])';
+imagesc(ax, E, [0 1]);  colormap(ax, seqMap(ST.teal));
+for i = 1:nV
+    for j = 1:3
+        col = ST.ink;  if E(i,j) > 0.55, col = [1 1 1]; end
+        text(ax, j, i, sprintf('%.2f%s', E(i,j), stars(Pv(i,j))), 'HorizontalAlignment', 'center', 'FontName', ST.font, ...
+            'FontSize', ST.szText, 'FontWeight', 'bold', 'Color', col);
+    end
+end
+nm = strrep(regexprep({A.name}, ' \(Dot\)', ''), 'minimum clearance (camera)', 'clearance (camera)');
+lb = strrep(strrep({A.limb}, 'lead', 'leading'), 'trail', 'trailing');
+set(ax, 'YDir', 'reverse', 'XTick', 1:3, 'XTickLabel', {'height', 'width', 'height \times width'}, 'YTick', 1:nV, ...
+    'YTickLabel', strcat(lb, {' '}, nm), 'TickLength', [0 0]);
+xlim(ax, [0.5 3.5]);  ylim(ax, [0.5 nV + 0.5]);
+ttl(ax, 'Partial \eta^2 (repeated-measures ANOVA)');
+% step 9-style bars: Dot foot lift per obstacle
+ax = tile(tl);
+b = vbars(ax, S.lift.mean', [ST.lead; ST.trail]);
+for k = 1:2
+    errorbar(ax, b(k).XEndPoints, S.lift.mean(k,:), S.lift.sd(k,:), 'LineStyle', 'none', 'Color', ST.ink, 'LineWidth', ST.errW, ...
+        'CapSize', 4, 'HandleVisibility', 'off');
+end
+set(ax, 'XTick', 1:6, 'XTickLabel', strrep(S.lift.cells, '_', '\_'));  xtickangle(ax, 20);
+lbl(ax, '', 'foot lift (mm)');
+ttl(ax, 'Dot foot lift per obstacle (mean \pm SD)');
+leg(ax, b, {'leading limb', 'trailing limb'}, 'Location', 'northwest');
+% Bland-Altman: Dot foot lift vs camera toe rise
+ax = tile(tl);
+lim = {'lead', ST.lead; 'trail', ST.trail};  h = gobjects(2, 1);
+for k = 1:2
+    B = S.BA.(lim{k,1});
+    h(k) = scatter(ax, B.mean, B.diff, 24, lim{k,2}, 'filled', 'MarkerFaceAlpha', 0.35);
+    yline(ax, B.bias, '-', 'Color', lim{k,2}, 'LineWidth', 2.4, 'HandleVisibility', 'off');
+    yline(ax, B.lo, '--', 'Color', lim{k,2}, 'LineWidth', 1.8, 'HandleVisibility', 'off');
+    yline(ax, B.hi, '--', 'Color', lim{k,2}, 'LineWidth', 1.8, 'HandleVisibility', 'off');
+end
+hk = [plot(ax, NaN, NaN, '-', 'Color', ST.ink, 'LineWidth', 2.4), plot(ax, NaN, NaN, '--', 'Color', ST.ink, 'LineWidth', 1.8)];
+lbl(ax, 'mean of Dot and camera (mm)', 'Dot - camera (mm)');
+ttl(ax, 'Foot lift: Dot sensor vs camera toe (Bland-Altman)');
+leg(ax, [h; hk(:)], {'leading', 'trailing', 'bias', '95% limits of agreement'}, 'Location', 'southwest', 'NumColumns', 2);
+% paired model comparisons
+ax = tile(tl);
+M = S.MC;  n = numel(M.d);  yy = (n:-1:1)';  sig = M.pM(:) < 0.05;
+cc = repmat(ST.generic, n, 1);  cc(sig, :) = repmat(ST.person, nnz(sig), 1);
+hbars(ax, yy, M.d(:), cc);
+errorbar(ax, M.d(:), yy, M.d(:) - M.lo(:), M.hi(:) - M.d(:), 'horizontal', 'LineStyle', 'none', 'Color', ST.ink, ...
+    'LineWidth', ST.errW, 'CapSize', 4);
+xline(ax, 0, '-', 'Color', ST.ink, 'LineWidth', 1.2, 'HandleVisibility', 'off');
+for i = 1:n
+    if M.pM(i) < 0.001, s = 'p < 0.001'; else, s = sprintf('p = %.3f', M.pM(i)); end
+    valText(ax, max(M.hi(i), M.d(i)) + 1, yy(i), s, 'VerticalAlignment', 'middle');
+end
+set(ax, 'YTick', 1:n, 'YTickLabel', flip(M.short));  ylim(ax, [0.4 n + 0.6]);
+xlim(ax, [min([M.lo(:); 0]) - 3, max(M.hi(:)) + 16]);
+lbl(ax, 'difference in balanced accuracy (points)', '');
+ttl(ax, 'Paired model comparisons (McNemar, Holm)');
+leg(ax, [keyPatch(ax, ST.person), keyPatch(ax, ST.generic)], {'significant', 'not significant'}, 'Location', 'southeast');
+layoutTitle(tl, 'Statistics of the crossing variables and of the model comparisons', ...
+    ['limbs analysed separately; ***, **, * = p < 0.001, 0.01, 0.05 (Greenhouse-Geisser); bars: mean \pm SD of the 10 participant ' ...
+     'means; model comparisons: 95% participant-bootstrap CI']);
+saveFig(tl, out, 'fig_stats.png');
+end
+
+function figRobust(out, S)
+ST = tmpl();  cc = [ST.lead; ST.both];  mk = {'o', 's'};
+[~, tl] = newFig(1500, 1040, 2, 2);
+% sampling rate
+ax = tile(tl);  r = S.rate;  h = gobjects(2, 1);
+for k = 1:2
+    fill(ax, [r.hz fliplr(r.hz)], 100 * [r.lo(k,:) fliplr(r.hi(k,:))], cc(k,:), 'FaceAlpha', 0.15, 'EdgeColor', 'none');
+    h(k) = plot(ax, r.hz, 100 * r.b(k,:), ['-' mk{k}], 'Color', cc(k,:), 'LineWidth', ST.lineW, 'MarkerSize', 9, ...
+        'MarkerFaceColor', cc(k,:), 'MarkerEdgeColor', 'w');
+end
+refLine(ax, 100/3, 'y', '');
+set(ax, 'XDir', 'reverse', 'XTick', sort(r.hz));  xlim(ax, [8 62]);  ylim(ax, [20 100]);
+lbl(ax, 'sampling rate (Hz)', 'balanced accuracy (%)');
+ttl(ax, 'Sampling rate');
+lg = leg(ax, h, {'real-time cue: leading limb, 0.3 s before lift-off', 'after the crossing: both limbs'}, 'Orientation', 'horizontal');
+lg.Layout.Tile = 'north';
+% noise
+ax = tile(tl);  z = S.noise;  x = 0:size(z.b, 2) - 1;
+for k = 1:2
+    errorbar(ax, x, 100 * z.b(k,:), 100 * (z.b(k,:) - z.lo(k,:)), 100 * (z.hi(k,:) - z.b(k,:)), ['-' mk{k}], 'Color', cc(k,:), ...
+        'LineWidth', ST.lineW, 'MarkerSize', 9, 'MarkerFaceColor', cc(k,:), 'MarkerEdgeColor', 'w', 'CapSize', 5);
+end
+refLine(ax, 100/3, 'y', '');
+set(ax, 'XTick', x, 'XTickLabel', [{'none'}, arrayfun(@(a, b) sprintf('%d%c / %d mm', a, 176, b), [1 2 4 8], [5 10 20 40], ...
+    'UniformOutput', false)]);
+xlim(ax, [-0.3 x(end) + 0.3]);  ylim(ax, [20 100]);
+lbl(ax, 'added noise (tilt / foot height)', 'balanced accuracy (%)');
+ttl(ax, 'Sensor noise');
+% model size
+ax = tile(tl);  z = S.size;  pc = [ST.person + 0.45 * (1 - ST.person); ST.person; 0.55 * ST.person];  fm = {'o', 's', 'd'};
+hs = gobjects(numel(z.leaf) + 1, 1);  nmz = cell(numel(z.leaf) + 1, 1);
+for i = 1:numel(z.leaf)
+    hs(i) = plot(ax, z.fbytes(i,:) / 1024, 100 * z.fb(i,:), ['-' fm{i}], 'Color', pc(i,:), 'LineWidth', 2, 'MarkerSize', 8, ...
+        'MarkerFaceColor', pc(i,:), 'MarkerEdgeColor', 'w');
+    nmz{i} = sprintf('forest, minimum leaf %d', z.leaf(i));
+end
+hs(end) = plot(ax, z.lbytes / 1024, 100 * z.lb, '-^', 'Color', ST.both, 'LineWidth', 2, 'MarkerSize', 9, 'MarkerFaceColor', ST.both, ...
+    'MarkerEdgeColor', 'w');
+nmz{end} = 'logistic, k features';
+set(ax, 'XScale', 'log');  ylim(ax, [60 100]);
+lbl(ax, 'model memory (kB, log scale)', 'balanced accuracy (%)');
+ttl(ax, 'Model size');
+leg(ax, hs, nmz, 'Location', 'southeast');
+% conformal prediction sets
+ax = tile(tl);  z = S.conf;
+Mx = 100 * [z.singleRight; z.single - z.singleRight; z.adjacent; z.nonadj + z.all3; z.empty]';
+b = bar(ax, Mx, 0.6, 'stacked', 'EdgeColor', ST.edge, 'LineWidth', ST.barEdgeW);
+fc = [ST.both; ST.level; ST.teal + 0.5 * (1 - ST.teal); ST.generic; ST.raw];
+for k = 1:numel(b), b(k).FaceColor = fc(k,:); end
+for a = 1:numel(z.alpha)
+    valText(ax, a, 103, sprintf('covered %.0f%%', 100 * z.cover(a)), 'HorizontalAlignment', 'center', 'VerticalAlignment', 'bottom');
+end
+set(ax, 'XTick', 1:numel(z.alpha), 'XTickLabel', arrayfun(@(a) sprintf('%.0f%%', 100 * (1 - a)), z.alpha, 'UniformOutput', false));
+ylim(ax, [0 115]);  xlim(ax, [0.4 numel(z.alpha) + 0.6]);
+lbl(ax, 'target coverage', '% of the crossings');
+ttl(ax, 'Prediction sets (conformal)');
+leg(ax, b, {'one height, right', 'one height, wrong', 'two neighbouring', 'H1 + H3 or all three', 'empty'}, 'Location', 'eastoutside');
+layoutTitle(tl, 'Device robustness: sampling rate, sensor noise, model size and prediction sets', ...
+    'obstacle height (3 classes, chance 33%), person scaling, random forest unless stated; every participant tested unseen');
+saveFig(tl, out, 'fig_robust.png');
+end
+
+function figParams(out, S)
+% Significance map of the 26 step 9 parameters (crossing_ml_params.m): partial eta^2 with FDR stars, and the
+% obstacle-vs-level-walk effect size on the same rows.
+ST = tmpl();  cls = unique(S.class, 'stable');  nV = numel(S.names);  nR = 1 + numel(cls) + nV;
+hd = struct('clearance', 'CLEARANCE (camera)', 'joint', 'JOINT ANGLES (IK)', 'segment', 'SEGMENT TILTS (Dot)', ...
+    'timing', 'PEAK TIMING (vs clearance)', 'spatiotemporal', 'SPATIOTEMPORAL');
+lab = repmat({''}, nR, 1);  rowOf = zeros(nV, 1);  hdr = zeros(numel(cls), 1);  r = 1;
+for c = 1:numel(cls)
+    r = r + 1;  hdr(c) = r;  lab{r} = sprintf('\\color[rgb]{%.2f %.2f %.2f}%s', ST.sub, hd.(cls{c}));
+    for v = find(strcmp(S.class, cls{c}))
+        r = r + 1;  rowOf(v) = r;  lab{r} = S.names{v};
+    end
+end
+[~, tl] = newFig(1500, 1040, 1, 3);
+% partial eta^2 (rows = parameters, columns = leading height / width / interaction, then trailing)
+ax = tile(tl, [1 2]);
+E = nan(nR, 6);  Q = nan(nR, 6);  G = false(nR, 6);  E(rowOf, :) = S.eta;  Q(rowOf, :) = S.q;
+G(rowOf, :) = [repmat(S.flag(:, 1), 1, 3), repmat(S.flag(:, 2), 1, 3)];       % verdict depends on outlying cells
+im = imagesc(ax, E, [0 1]);  im.AlphaData = double(isfinite(E));  colormap(ax, seqMap(ST.teal));
+for i = 1:nR
+    for j = 1:6
+        if ~isfinite(E(i,j)), continue; end
+        col = ST.ink;  if E(i,j) > 0.55, col = [1 1 1]; end
+        dg = '';  if G(i,j), dg = char(8224); end
+        text(ax, j, i, sprintf('%.2f%s%s', E(i,j), stars(Q(i,j)), dg), 'HorizontalAlignment', 'center', 'FontName', ST.font, ...
+            'FontSize', ST.szText, 'FontWeight', 'bold', 'Color', col);
+    end
+end
+xline(ax, 3.5, '-', 'Color', 'w', 'LineWidth', 6, 'HandleVisibility', 'off');
+text(ax, 2, 1, 'leading limb', 'HorizontalAlignment', 'center', 'FontName', ST.font, 'FontSize', ST.szLabel, 'FontWeight', 'bold', 'Color', ST.lead);
+text(ax, 5, 1, 'trailing limb', 'HorizontalAlignment', 'center', 'FontName', ST.font, 'FontSize', ST.szLabel, 'FontWeight', 'bold', 'Color', ST.trail);
+set(ax, 'YDir', 'reverse', 'XTick', 1:6, 'XTickLabel', repmat({'height', 'width', 'H \times W'}, 1, 2), 'YTick', 1:nR, ...
+    'YTickLabel', lab, 'TickLength', [0 0]);
+xlim(ax, [0.5 6.5]);  ylim(ax, [0.5 nR + 0.5]);
+ttl(ax, 'Partial \eta^2 of the repeated-measures ANOVA (stars: FDR q)');
+% obstacle (mean of the six) minus level walk, d_z
+ax = tile(tl);
+xline(ax, 0, '-', 'Color', ST.ink, 'LineWidth', 1.2, 'HandleVisibility', 'off');
+for c = 1:numel(cls), yline(ax, hdr(c), '-', 'Color', [0.85 0.85 0.85], 'LineWidth', 1, 'HandleVisibility', 'off'); end
+col = [ST.lead; ST.trail];  mk = {'o', 's'};  off = [-0.17 0.17];
+for l = 1:2
+    y = rowOf + off(l);  x = S.dz(:, l);  sg = S.qLev(:, l) < 0.05;  ns = isfinite(x) & ~sg;
+    plot(ax, x(sg), y(sg), mk{l}, 'MarkerSize', 9, 'MarkerFaceColor', col(l,:), 'MarkerEdgeColor', col(l,:), 'LineWidth', 1.5);
+    plot(ax, x(ns), y(ns), mk{l}, 'MarkerSize', 9, 'MarkerFaceColor', 'w', 'MarkerEdgeColor', col(l,:), 'LineWidth', 1.5);
+end
+xr = [min([S.dz(:); 0]), max([S.dz(:); 0])];  pad = 0.08 * diff(xr);
+set(ax, 'YDir', 'reverse', 'YTick', []);  ylim(ax, [0.5 nR + 0.5]);  xlim(ax, xr + [-pad pad]);
+ic = find(strcmp(cls, 'clearance'));
+if ~isempty(ic), valText(ax, 0.04 * diff(xlim(ax)), hdr(ic) + 3, 'no level-walk value', 'HorizontalAlignment', 'left'); end
+lbl(ax, 'obstacles - level walk (d_z)', '');
+ttl(ax, 'Obstacle vs level walk');
+k = [plot(ax, NaN, NaN, 'o', 'MarkerSize', 9, 'MarkerFaceColor', ST.lead, 'MarkerEdgeColor', ST.lead, 'LineWidth', 1.5), ...
+     plot(ax, NaN, NaN, 's', 'MarkerSize', 9, 'MarkerFaceColor', ST.trail, 'MarkerEdgeColor', ST.trail, 'LineWidth', 1.5), ...
+     plot(ax, NaN, NaN, 'o', 'MarkerSize', 9, 'MarkerFaceColor', 'w', 'MarkerEdgeColor', ST.ref, 'LineWidth', 1.5)];
+lg = leg(ax, k, {'leading, q < 0.05', 'trailing, q < 0.05', 'open: not significant'}, 'Orientation', 'horizontal');
+lg.Layout.Tile = 'south';
+layoutTitle(tl, 'Significance of the 26 step 9 parameters', {sprintf(['participant means (n = %d); ***, **, * = q < 0.001, 0.01, 0.05 ' ...
+    '(FDR over the 52 tests of each effect)'], S.n), sprintf(['%s = the verdict at p < 0.05 changes without the participants with ' ...
+    'outlying cells; right: d_z of the six-obstacle mean minus the level walk'], char(8224))});
+saveFig(tl, out, 'fig_params.png');
+end
+
+function figParamsClear(out, S)
+% Clearance class: change from H1 to H3 and from W1 to W2 with 90 % CI (equivalence view).
+ST = tmpl();  E = S.clr;  n = numel(E.names);  yy = (1:n)';  col = [ST.lead; ST.trail];  nm = {'Leading limb', 'Trailing limb'};
+[~, tl] = newFig(1500, 640, 1, 2);
+xr = [min([E.loH(:); E.loW(:); 0]), max([E.hiH(:); E.hiW(:); 0])];  pad = 0.08 * diff(xr);
+for l = 1:2
+    ax = tile(tl);
+    xline(ax, 0, '-', 'Color', ST.ink, 'LineWidth', 1.2, 'HandleVisibility', 'off');
+    errorbar(ax, E.dH(:, l), yy - 0.15, E.dH(:, l) - E.loH(:, l), E.hiH(:, l) - E.dH(:, l), 'horizontal', 'LineStyle', 'none', ...
+        'Marker', 'o', 'MarkerSize', 9, 'MarkerFaceColor', col(l,:), 'Color', col(l,:), 'LineWidth', 1.8, 'CapSize', 6);
+    errorbar(ax, E.dW(:, l), yy + 0.15, E.dW(:, l) - E.loW(:, l), E.hiW(:, l) - E.dW(:, l), 'horizontal', 'LineStyle', 'none', ...
+        'Marker', 's', 'MarkerSize', 9, 'MarkerFaceColor', 'w', 'Color', col(l,:), 'LineWidth', 1.8, 'CapSize', 6);
+    set(ax, 'YDir', 'reverse', 'YTick', yy, 'YTickLabel', E.names);  ylim(ax, [0.4 n + 0.6]);  xlim(ax, xr + [-pad pad]);
+    if l == 2, set(ax, 'YTickLabel', {}); end
+    lbl(ax, 'change (cm), mean with 90% CI', '');
+    ttl(ax, nm{l});
+end
+k = [plot(ax, NaN, NaN, 'o', 'MarkerSize', 9, 'MarkerFaceColor', ST.ink, 'MarkerEdgeColor', ST.ink, 'LineWidth', 1.5), ...
+     plot(ax, NaN, NaN, 's', 'MarkerSize', 9, 'MarkerFaceColor', 'w', 'MarkerEdgeColor', ST.ink, 'LineWidth', 1.5)];
+lg = leg(ax, k, {'height: H3 - H1', 'width: W2 - W1'}, 'Orientation', 'horizontal');
+lg.Layout.Tile = 'south';
+layoutTitle(tl, 'Clearance class: change with obstacle height and width', sprintf(['participant means (n = %d) with 90%% CI: a change ' ...
+    'beyond the CI is excluded (TOST, \\alpha = 0.05); from H1 to H3 the obstacle rises by %.1f cm'], S.n, E.rise));
+saveFig(tl, out, 'fig_params_clear.png');
+end
+
+function s = stars(p)
+if p < 0.001, s = '***'; elseif p < 0.01, s = '**'; elseif p < 0.05, s = '*'; else, s = ''; end
 end
 
 %% ========================================================================

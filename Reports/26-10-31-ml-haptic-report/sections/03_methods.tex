@@ -158,7 +158,7 @@ participants (nested), optionally only among moments available before a deadline
 \subsection{Analyses}
 \label{sec:analyses}
 
-Table~\ref{tab:analysis-map} maps the research questions to the nine MATLAB scripts in \vn{Analysis/ML/}; all share the
+Table~\ref{tab:analysis-map} maps the research questions to the twelve MATLAB scripts in \vn{Analysis/ML/}; all share the
 building blocks of \vn{mlTools.m}. Their reports (\vn{ml_*_matlab.md}) and figures (\vn{fig_*.png}) are in
 \vn{Results/ML Models/MATLAB/}.
 
@@ -190,6 +190,11 @@ at the leading-foot apex or landing; why some participants are harder ($d'$). \\
 statistics, confusion matrix and probability calibration; anticipation in the approach; IMU vs camera scaling. \\
 \vn{crossing_ml_haptic.m} & Q4 & Event timeline relative to the trailing toe lift-off; single-signal crossing detection and
 height thresholds over the swing and in real time; extra angle and lift per height. \\
+\vn{crossing_ml_stats.m} & Q1--Q3 & Repeated-measures ANOVA and mixed models of the crossing variables per limb; IMU vs camera
+agreement; paired tests between the main models; leg dominance. \\
+\vn{crossing_ml_robust.m} & Q3 & Sampling rate, sensor noise, model size and conformal prediction sets of the device. \\
+\vn{crossing_ml_params.m} & Q1 & Significance of the 26 step~9 parameters (the SPSS sheet): ANOVA with FDR, change per cm, level
+walk, rank-based tests, outlying cells, clearance equivalence, power. \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -214,3 +219,41 @@ only if the top probability is at least 0.6. Outcome per crossing: correct cue, 
 single-signal detection (crossing vs level stride) and three-level grading over the swing; the same grading on the
 time-aligned signals for cue deadlines of 500, 300, 200, 100 and 0\,ms before the lift-off; the mean extra angle or lift per
 height at the most informative moment, and its crossing-to-crossing SD.
+
+\paragraph{Statistical tests} (\vn{crossing_ml_stats.m}). The leading and the trailing limb are analysed separately, as in the
+group analysis of step~9. (1) A 3 (height) $\times$ 2 (width) repeated-measures ANOVA on each participant's mean per obstacle
+(\vn{fitrm}, \vn{ranova}) for four variables per limb: Dot foot lift, the main segment angle (leading thigh flexion, trailing
+shank heel-up), swing time and the camera minimum clearance; Greenhouse--Geisser corrected $p$, partial
+$\eta^2_p = SS_{\text{effect}}/(SS_{\text{effect}} + SS_{\text{error}})$, and paired $t$-tests between the height levels (averaged over
+width) with Holm correction and $d_z$ = mean difference / SD of the differences. (2) Mixed models on every crossing,
+$y = \beta_0 + \beta_h h_c + \beta_W W + \beta_{hW} h_c W + \beta_r\,\text{repeat} + u_{0p} + u_{1p} h_c + \varepsilon$, with the
+height $h_c$ (cm) centred on its mean and the width coded $W = \pm\tfrac12$, so $\beta_h$ is the slope averaged over the widths,
+$\beta_W$ the width effect at the mean height and $\beta_{hW}$ the difference of the slopes. (3) Agreement of the Dot foot lift with
+the camera toe rise (Bland--Altman: bias, $\pm 1.96$\,SD limits of agreement, proportional bias) and of the IMU toe-off with the
+camera lift-off. (4) Paired model comparisons on the same crossings: McNemar exact test, Wilcoxon signed-rank test on the ten
+participant accuracies, and the participant-bootstrap CI of the difference in balanced accuracy; Holm correction over the five
+pairs. (5) Leg dominance as an extra fixed effect in the mixed models, and Fisher's exact test of the device model's errors.
+
+\paragraph{Device robustness} (\vn{crossing_ml_robust.m}). On the time-aligned signals (thigh, shank and foot tilt, foot
+acceleration, foot height), six features per signal (maximum, minimum, mean, SD, last value, time of the maximum) are computed
+for the leading limb up to 0.3\,s before the trailing lift-off (real-time cue) and for both limbs over the whole window (after the
+crossing), with person scaling and a random forest. \emph{Sampling rate}: each signal is averaged over its last $m$ samples and
+every $m$-th sample is kept ($m = 2, 3, 4, 6$: 30, 20, 15, 10\,Hz). \emph{Noise}: independent Gaussian noise added to every
+sample (tilt SD 1--8\textdegree{}, foot acceleration 0.25--2\,m/s$^2$, foot height 5--40\,mm; three draws per level).
+\emph{Model size}: on the device features, forests of 5--300 trees with a minimum leaf size of 2, 10 or 30 (memory about 12
+bytes per tree node) and logistic models restricted to the $k$ best features of each training set (ANOVA $F$).
+\emph{Prediction sets}: split-conformal across participants. The nonconformity score $s = 1 - P(\text{true class})$ is computed for
+the other participants' crossings with models trained without the tested participant either (nested LOPO); with $q$ the
+$\lceil (n+1)(1-\alpha) \rceil$-th smallest of these $n$ scores, the set holds every class with $1 - P(c) \le q$. This covers the
+true class with probability at least $1-\alpha$ when the participants are exchangeable.
+
+\paragraph{Step 9 parameters} (\vn{crossing_ml_params.m}). The 26 parameters of the step~9 SPSS sheet (participant means per obstacle
+and limb, and the level walk) are tested per limb with the 3 $\times$ 2 repeated-measures ANOVA of the SPSS GLM (Greenhouse--Geisser
+$p$, partial $\eta^2$) and the Benjamini--Hochberg false discovery rate $q$ over the 52 parameter $\times$ limb tests of each effect;
+Holm-corrected pairwise height contrasts; the change per cm of obstacle from a mixed model on the participant means,
+$y = \beta_0 + \beta_h h_c + \beta_W W + \beta_{hW} h_c W + u_{0p} + u_{1p} h_c + \varepsilon$; paired $t$-tests of the six-obstacle mean
+and of the lowest obstacle against the level walk; Friedman and Wilcoxon signed-rank tests as rank-based checks; outlying cells by
+the modified $z$-score $(x - \text{median}) / (1.4826\,\text{MAD}) > 3.5$ within each obstacle column, with the ANOVA repeated
+without the participants that have them; for the clearance the 90\,\% CI of H3 $-$ H1 and W2 $-$ W1, whose larger absolute limit is
+the smallest bound at which two one-sided tests (TOST, $\alpha = 0.05$) show equivalence; and the smallest effect $d_z$ detectable
+with 80\,\% power (\vn{sampsizepwr}).

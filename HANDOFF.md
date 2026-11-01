@@ -86,6 +86,12 @@ ankle_angle) and `SROM` (Thigh/Shank/Foot); clearance → `T1`; timing → `PKT`
 `Statistical Analysis/` holds the user's SPSS work: `dataset.sav`, `anova-analysis.spv`, `OUTPUT.pdf`, and a copy
 of the SPSS input sheet. **NOTE:** that copy can lag behind the latest step9 run — after re-running step9, the
 fresh sheet is `Results/Group Analysis/GroupCrossing_YoungAdults_SPSS.xlsx`; re-import it into SPSS.
+`Analysis/ML/crossing_ml_params.m` reproduces the SPSS GLM exactly in MATLAB (checked on the 26 Oct sheet, 14 tables) and
+extends it on the fresh sheet (FDR over all 26 parameters x 2 limbs, change per cm, level walk, Friedman / Wilcoxon,
+outlying cells, clearance equivalence, power) -> `Results/ML Models/MATLAB/ml_params_matlab.md`. **Cells to check:** 93
+participant means are outlying (modified z > 3.5), e.g. 104's leading knee ROM 238-274 deg and hip peak flexion
+123-157 deg (IK artefact) and 101's trailing shank / foot peak timing at W2_H2; fix them in step 9 (e.g.
+`manualJointValues.m`) before trusting the joint-angle and timing results, in MATLAB or SPSS.
 
 ## Machine learning and haptic-cue analyses (`Analysis/ML/`, all MATLAB)
 Question: can the Dot IMUs alone recognise the obstacle (height, width) for a participant never seen in training, and
@@ -94,16 +100,18 @@ when, from which limb and with which threshold should a haptic cue be given? Res
 `Reports/26-10-31-ml-haptic-report/` (LaTeX; the `.zip` next to it uploads to Overleaf). Slides:
 `Presentations/26-10-31-ml-haptic-results-101-110.pptx`.
 
-Run from `Analysis/ML`, in this order (headless: `matlab -batch "name"`; a full rerun takes ~65 min on 8 workers):
+Run from `Analysis/ML`, in this order (headless: `matlab -batch "name"`; a full rerun takes ~70 min on 8 workers):
 1. `build_crossing_master` — one row per crossing from the step 1–9 outputs → `Results/ML Dataset/`: master CSV
    (349 rows × 193 columns), swing-curve CSV, time-aligned CSV (60 Hz, −1.5 to +0.6 s around the camera trailing toe
    lift-off), data dictionary, build report, exclusions log. **Close Excel first.**
-2. The nine analyses; each writes `Results/ML Models/MATLAB/ml_*_matlab.md` and saves the numbers behind its figures
+2. The twelve analyses; each writes `Results/ML Models/MATLAB/ml_*_matlab.md` and saves the numbers behind its figures
    in `figdata/`: `crossing_ml_matlab` (~26 min, permutation tests), `crossing_ml_explore`, `crossing_ml_story` (CNN),
    `crossing_ml_stream`, `crossing_ml_device`, `crossing_ml_realworld`, `crossing_ml_lateral`, `crossing_ml_validate`,
-   `crossing_ml_haptic` (no arguments = full run). A quick test (`true` as the first argument, or the second for
+   `crossing_ml_haptic`, `crossing_ml_stats` (RM-ANOVA and mixed models per limb, IMU vs camera agreement, McNemar
+   model comparisons, leg dominance; ~1 min), `crossing_ml_robust` (sampling rate, noise, model size, conformal
+   prediction sets; ~2 min), `crossing_ml_params` (the step 9 SPSS sheet, see above; seconds) (no arguments = full run). A quick test (`true` as the first argument, or the second for
    `crossing_ml_matlab` and `crossing_ml_story`) overwrites the reports with QUICK versions.
-3. `crossing_ml_figures` — redraws all 19 `fig_*.png` from `figdata/` in seconds. **All figure code lives here**, in
+3. `crossing_ml_figures` — redraws all 23 `fig_*.png` from `figdata/` in seconds. **All figure code lives here**, in
    the step 9 plot template (Arial, bold 16-pt labels, 13-pt ticks, 2-pt box, blue leading / orange trailing, 300-dpi
    PNG; green = both limbs, grey = generic model, purple = person scaling). Restyle here, never in the analyses.
 
@@ -135,13 +143,15 @@ Notes:
 ## Current state
 Steps 01–09 working for **n=10 (Tests 101–110)**. `GroupCrossing_YoungAdults_SPSS.xlsx` is the tailored wide sheet
 described above. The ML and haptic-cue analyses, their report (Overleaf zip) and the 31 Oct deck are committed
-(bf64ad7); all ML figures are in the step 9 template.
+(bf64ad7); all ML figures are in the step 9 template. On 31 Oct the statistics (`crossing_ml_stats`) and device-robustness
+(`crossing_ml_robust`) analyses and the step 9 parameter statistics (`crossing_ml_params`) were added to the code, the report
+(results 4.4 and 4.7, appendix) and the deck (44 slides).
 
 ## Likely next steps
 - Add participants: run pipeline → `diag_participant(NNN)` (QC) → hand-calc flagged joints in `manualJointValues.m`
   (add a new section) → add NNN to `TESTS` in step9 → close Excel → re-run step9 → re-import sheet into SPSS.
 - Keep the SPSS sheet and the `Statistical Analysis/` copy in sync after each step9 run.
 - Rebuild in-MATLAB group statistics only if asked (user prefers small, incremental steps).
-- ML after new participants: rerun `build_crossing_master`, the nine analyses and `crossing_ml_figures`, then
+- ML after new participants: rerun `build_crossing_master`, the twelve analyses and `crossing_ml_figures`, then
   regenerate the report tables. Open research steps: older adults, mixed obstacle order, a real-time haptic prototype
   with a reaction-time test, and a measured sensor-to-toe geometry for clearance.

@@ -1,0 +1,83 @@
+\subsubsection{Robustness for a low-cost device}
+\label{sec:res-robust}
+
+Four tests (\vn{crossing_ml_robust.m}, Section~\ref{sec:analyses}) ask whether the device result survives cheaper hardware and a
+small processor. The sampling-rate and noise tests use six features per signal for two settings: a real-time cue from the leading
+limb up to 0.3\,s before the trailing lift-off (80.1\,\% at 60\,Hz) and the result after the crossing from both limbs (89.2\,\%).
+Figure~\ref{fig:robust} summarises them.
+
+\paragraph{Sampling rate.} From 60 to 10\,Hz the accuracy drops by 2.6 points for the real-time cue (80.1 to 77.4\,\%) and by
+2.3 points after the crossing (89.2 to 86.9\,\%); no rate costs more than 3.1 points (Table~\ref{tab:robrate}). The obstacle is
+written in slow movements (foot lift, thigh and shank tilt over 0.2--0.5\,s), so a 10--20\,Hz stream keeps it. The foot height was
+still integrated at 60\,Hz; a less accurate integration at a low IMU rate is not simulated.
+
+\paragraph{Sensor noise.} With the noise of a good IMU (1--2\textdegree{} tilt, 0.25--0.5\,m/s$^2$ acceleration, 5--10\,mm foot
+height) the accuracy does not change ($-0.3$ to $+1.0$ points); only at 8\textdegree{} and 40\,mm does it fall, to 76.5\,\% for
+the real-time cue and 87.7\,\% after the crossing (Table~\ref{tab:robnoise}). The features are maxima, minima and means over many
+samples, which average the noise. A constant offset, such as a sensor mounted a few degrees off, is removed by both the level-walk
+calibration and the person scaling.
+
+\paragraph{Model size.} The device model (300 trees, minimum leaf 2) reaches 92.3\,\% and needs about 311\,kB
+(Table~\ref{tab:robforest}). Ten trees with a minimum leaf of 30 reach 91.2\,\% in about 3\,kB, small enough for a
+microcontroller. A logistic model with a single feature per limb, most often the peak height of the leading foot and the height of
+the trailing foot at 25\,\% of its swing, reaches 89.2\,\% in 72 bytes, and with two features per limb 90.8\,\% in 120 bytes
+(Table~\ref{tab:roblogistic}); more features do not help the logistic model (86.1--89.3\,\%).
+
+\paragraph{Prediction sets.} Instead of a single height, the device can return the set of plausible heights with a guaranteed
+coverage for a new person (split-conformal, Table~\ref{tab:robconformal}). At a 90\,\% target the sets contain the true height in
+91.2\,\% of the crossings (H1 94\,\%, H2 88\,\%, H3 91\,\%): 97.7\,\% of the crossings get a single height and 2.3\,\% an empty
+set (no cue), and the 8.8\,\% not covered are 6.5\,\% wrong single heights and the 2.3\,\% empty sets. At 95\,\% the coverage is
+94.6\,\% and 14.6\,\% of the sets are two neighbouring heights; H1 and H3 together, or all three heights, never occur. At 80\,\%
+the sets are empty for 16.2\,\% of the crossings. A cue can therefore name one height, fall back to ``one of two neighbouring
+heights'' at a strict target, and stay silent when no height is plausible enough.
+
+\begin{table}[htbp]
+\centering
+\caption{Sampling rate: balanced accuracy (95\,\% CI) when every signal is averaged over its last $m$ samples and decimated from
+60\,Hz to 30, 20, 15 and 10\,Hz.}
+\label{tab:robrate}
+\input{tables/robust_rate}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Sensor noise: mean balanced accuracy over three draws of independent Gaussian noise added to every sample (min--max in
+brackets).}
+\label{tab:robnoise}
+\input{tables/robust_noise}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Model size, random forests of the device model: balanced accuracy and memory (12 bytes per tree node, both limbs).}
+\label{tab:robforest}
+\input{tables/robust_forest}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Model size, logistic regression with the $k$ best features per limb (chosen inside each training set): balanced accuracy
+and memory.}
+\label{tab:roblogistic}
+\input{tables/robust_logistic}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Conformal prediction sets: observed coverage overall and per class, mean set size, and share of the crossings by set
+type (in brackets: single height and right).}
+\label{tab:robconformal}
+\input{tables/robust_conformal}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{fig_robust.png}
+\caption{Device robustness. Top left: balanced accuracy against the sampling rate for the real-time cue (blue: leading limb up to
+0.3\,s before the trailing lift-off) and after the crossing (green: both limbs); band = 95\,\% participant-bootstrap CI. Top right:
+against added sensor noise (mean and min--max over three draws). Bottom left: against model memory for forests (purple, minimum
+leaf 2, 10 and 30; 5--300 trees) and logistic models with the $k$ best features per limb (green). Bottom right: conformal
+prediction sets at 80, 90 and 95\,\% target coverage: one right height (green), one wrong height (red), two neighbouring heights
+(light teal), H1 + H3 or all three (grey) and empty (light grey); observed coverage above the bars. Dashed = chance.}
+\label{fig:robust}
+\end{figure}

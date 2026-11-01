@@ -26,16 +26,22 @@ generated directly from the analysis reports in \vn{Results/ML Models/MATLAB/}.
 \begin{keybox}[Answers in one page]
 \begin{description}[leftmargin=0.3cm,style=nextline,itemsep=3pt]
   \item[Q1 How people cross] Each foot is lifted by about the obstacle height (leading foot +10.1\,mm per cm, trailing +11.1\,mm per cm,
-  measured by the foot sensor), through leading-thigh flexion and trailing heel-up, while the clearance stays constant. Height shows
+  measured by the foot sensor), through leading-thigh flexion and trailing heel-up, while the leading-foot clearance stays constant
+  (equivalent within 2.6\,cm) and the trailing one tends to fall slightly. Of the 26 step~9 parameters, height changes 6 per limb
+  after an FDR correction, most clearly the thigh and shank tilts (partial $\eta^2$ 0.85--0.90). Height shows
   most in the trailing foot early in its swing and in the leading foot around its apex. Each person has a strong walking signature
   (one crossing identifies the person in 99\,\% of cases) and a personal obstacle margin. Nothing in the approach steps anticipates
-  the height.
+  the height. A deeper obstacle adds only 25\,mm of foot lift: significant for the group means, small against the 40\,mm
+  crossing-to-crossing SD. The non-dominant leg crosses with the larger clearance, leading or trailing.
   \item[Q2 Recognition] Height (3 levels): generic models 56--73\,\%; with person scaling (no labels) 90--92\,\% for a new person;
-  2.4\,cm error as a number; an unseen middle height is interpolated with 3.1\,cm error. Width: 54--66\,\% (chance 50\,\%),
+  2.4\,cm error as a number; an unseen middle height is interpolated with 3.1\,cm error. Paired tests confirm the gains of person
+  scaling (+35 points), the random forest (+6) and the clearance-shape features (+11). Width: 54--66\,\% (chance 50\,\%),
   because people barely change how they cross a deeper obstacle.
-  \item[Q3 Device] Two foot IMUs are enough (92.3\,\%); one labelled crossing gives 80\,\%, 10--15 unlabelled crossings 81--85\,\%;
-  in a realistic mixed session the device reaches 90\,\% from crossing 16 on; without any camera 86\,\% of the crossings are found,
-  paired and classified correctly.
+  \item[Q3 Device] Two foot IMUs are enough (92.3\,\%; six are not significantly better); one labelled crossing gives 80\,\%,
+  10--15 unlabelled crossings 81--85\,\%; in a realistic mixed session the device reaches 90\,\% from crossing 16 on; without any
+  camera 86\,\% of the crossings are found, paired and classified correctly. Sampling at 10\,Hz costs at most about 3 points,
+  consumer-grade sensor noise nothing; a 10-tree forest of about 3\,kB keeps 91\,\%, and prediction sets reach their 90\,\%
+  coverage target for a new person (91\,\%).
   \item[Q4 Haptic cue] Cue the trailing limb from the leading limb, at the latest at the leading-foot apex (about 0.45\,s before the
   trailing toe leaves the floor); the leading landing is too late (0.2\,s). Detect the crossing from the leading thigh or foot
   (97--99\,\%); grade the height with personal thresholds (64--73\,\% with one signal, 71--76\,\% with the multi-feature real-time
@@ -54,7 +60,7 @@ generated directly from the analysis reports in \vn{Results/ML Models/MATLAB/}.
   participants only.
   \item \textbf{Models} (Section~\ref{sec:models}). Logistic regression, random forests, support vector machines, boosted
   trees, ensembles, a 1D convolutional network, regression models and a physics-informed offset model.
-  \item \textbf{Analyses} (Section~\ref{sec:analyses}). Nine MATLAB scripts, each answering part of Q1--Q4
+  \item \textbf{Analyses} (Section~\ref{sec:analyses}). Twelve MATLAB scripts, each answering part of Q1--Q4
   (Table~\ref{tab:analysis-map}).
   \item \textbf{Haptic design} (Sections~\ref{sec:res-haptic} and \ref{sec:discussion}). Timing of the crossing events
   and single-signal thresholds that a simple cueing rule could use.

@@ -1,6 +1,6 @@
 # What wearable IMUs reveal about obstacle crossing — summary of the MATLAB analyses
 
-*Updated 31 October 2026: full rerun of the nine analyses on the rebuilt dataset; figures redrawn in the step 9 template. Full write-up: `Reports/26-10-31-ml-haptic-report/`; slides: `Presentations/26-10-31-ml-haptic-results-101-110.pptx`.*
+*Updated 31 October 2026: full rerun of the nine analyses on the rebuilt dataset, plus statistics and device-robustness analyses; figures redrawn in the step 9 template. Full write-up: `Reports/26-10-31-ml-haptic-report/`; slides: `Presentations/26-10-31-ml-haptic-results-101-110.pptx`.*
 
 **Study:** 10 young adults, with Movella Dot IMUs on the thigh, shank and foot of both legs. They crossed 6 obstacles: 3 heights (10 / 20 / 30 % of leg length) × 2 widths (5 / 15 cm), about 5 repeats each.
 
@@ -8,7 +8,7 @@
 
 ## The story in one paragraph
 
-People clear an obstacle by lifting the foot by about the obstacle height: **+10 mm per cm of obstacle, 95 % CI 9.4–10.8**, for the leading foot. This lift comes from thigh flexion on the leading leg and heel-up on the trailing leg. Meanwhile they keep a nearly constant safety margin. How much extra each person lifts for *any* obstacle is very personal: it varies across people by two-thirds of the step between two heights. Every person also has a strong walking "signature": one crossing identifies the walker with 99 % accuracy. This is why a generic model reaches only about 62–73 %, but **one foot IMU per leg recognises obstacle height on a new person with about 92 % accuracy once the device has seen some of that person's crossings.** The height is about 80 % known at the leading-foot apex, a median **0.45 s** before the trailing toe leaves the floor (camera), so a cue for the trailing leg must come from the leading leg, by its apex; the leading landing leaves only 0.2 s, and the trailing leg's own signals show nothing before it lifts. In real time, using only the leading leg, about 3 in 4 cues are correct (79–82 % of the cues given when the device answers only when confident). The whole pipeline (finding the crossing, telling which leg led, classifying the height) runs without any camera. Width is not detectable, and that limit is behavioural: people barely change how they cross for a 5 vs 15 cm obstacle. The toe clearance depends mainly on how high the toe goes and is only partly predictable from the foot IMU.
+People clear an obstacle by lifting the foot by about the obstacle height: **+10 mm per cm of obstacle, 95 % CI 9.4–10.8**, for the leading foot. This lift comes from thigh flexion on the leading leg and heel-up on the trailing leg. Meanwhile they keep a nearly constant safety margin. How much extra each person lifts for *any* obstacle is very personal: it varies across people by two-thirds of the step between two heights. Every person also has a strong walking "signature": one crossing identifies the walker with 99 % accuracy. This is why a generic model reaches only about 62–73 %, but **one foot IMU per leg recognises obstacle height on a new person with about 92 % accuracy once the device has seen some of that person's crossings.** The height is about 80 % known at the leading-foot apex, a median **0.45 s** before the trailing toe leaves the floor (camera), so a cue for the trailing leg must come from the leading leg, by its apex; the leading landing leaves only 0.2 s, and the trailing leg's own signals show nothing before it lifts. In real time, using only the leading leg, about 3 in 4 cues are correct (79–82 % of the cues given when the device answers only when confident). The whole pipeline (finding the crossing, telling which leg led, classifying the height) runs without any camera, and it needs no laboratory hardware: 10 Hz sampling, consumer-grade sensor noise or a 3 kB model cost at most about 3 points. Width is not detectable, and that limit is behavioural: people barely change how they cross for a 5 vs 15 cm obstacle. The toe clearance depends mainly on how high the toe goes and is only partly predictable from the foot IMU.
 
 ## Contributions and key numbers
 
@@ -160,10 +160,32 @@ The pipeline uses all 7,250 strides of the sessions.
 
 **How much the limbs move per height** (H1 / H2 / H3, relative to normal walking): lead thigh +35 / +46 / +53°, lead foot +204 / +298 / +361 mm, trailing shank heel-up −31 / −46 / −55°, trailing foot +237 / +352 / +436 mm.
 
-### 9. Limits (reported as findings)
+### 9. Statistics (`ml_stats_matlab.md`, `fig_stats.png`; step 9 parameters: `ml_params_matlab.md`, `fig_params.png`, `fig_params_clear.png`)
+
+Each limb analysed separately, as in step 9.
+
+- **The 26 step 9 parameters (the SPSS sheet, participant means, n = 10).** The MATLAB repeated-measures ANOVA reproduces the SPSS GLM exactly (same F and Greenhouse-Geisser p in the 14 SPSS tables compared, on the 26 October sheet). With a false-discovery-rate correction over the 52 parameter × limb tests, height changes **6 of 26 parameters per limb**: most clearly the leading thigh forward tilt and tilt ROM (partial η² 0.87 / 0.89, +1.16° per cm) and the trailing shank backward tilt and tilt ROM (0.90 / 0.85, +1.23° per cm); also hip ROM, leading knee peak flexion and ankle ROM, trailing foot tilt ROM and cadence, and gait speed. No clearance or peak-timing parameter changes with height. Width changes 3 leading-limb segment parameters; no interaction. 10 (leading) and 14 (trailing) of the 21 parameters with a level walk differ from level walking.
+- **Clearance (equivalence test).** From H1 to H3 the obstacle rises 18.5 cm; the leading minimum clearance changes by −1.2 cm and changes beyond **2.6 cm are excluded** (TOST), so the leading foot keeps its clearance. The trailing minimum clearance falls by 3.5 cm (90 % CI −6.9 to −0.2): constant is not shown.
+- **Cells to check in step 9.** 93 of 3120 participant means are outlying (modified z > 3.5), 42 in the IK joint angles and 28 in the peak timings. Some are impossible: participant 104's leading knee ROM 238–274° and hip peak flexion 123–157° (medians 60–80° and 37–50°). Participant 101's trailing shank / foot peak timing at W2_H2 is +11.5 / +9.4 % GC (medians −3.0 / −4.5 %). Without the participants with outlying cells, 8 verdicts at p < 0.05 change (e.g. trailing shank-tilt timing vs height: p 0.143 → < 0.001). 104's values are also in the sheet of the 26 October SPSS run (hip flexion 123–152°), so the SPSS joint-angle results are affected too.
+- **Power.** With 10 people a paired comparison detects only d_z ≥ 1.0 (80 % power); 54 of the 70 non-significant contrasts have |d_z| < 0.5 (n > 34 needed). Non-significant means "no large effect", not "no effect".
+
+- **Height vs width (repeated-measures ANOVA on the participant means):** height changes the foot lift (partial η² 0.97 lead / 0.93 trail), lead thigh flexion (0.89), trailing shank heel-up (0.86) and trailing swing time (0.37), but not the lead swing time or the camera clearance. Width also shifts the foot lift (0.80 / 0.76), lead thigh (0.70), trailing shank (0.38) and trailing swing time (0.48). No height × width interaction.
+- **In physical units (mixed models on every crossing):** +10.1 / +11.1 mm per cm of height. At the same height the 15 cm obstacle adds **+25 mm** (as much as 2.5 / 2.3 cm of extra height), against a crossing-to-crossing SD of 41 / 40 mm. The shift is consistent across people, so it is significant for the means, but it is too small to read from one crossing: this is why width cannot be recognised. The foot lift shows no linear trend over the five repeats.
+- **IMU vs camera:** Dot foot lift minus camera toe rise: bias +8 / +48 mm, limits of agreement −122 to +137 / −163 to +260 mm, no proportional bias. The IMU toe-off comes a median +83 / +233 ms after the camera lift-off (trailing: +4.9 ms more per cm).
+- **Which model differences are real (McNemar, Holm over 5 pairs):** person scaling vs generic **+34.8 points** (p < 0.001), forest vs logistic +5.9 (p = 0.008), clearance-shape vs summary features +10.7 (p = 0.003). Not significant: 2 vs 6 IMUs (+1.1, p = 0.38), both feet vs leading foot (+3.5, p = 0.19). Cohen's κ 0.88 (device) vs 0.36 (generic).
+- **Leg dominance** (association; people chose their leading leg): with the dominant leg leading, lead foot lift −21 mm, lead thigh −5.4°, lead clearance −34 mm; the non-dominant trailing leg tilts its shank 2.6° further back and clears by +46 mm. **The non-dominant leg crosses with the larger margin in either role.** Device accuracy 95.6 vs 89.8 % (Fisher p = 0.10): the device does not need to know which leg is dominant.
+
+### 10. Device robustness (`ml_robust_matlab.md`, `fig_robust.png`)
+
+- **Sampling rate:** 60 → 10 Hz costs 2.6 points for the real-time cue (80.1 → 77.4 %) and 2.3 after the crossing (89.2 → 86.9 %).
+- **Sensor noise:** nothing lost with 1–2° tilt and 5–10 mm foot-height noise; at 8° / 40 mm 76.5 / 87.7 %.
+- **Model size:** the 300-tree forest (92.3 %) needs 311 kB; **10 trees with minimum leaf 30 give 91.2 % in 3 kB**. A logistic model on one feature per leg (lead peak foot height, trailing foot height at 25 % of its swing) gives 89.2 % in 72 bytes.
+- **Prediction sets** (split-conformal, nested LOPO): at a 90 % target the sets cover 91.2 % of crossings, with one height for 97.7 % and an empty set (no cue) for 2.3 %. At 95 %, 14.6 % are two neighbouring heights; H1 + H3 together never occurs.
+
+### 11. Limits (reported as findings)
 
 - **Width is behaviourally invisible.**
-  - For a 10 cm wider obstacle the crossing step grows by only about 4 cm.
+  - For a 10 cm wider obstacle the crossing step grows by only about 4 cm, and the foot rises by only 25 mm (see Statistics above).
   - Even the camera's foot placement classifies width at only 57 %. The IMU models reach 55–66 %.
   - **Side-to-side motion doesn't help** (`ml_lateral_matlab.md`, `fig_lateral.png`). I checked the sideways tilt and twist of the thigh, shank and foot, and the foot's outward path: they alone give 53 %, and the largest width effect is 6 % of the variance. People simply don't cross a 5 vs 15 cm obstacle differently in any direction.
 - **The toe clearance is only partly predictable from the IMU** (`ml_validate_matlab.md` V3). Within a person and obstacle it varies (SD 37 mm lead, 71 mm trail) mainly with how high the toe goes: the camera toe peak explains 35 / 34 % of it, the IMU foot lift 20 / 12 %. The absolute clearance error from the IMU is 39 / 65 mm (a constant: 49 / 88 mm; the camera toe peak: 34 / 55 mm). Near-contact detection is weak (AUC 0.63–0.73). A measured toe height (sensor position on the shoe) is needed.
@@ -191,7 +213,10 @@ Code (MATLAB), in `Analysis/ML/`:
 | `crossing_ml_lateral.m` | width from side-to-side motion |
 | `crossing_ml_validate.m` | generalisation, clearance mechanism, importance, statistics, validity (V1–V7) |
 | `crossing_ml_haptic.m` | haptic-cue timing, detection and height thresholds |
-| `crossing_ml_figures.m` | draws all 19 figures (step 9 template) from the numbers saved in `figdata/` |
+| `crossing_ml_stats.m` | repeated-measures ANOVA and mixed models per limb, IMU vs camera agreement, paired model tests, leg dominance |
+| `crossing_ml_robust.m` | sampling rate, sensor noise, model size and conformal prediction sets of the device |
+| `crossing_ml_params.m` | significance of the 26 step 9 parameters (SPSS sheet): ANOVA with FDR, per cm, level walk, rank tests, outlying cells, clearance equivalence, power |
+| `crossing_ml_figures.m` | draws all 23 figures (step 9 template) from the numbers saved in `figdata/` |
 | `mlTools.m` | shared building blocks |
 
 Reports (`ml_*_matlab.md`), figures (`fig_*.png`) and figure data (`figdata/`) are in this folder.

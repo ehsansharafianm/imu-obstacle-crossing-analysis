@@ -101,8 +101,8 @@ classdef mlTools
 
         %% ---------------- models ----------------
         function s = spec(kind, varargin)
-            % spec('logreg', 'C', 0.1, 'k', 0) | spec('forest', 'nTrees', 500) | spec('svm') | spec('boost')
-            s = struct('kind', kind, 'C', 0.1, 'k', 0, 'nTrees', 500, 'seed', 0);
+            % spec('logreg', 'C', 0.1, 'k', 0) | spec('forest', 'nTrees', 500, 'minLeaf', 2) | spec('svm') | spec('boost')
+            s = struct('kind', kind, 'C', 0.1, 'k', 0, 'nTrees', 500, 'minLeaf', 2, 'seed', 0);
             for i = 1:2:numel(varargin), s.(varargin{i}) = varargin{i+1}; end
         end
 
@@ -124,7 +124,7 @@ classdef mlTools
                     [P.W, P.b] = mlTools.logregFit(X(:, P.sel), yi, numel(P.classes), s.C, w);
                 case 'forest'
                     rng(s.seed, 'twister');
-                    P.tb = TreeBagger(s.nTrees, X, y, 'Method', 'classification', 'MinLeafSize', 2, ...
+                    P.tb = TreeBagger(s.nTrees, X, y, 'Method', 'classification', 'MinLeafSize', s.minLeaf, ...
                         'NumPredictorsToSample', max(1, floor(sqrt(size(X,2)))), 'Prior', 'Uniform', ...
                         'Options', statset('UseParallel', false));
                 case 'svm'
