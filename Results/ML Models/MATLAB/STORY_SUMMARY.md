@@ -1,6 +1,6 @@
 # What wearable IMUs reveal about obstacle crossing — summary of the MATLAB analyses
 
-*Updated 31 October 2026: full rerun of the nine analyses on the rebuilt dataset, plus statistics and device-robustness analyses; figures redrawn in the step 9 template. Full write-up: `Reports/26-10-31-ml-haptic-report/`; slides: `Presentations/26-10-31-ml-haptic-results-101-110.pptx`.*
+*Updated 31 October 2026: full rerun of the nine analyses on the rebuilt dataset, plus statistics and device-robustness analyses; figures redrawn in the step 9 template. Full write-up: `Documents/obstacle-crossing-report` (Overleaf-linked git folder); slides: `Presentations/26-10-31-ml-haptic-results-101-110.pptx`.*
 
 **Study:** 10 young adults, with Movella Dot IMUs on the thigh, shank and foot of both legs. They crossed 6 obstacles: 3 heights (10 / 20 / 30 % of leg length) × 2 widths (5 / 15 cm), about 5 repeats each.
 

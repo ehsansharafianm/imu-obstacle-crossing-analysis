@@ -39,6 +39,11 @@ and spatiotemporal measures during obstacle crossing, aggregated across particip
   step9 (so hand values flow into the figure AND the group ROM/max/min). `[]` = keep automatic. **Only Test 108
   has entries so far** (right-leg heading drift; hip/knee/ankle re-measured by hand).
 - `signNormTools.m` + `signTemplates.mat` — data-driven left/right sign normalization (hip + Dot segments).
+- `diag_step9_cells.m` — read-only check of the outlying cells of the step 9 SPSS sheet -> 
+  `Results/Group Analysis/Step9_Cells_To_Check.md`: the diag_participant hand-calc candidates of every test (80 in 9
+  tests; only 108 has hand values) and, for each outlying peak-timing cell, its per-stride values recomputed exactly as
+  step 9 does (16 of 28 are single-stride peak jumps that the CLEAN rule, 3-MAD gate + median, would remove). Rerun
+  it after adding hand values or changing step 9.
 
 ## Key methods / decisions (important context)
 - **Heading drift:** IMU heading (yaw) drifts badly (lab magnetometer unreliable); tilt is clean. OpenSim turns
@@ -97,7 +102,7 @@ participant means are outlying (modified z > 3.5), e.g. 104's leading knee ROM 2
 Question: can the Dot IMUs alone recognise the obstacle (height, width) for a participant never seen in training, and
 when, from which limb and with which threshold should a haptic cue be given? Results in one page:
 `Results/ML Models/MATLAB/STORY_SUMMARY.md`. Full write-up (dataset, methods, results, recommendations):
-`Reports/26-10-31-ml-haptic-report/` (LaTeX; the `.zip` next to it uploads to Overleaf). Slides:
+the Overleaf-linked folder `Documents/obstacle-crossing-report` (git clone of the Overleaf project; its README explains how to regenerate tables). Slides:
 `Presentations/26-10-31-ml-haptic-results-101-110.pptx`.
 
 Run from `Analysis/ML`, in this order (headless: `matlab -batch "name"`; a full rerun takes ~70 min on 8 workers):

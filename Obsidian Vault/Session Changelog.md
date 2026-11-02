@@ -4,7 +4,31 @@ tags: [changelog, summary]
 
 # Session Changelog
 
-## ★ Latest (2026-10-21) — Step 9 overhaul: sign normalization, recovered peaks, clearance-referenced timing
+## ★ Latest (2026-10-31) — Machine learning, haptic cue and statistics
+Focus: can the Dot IMUs recognise the obstacle for a person never seen in training, when should a haptic cue reach the
+trailing leg, and which step 9 parameters change significantly. All code is MATLAB in `Analysis/ML/` (run order and
+details in `HANDOFF.md`); results in `Results/ML Models/MATLAB/` (one page: `STORY_SUMMARY.md`); full write-up
+`Documents/obstacle-crossing-report` (git clone of the Overleaf project); deck `Presentations/26-10-31-ml-haptic-results-101-110.pptx`.
+- **Dataset** (`build_crossing_master.m`): one row per crossing built from the step 1–9 outputs (349 rows, 260 crossings
+  for ML); only Dot values are model inputs, the camera is the reference.
+- **Height yes, width no.** Generic models 56–73 % (chance 33 %); scaling each feature with the person's own crossings
+  (no labels) 90–92 % for a new person; two foot IMUs are enough (92.3 %). Width 54–66 % (chance 50 %): a deeper obstacle
+  adds only 25 mm of foot lift against a 40 mm crossing-to-crossing SD.
+- **Haptic cue:** from the leading leg (foot height, or thigh), with personal thresholds, at the leading-foot apex at
+  the latest (median 0.45 s before the trailing toe lifts); the trailing leg shows nothing before it lifts.
+- **Device robustness** (`crossing_ml_robust.m`): 10 Hz sampling, consumer-grade sensor noise or a 3 kB model cost at
+  most about 3 points; conformal prediction sets reach their 90 % coverage for a new person.
+- **Statistics.** `crossing_ml_stats.m`: ANOVA / mixed models per limb, IMU vs camera agreement, model comparisons, leg
+  dominance. `crossing_ml_params.m`: all 26 step 9 parameters on the SPSS sheet — reproduces the SPSS GLM exactly, adds
+  FDR, change per cm, level walk, rank tests, clearance equivalence and power. Height changes 6 of 26 parameters per
+  limb (thigh and shank tilts most); the leading clearance is kept within ±2.6 cm, the trailing one tends to fall.
+- **Step 9 cells to check** (`Analysis/diag_step9_cells.m` → `Results/Group Analysis/Step9_Cells_To_Check.md`,
+  read-only): 80 IK hand-calc candidates in 9 tests, hand values so far only for 108 (worst: 104, leading knee ROM
+  238–274°); 28 outlying peak-timing cells, 16 of them single-stride peak jumps that the robust rule of
+  [[Step 9 - Group Crossing Analysis]] (3-MAD gate + median, now only for 106) would remove.
+- **Figures:** every ML figure in the step 9 plot template, drawn by `crossing_ml_figures.m` from saved data.
+
+## ★ (2026-10-21) — Step 9 overhaul: sign normalization, recovered peaks, clearance-referenced timing
 Focus: making the group directional kinematics **correct and task-meaningful**. See [[Step 9 - Group Crossing Analysis]].
 - **Data-driven SIGN normalization** (`Analysis/signNormTools.m`). The IK joints (and occasionally the Dot
   tilts) come out with **inconsistent signs between legs and between trials** (rotated sensor-to-body
