@@ -4,7 +4,8 @@ function crossing_ml_figures(want)
 %   crossing_ml_figures              % redraw all ML figures from the saved results (seconds)
 %   crossing_ml_figures('haptic')    % one group: main, followup, limbs, settings, explore, device,
 %                                    % stream, realworld, lateral, validate, haptic, story_map,
-%                                    % story_person, story_strategy, story_embed, stats, robust, params
+%                                    % story_person, story_strategy, story_embed, stats, robust, params,
+%                                    % confusion
 %
 % The analyses (crossing_ml_*.m) save the numbers behind their figures in
 % Results/ML Models/MATLAB/figdata/<group>.mat (mlTools.figures) and call this function for their
@@ -21,7 +22,7 @@ function crossing_ml_figures(want)
 here = fileparts(mfilename('fullpath'));
 out = fullfile(fileparts(fileparts(here)), 'Results', 'ML Models', 'MATLAB');
 groups = {'main', 'followup', 'limbs', 'settings', 'explore', 'device', 'stream', 'realworld', 'lateral', ...
-          'validate', 'haptic', 'story_map', 'story_person', 'story_strategy', 'story_embed', 'stats', 'robust', 'params'};
+          'validate', 'haptic', 'story_map', 'story_person', 'story_strategy', 'story_embed', 'stats', 'robust', 'params', 'confusion'};
 if nargin < 1 || isempty(want), want = groups; end
 want = cellstr(want);
 for k = 1:numel(want)
@@ -50,6 +51,7 @@ for k = 1:numel(want)
         case 'stats',          figStats(out, S);
         case 'robust',         figRobust(out, S);
         case 'params',         figParams(out, S);  figParamsClear(out, S);
+        case 'confusion',      figConfusionSelf(out, S);
         otherwise, error('crossing_ml_figures:group', 'unknown figure group %s', want{k});
     end
     fprintf('Figures drawn: %s\n', want{k});
@@ -117,6 +119,36 @@ end
 layoutTitle(tl, 'Confusion matrices (generic model, logistic regression)', ...
     'cell = % of the true class (row) and number of crossings; every participant tested unseen');
 saveFig(tl, out, 'fig_confusion.png');
+end
+
+function figConfusionSelf(out, S)
+% Generic (top) vs person-scaled (bottom) confusion matrices of the same logistic model (crossing_ml_confusion.m).
+ST = tmpl();
+keys = {'height|all', 'height|lead only', 'width|all'};
+nm = {'Generic', ST.lead;  'Person scaling', ST.person};          % colour maps: fig_confusion blue, person purple
+[~, tl] = newFig(1400, 1060, 2, 3);
+for n = 1:2
+    for k = 1:3
+        c = S.conf(strcmp({S.conf.key}, keys{k}) & strcmp({S.conf.norm}, S.norms{n,1}));
+        ax = tile(tl);
+        pc = 100 * c.cm ./ sum(c.cm, 2);  nl = numel(c.lab);
+        imagesc(ax, pc, [0 100]);  colormap(ax, seqMap(nm{n,2}));
+        for i = 1:nl
+            for j = 1:nl
+                col = ST.ink;  if pc(i,j) > 55, col = [1 1 1]; end
+                text(ax, j, i, sprintf('%.0f%%\n(n = %d)', pc(i,j), c.cm(i,j)), 'HorizontalAlignment', 'center', ...
+                    'FontName', ST.font, 'FontSize', 13, 'FontWeight', 'bold', 'Color', col);
+            end
+        end
+        axis(ax, 'image');
+        set(ax, 'YDir', 'reverse', 'XTick', 1:nl, 'XTickLabel', c.lab, 'YTick', 1:nl, 'YTickLabel', c.lab, 'TickLength', [0 0]);
+        if k == 1, lbl(ax, 'predicted', 'true class'); else, lbl(ax, 'predicted', ''); end
+        ttl(ax, sprintf('%s\n%s, %.1f%%', nm{n,1}, c.title, 100 * c.bal));
+    end
+end
+layoutTitle(tl, 'Confusion matrices: generic model vs person scaling (logistic regression)', ...
+    'cell = % of the true class (row) and number of crossings; title = balanced accuracy; every participant tested unseen');
+saveFig(tl, out, 'fig_confusion_self.png');
 end
 
 function figParticipants(out, S)
