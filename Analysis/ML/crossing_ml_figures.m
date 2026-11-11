@@ -5,7 +5,7 @@ function crossing_ml_figures(want)
 %   crossing_ml_figures('haptic')    % one group: main, followup, limbs, settings, explore, device,
 %                                    % stream, realworld, lateral, validate, haptic, story_map,
 %                                    % story_person, story_strategy, story_embed, stats, robust, params,
-%                                    % confusion
+%                                    % confusion, environment
 %
 % The analyses (crossing_ml_*.m) save the numbers behind their figures in
 % Results/ML Models/MATLAB/figdata/<group>.mat (mlTools.figures) and call this function for their
@@ -22,7 +22,8 @@ function crossing_ml_figures(want)
 here = fileparts(mfilename('fullpath'));
 out = fullfile(fileparts(fileparts(here)), 'Results', 'ML Models', 'MATLAB');
 groups = {'main', 'followup', 'limbs', 'settings', 'explore', 'device', 'stream', 'realworld', 'lateral', ...
-          'validate', 'haptic', 'story_map', 'story_person', 'story_strategy', 'story_embed', 'stats', 'robust', 'params', 'confusion'};
+          'validate', 'haptic', 'story_map', 'story_person', 'story_strategy', 'story_embed', 'stats', 'robust', 'params', 'confusion', ...
+          'environment'};
 if nargin < 1 || isempty(want), want = groups; end
 want = cellstr(want);
 for k = 1:numel(want)
@@ -52,6 +53,7 @@ for k = 1:numel(want)
         case 'robust',         figRobust(out, S);
         case 'params',         figParams(out, S);  figParamsClear(out, S);
         case 'confusion',      figConfusionSelf(out, S);
+        case 'environment',    figEnvironment(out, S);  figEnvironmentScatter(out, S);
         otherwise, error('crossing_ml_figures:group', 'unknown figure group %s', want{k});
     end
     fprintf('Figures drawn: %s\n', want{k});
@@ -149,6 +151,113 @@ end
 layoutTitle(tl, 'Confusion matrices: generic model vs person scaling (logistic regression)', ...
     'cell = % of the true class (row) and number of crossings; title = balanced accuracy; every participant tested unseen');
 saveFig(tl, out, 'fig_confusion_self.png');
+end
+
+function figEnvironment(out, S)
+% Environment estimation (crossing_ml_environment.m): which sensors, which limb, and what calibration adds.
+ST = tmpl();  TG = S.TG;  nT = numel(TG);
+best = @(t, i) min(reshape(S.mae(t, i, :, :), [], 1));          % best normalisation / model, no labels
+skill = @(v, t) max(0, 100 * (1 - v / S.base(t)));
+[~, tl] = newFig(1700, 1180, 2, 3);
+tg = {TG.short};
+% which sensors (both limbs)
+for pnl = 1:2
+    if pnl == 1
+        cols = S.sensors;  ax = tile(tl, [1 2]);  lim = repmat({'both'}, 1, numel(cols));  sen = cols;
+        ttl(ax, 'Which sensors? (both limbs)');
+    else
+        cols = {'leading', 'trailing', 'both'};  ax = tile(tl);  lim = S.limbs;  sen = repmat(S.sensors(end), 1, 3);
+        ttl(ax, 'Which limb? (all three sensors)');
+    end
+    E = nan(nT, numel(cols));  V = E;
+    for t = 1:nT
+        for c = 1:numel(cols)
+            i = strcmp(S.setSensor, sen{c}) & strcmp(S.setLimb, lim{c});
+            V(t, c) = best(t, i);  E(t, c) = skill(V(t, c), t);
+        end
+    end
+    imagesc(ax, E, [0 80]);  colormap(ax, seqMap(ST.both));
+    for t = 1:nT
+        for c = 1:numel(cols)
+            col = ST.ink;  if E(t, c) > 45, col = [1 1 1]; end
+            text(ax, c, t, sprintf('%.0f mm', V(t, c)), 'HorizontalAlignment', 'center', 'FontName', ST.font, 'FontSize', 12, ...
+                'FontWeight', 'bold', 'Color', col);
+        end
+    end
+    axis(ax, 'tight');  set(ax, 'YDir', 'reverse', 'XTick', 1:numel(cols), 'XTickLabel', cols, 'TickLength', [0 0]);
+    if pnl == 1, set(ax, 'YTick', 1:nT, 'YTickLabel', tg); else, set(ax, 'YTick', 1:nT, 'YTickLabel', {}); end
+    xtickangle(ax, 15);
+    cb = colorbar(ax);  cb.Label.String = 'error reduction vs baseline (%)';
+    set(cb, 'FontName', ST.font, 'FontSize', ST.szTick, 'FontWeight', 'bold', 'LineWidth', 1.2, 'Color', ST.ink);
+    set(cb.Label, 'FontSize', 14, 'FontWeight', 'bold');
+end
+% baseline vs IMU vs calibration (all targets)
+ax = tile(tl, [1 3]);
+iA = find(strcmp(S.setSensor, S.sensors{end}) & strcmp(S.setLimb, 'both'));
+V = nan(nT, 4);
+for t = 1:nT
+    V(t, :) = [S.base(t), S.bestNoLab(t), min(reshape(S.cal3(t, iA, :, :), [], 1)), S.own3(t)];
+end
+cc = [ST.raw; ST.both; ST.teal; ST.generic];
+vbars(ax, V, cc);
+set(ax, 'XTick', 1:nT, 'XTickLabel', tg, 'TickLength', [0 0]);  xtickangle(ax, 15);  xlim(ax, [0.4 nT + 0.6]);
+lbl(ax, '', 'mean absolute error (mm)');
+ttl(ax, 'How close is the estimate for a new person?');
+hk = arrayfun(@(k) keyPatch(ax, cc(k, :)), 1:4);
+leg(ax, hk, {'baseline (training mean)', 'IMUs, no labels (best)', 'IMUs + 3 labelled crossings', 'own mean of the 3 labelled crossings'}, ...
+    'Location', 'northwest', 'NumColumns', 2);
+layoutTitle(tl, 'Can the walker measure the environment? (camera = training target only)', ...
+    ['mean absolute error for a participant left out of training; heat maps: best normalisation and model per cell, colour = error ' ...
+     'reduction against the training mean']);
+saveFig(tl, out, 'fig_environment.png');
+end
+
+function figEnvironmentScatter(out, S)
+% Estimate vs camera for the five main targets (best input set without labels) + tracking within cells.
+ST = tmpl();  TG = S.TG;  m = find([TG.main]);
+[~, tl] = newFig(1700, 1060, 2, 3);
+for k = 1:numel(m)
+    t = m(k);  y = S.Y(:, t);  p = S.bestPred(:, t);  nm = 'best input set';  mae = S.bestNoLab(t);  r = S.bestR(t);
+    if strcmp(TG(t).key, 'trailplace')                            % the physics estimate is the best one here
+        ph = S.phys(strcmp({S.phys.target}, 'trailplace'));  p = S.phPlace;  nm = 'physics: trailing apex';
+        mae = ph.mae;  r = ph.r;
+    end
+    ok = isfinite(y) & isfinite(p);
+    switch TG(t).limb
+        case 'lead',  col = ST.lead;
+        case 'trail', col = ST.trail;
+        otherwise,    col = ST.both;
+    end
+    ax = tile(tl);
+    v = [y(ok); p(ok)];  lo = prctile(v, 0.5);  hi = prctile(v, 99.5);  pad = 0.06 * (hi - lo);  lo = lo - pad;  hi = hi + pad;
+    plot(ax, [lo hi], [lo hi], '--', 'Color', ST.ref, 'LineWidth', ST.refW);
+    scatter(ax, y(ok), p(ok), 28, col, 'filled', 'MarkerFaceAlpha', 0.55, 'MarkerEdgeColor', 'none');
+    xlim(ax, [lo hi]);  ylim(ax, [lo hi]);  axis(ax, 'square');
+    nOut = nnz(y(ok) < lo | y(ok) > hi | p(ok) < lo | p(ok) > hi);
+    if nOut > 0
+        valText(ax, hi - 0.03 * (hi - lo), lo + 0.04 * (hi - lo), sprintf('%d off scale', nOut), 'HorizontalAlignment', 'right', ...
+            'VerticalAlignment', 'bottom');
+    end
+    lbl(ax, 'camera (mm)', 'IMU estimate (mm)');
+    ttl(ax, sprintf('%s (%s)\nMAE %.0f mm (baseline %.0f), r = %.2f', capFirst(TG(t).short), nm, mae, S.base(t), r));
+end
+ax = tile(tl);
+v = [S.bestR(:), S.bestRw(:)];
+ph = S.phys(strcmp({S.phys.target}, 'trailplace'));  v(strcmp({TG.key}, 'trailplace'), :) = [ph.r, ph.rw];
+b = barh(ax, 1:numel(TG), v, 'grouped', 'BarWidth', 0.85, 'EdgeColor', ST.edge, 'LineWidth', ST.barEdgeW);
+b(1).FaceColor = ST.both;  b(2).FaceColor = ST.teal;
+set(ax, 'YDir', 'reverse', 'YTick', 1:numel(TG), 'YTickLabel', {TG.short});  xlim(ax, [-0.2 1]);
+xline(ax, 0, '-', 'Color', ST.ink, 'LineWidth', 1.2, 'HandleVisibility', 'off');
+lbl(ax, 'correlation with the camera (r)', '');
+ttl(ax, 'Across crossings vs within one cell');
+leg(ax, b, {'all crossings', 'within cells'}, 'Location', 'southoutside', 'Orientation', 'horizontal');
+layoutTitle(tl, 'IMU estimate vs camera, participant left out of training (no labels)', ...
+    'dashed = identity; within cells = estimate and camera both minus their participant x obstacle mean (crossing-to-crossing tracking)');
+saveFig(tl, out, 'fig_environment_scatter.png');
+end
+
+function s = capFirst(s)
+s(1) = upper(s(1));
 end
 
 function figParticipants(out, S)
@@ -353,7 +462,8 @@ end
 function figDevice(out, S)
 ST = tmpl();  R1 = S.R1;  B = S.B;  CV = S.CV;  LC = S.LC;
 [~, tl] = newFig(1700, 1040, 2, 3);
-% sensors
+% sensors: the two-sensor options and all six (single-leg foot sensors in tab:onesensor only)
+R1 = R1(~startsWith({R1.name}, '1 foot'));
 ax = tile(tl);
 n = numel(R1);  yy = (n:-1:1)';  v = 100 * [R1.b]';
 cc = repmat(ST.generic, n, 1);  cc(strcmp({R1.name}, '2 foot IMUs'), :) = ST.both;
