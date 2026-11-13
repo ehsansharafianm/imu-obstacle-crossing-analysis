@@ -4,7 +4,34 @@ tags: [changelog, summary]
 
 # Session Changelog
 
-## ★ Latest (2026-10-31) — Machine learning, haptic cue and statistics
+## ★ Latest (2026-11-12) — Arms and trunk during the crossing
+Focus (asked by Babak): what the arms do in level walking and over each obstacle (the two arm IMUs and the two joints:
+range, peaks, significance, variability), how they relate to the leading and trailing leg, and what the trunk does.
+Steps 1–9 were only read. Code in `Analysis/ML/` (details in `HANDOFF.md`); numbers in
+`Results/ML Models/MATLAB/ml_arms_matlab.md`; write-up = Section "What do the arms and the trunk do during the crossing?"
+(`sections/05d_arms.tex`) of `Documents/obstacle-crossing-report`; deck `Presentations/26-11-12-arms-trunk-crossing-101-110.pptx`.
+- **Data check.** The arm and sternum IMUs (Awinda) lose no sample inside the walks of any participant. The OpenSim IK
+  shoulder and elbow angles are not reliable: the heading drift moves the median `arm_flex` of an arm by 10° (median, up
+  to 45°) between the walks of a trial and leaks the swing into `arm_add` (13 of 20 arms), the IK elbow sits on its 0°
+  limit in 48 % of the walking samples, and Test 109 has no IK for 39 % of them (see [[Heading Drift and De-drift]]).
+- **Heading-free angles** (`build_arm_dataset.m`): only the tilt of each IMU is used; the swing axis comes from the
+  swings of the opposite leg; shoulder = upper arm to the trunk, elbow = forearm to upper arm; zero = standing posture
+  at the start of the trial. The level-walk reference is matched by side (same leg, hence the same arm). 313 of the 349
+  rows are usable (274 crossings, 39 level walks).
+- **Level walk:** shoulder 17°, forearm 38°, elbow 24°; arm with the opposite thigh r = 0.94; people differ a lot
+  (shoulder 11–30°; left–right difference up to 70 % in one person).
+- **Each obstacle:** the ranges of the four signals hardly change (3 of 48 obstacle cells differ from level, all in the
+  elbow; no height or width effect), the peaks do (27 of 108 cells). People differ far more than obstacles (who is
+  walking and which arm: 46–64 % of the variance of the ranges; the obstacle 6–28 %).
+- **Crossing:** the legs almost double their range (leading thigh 47 → 92°) but the shoulder swing does not grow
+  (16.6 → 14.4°, p = 0.18), so the arm swing per degree of thigh halves (0.52 → 0.25). The trunk leans forward
+  (5 → 16.5° at H3, +0.33° per cm) and the upper arms follow 73 % of that lean; both arms move away from the trunk; the
+  forward swing of the opposite arm keeps its duration and ends 0.1–0.3 s before the foot lands.
+- **Height, not width:** 27 of 56 measures change with the height (FDR), 0 with the width. The upper body alone tells
+  the height at 45–58 % (legs 54–78 %) and adds nothing to the leg IMUs for the device.
+- **Figures:** nine `fig_arms_*.png` in the step 9 template (group `'arms'` of `crossing_ml_figures.m`).
+
+## ★ (2026-10-31) — Machine learning, haptic cue and statistics
 Focus: can the Dot IMUs recognise the obstacle for a person never seen in training, when should a haptic cue reach the
 trailing leg, and which step 9 parameters change significantly. All code is MATLAB in `Analysis/ML/` (run order and
 details in `HANDOFF.md`); results in `Results/ML Models/MATLAB/` (one page: `STORY_SUMMARY.md`); full write-up

@@ -116,7 +116,7 @@ Run from `Analysis/ML`, in this order (headless: `matlab -batch "name"`; a full 
    model comparisons, leg dominance; ~1 min), `crossing_ml_robust` (sampling rate, noise, model size, conformal
    prediction sets; ~2 min), `crossing_ml_params` (the step 9 SPSS sheet, see above; seconds) (no arguments = full run). A quick test (`true` as the first argument, or the second for
    `crossing_ml_matlab` and `crossing_ml_story`) overwrites the reports with QUICK versions.
-3. `crossing_ml_figures` — redraws all 23 `fig_*.png` from `figdata/` in seconds. **All figure code lives here**, in
+3. `crossing_ml_figures` — redraws all 35 `fig_*.png` from `figdata/` in seconds. **All figure code lives here**, in
    the step 9 plot template (Arial, bold 16-pt labels, 13-pt ticks, 2-pt box, blue leading / orange trailing, 300-dpi
    PNG; green = both limbs, grey = generic model, purple = person scaling). Restyle here, never in the analyses.
 
@@ -130,6 +130,30 @@ Notes:
 - Timing is relative to the **camera** trailing toe lift-off (`trail_toeoff_t_cam`); the IMU step-4 trailing toe-off
   comes ~0.23 s later.
 - MATLAB figures taller than ~1040 px are shrunk by the 1920×1080 screen; keep figure canvases within that.
+
+### Arms and trunk (added 12 Nov 2026, asked by Babak)
+Question: what do the arms and the trunk do in level walking and over each obstacle (upper-arm and forearm IMU,
+shoulder and elbow joint: range, peaks, significance, variability; leading leg against the arms)? Steps 1–9 are only
+read. Report: Section "What do the arms and the trunk do during the crossing?" (`sections/05d_arms.tex`) of the
+Overleaf-linked folder; deck: `Presentations/26-11-12-arms-trunk-crossing-101-110.pptx`.
+1. `build_arm_dataset` (~20 s) — reads the step 3 / step 4 outputs and the rows of the crossing master →
+   `Results/ML Dataset/`: `Arm_Master_YoungAdults.csv` (349 rows × 183 columns; `arm_ok`, `ik_ok`),
+   `Arm_Curves_YoungAdults.mat`, `arm_build_report.md` (per-sensor quality), `arm_data_dictionary.md`.
+2. `crossing_ml_arms` (~15 min; `crossing_ml_arms(true)` = quick test, overwrites the report with a QUICK version) →
+   `Results/ML Models/MATLAB/ml_arms_matlab.md` (parts A1–A11), `figdata/arms.mat`, `figdata/arms_numbers.json`
+   (numbers for the deck), `Results/ML Dataset/Arm_YoungAdults_SPSS.xlsx` (one row per participant).
+3. `crossing_ml_figures('arms')` — the nine `fig_arms_*.png`.
+
+Decisions to keep:
+- **Heading-free angles.** The OpenSim IK shoulder and elbow angles drift with the heading (and the elbow sits on its
+  0° limit; Test 109 lacks IK for 39 % of the walking samples), so the angles come from the tilt of each Awinda IMU
+  only: swing axis = mean displacement of the tilt while the *contralateral* leg swings; shoulder = upper arm + trunk
+  pitch; elbow = forearm − upper arm; abduction to the trunk = frontal elevation corrected for the trunk roll;
+  zero = standing posture of the first 2 s. The IK angles are reported as a reference only (A9).
+- **Level-walk reference matched by side** (level strides of the same leg, weighted by how often the participant led
+  with each leg), because people swing their two arms differently and often lead with the same leg.
+- Arms follow the step 4–9 convention: an arm is analysed over the stride of the opposite leg.
+- Rows: `arm_ok` = 1 and `include_biomech` = 1 → 313 of 349 (274 crossings, 39 level walks).
 
 ## Conventions / constraints
 - **Commit directly to main.** End commit messages with the Co-Authored-By line of the Claude model in use (latest:
@@ -150,13 +174,14 @@ Steps 01–09 working for **n=10 (Tests 101–110)**. `GroupCrossing_YoungAdults
 described above. The ML and haptic-cue analyses, their report (Overleaf zip) and the 31 Oct deck are committed
 (bf64ad7); all ML figures are in the step 9 template. On 31 Oct the statistics (`crossing_ml_stats`) and device-robustness
 (`crossing_ml_robust`) analyses and the step 9 parameter statistics (`crossing_ml_params`) were added to the code, the report
-(results 4.4 and 4.7, appendix) and the deck (44 slides).
+(results 4.4 and 4.7, appendix) and the deck (44 slides). On 12 Nov the arm and trunk analysis (`build_arm_dataset`,
+`crossing_ml_arms`, nine `fig_arms_*.png`) was added, with its report section and its deck (24 slides).
 
 ## Likely next steps
 - Add participants: run pipeline → `diag_participant(NNN)` (QC) → hand-calc flagged joints in `manualJointValues.m`
   (add a new section) → add NNN to `TESTS` in step9 → close Excel → re-run step9 → re-import sheet into SPSS.
 - Keep the SPSS sheet and the `Statistical Analysis/` copy in sync after each step9 run.
 - Rebuild in-MATLAB group statistics only if asked (user prefers small, incremental steps).
-- ML after new participants: rerun `build_crossing_master`, the twelve analyses and `crossing_ml_figures`, then
-  regenerate the report tables. Open research steps: older adults, mixed obstacle order, a real-time haptic prototype
+- ML after new participants: rerun `build_crossing_master`, the twelve analyses, `build_arm_dataset`,
+  `crossing_ml_arms` and `crossing_ml_figures`, then regenerate the report tables. Open research steps: older adults, mixed obstacle order, a real-time haptic prototype
   with a reaction-time test, and a measured sensor-to-toe geometry for clearance.

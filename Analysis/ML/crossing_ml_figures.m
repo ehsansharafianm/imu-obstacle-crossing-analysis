@@ -5,7 +5,7 @@ function crossing_ml_figures(want)
 %   crossing_ml_figures('haptic')    % one group: main, followup, limbs, settings, explore, device,
 %                                    % stream, realworld, lateral, validate, haptic, story_map,
 %                                    % story_person, story_strategy, story_embed, stats, robust, params,
-%                                    % confusion, environment
+%                                    % confusion, environment, arms
 %
 % The analyses (crossing_ml_*.m) save the numbers behind their figures in
 % Results/ML Models/MATLAB/figdata/<group>.mat (mlTools.figures) and call this function for their
@@ -23,7 +23,7 @@ here = fileparts(mfilename('fullpath'));
 out = fullfile(fileparts(fileparts(here)), 'Results', 'ML Models', 'MATLAB');
 groups = {'main', 'followup', 'limbs', 'settings', 'explore', 'device', 'stream', 'realworld', 'lateral', ...
           'validate', 'haptic', 'story_map', 'story_person', 'story_strategy', 'story_embed', 'stats', 'robust', 'params', 'confusion', ...
-          'environment'};
+          'environment', 'arms'};
 if nargin < 1 || isempty(want), want = groups; end
 want = cellstr(want);
 for k = 1:numel(want)
@@ -54,6 +54,8 @@ for k = 1:numel(want)
         case 'params',         figParams(out, S);  figParamsClear(out, S);
         case 'confusion',      figConfusionSelf(out, S);
         case 'environment',    figEnvironment(out, S);  figEnvironmentScatter(out, S);
+        case 'arms',           figArmsQuality(out, S);  figArmsLevel(out, S);  figArmsSegments(out, S);  figArmsCurves(out, S);  figArmsEffects(out, S);
+                               figArmsStats(out, S);  figArmsParticipants(out, S);  figArmsTrunk(out, S);  figArmsML(out, S);
         otherwise, error('crossing_ml_figures:group', 'unknown figure group %s', want{k});
     end
     fprintf('Figures drawn: %s\n', want{k});
@@ -1069,6 +1071,358 @@ lg.Layout.Tile = 'south';
 layoutTitle(tl, 'Clearance class: change with obstacle height and width', sprintf(['participant means (n = %d) with 90%% CI: a change ' ...
     'beyond the CI is excluded (TOST, \\alpha = 0.05); from H1 to H3 the obstacle rises by %.1f cm'], S.n, E.rise));
 saveFig(tl, out, 'fig_params_clear.png');
+end
+
+%% ========================================================================
+%  crossing_ml_arms: quality, level, curves, effects, stats, participants, trunk, upper-body ML
+%% ========================================================================
+function figArmsQuality(out, S)
+% Median IK shoulder flexion and its heading-free counterpart in every walk of each trial (crossing_ml_arms.m, A1).
+ST = tmpl();  T = S.trend;  nP = numel(T);  nc = ceil(nP / 2);
+v = cell2mat(arrayfun(@(t) [t.ik_flex(:); t.sag(:)], T(:), 'UniformOutput', false));
+yl = [floor(min(v) / 10) * 10, ceil(max(v) / 10) * 10];
+[~, tl] = newFig(1700, 800, 2, nc);
+for k = 1:nP
+    ax = tile(tl);  tm = T(k).t / 60;
+    yline(ax, 0, '-', 'Color', ST.ref, 'LineWidth', 1.0, 'HandleVisibility', 'off');
+    h = [plot(ax, tm, T(k).ik_flex(:, 1), '-o', 'Color', ST.person, 'LineWidth', 1.8, 'MarkerSize', 4, 'MarkerFaceColor', ST.person), ...
+         plot(ax, tm, T(k).ik_flex(:, 2), ':o', 'Color', ST.person, 'LineWidth', 1.8, 'MarkerSize', 4, 'MarkerFaceColor', 'w'), ...
+         plot(ax, tm, T(k).sag(:, 1), '-o', 'Color', ST.both, 'LineWidth', 1.8, 'MarkerSize', 4, 'MarkerFaceColor', ST.both), ...
+         plot(ax, tm, T(k).sag(:, 2), ':o', 'Color', ST.both, 'LineWidth', 1.8, 'MarkerSize', 4, 'MarkerFaceColor', 'w')];
+    xlim(ax, [0 max(tm) + 0.3]);  ylim(ax, yl);
+    ttl(ax, sprintf('Test %d', T(k).tn));
+    if k > nc, lbl(ax, 'time in the trial (min)', ''); end
+    if mod(k, nc) == 1, lbl(ax, '', 'median of the walk (deg)'); end
+end
+lg = leg(ax, h, {'IK arm\_flex, left arm', 'IK arm\_flex, right arm', 'heading-free shoulder, left arm', 'heading-free shoulder, right arm'}, ...
+    'Orientation', 'horizontal');
+lg.Layout.Tile = 'north';
+layoutTitle(tl, 'Heading drift in the IK shoulder angle, and the heading-free angle of the same arm', ...
+    ['one point = the median angle of one walk over the walkway (0 deg = standing at the start); a walking posture does not wander by tens of ' ...
+     'degrees from walk to walk, heading drift does; Test 109: no IK for part of the trial']);
+saveFig(tl, out, 'fig_arms_quality.png');
+end
+
+function figArmsLevel(out, S)
+% Level walking: the arm over a stride, the swing of each arm and the arm-to-leg gain per participant (A2).
+ST = tmpl();  LV = S.LV;  P = S.P;  nP = numel(P);  x = LV.curve.pct;
+pl = arrayfun(@(p) sprintf('%d', p), P, 'UniformOutput', false);
+[~, tl] = newFig(1700, 620, 1, 3);
+ax = tile(tl);
+mA = mean(LV.curve.arm, 1, 'omitnan');  sA = std(LV.curve.arm, 0, 1, 'omitnan');
+patch(ax, [x, fliplr(x)], [mA - sA, fliplr(mA + sA)], ST.both, 'FaceAlpha', 0.18, 'EdgeColor', 'none', 'HandleVisibility', 'off');
+h = [plot(ax, x, mean(LV.curve.thigh, 1, 'omitnan'), '-', 'Color', ST.ink, 'LineWidth', ST.lineW), ...
+     plot(ax, x, mA, '-', 'Color', ST.both, 'LineWidth', ST.lineW), ...
+     plot(ax, x, mean(LV.curve.sh, 1, 'omitnan'), '--', 'Color', ST.teal, 'LineWidth', ST.lineW)];
+yline(ax, 0, ':', 'Color', ST.ref, 'LineWidth', 1.4, 'HandleVisibility', 'off');
+evLine(ax, LV.curve.toeoff, 'toe-off', '--', 'bottom');  evLine(ax, LV.curve.landing, 'landing', '--', 'bottom');
+xlim(ax, [0 100]);  yl = ylim(ax);  ylim(ax, [yl(1), yl(2) + 0.42 * diff(yl)]);
+lbl(ax, '% of the stride (mid-stance to mid-stance)', 'angle (deg)');
+ttl(ax, 'A level stride: the thigh and the opposite arm');
+leg(ax, h, {'thigh of the stride leg', 'opposite arm (whole arm)', 'opposite shoulder (to the trunk)'}, 'Location', 'northwest');
+ax = tile(tl);
+b = vbars(ax, LV.sh, [ST.both; ST.generic]);
+set(ax, 'XTick', 1:nP, 'XTickLabel', pl, 'TickLength', [0 0]);  xtickangle(ax, 45);  xlim(ax, [0.4 nP + 0.6]);
+lbl(ax, 'participant', 'shoulder swing (deg)');
+ttl(ax, 'Shoulder swing in level walking');
+leg(ax, b, {'left arm', 'right arm'}, 'Location', 'northeast');
+ax = tile(tl);
+vbars(ax, LV.gain, ST.teal);
+refLine(ax, mean(LV.gain), 'y', '');
+set(ax, 'XTick', 1:nP, 'XTickLabel', pl, 'TickLength', [0 0]);  xtickangle(ax, 45);  xlim(ax, [0.4 nP + 0.6]);
+lbl(ax, 'participant', 'arm swing per degree of thigh range');
+ttl(ax, sprintf('How much arm per leg (mean %.2f)', mean(LV.gain)));
+layoutTitle(tl, 'Arm swing in level walking', sprintf(['heading-free angles from the arm IMUs; left: mean of the %d participants (band = SD of the whole-arm angle), ' ...
+    'opposite arm = contralateral to the leg of the stride; arm-thigh correlation r = %.2f'], nP, mean(LV.r)));
+saveFig(tl, out, 'fig_arms_level.png');
+end
+
+function figArmsSegments(out, S)
+% The two arm IMUs and the two joints in the level walk and in each of the six obstacles: range, forward peak and
+% repeat-to-repeat SD of the range (crossing_ml_arms.m, A3).
+ST = tmpl();  G = S.SG;
+sg = {'Upper arm (IMU)', 'Forearm (IMU)', 'Shoulder (joint)', 'Elbow (joint)'};
+rw = {[1 4 7 11], 'range (deg)';  [2 5 8 12], {'forward / flexion', 'peak (deg)'};  [1 4 7 11], {'repeat-to-repeat SD', 'of the range (deg)'}};
+[~, tl] = newFig(1700, 1040, 3, 4);
+for r = 1:3
+    for c = 1:4
+        ax = tile(tl);  i = rw{r,1}(c);
+        if r < 3
+            V = squeeze(G.mean(i, :, :))';  E = squeeze(G.sd(i, :, :))';  lv = mean(G.lev(i, :));
+        else
+            V = squeeze(G.wCell(i, :, :))';  E = zeros(size(V));  lv = mean(G.wLev(i, :));
+        end
+        b = vbars(ax, V, [ST.lead; ST.trail]);
+        for k = 1:2
+            if r < 3
+                errorbar(ax, b(k).XEndPoints, V(:, k), E(:, k), 'LineStyle', 'none', 'Color', ST.ink, 'LineWidth', ST.errW, 'CapSize', 4, 'HandleVisibility', 'off');
+                for j = find(squeeze(G.pCell(i, k, :))' < 0.05)
+                    text(ax, b(k).XEndPoints(j), V(j, k) + E(j, k), '*', 'HorizontalAlignment', 'center', 'VerticalAlignment', 'bottom', 'FontName', ST.font, ...
+                        'FontSize', 16, 'FontWeight', 'bold', 'Color', ST.ink);
+                end
+            end
+        end
+        hl = yline(ax, lv, '--', 'Color', ST.level, 'LineWidth', ST.refW);
+        if min(V(:) - E(:)) < 0, yline(ax, 0, '-', 'Color', ST.ink, 'LineWidth', 1.0, 'HandleVisibility', 'off'); end
+        yl = ylim(ax);  ylim(ax, [yl(1), yl(2) + 0.06 * diff(yl)]);
+        set(ax, 'XTick', 1:6, 'XTickLabel', {}, 'TickLength', [0 0]);  xlim(ax, [0.4 6.6]);
+        if r == 3, set(ax, 'XTickLabel', {'W1 H1', 'W1 H2', 'W1 H3', 'W2 H1', 'W2 H2', 'W2 H3'});  xtickangle(ax, 45); end
+        if c == 1, lbl(ax, '', rw{r,2}); end
+        if r == 1, ttl(ax, sg{c}); end
+    end
+end
+lg = leg(ax, [b(1), b(2), hl], {'arm opposite to the leading limb (leading stride)', 'arm opposite to the trailing limb (trailing stride)', ...
+    'level walk (side-matched)'}, 'Orientation', 'horizontal');
+lg.Layout.Tile = 'north';
+layoutTitle(tl, 'The two arm IMUs and the two joints in every condition', {sprintf(['mean of the %d participant means, error bars = SD between ' ...
+    'participants; * = different from the level walk (paired t-test, Holm over the six obstacles)'], numel(S.P)), ...
+    ['upper arm and forearm to the vertical, shoulder = upper arm to the trunk, elbow = forearm to upper arm; bottom row: SD of one person over ' ...
+     'the repeats of an obstacle (same leading limb)']});
+saveFig(tl, out, 'fig_arms_segments.png');
+end
+
+function figArmsCurves(out, S)
+% Phase-normalised curves of the legs, the trunk and the two arms through the crossing, by obstacle height (A4-A6).
+ST = tmpl();  C = S.curve;  x = C.x;  ev = cumsum([0 C.n]);
+pn = {'ls_thigh', 'Leading thigh', ST.lead;  'ts_thigh', 'Trailing thigh', ST.trail;  'pitch', 'Trunk forward lean', ST.both;  'roll', 'Trunk roll to the leading side', ST.both;
+      'ls_ua', 'Upper arm to the vertical', ST.lead;  'ls_sh', 'Upper arm to the trunk', ST.lead;  'ls_abd', 'Abduction to the vertical', ST.lead;  'ls_abt', 'Abduction to the trunk', ST.lead;
+      'ts_ua', 'Upper arm to the vertical', ST.trail;  'ts_sh', 'Upper arm to the trunk', ST.trail;  'ts_abd', 'Abduction to the vertical', ST.trail;  'ts_abt', 'Abduction to the trunk', ST.trail};
+yl0 = {'legs and trunk (deg)', 'lead-side arm (deg)', 'trail-side arm (deg)'};
+[~, tl] = newFig(1700, 1040, 3, 4);
+for q = 1:size(pn, 1)
+    ax = tile(tl);  Y = C.(pn{q,1});  hc = ramp3(pn{q,3});
+    yl = [min(Y(:)), max(Y(:))];  yl = yl + 0.08 * diff(yl) * [-1 1];
+    patch(ax, ev([3 4 4 3]), yl([1 1 2 2]), ST.lead, 'FaceAlpha', 0.08, 'EdgeColor', 'none', 'HandleVisibility', 'off');
+    patch(ax, ev([5 6 6 5]), yl([1 1 2 2]), ST.trail, 'FaceAlpha', 0.08, 'EdgeColor', 'none', 'HandleVisibility', 'off');
+    if yl(1) < 0 && yl(2) > 0, yline(ax, 0, ':', 'Color', ST.ref, 'LineWidth', 1.4, 'HandleVisibility', 'off'); end
+    for c = 2:4, plot(ax, x, Y(c, :), '-', 'Color', hc(c - 1, :), 'LineWidth', ST.lineW); end
+    plot(ax, x, Y(1, :), '--', 'Color', ST.level, 'LineWidth', ST.lineW);
+    xlim(ax, [0 x(end)]);  ylim(ax, yl);
+    set(ax, 'XTick', ev(3:6), 'XTickLabel', {}, 'TickLength', [0.012 0.012]);
+    if q > 8, set(ax, 'XTickLabel', {'lead toe-off', 'lead landing', 'trail toe-off', 'trail landing'});  xtickangle(ax, 28); end
+    if mod(q, 4) == 1, lbl(ax, '', yl0{(q + 3) / 4}); end
+    ttl(ax, pn{q,2});
+end
+g = ramp3(ST.ref);
+h = [plot(ax, NaN, NaN, '--', 'Color', ST.level, 'LineWidth', ST.lineW), plot(ax, NaN, NaN, '-', 'Color', g(1, :), 'LineWidth', ST.lineW), ...
+     plot(ax, NaN, NaN, '-', 'Color', g(2, :), 'LineWidth', ST.lineW), plot(ax, NaN, NaN, '-', 'Color', g(3, :), 'LineWidth', ST.lineW), ...
+     patch(ax, NaN, NaN, ST.lead, 'FaceAlpha', 0.25, 'EdgeColor', 'none'), patch(ax, NaN, NaN, ST.trail, 'FaceAlpha', 0.25, 'EdgeColor', 'none')];
+lg = leg(ax, h, {'level walk', 'H1', 'H2', 'H3 (light to dark)', 'leading swing', 'trailing swing'}, 'Orientation', 'horizontal');
+lg.Layout.Tile = 'north';
+layoutTitle(tl, 'Legs, trunk and arms through the crossing', {sprintf(['mean of the %d participant means; every phase between two foot events is stretched ' ...
+    'to a fixed length, so the events line up (leading swing lasts %.2f s in level walking and %.2f s at H3)'], numel(S.P), C.dur(3, 1), C.dur(3, 4)), ...
+    ['rows: legs and trunk, the arm on the side of the leading limb (blue), the arm on the side of the trailing limb (orange); + = forward (thigh, arm), ' ...
+     'forward lean, away from the body (abduction)']});
+saveFig(tl, out, 'fig_arms_curves.png');
+end
+
+function figArmsEffects(out, S)
+% Step 9-style bars of six arm and trunk measures per obstacle, leading and trailing stride, with the level walk (A4, A5).
+ST = tmpl();  cols = {S.I.col};
+pn = {'con_sh_rom', 'Shoulder swing, opposite arm', 'deg';  'con_ua_max', 'Forward peak, opposite arm (to the vertical)', 'deg';
+      'ips_abt_max', 'Abduction peak to the trunk, same-side arm', 'deg';  'trunk_pitch_max', 'Trunk forward lean, peak', 'deg';
+      'cpl_gain', 'Arm swing per degree of thigh range', 'deg / deg';  'con_lag_hs', 'Arm forward peak minus foot landing', 'ms'};
+[~, tl] = newFig(1700, 1000, 2, 3);
+for q = 1:size(pn, 1)
+    ax = tile(tl);
+    i = [find(strcmp(cols, ['lead_' pn{q,1}])), find(strcmp(cols, ['trail_' pn{q,1}]))];
+    V = S.cellMean(i, :)';  E = S.cellSD(i, :)';
+    b = vbars(ax, V, [ST.lead; ST.trail]);
+    for k = 1:2
+        errorbar(ax, b(k).XEndPoints, V(:, k), E(:, k), 'LineStyle', 'none', 'Color', ST.ink, 'LineWidth', ST.errW, 'CapSize', 4, 'HandleVisibility', 'off');
+    end
+    hl = yline(ax, mean(S.levMean(i)), '--', 'Color', ST.level, 'LineWidth', ST.refW);
+    if min(V(:) - E(:)) < 0, yline(ax, 0, '-', 'Color', ST.ink, 'LineWidth', 1.0, 'HandleVisibility', 'off'); end
+    set(ax, 'XTick', 1:6, 'XTickLabel', {'W1 H1', 'W1 H2', 'W1 H3', 'W2 H1', 'W2 H2', 'W2 H3'}, 'TickLength', [0 0]);  xlim(ax, [0.4 6.6]);
+    lbl(ax, '', pn{q,3});
+    ttl(ax, pn{q,2});
+end
+lg = leg(ax, [b(1), b(2), hl], {'leading-limb stride', 'trailing-limb stride', 'level walk (side-matched)'}, 'Orientation', 'horizontal');
+lg.Layout.Tile = 'north';
+layoutTitle(tl, 'Arms and trunk per obstacle', sprintf(['mean of the %d participant means, error bars = SD; W1 / W2 = 5 / 15 cm wide, H1-H3 = 10 / 20 / 30%% ' ...
+    'of leg length; opposite arm = contralateral to the leg of the stride, same-side arm = ipsilateral'], numel(S.P)));
+saveFig(tl, out, 'fig_arms_effects.png');
+end
+
+function figArmsStats(out, S)
+% Significance map of the arm, trunk and coordination measures: partial eta^2 with FDR stars, and obstacle vs level walk (A4, A5).
+ST = tmpl();  V = S.V;  nV = size(V, 1);  fam = unique(V(:, 4), 'stable');
+hd = struct('swing', 'SIZE OF THE SWING', 'peaks', 'PEAKS OF THE SWING', 'elbow', 'ELBOW', 'abduction', 'ABDUCTION', 'trunk', 'TRUNK', ...
+    'coordination', 'ARM-LEG COORDINATION', 'leg', 'LEG (for comparison)');
+nR = 1 + numel(fam) + nV;  lab = repmat({''}, nR, 1);  rowOf = zeros(nV, 1);  hdr = zeros(numel(fam), 1);  r = 1;
+for c = 1:numel(fam)
+    r = r + 1;  hdr(c) = r;  lab{r} = sprintf('\\color[rgb]{%.2f %.2f %.2f}%s', ST.sub, hd.(fam{c}));
+    for v = find(strcmp(V(:, 4), fam{c}))'
+        r = r + 1;  rowOf(v) = r;  lab{r} = sprintf('%s (%s)', V{v,2}, V{v,3});
+    end
+end
+E = nan(nR, 6);  Q = nan(nR, 6);  dz = nan(nV, 2);  qL = nan(nV, 2);
+for v = 1:nV
+    i = [find([S.I.v] == v & strcmp({S.I.cls}, 'Leading')), find([S.I.v] == v & strcmp({S.I.cls}, 'Trailing'))];
+    E(rowOf(v), :) = [S.eta(i(1), :), S.eta(i(2), :)];  Q(rowOf(v), :) = [S.qA(i(1), :), S.qA(i(2), :)];
+    dz(v, :) = S.dz(i)';  qL(v, :) = S.qLev(i)';
+end
+[~, tl] = newFig(1700, 1040, 1, 3);
+ax = tile(tl, [1 2]);
+im = imagesc(ax, E, [0 1]);  im.AlphaData = double(isfinite(E));  colormap(ax, seqMap(ST.teal));
+for i = 1:nR
+    for j = 1:6
+        if ~isfinite(E(i, j)), continue; end
+        col = ST.ink;  if E(i, j) > 0.42, col = [1 1 1]; end
+        text(ax, j, i, sprintf('%.2f%s', E(i, j), stars(Q(i, j))), 'HorizontalAlignment', 'center', 'FontName', ST.font, 'FontSize', ST.szText, ...
+            'FontWeight', 'bold', 'Color', col);
+    end
+end
+xline(ax, 3.5, '-', 'Color', 'w', 'LineWidth', 6, 'HandleVisibility', 'off');
+text(ax, 2, 1, 'leading-limb stride', 'HorizontalAlignment', 'center', 'FontName', ST.font, 'FontSize', ST.szLabel, 'FontWeight', 'bold', 'Color', ST.lead);
+text(ax, 5, 1, 'trailing-limb stride', 'HorizontalAlignment', 'center', 'FontName', ST.font, 'FontSize', ST.szLabel, 'FontWeight', 'bold', 'Color', ST.trail);
+set(ax, 'YDir', 'reverse', 'XTick', 1:6, 'XTickLabel', repmat({'height', 'width', 'H \times W'}, 1, 2), 'YTick', 1:nR, 'YTickLabel', lab, 'TickLength', [0 0]);
+xlim(ax, [0.5 6.5]);  ylim(ax, [0.5 nR + 0.5]);
+ttl(ax, 'Partial \eta^2 of the repeated-measures ANOVA (stars: FDR q)');
+ax = tile(tl);  lim = 3.8;
+xline(ax, 0, '-', 'Color', ST.ink, 'LineWidth', 1.2, 'HandleVisibility', 'off');
+for c = 1:numel(fam), yline(ax, hdr(c), '-', 'Color', [0.85 0.85 0.85], 'LineWidth', 1, 'HandleVisibility', 'off'); end
+col = [ST.lead; ST.trail];  mk = {'o', 's'};  off = [-0.17 0.17];
+for l = 1:2
+    y = rowOf + off(l);  xx = max(-lim, min(lim, dz(:, l)));  sg = qL(:, l) < 0.05;  ns = isfinite(xx) & ~sg;
+    plot(ax, xx(sg), y(sg), mk{l}, 'MarkerSize', 9, 'MarkerFaceColor', col(l, :), 'MarkerEdgeColor', col(l, :), 'LineWidth', 1.5);
+    plot(ax, xx(ns), y(ns), mk{l}, 'MarkerSize', 9, 'MarkerFaceColor', 'w', 'MarkerEdgeColor', col(l, :), 'LineWidth', 1.5);
+    for v = find(abs(dz(:, l)) > lim)'
+        valText(ax, sign(dz(v, l)) * (lim - 0.22), y(v), sprintf('%.1f', dz(v, l)), 'HorizontalAlignment', ternaryStr(dz(v, l) > 0, 'right', 'left'), ...
+            'VerticalAlignment', 'middle');
+    end
+end
+set(ax, 'YDir', 'reverse', 'YTick', []);  ylim(ax, [0.5 nR + 0.5]);  xlim(ax, [-lim - 0.2, lim + 0.2]);
+lbl(ax, 'obstacles - level walk (d_z)', '');
+ttl(ax, 'Obstacle vs level walk');
+k = [plot(ax, NaN, NaN, 'o', 'MarkerSize', 9, 'MarkerFaceColor', ST.lead, 'MarkerEdgeColor', ST.lead, 'LineWidth', 1.5), ...
+     plot(ax, NaN, NaN, 's', 'MarkerSize', 9, 'MarkerFaceColor', ST.trail, 'MarkerEdgeColor', ST.trail, 'LineWidth', 1.5), ...
+     plot(ax, NaN, NaN, 'o', 'MarkerSize', 9, 'MarkerFaceColor', 'w', 'MarkerEdgeColor', ST.ref, 'LineWidth', 1.5)];
+lg = leg(ax, k, {'leading, q < 0.05', 'trailing, q < 0.05', 'open: not significant'}, 'Orientation', 'horizontal');
+lg.Layout.Tile = 'south';
+layoutTitle(tl, 'Significance of the arm, trunk and coordination measures', {sprintf(['participant means (n = %d); ***, **, * = q < 0.001, 0.01, 0.05 ' ...
+    '(FDR over the %d measures of the analysis); opposite arm = contralateral to the leg of the stride'], numel(S.P), numel(S.I)), ...
+    'right: d_z of the six-obstacle mean minus the side-matched level walk (values beyond the axis are written out)'});
+saveFig(tl, out, 'fig_arms_stats.png');
+end
+
+function figArmsParticipants(out, S)
+% Every participant from the level walk to H3 for six key measures (A7).
+ST = tmpl();  PP = S.PP;  P = S.P;  nP = numel(P);
+sel = [1 2 6 7 8 9];
+pn = {'Forward peak, opposite arm (leading stride)', 'deg to the vertical', ST.lead;  'Forward peak, opposite arm (trailing stride)', 'deg to the vertical', ST.trail;
+      'Abduction, same-side arm (trailing stride)', 'deg to the vertical', ST.trail;  'Trunk forward lean, peak', 'deg', ST.both;
+      'Arm swing per degree of thigh (leading stride)', 'deg / deg', ST.lead;  'Arm forward peak minus foot landing (leading)', 'ms', ST.lead};
+[~, tl] = newFig(1700, 1000, 2, 3);
+for q = 1:numel(sel)
+    ax = tile(tl);  M = PP.m(:, :, sel(q));
+    plot(ax, 1:4, M', '-o', 'Color', ST.generic, 'LineWidth', 1.4, 'MarkerSize', 5, 'MarkerFaceColor', ST.generic, 'HandleVisibility', 'off');
+    plot(ax, 1:4, mean(M, 1, 'omitnan'), '-o', 'Color', pn{q,3}, 'LineWidth', 3.4, 'MarkerSize', 10, 'MarkerFaceColor', pn{q,3});
+    set(ax, 'XTick', 1:4, 'XTickLabel', {'level', 'H1', 'H2', 'H3'});  xlim(ax, [0.7 4.75]);
+    yl = [min(M(:)), max(M(:))];  ylim(ax, yl + 0.10 * diff(yl) * [-1 1.6]);
+    spreadLabels(ax, repmat(4, nP, 1), M(:, 4), arrayfun(@(p) sprintf('%d', p), P(:), 'UniformOutput', false));
+    valText(ax, 0.04, 0.97, sprintf('%d of %d participants change this way', PP.nDir(sel(q)), nP), 'Units', 'normalized', 'VerticalAlignment', 'top');
+    lbl(ax, '', pn{q,2});
+    ttl(ax, pn{q,1});
+end
+layoutTitle(tl, 'Does every participant respond in the same way?', ['grey = participant means (number = Test), colour = mean of the participants; level = ' ...
+    'side-matched level walk; the count compares H3 with the level walk']);
+saveFig(tl, out, 'fig_arms_participants.png');
+end
+
+function figArmsTrunk(out, S)
+% The crossing-to-crossing links, and the upper arms following the trunk (A8).
+ST = tmpl();  LK = S.LK;
+[~, tl] = newFig(1700, 800, 1, 3);
+ax = tile(tl, [1 2]);
+R = LK.r;  [nr, ncl] = size(R);
+im = imagesc(ax, abs(R), [0 0.6]);  im.AlphaData = double(isfinite(R));  colormap(ax, seqMap(ST.teal));
+for i = 1:nr
+    for j = 1:ncl
+        if ~isfinite(R(i, j)), continue; end
+        col = ST.ink;  if abs(R(i, j)) > 0.26, col = [1 1 1]; end
+        text(ax, j, i, sprintf('%+.2f%s', R(i, j), stars(LK.pr(i, j))), 'HorizontalAlignment', 'center', 'FontName', ST.font, 'FontSize', ST.szText, ...
+            'FontWeight', 'bold', 'Color', col);
+    end
+end
+set(ax, 'YDir', 'reverse', 'XTick', 1:ncl, 'XTickLabel', LK.cl, 'YTick', 1:nr, 'YTickLabel', LK.rw, 'TickLength', [0 0]);  xtickangle(ax, 20);
+xlim(ax, [0.5 ncl + 0.5]);  ylim(ax, [0.5 nr + 0.5]);
+ttl(ax, 'Crossing-to-crossing links (r within cells)');
+ax = tile(tl);
+m = 1.1 * max(abs(prctile([LK.sc.pitch; LK.sc.ua], [0.5 99.5])));
+h = [plot(ax, [-m m], [0 0], '--', 'Color', ST.ref, 'LineWidth', ST.refW), plot(ax, [-m m], [m -m], ':', 'Color', ST.ref, 'LineWidth', ST.refW + 0.6)];
+scatter(ax, LK.sc.pitch, LK.sc.ua, 30, ST.both, 'filled', 'MarkerFaceAlpha', 0.5, 'MarkerEdgeColor', 'none');
+h(3) = plot(ax, [-m m], LK.scSlope * [-m m], '-', 'Color', ST.ink, 'LineWidth', ST.lineW);
+xlim(ax, [-m m]);  ylim(ax, [-m m]);
+lbl(ax, 'mean trunk lean, vs usual (deg)', 'mean upper-arm angle to the vertical, vs usual (deg)');
+ttl(ax, 'The upper arms follow the trunk');
+leg(ax, h, {'arm left hanging (slope 0)', 'arm fixed to the trunk (slope -1)', sprintf('fit: slope %.2f, r = %.2f', LK.scSlope, LK.scR)}, 'Location', 'southoutside');
+layoutTitle(tl, 'What goes with the arm posture of one crossing?', {'each value minus the mean of its cell (same participant, obstacle and leading limb): crossing-to-crossing variation only', ...
+    '***, **, * = p < 0.001, 0.01, 0.05; foot lift = foot IMU (Dot), clearance = camera'});
+saveFig(tl, out, 'fig_arms_trunk.png');
+end
+
+function figArmsML(out, S)
+% Obstacle height from the upper body for a participant left out, next to the leg IMUs (A11).
+ST = tmpl();  ML = S.ML;  nS = numel(ML.sets);  yy = (nS:-1:1)';
+nm = {'arms', 'trunk', 'arms + trunk', 'arms + trunk, leading stride only', 'legs (Dot IMUs)', 'legs + arms + trunk'};
+[~, tl] = newFig(1700, 640, 1, 3);
+ax = tile(tl, [1 2]);
+b = barh(ax, yy, 100 * ML.acc, 'grouped', 'BarWidth', 0.85, 'EdgeColor', ST.edge, 'LineWidth', ST.barEdgeW);
+cc = [ST.generic; ST.person];
+for k = 1:2
+    b(k).FaceColor = cc(k, :);  v = 100 * ML.acc(:, k);  lo = 100 * ML.ci(:, 1, k);  hi = 100 * ML.ci(:, 2, k);
+    errorbar(ax, v, b(k).XEndPoints, v - lo, hi - v, 'horizontal', 'LineStyle', 'none', 'Color', ST.ink, 'LineWidth', ST.errW, 'CapSize', 4, 'HandleVisibility', 'off');
+    for s = 1:nS, valText(ax, hi(s) + 1.2, b(k).XEndPoints(s), sprintf('%.0f', v(s)), 'VerticalAlignment', 'middle'); end
+end
+refLine(ax, 100 / 3, 'x', 'chance');
+set(ax, 'YTick', 1:nS, 'YTickLabel', flip(nm(1:nS)), 'TickLength', [0 0]);  xlim(ax, [0 100]);  ylim(ax, [0.4 nS + 0.6]);
+lbl(ax, 'balanced accuracy (%)', '');
+ttl(ax, 'Obstacle height (3 classes), participant left out');
+leg(ax, b, {'generic model', 'person scaling'}, 'Location', 'northeast');
+ax = tile(tl);
+pc = 100 * ML.cm ./ sum(ML.cm, 2);  nl = numel(ML.lab);
+imagesc(ax, pc, [0 100]);  colormap(ax, seqMap(ST.both));
+for i = 1:nl
+    for j = 1:nl
+        col = ST.ink;  if pc(i, j) > 55, col = [1 1 1]; end
+        text(ax, j, i, sprintf('%.0f%%\n(n = %d)', pc(i, j), ML.cm(i, j)), 'HorizontalAlignment', 'center', 'FontName', ST.font, 'FontSize', 13, ...
+            'FontWeight', 'bold', 'Color', col);
+    end
+end
+axis(ax, 'image');
+set(ax, 'YDir', 'reverse', 'XTick', 1:nl, 'XTickLabel', ML.lab, 'YTick', 1:nl, 'YTickLabel', ML.lab, 'TickLength', [0 0]);
+lbl(ax, 'predicted', 'true class');
+ttl(ax, sprintf('Arms + trunk, generic: %.0f%%', 100 * ML.acc(3, 1)));
+layoutTitle(tl, 'Does the upper body know the obstacle height?', {sprintf(['logistic regression, leave-one-participant-out, %d crossings; bars = balanced ' ...
+    'accuracy with participant-bootstrap 95%% CI'], ML.n), 'upper-body inputs = heading-free amplitude and posture measures of the arms and the trunk (no timing, no leg signal)'});
+saveFig(tl, out, 'fig_arms_ml.png');
+end
+
+function s = ternaryStr(c, a, b)
+if c, s = a; else, s = b; end
+end
+
+function spreadLabels(ax, x, y, s)
+% Labels to the right of points that share an x position, moved apart vertically until they no longer overlap; a
+% thin line joins each label to its point. Set the axis limits before calling.
+ST = tmpl();  gap = 0.055 * diff(ylim(ax));  dx = 0.035 * diff(xlim(ax));
+[ys, o] = sort(y(:));  n = nnz(isfinite(ys));  yt = ys;
+for it = 1:300
+    moved = false;
+    for i = 2:n
+        d = yt(i) - yt(i - 1);
+        if d < gap - 1e-9, yt(i - 1) = yt(i - 1) - (gap - d) / 2;  yt(i) = yt(i) + (gap - d) / 2;  moved = true; end
+    end
+    if ~moved, break; end
+end
+yl = ylim(ax);  yt(1:n) = yt(1:n) + max(0, yl(1) + 0.6 * gap - min(yt(1:n)));       % keep the stack inside the axes
+yt(1:n) = yt(1:n) - max(0, max(yt(1:n)) - (yl(2) - 0.6 * gap));
+for i = 1:n
+    plot(ax, x(o(i)) + [0.25 0.9] * dx, [ys(i), yt(i)], '-', 'Color', ST.generic, 'LineWidth', 0.8, 'HandleVisibility', 'off');
+    text(ax, x(o(i)) + dx, yt(i), s{o(i)}, 'FontName', ST.font, 'FontSize', ST.szText - 1, 'FontWeight', 'bold', 'Color', ST.txt, ...
+        'HorizontalAlignment', 'left', 'VerticalAlignment', 'middle');
+end
 end
 
 function s = stars(p)

@@ -1,6 +1,6 @@
 # What wearable IMUs reveal about obstacle crossing — summary of the MATLAB analyses
 
-*Updated 31 October 2026: full rerun of the nine analyses on the rebuilt dataset, plus statistics and device-robustness analyses; figures redrawn in the step 9 template. Full write-up: `Documents/obstacle-crossing-report` (Overleaf-linked git folder); slides: `Presentations/26-10-31-ml-haptic-results-101-110.pptx`.*
+*Updated 31 October 2026: full rerun of the nine analyses on the rebuilt dataset, plus statistics and device-robustness analyses; figures redrawn in the step 9 template. Full write-up: `Documents/obstacle-crossing-report` (Overleaf-linked git folder); slides: `Presentations/26-10-31-ml-haptic-results-101-110.pptx`. 12 November 2026: arms and trunk added (section 12).*
 
 **Study:** 10 young adults, with Movella Dot IMUs on the thigh, shank and foot of both legs. They crossed 6 obstacles: 3 heights (10 / 20 / 30 % of leg length) × 2 widths (5 / 15 cm), about 5 repeats each.
 
@@ -192,6 +192,20 @@ Each limb analysed separately, as in step 9.
 - **Self-training** (the model labelling the new user's crossings itself) **makes things worse** (54–67 %).
 - **Comparing each crossing to the previous normal stride** doesn't help either (about 60 %). The personal margin is not visible in ordinary walking.
 
+### 12. Arms and trunk (`ml_arms_matlab.md`, `fig_arms_*.png`; added 12 November 2026)
+
+*Upper body from the Xsens Awinda IMUs (sternum, upper arms, forearms). 313 rows: 274 crossings and 39 level walks. Deck: `Presentations/26-11-12-arms-trunk-crossing-101-110.pptx`.*
+
+- **Data:** the arm IMUs lose no sample inside the walks. The OpenSim IK shoulder and elbow angles drift with the heading (median `arm_flex` of an arm wanders by 10°, up to 45°, between the walks of a trial; elbow on its 0° limit in 48 % of the walking samples; Test 109 without IK for 39 %), so the angles are **heading-free**: tilt of each IMU only, swing axis from the swings of the opposite leg, shoulder = upper arm to the trunk, elbow = forearm to upper arm.
+- **Level walk:** shoulder 17°, forearm 38°, elbow 24° for a thigh range of 47°; the arm moves with the opposite thigh (r = 0.94). People differ a lot (shoulder 11–30°; left–right difference up to 70 % in one person).
+- **The two arm IMUs and the two joints, obstacle by obstacle:** the ranges stay where they are (3 of 48 obstacle cells differ from the level walk, all in the elbow; no height or width effect); the peaks move (27 of 108 cells). Who is walking and which arm it is make up 46–64 % of the variance of the ranges, the obstacle 6–28 %; one person varies from repeat to repeat by 4.1° in level walking and 5.0° over obstacles.
+- **The arms do not scale with the legs:** leading thigh range 47 → 92°, shoulder swing of the opposite arm 16.6 → 14.4° (p = 0.18), so the arm swing per degree of thigh halves (0.52 → 0.25).
+- **The trunk leans forward and the upper arms go with it:** peak lean 5.0 → 10.4 / 12.8 / 16.5° (+0.33° per cm), roll range 4.0 → 8.2°; the upper arms follow 73 % of the lean (to the vertical they move back, to the trunk they stay).
+- **The arm keeps its own schedule:** the leading leg swing lasts 0.37 → 0.57 s, the forward swing of the opposite arm 0.53 → 0.48 s; the arm peaks 112 / 184 / 304 ms before the foot lands (level walk: at heel-strike).
+- **Both arms move out:** mean abduction to the trunk 2.6 → 7.9° and 1.6 → 7.6° at H3; the elbow of the arm that swings with the leading leg flexes 5.5° more.
+- **Height, not width:** 27 of 56 measures change with the height (FDR), 0 with the width; 35 differ from level walking. The direction is shared (4 of 10 key changes in all 10 participants), the size is personal.
+- **As a sensor:** the upper body alone tells the height at 45–58 % (legs 54–78 %, chance 33 %) and adds nothing to the leg IMUs.
+
 ## Caveats
 - **n = 10 young adults:** these are feasibility results. Confirm on new participants and older adults.
 - **The clearance-shape features were designed after the first results** (a few iterations, guided by biomechanics), so a small optimism remains.
@@ -216,7 +230,9 @@ Code (MATLAB), in `Analysis/ML/`:
 | `crossing_ml_stats.m` | repeated-measures ANOVA and mixed models per limb, IMU vs camera agreement, paired model tests, leg dominance |
 | `crossing_ml_robust.m` | sampling rate, sensor noise, model size and conformal prediction sets of the device |
 | `crossing_ml_params.m` | significance of the 26 step 9 parameters (SPSS sheet): ANOVA with FDR, per cm, level walk, rank tests, outlying cells, clearance equivalence, power |
-| `crossing_ml_figures.m` | draws all 23 figures (step 9 template) from the numbers saved in `figdata/` |
+| `build_arm_dataset.m` | builds the arm and trunk dataset (heading-free angles from the Awinda IMUs) |
+| `crossing_ml_arms.m` | arms and trunk: data quality, level walk, each signal per obstacle, obstacles vs level, height and width, timing, participants, IK angles, height from the upper body |
+| `crossing_ml_figures.m` | draws all 35 figures (step 9 template) from the numbers saved in `figdata/` |
 | `mlTools.m` | shared building blocks |
 
 Reports (`ml_*_matlab.md`), figures (`fig_*.png`) and figure data (`figdata/`) are in this folder.
